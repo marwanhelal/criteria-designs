@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/db'
 import { FolderKanban, Users, Briefcase, FileText } from 'lucide-react'
 
+// Force dynamic rendering (don't prerender at build time)
+export const dynamic = 'force-dynamic'
+
 async function getStats() {
   const [projects, team, services, posts] = await Promise.all([
     prisma.project.count(),
