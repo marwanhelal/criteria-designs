@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
       include: {
         images: {
           orderBy: { order: 'asc' }
+        },
+        timeline: {
+          orderBy: { order: 'asc' }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -50,6 +53,7 @@ export async function POST(request: NextRequest) {
         yearCompleted: data.yearCompleted ? parseInt(data.yearCompleted) : null,
         location: data.location || null,
         clientName: data.clientName || null,
+        clientLogo: data.clientLogo || null,
         featured: data.featured || false,
         status: data.status || 'DRAFT',
         images: data.images?.length ? {
@@ -58,10 +62,21 @@ export async function POST(request: NextRequest) {
             alt: img.alt || null,
             order: index
           }))
+        } : undefined,
+        timeline: data.timeline?.length ? {
+          create: data.timeline.map((entry: { titleEn: string; titleAr: string; descriptionEn: string; descriptionAr: string; image?: string }, index: number) => ({
+            titleEn: entry.titleEn,
+            titleAr: entry.titleAr,
+            descriptionEn: entry.descriptionEn,
+            descriptionAr: entry.descriptionAr,
+            image: entry.image || null,
+            order: index
+          }))
         } : undefined
       },
       include: {
-        images: true
+        images: true,
+        timeline: { orderBy: { order: 'asc' } }
       }
     })
 

@@ -37,9 +37,11 @@ model Project {
   descriptionAr String    @db.Text
   category      ProjectCategory
   images        ProjectImage[]
+  timeline      ProjectTimeline[]
   yearCompleted Int?
   location      String?
   clientName    String?
+  clientLogo    String?
   featured      Boolean   @default(false)
   status        Status    @default(DRAFT)
   createdAt     DateTime  @default(now())
@@ -53,6 +55,18 @@ model ProjectImage {
   order     Int      @default(0)
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectTimeline {
+  id            String   @id @default(cuid())
+  titleEn       String
+  titleAr       String
+  descriptionEn String   @db.Text
+  descriptionAr String   @db.Text
+  image         String?
+  order         Int      @default(0)
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum ProjectCategory {

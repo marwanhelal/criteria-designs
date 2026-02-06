@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Upload, X } from 'lucide-react'
+import { ArrowLeft, Save, Upload, X, Plus, Trash2 } from 'lucide-react'
 
 const categories = [
   { value: 'RESIDENTIAL', label: 'Residential' },
@@ -14,11 +14,22 @@ const categories = [
   { value: 'RENOVATION', label: 'Renovation' }
 ]
 
+interface TimelineEntry {
+  titleEn: string
+  titleAr: string
+  descriptionEn: string
+  descriptionAr: string
+  image: string
+}
+
 export default function NewProjectPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [images, setImages] = useState<{ url: string; alt?: string }[]>([])
   const [uploading, setUploading] = useState(false)
+  const [timeline, setTimeline] = useState<TimelineEntry[]>([])
+  const [uploadingTimeline, setUploadingTimeline] = useState<number | null>(null)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
 
   const [form, setForm] = useState({
     titleEn: '',
@@ -30,6 +41,7 @@ export default function NewProjectPage() {
     yearCompleted: '',
     location: '',
     clientName: '',
+    clientLogo: '',
     featured: false,
     status: 'DRAFT'
   })
@@ -80,6 +92,60 @@ export default function NewProjectPage() {
     setImages(images.filter((_, i) => i !== index))
   }
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files?.length) return
+
+    setUploadingLogo(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', files[0])
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (res.ok) {
+        const media = await res.json()
+        setForm({ ...form, clientLogo: media.url })
+      }
+    } catch (error) {
+      console.error('Error uploading logo:', error)
+    } finally {
+      setUploadingLogo(false)
+    }
+  }
+
+  const addTimelineEntry = () => {
+    setTimeline([...timeline, { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', image: '' }])
+  }
+
+  const updateTimeline = (index: number, field: keyof TimelineEntry, value: string) => {
+    const updated = [...timeline]
+    updated[index] = { ...updated[index], [field]: value }
+    setTimeline(updated)
+  }
+
+  const removeTimelineEntry = (index: number) => {
+    setTimeline(timeline.filter((_, i) => i !== index))
+  }
+
+  const handleTimelineImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const files = e.target.files
+    if (!files?.length) return
+
+    setUploadingTimeline(index)
+    try {
+      const formData = new FormData()
+      formData.append('file', files[0])
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (res.ok) {
+        const media = await res.json()
+        updateTimeline(index, 'image', media.url)
+      }
+    } catch (error) {
+      console.error('Error uploading timeline image:', error)
+    } finally {
+      setUploadingTimeline(null)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
@@ -90,7 +156,8 @@ export default function NewProjectPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
-          images
+          images,
+          timeline: timeline.filter(t => t.titleEn.trim())
         })
       })
 
@@ -248,10 +315,41 @@ export default function NewProjectPage() {
               />
             </div>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Client Logo
+            </label>
+            <div className="flex items-center gap-4">
+              {form.clientLogo && (
+                <div className="relative">
+                  <img src={form.clientLogo} alt="Client logo" className="h-12 object-contain" />
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, clientLogo: '' })}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              )}
+              <label className="px-3 py-2 border rounded-lg cursor-pointer hover:bg-gray-50 text-sm text-gray-600">
+                {uploadingLogo ? 'Uploading...' : 'Upload Logo'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                  disabled={uploadingLogo}
+                />
+              </label>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Images</h2>
+          <p className="text-sm text-gray-500">First image = hero. Images 2-7 = gallery thumbnails. Remaining = showcase.</p>
 
           <div className="flex flex-wrap gap-4">
             {images.map((img, index) => (
@@ -268,6 +366,9 @@ export default function NewProjectPage() {
                 >
                   <X size={16} />
                 </button>
+                <span className="absolute bottom-1 left-1 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">
+                  {index === 0 ? 'Hero' : index <= 6 ? `Gallery ${index}` : `Showcase ${index - 6}`}
+                </span>
               </div>
             ))}
 
@@ -286,6 +387,104 @@ export default function NewProjectPage() {
               />
             </label>
           </div>
+        </div>
+
+        {/* Timeline Section */}
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <div className="flex items-center justify-between border-b pb-2">
+            <h2 className="font-semibold text-lg">Project Timeline</h2>
+            <button
+              type="button"
+              onClick={addTimelineEntry}
+              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+            >
+              <Plus size={16} />
+              Add Entry
+            </button>
+          </div>
+
+          {timeline.length === 0 && (
+            <p className="text-sm text-gray-500">No timeline entries yet. Click &ldquo;Add Entry&rdquo; to create one.</p>
+          )}
+
+          {timeline.map((entry, index) => (
+            <div key={index} className="border rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-500">Entry {index + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => removeTimelineEntry(index)}
+                  className="text-red-500 hover:text-red-600"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Title (English)</label>
+                  <input
+                    type="text"
+                    value={entry.titleEn}
+                    onChange={(e) => updateTimeline(index, 'titleEn', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    placeholder="e.g. Concept Sketching"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Title (Arabic)</label>
+                  <input
+                    type="text"
+                    value={entry.titleAr}
+                    onChange={(e) => updateTimeline(index, 'titleAr', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    dir="rtl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Description (English)</label>
+                  <textarea
+                    value={entry.descriptionEn}
+                    onChange={(e) => updateTimeline(index, 'descriptionEn', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Description (Arabic)</label>
+                  <textarea
+                    value={entry.descriptionAr}
+                    onChange={(e) => updateTimeline(index, 'descriptionAr', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    rows={3}
+                    dir="rtl"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Image</label>
+                <div className="flex items-center gap-3">
+                  {entry.image && (
+                    <img src={entry.image} alt="" className="w-20 h-20 object-cover rounded" />
+                  )}
+                  <label className="px-3 py-1.5 border rounded-lg cursor-pointer hover:bg-gray-50 text-sm text-gray-600">
+                    {uploadingTimeline === index ? 'Uploading...' : 'Upload Image'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleTimelineImageUpload(e, index)}
+                      className="hidden"
+                      disabled={uploadingTimeline === index}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
