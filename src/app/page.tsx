@@ -1,20 +1,96 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ChevronDown, ChevronLeft, ChevronRight, Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
+interface Project {
+  id: string
+  slug: string
+  titleEn: string
+  descriptionEn: string
+  category: string
+  location: string | null
+  yearCompleted: number | null
+  images: { id: string; url: string; alt: string | null }[]
+}
+
+interface Service {
+  id: string
+  titleEn: string
+  descriptionEn: string
+  icon: string | null
+  image: string | null
+}
+
+interface Settings {
+  companyNameEn: string
+  seoDescriptionEn: string | null
+}
+
+const iconMap: Record<string, typeof Building> = {
+  Building, Leaf, Headset, Users, Armchair, Shield
+}
+
 export default function Home() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [services, setServices] = useState<Service[]>([])
+  const [settings, setSettings] = useState<Settings | null>(null)
+  useEffect(() => {
+    // Fetch featured/published projects
+    fetch('/api/projects?status=PUBLISHED')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setProjects(data.slice(0, 6)))
+      .catch(() => {})
+
+    // Fetch services
+    fetch('/api/services')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setServices(data.slice(0, 6)))
+      .catch(() => {})
+
+    // Fetch settings
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setSettings(data))
+      .catch(() => {})
+  }, [])
+
+  // Fallback projects if none from CMS yet
+  const displayProjects = projects.length > 0 ? projects : []
+  const displayServices = services.length > 0 ? services : []
+
+  // Featured project for the large image
+  const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
+  const featuredImage = featuredProject?.images?.[0]?.url || null
+
+  const scrollProjects = (dir: 'left' | 'right') => {
+    const container = document.getElementById('project-scroll')
+    if (container) {
+      const scrollAmount = 440
+      container.scrollBy({
+        left: dir === 'right' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth'
+      })
+    }
+  }
+
   return (
     <>
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative h-screen w-full overflow-hidden">
-        {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[#181C23]"
+            style={{
+              backgroundImage: featuredImage
+                ? `url('${featuredImage}')`
+                : undefined
+            }}
           />
           <div
             className="absolute inset-0"
@@ -25,7 +101,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Hero Content */}
         <div className="relative z-10 h-full flex flex-col justify-end pb-20 px-8 lg:px-[315px]">
           <Link
             href="/about"
@@ -34,7 +109,6 @@ export default function Home() {
             Learn more
           </Link>
 
-          {/* Scroll Down */}
           <div className="flex items-center gap-2 mt-16">
             <ChevronDown size={16} className="text-white" />
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px]">
@@ -43,7 +117,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Slide Controller */}
         <div className="absolute right-[96px] top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-2">
           <div className="w-[3px] h-[20px] bg-white rounded-full" />
           <div className="w-[3px] h-[20px] bg-white/30 rounded-full" />
@@ -54,7 +127,6 @@ export default function Home() {
       {/* ===== ABOUT SECTION ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          {/* Image */}
           <div className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200 shrink-0">
             <div
               className="w-full h-full bg-cover bg-center"
@@ -62,7 +134,6 @@ export default function Home() {
             />
           </div>
 
-          {/* Content */}
           <div className="flex flex-col justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Who we are
@@ -71,7 +142,7 @@ export default function Home() {
               We build quality real estate projects since 1978
             </h2>
             <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-8 max-w-[526px]">
-              Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+              {settings?.seoDescriptionEn || 'Criteria Designs is a leading architecture and interior design firm dedicated to creating spaces that inspire. With decades of experience, we deliver exceptional quality in every project.'}
             </p>
             <Link
               href="/about"
@@ -87,7 +158,6 @@ export default function Home() {
       <section className="bg-[#181C23] py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-16">
-            {/* Left Content */}
             <div className="lg:w-[400px] shrink-0">
               <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
                 What we create
@@ -103,48 +173,62 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Project Cards */}
-            <div className="flex gap-6 overflow-x-auto pb-4">
-              {[
-                { name: 'Rowaq Compound', location: 'New Cairo, Egy', area: '273,000 SQFT' },
-                { name: 'EUA UNI.', location: 'Al-amin, North Coast', area: '418,550 SQFT' },
-                { name: 'Crystal Yard Mall', location: 'New Cairo, Egy', area: '210,500 SQFT' },
-              ].map((project, idx) => (
-                <div
-                  key={idx}
-                  className="min-w-[300px] lg:min-w-[414px] bg-[#1E2330] rounded-lg overflow-hidden group cursor-pointer shrink-0"
-                >
-                  <div className="h-[380px] bg-gray-700 overflow-hidden">
-                    <div
-                      className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                      style={{ backgroundImage: `url('/images/project-${idx + 1}.jpg')` }}
-                    />
-                  </div>
-                  <div className="p-8">
-                    <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px]">
-                      {project.location}
-                    </p>
-                    <h3 className="font-[var(--font-merriweather)] text-[24px] text-white leading-[34px] mt-2">
-                      {project.name}
-                    </h3>
-                    <p className="font-[var(--font-libre-franklin)] text-[16px] text-white/60 mt-4">
-                      {project.area}
-                    </p>
-                  </div>
+            {/* Dynamic Project Cards */}
+            <div id="project-scroll" className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+              {displayProjects.length > 0 ? (
+                displayProjects.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={`/projects/${project.slug}`}
+                    className="min-w-[300px] lg:min-w-[414px] bg-[#1E2330] rounded-lg overflow-hidden group cursor-pointer shrink-0"
+                  >
+                    <div className="h-[380px] bg-gray-700 overflow-hidden">
+                      <div
+                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
+                        style={{
+                          backgroundImage: project.images?.length > 0
+                            ? `url('${project.images[0].url}')`
+                            : undefined
+                        }}
+                      />
+                    </div>
+                    <div className="p-8">
+                      <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px]">
+                        {project.location || project.category}
+                      </p>
+                      <h3 className="font-[var(--font-merriweather)] text-[24px] text-white leading-[34px] mt-2">
+                        {project.titleEn}
+                      </h3>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="flex items-center justify-center w-full py-20">
+                  <p className="font-[var(--font-open-sans)] text-[16px] text-white/40">
+                    No projects yet. Add projects from the CMS.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
           {/* Navigation Arrows */}
-          <div className="flex gap-4 mt-10">
-            <button className="w-[60px] h-[60px] rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-              <ChevronLeft size={20} />
-            </button>
-            <button className="w-[60px] h-[60px] rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-              <ChevronRight size={20} />
-            </button>
-          </div>
+          {displayProjects.length > 2 && (
+            <div className="flex gap-4 mt-10">
+              <button
+                onClick={() => scrollProjects('left')}
+                className="w-[60px] h-[60px] rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => scrollProjects('right')}
+                className="w-[60px] h-[60px] rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-20 pt-16 border-t border-white/10">
@@ -165,13 +249,15 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Large Image */}
-          <div className="mt-20 h-[400px] lg:h-[800px] rounded-lg overflow-hidden bg-gray-700">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: "url('/images/project-large.jpg')" }}
-            />
-          </div>
+          {/* Large Featured Image */}
+          {featuredImage && (
+            <div className="mt-20 h-[400px] lg:h-[800px] rounded-lg overflow-hidden bg-gray-700">
+              <div
+                className="w-full h-full bg-cover bg-center"
+                style={{ backgroundImage: `url('${featuredImage}')` }}
+              />
+            </div>
+          )}
         </div>
       </section>
 
@@ -186,26 +272,48 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 mt-16">
-            {[
-              { icon: Building, title: 'High Quality Products', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              { icon: Leaf, title: 'Natural Environment', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              { icon: Headset, title: 'Professional Services', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              { icon: Users, title: 'Humanitarian Community', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              { icon: Armchair, title: 'Comprehensive Amenities', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              { icon: Shield, title: 'Absolute Security', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-            ].map((service, idx) => (
-              <div key={idx} className="flex flex-col">
-                <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
-                  <service.icon size={50} className="text-[#B1A490]" />
+            {displayServices.length > 0 ? (
+              displayServices.map((service) => {
+                const IconComponent = service.icon && iconMap[service.icon]
+                  ? iconMap[service.icon]
+                  : Building
+                return (
+                  <div key={service.id} className="flex flex-col">
+                    <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                      <IconComponent size={50} className="text-[#B1A490]" />
+                    </div>
+                    <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
+                      {service.titleEn}
+                    </h3>
+                    <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
+                      {service.descriptionEn}
+                    </p>
+                  </div>
+                )
+              })
+            ) : (
+              /* Fallback static services when CMS is empty */
+              [
+                { icon: Building, title: 'High Quality Products', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+                { icon: Leaf, title: 'Natural Environment', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+                { icon: Headset, title: 'Professional Services', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+                { icon: Users, title: 'Humanitarian Community', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+                { icon: Armchair, title: 'Comprehensive Amenities', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+                { icon: Shield, title: 'Absolute Security', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
+              ].map((service, idx) => (
+                <div key={idx} className="flex flex-col">
+                  <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                    <service.icon size={50} className="text-[#B1A490]" />
+                  </div>
+                  <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
+                    {service.title}
+                  </h3>
+                  <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
+                    {service.desc}
+                  </p>
                 </div>
-                <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
-                  {service.title}
-                </h3>
-                <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
-                  {service.desc}
-                </p>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -213,7 +321,6 @@ export default function Home() {
       {/* ===== TESTIMONIALS SECTION ===== */}
       <section className="bg-[#F5F0EB] py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
-          {/* Avatar */}
           <div className="relative shrink-0">
             <div className="w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gray-300 overflow-hidden">
               <div
@@ -226,7 +333,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Quote */}
           <div>
             <p className="font-[var(--font-merriweather)] text-[20px] lg:text-[24px] text-[#181C23] leading-[36px] lg:leading-[46px] italic">
               &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
@@ -235,7 +341,6 @@ export default function Home() {
               Hesham helal / Ceo &amp; founder
             </p>
 
-            {/* Dots */}
             <div className="flex gap-2 mt-8">
               <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
               <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
@@ -248,7 +353,6 @@ export default function Home() {
       {/* ===== CAREER / JOIN US SECTION ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          {/* Image */}
           <div className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200 shrink-0">
             <div
               className="w-full h-full bg-cover bg-center"
@@ -256,7 +360,6 @@ export default function Home() {
             />
           </div>
 
-          {/* Content */}
           <div className="flex flex-col justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Join with Us
