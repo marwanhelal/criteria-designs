@@ -32,18 +32,18 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Install sharp for image optimization in standalone mode
+# Install system deps and global tools
 RUN apk add --no-cache libc6-compat
 RUN npm install -g prisma tsx
-RUN npm install --os=linux --cpu=x64 sharp@0.33.5
 
 COPY --from=builder /app/public ./public
 
-# Copy prisma folder for migrations
+# Copy node_modules needed at runtime (prisma + sharp for image optimization)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
