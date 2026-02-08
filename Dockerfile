@@ -38,12 +38,11 @@ RUN npm install -g prisma tsx
 
 COPY --from=builder /app/public ./public
 
-# Copy node_modules needed at runtime (prisma + sharp for image optimization)
+# Copy node_modules needed at runtime (prisma)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -63,8 +62,6 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-ENV NEXT_SHARP_PATH=/app/node_modules/sharp
-
 # Copy startup script
 COPY --from=builder --chown=nextjs:nodejs /app/start.sh ./start.sh
 RUN chmod +x start.sh
