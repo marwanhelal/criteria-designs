@@ -13,7 +13,7 @@ interface Service {
   titleAr: string
   descriptionEn: string
   image: string | null
-  iconName: string | null
+  icon: string | null
 }
 
 const defaultIcons: Record<string, typeof Building> = {
@@ -78,15 +78,15 @@ export default function ServicesPage() {
           ) : (
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16" staggerDelay={0.15}>
               {(services.length > 0 ? services : [
-                { id: '1', titleEn: 'Architectural Design', descriptionEn: 'Creating innovative and functional building designs that blend aesthetics with practicality for residential and commercial spaces.', iconName: 'Building', image: null, titleAr: '' },
-                { id: '2', titleEn: 'Interior Design', descriptionEn: 'Transforming interior spaces with thoughtful design that reflects your style while maximizing comfort and functionality.', iconName: 'Leaf', image: null, titleAr: '' },
-                { id: '3', titleEn: 'Urban Planning', descriptionEn: 'Developing comprehensive urban plans that create sustainable, livable communities with smart infrastructure.', iconName: 'Headset', image: null, titleAr: '' },
-                { id: '4', titleEn: 'Landscape Design', descriptionEn: 'Designing outdoor spaces that complement architecture and create harmonious connections between buildings and nature.', iconName: 'Users', image: null, titleAr: '' },
-                { id: '5', titleEn: 'Renovation', descriptionEn: 'Breathing new life into existing structures through thoughtful renovation that preserves character while adding modern functionality.', iconName: 'Armchair', image: null, titleAr: '' },
-                { id: '6', titleEn: 'Project Management', descriptionEn: 'End-to-end project management ensuring your vision is realized on time and within budget with the highest quality standards.', iconName: 'Shield', image: null, titleAr: '' },
+                { id: '1', titleEn: 'Architectural Design', descriptionEn: 'Creating innovative and functional building designs that blend aesthetics with practicality for residential and commercial spaces.', icon: 'Building', image: null, titleAr: '' },
+                { id: '2', titleEn: 'Interior Design', descriptionEn: 'Transforming interior spaces with thoughtful design that reflects your style while maximizing comfort and functionality.', icon: 'Leaf', image: null, titleAr: '' },
+                { id: '3', titleEn: 'Urban Planning', descriptionEn: 'Developing comprehensive urban plans that create sustainable, livable communities with smart infrastructure.', icon: 'Headset', image: null, titleAr: '' },
+                { id: '4', titleEn: 'Landscape Design', descriptionEn: 'Designing outdoor spaces that complement architecture and create harmonious connections between buildings and nature.', icon: 'Users', image: null, titleAr: '' },
+                { id: '5', titleEn: 'Renovation', descriptionEn: 'Breathing new life into existing structures through thoughtful renovation that preserves character while adding modern functionality.', icon: 'Armchair', image: null, titleAr: '' },
+                { id: '6', titleEn: 'Project Management', descriptionEn: 'End-to-end project management ensuring your vision is realized on time and within budget with the highest quality standards.', icon: 'Shield', image: null, titleAr: '' },
               ]).map((service) => {
-                const IconComponent = service.iconName && defaultIcons[service.iconName]
-                  ? defaultIcons[service.iconName]
+                const IconComponent = service.icon && defaultIcons[service.icon]
+                  ? defaultIcons[service.icon]
                   : Building
                 return (
                   <StaggerItem key={service.id}>

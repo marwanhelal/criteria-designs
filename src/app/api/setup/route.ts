@@ -42,8 +42,7 @@ export async function GET() {
   } catch (error) {
     console.error('Setup error:', error)
     return NextResponse.json({
-      error: 'Setup failed',
-      details: String(error)
+      error: 'Setup failed'
     }, { status: 500 })
   }
 }

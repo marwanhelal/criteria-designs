@@ -21,8 +21,10 @@ export async function DELETE(
     }
 
     // Delete file from disk
+    // URL is stored as /api/uploads/filename, actual file is at public/uploads/filename
     try {
-      const filepath = join(process.cwd(), 'public', media.url)
+      const filename = media.url.replace(/^\/api\/uploads\//, '')
+      const filepath = join(process.cwd(), 'public', 'uploads', filename)
       await unlink(filepath)
     } catch {
       // File may not exist, continue with database deletion
