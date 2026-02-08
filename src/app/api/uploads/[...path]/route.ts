@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile, stat } from 'fs/promises'
-import { join } from 'path'
+import { resolve } from 'path'
 
 const MIME_TYPES: Record<string, string> = {
   '.jpg': 'image/jpeg',
@@ -16,15 +16,16 @@ export async function GET(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const { path } = await params
-    const filename = path.join('/')
+    const { path: pathSegments } = await params
+    const filename = pathSegments.join('/')
 
-    // Prevent directory traversal
-    if (filename.includes('..')) {
+    // Prevent directory traversal - resolve to absolute and verify it stays within uploads
+    const uploadsDir = resolve(process.cwd(), 'public', 'uploads')
+    const filepath = resolve(uploadsDir, filename)
+
+    if (!filepath.startsWith(uploadsDir)) {
       return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
     }
-
-    const filepath = join(process.cwd(), 'public', 'uploads', filename)
 
     // Check file exists
     try {

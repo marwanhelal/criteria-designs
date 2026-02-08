@@ -9,15 +9,8 @@ import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/Ani
 import { Award, Users, Building, Clock, Target, Eye } from 'lucide-react'
 
 interface Settings {
-  companyName?: string
-  aboutTitle?: string
-  aboutDescription?: string
-  missionText?: string
-  visionText?: string
-  statsProjects?: string
-  statsUnderConstruction?: string
-  statsTeam?: string
-  statsYears?: string
+  companyNameEn?: string
+  [key: string]: string | undefined
 }
 
 export default function AboutPage() {
@@ -27,13 +20,9 @@ export default function AboutPage() {
     fetch('/api/settings')
       .then(res => res.ok ? res.json() : {})
       .then(data => {
-        const s: Settings = {}
-        if (Array.isArray(data)) {
-          data.forEach((item: { key: string; value: string }) => {
-            (s as Record<string, string>)[item.key] = item.value
-          })
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          setSettings(data as Settings)
         }
-        setSettings(s)
       })
       .catch(() => {})
   }, [])
@@ -67,7 +56,7 @@ export default function AboutPage() {
               Who we are
             </span>
             <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
-              About {settings.companyName || 'Criteria Designs'}
+              About {settings.companyNameEn || 'Criteria Designs'}
             </h1>
           </AnimatedSection>
         </div>

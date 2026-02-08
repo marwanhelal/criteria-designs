@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import DOMPurify from 'isomorphic-dompurify'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ArrowLeft, Calendar, User } from 'lucide-react'
@@ -109,7 +110,7 @@ export default async function BlogDetailPage({ params }: Props) {
           )}
           <div
             className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] prose prose-lg max-w-none prose-headings:font-[var(--font-merriweather)] prose-headings:text-[#181C23] prose-a:text-[#B1A490]"
-            dangerouslySetInnerHTML={{ __html: post.contentEn }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contentEn) }}
           />
 
           {/* Tags */}

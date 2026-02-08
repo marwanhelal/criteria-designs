@@ -8,10 +8,10 @@ import AnimatedSection from '@/components/AnimatedSection'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 
 interface Settings {
-  companyAddress?: string
-  companyPhone?: string
-  companyEmail?: string
-  workingHours?: string
+  addressEn?: string
+  phone?: string
+  email?: string
+  [key: string]: string | undefined
 }
 
 export default function ContactPage() {
@@ -25,18 +25,15 @@ export default function ContactPage() {
   })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
 
   useEffect(() => {
     fetch('/api/settings')
       .then(res => res.ok ? res.json() : {})
       .then(data => {
-        const s: Settings = {}
-        if (Array.isArray(data)) {
-          data.forEach((item: { key: string; value: string }) => {
-            (s as Record<string, string>)[item.key] = item.value
-          })
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          setSettings(data as Settings)
         }
-        setSettings(s)
       })
       .catch(() => {})
   }, [])
@@ -44,20 +41,22 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
+    setSubmitError(false)
 
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
+      if (!res.ok) throw new Error('Failed')
+      setSubmitted(true)
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
     } catch {
-      // silently handle
+      setSubmitError(true)
+    } finally {
+      setSubmitting(false)
     }
-
-    setSubmitted(true)
-    setSubmitting(false)
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
   }
 
   return (
@@ -121,7 +120,7 @@ export default function ContactPage() {
                       Address
                     </h4>
                     <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1">
-                      {settings.companyAddress || 'Cairo, Egypt'}
+                      {settings.addressEn || 'Cairo, Egypt'}
                     </p>
                   </div>
                 </div>
@@ -134,8 +133,8 @@ export default function ContactPage() {
                     <h4 className="font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px]">
                       Phone
                     </h4>
-                    <a href={`tel:${(settings.companyPhone || '+201151724527').replace(/\s/g, '')}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
-                      {settings.companyPhone || '+20 115 172 4527'}
+                    <a href={`tel:${(settings.phone || '+201151724527').replace(/\s/g, '')}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
+                      {settings.phone || '+20 115 172 4527'}
                     </a>
                   </div>
                 </div>
@@ -148,8 +147,8 @@ export default function ContactPage() {
                     <h4 className="font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px]">
                       Email
                     </h4>
-                    <a href={`mailto:${settings.companyEmail || 'info@criteriadesigns.com'}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
-                      {settings.companyEmail || 'info@criteriadesigns.com'}
+                    <a href={`mailto:${settings.email || 'info@criteriadesigns.com'}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
+                      {settings.email || 'info@criteriadesigns.com'}
                     </a>
                   </div>
                 </div>
@@ -192,6 +191,11 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {submitError && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg font-[var(--font-open-sans)] text-[15px]">
+                      Something went wrong. Please try again or email us directly.
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px] block mb-2">

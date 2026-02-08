@@ -234,7 +234,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Basic Information</h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Title (English) *
@@ -275,7 +275,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description (English) *
@@ -307,7 +307,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Project Details</h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Category *
@@ -337,7 +337,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location
@@ -466,7 +466,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Title (English)</label>
                   <input
@@ -489,7 +489,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Description (English)</label>
                   <textarea
