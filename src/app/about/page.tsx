@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
@@ -33,15 +32,7 @@ export default function AboutPage() {
 
       {/* ===== HERO BANNER ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/about-hero.jpg"
-            alt="About Criteria Designs"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
           <div
             className="absolute inset-0"
             style={{
@@ -65,14 +56,8 @@ export default function AboutPage() {
       {/* ===== ABOUT INTRO ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <AnimatedSection direction="left" className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200 shrink-0 relative">
-            <Image
-              src="/images/about-bg.jpg"
-              alt="About us"
-              fill
-              sizes="(max-width: 1024px) 100vw, 633px"
-              className="object-cover"
-            />
+          <AnimatedSection direction="left" className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 shrink-0 relative flex items-center justify-center">
+            <Building size={120} className="text-[#B1A490]/30" />
           </AnimatedSection>
 
           <AnimatedSection direction="right" className="flex flex-col justify-center">

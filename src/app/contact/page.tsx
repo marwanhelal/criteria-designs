@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import AnimatedSection from '@/components/AnimatedSection'
@@ -65,15 +64,7 @@ export default function ContactPage() {
 
       {/* ===== HERO ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/contact-hero.jpg"
-            alt="Contact Us"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
           <div
             className="absolute inset-0"
             style={{

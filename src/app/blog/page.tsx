@@ -72,15 +72,7 @@ export default function BlogPage() {
 
       {/* ===== HERO ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/blog-hero.jpg"
-            alt="Our Blog"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
           <div
             className="absolute inset-0"
             style={{
@@ -150,13 +142,9 @@ export default function BlogPage() {
                             unoptimized
                           />
                         ) : (
-                          <Image
-                            src="/images/blog-placeholder.jpg"
-                            alt={post.titleEn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#B1A490]/30 to-[#181C23]/20 flex items-center justify-center">
+                            <span className="font-[var(--font-merriweather)] text-[#B1A490]/40 text-[48px]">B</span>
+                          </div>
                         )}
                       </div>
                       <div className="p-8">

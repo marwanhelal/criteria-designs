@@ -51,15 +51,7 @@ export default function ProjectsPage() {
 
       {/* ===== HERO BANNER ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/projects-hero.jpg"
-            alt="Our Projects"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
           <div
             className="absolute inset-0"
             style={{

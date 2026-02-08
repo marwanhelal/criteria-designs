@@ -132,14 +132,8 @@ export default function Home() {
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
           <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
-            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200">
-              <Image
-                src="/images/about-bg.jpg"
-                alt="About Criteria Designs"
-                fill
-                sizes="(max-width: 1024px) 100vw, 633px"
-                className="object-cover"
-              />
+            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
+              <Building size={120} className="text-[#B1A490]/30" />
             </div>
           </AnimatedSection>
 
@@ -351,14 +345,8 @@ export default function Home() {
         <AnimatedSection>
           <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="relative shrink-0">
-              <div className="relative w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gray-300 overflow-hidden">
-                <Image
-                  src="/images/testimonial-avatar.jpg"
-                  alt="Testimonial"
-                  fill
-                  sizes="220px"
-                  className="object-cover"
-                />
+              <div className="relative w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-[#181C23]/20 overflow-hidden flex items-center justify-center">
+                <Users size={64} className="text-[#B1A490]/40" />
               </div>
               <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
                 <Quote size={20} className="text-white" />
@@ -386,14 +374,8 @@ export default function Home() {
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
           <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
-            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200">
-              <Image
-                src="/images/career-bg.jpg"
-                alt="Join with us"
-                fill
-                sizes="(max-width: 1024px) 100vw, 633px"
-                className="object-cover"
-              />
+            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
+              <Users size={120} className="text-[#B1A490]/30" />
             </div>
           </AnimatedSection>
 

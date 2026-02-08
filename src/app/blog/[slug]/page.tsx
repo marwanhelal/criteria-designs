@@ -50,14 +50,7 @@ export default async function BlogDetailPage({ params }: Props) {
               unoptimized
             />
           ) : (
-            <Image
-              src="/images/blog-placeholder.jpg"
-              alt={post.titleEn}
-              fill
-              sizes="100vw"
-              className="object-cover"
-              priority
-            />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]" />
           )}
           <div
             className="absolute inset-0"

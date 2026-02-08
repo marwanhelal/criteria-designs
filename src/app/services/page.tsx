@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -39,15 +38,7 @@ export default function ServicesPage() {
 
       {/* ===== HERO BANNER ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/services-hero.jpg"
-            alt="Our Services"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
           <div
             className="absolute inset-0"
             style={{
