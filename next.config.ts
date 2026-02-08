@@ -8,7 +8,20 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        // Redirect old /uploads/* URLs to the API route
+        source: '/uploads/:path*',
+        destination: '/api/uploads/:path*',
+      },
+    ]
   },
 };
 

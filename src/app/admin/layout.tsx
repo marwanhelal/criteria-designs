@@ -24,7 +24,6 @@ const sidebarItems = [
   { name: 'Services', href: '/admin/services', icon: Briefcase },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Media', href: '/admin/media', icon: Image },
-  { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ]
 

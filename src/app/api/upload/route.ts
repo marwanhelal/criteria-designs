@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     const media = await prisma.media.create({
       data: {
         filename: file.name,
-        url: `/uploads/${filename}`,
+        url: `/api/uploads/${filename}`,
         mimeType: file.type,
         size: file.size,
         alt: formData.get('alt') as string || null
