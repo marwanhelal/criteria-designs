@@ -21,6 +21,7 @@ export default function SettingsPage() {
     twitter: '',
     logo: '',
     favicon: '',
+    heroImage: '',
     seoTitleEn: '',
     seoTitleAr: '',
     seoDescriptionEn: '',
@@ -49,6 +50,7 @@ export default function SettingsPage() {
           twitter: settings.twitter || '',
           logo: settings.logo || '',
           favicon: settings.favicon || '',
+          heroImage: settings.heroImage || '',
           seoTitleEn: settings.seoTitleEn || '',
           seoTitleAr: settings.seoTitleAr || '',
           seoDescriptionEn: settings.seoDescriptionEn || '',
@@ -62,7 +64,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon') => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -258,6 +260,43 @@ export default function SettingsPage() {
                   />
                 </label>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <h2 className="font-semibold text-lg border-b pb-2">Homepage Hero Image</h2>
+          <p className="text-sm text-gray-500">This image will be displayed as the full-screen background on the homepage hero section.</p>
+          <div>
+            <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden mb-4">
+              {form.heroImage ? (
+                <img src={form.heroImage} alt="Hero" className="w-full h-full object-cover" />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  No hero image set
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-4">
+              <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700">
+                {uploading === 'heroImage' ? 'Uploading...' : 'Upload Hero Image'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'heroImage')}
+                  className="hidden"
+                  disabled={uploading === 'heroImage'}
+                />
+              </label>
+              {form.heroImage && (
+                <button
+                  type="button"
+                  onClick={() => setForm(prev => ({ ...prev, heroImage: '' }))}
+                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
+                >
+                  Remove
+                </button>
+              )}
             </div>
           </div>
         </div>

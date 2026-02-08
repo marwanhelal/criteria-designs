@@ -157,6 +157,7 @@ model SiteSettings {
   twitter         String?
   logo            String?
   favicon         String?
+  heroImage       String?
   seoTitleEn      String?
   seoTitleAr      String?
   seoDescriptionEn String?

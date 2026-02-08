@@ -31,6 +31,7 @@ interface Settings {
   companyNameEn: string
   seoDescriptionEn: string | null
   logo: string | null
+  heroImage: string | null
 }
 
 const iconMap: Record<string, typeof Building> = {
@@ -62,7 +63,7 @@ export default function Home() {
   const displayProjects = projects.length > 0 ? projects : []
   const displayServices = services.length > 0 ? services : []
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
-  const featuredImage = featuredProject?.images?.[0]?.url || null
+  const heroImage = settings?.heroImage || featuredProject?.images?.[0]?.url || null
 
   const scrollProjects = (dir: 'left' | 'right') => {
     const container = document.getElementById('project-scroll')
@@ -78,9 +79,9 @@ export default function Home() {
       {/* ===== HERO SECTION ===== */}
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0">
-          {featuredImage ? (
+          {heroImage ? (
             <Image
-              src={featuredImage}
+              src={heroImage}
               alt="Hero"
               fill
               sizes="100vw"
@@ -266,11 +267,11 @@ export default function Home() {
           </StaggerContainer>
 
           {/* Large Featured Image - Fixed 1290x800 aspect ratio */}
-          {featuredImage && (
+          {heroImage && (
             <AnimatedSection delay={0.2} className="mt-20">
               <div className="relative h-[400px] lg:h-[800px] rounded-lg overflow-hidden">
                 <Image
-                  src={featuredImage}
+                  src={heroImage}
                   alt="Featured project"
                   fill
                   sizes="(max-width: 1024px) 100vw, 1290px"

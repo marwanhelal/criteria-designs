@@ -37,7 +37,17 @@ export async function POST() {
       results.push(`✗ ProjectTimeline: ${e instanceof Error ? e.message : String(e)}`)
     }
 
-    // 3. Create index on ProjectTimeline.projectId if it doesn't exist
+    // 3. Add heroImage column to SiteSettings table if it doesn't exist
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "heroImage" TEXT;
+      `)
+      results.push('✓ heroImage column ensured on SiteSettings table')
+    } catch (e) {
+      results.push(`✗ heroImage: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 4. Create index on ProjectTimeline.projectId if it doesn't exist
     try {
       await prisma.$executeRawUnsafe(`
         CREATE INDEX IF NOT EXISTS "ProjectTimeline_projectId_idx" ON "ProjectTimeline"("projectId");
@@ -68,6 +78,14 @@ export async function GET() {
       status.clientLogo = 'exists'
     } catch {
       status.clientLogo = 'missing'
+    }
+
+    // Check if heroImage column exists on SiteSettings
+    try {
+      await prisma.$queryRawUnsafe(`SELECT "heroImage" FROM "SiteSettings" LIMIT 1`)
+      status.heroImage = 'exists'
+    } catch {
+      status.heroImage = 'missing'
     }
 
     // Check if ProjectTimeline table exists
