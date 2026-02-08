@@ -32,8 +32,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Install production dependencies for Prisma CLI
+# Install sharp for image optimization in standalone mode
+RUN apk add --no-cache libc6-compat
 RUN npm install -g prisma tsx
+RUN npm install --os=linux --cpu=x64 sharp@0.33.5
 
 COPY --from=builder /app/public ./public
 
@@ -61,6 +63,7 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV NEXT_SHARP_PATH=/app/node_modules/sharp
 
 # Copy startup script
 COPY --from=builder --chown=nextjs:nodejs /app/start.sh ./start.sh
