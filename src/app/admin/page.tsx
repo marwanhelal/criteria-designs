@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import Link from 'next/link'
 import { FolderKanban, Users, Briefcase, FileText } from 'lucide-react'
 
 // Force dynamic rendering (don't prerender at build time)
@@ -52,15 +53,15 @@ export default async function AdminDashboard() {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
           <div className="space-y-2">
-            <a href="/admin/projects/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+            <Link href="/admin/projects/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
               + Add New Project
-            </a>
-            <a href="/admin/blog/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+            </Link>
+            <Link href="/admin/blog/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
               + Create Blog Post
-            </a>
-            <a href="/admin/team/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+            </Link>
+            <Link href="/admin/team/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
               + Add Team Member
-            </a>
+            </Link>
           </div>
         </div>
 
