@@ -1,11 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import AnimatedSection from '@/components/AnimatedSection'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 
+interface Settings {
+  companyAddress?: string
+  companyPhone?: string
+  companyEmail?: string
+  workingHours?: string
+}
+
 export default function ContactPage() {
+  const [settings, setSettings] = useState<Settings>({})
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,12 +26,34 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : {})
+      .then(data => {
+        const s: Settings = {}
+        if (Array.isArray(data)) {
+          data.forEach((item: { key: string; value: string }) => {
+            (s as Record<string, string>)[item.key] = item.value
+          })
+        }
+        setSettings(s)
+      })
+      .catch(() => {})
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
 
-    // Simulate form submission - replace with actual API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+    } catch {
+      // silently handle
+    }
 
     setSubmitted(true)
     setSubmitting(false)
@@ -35,9 +67,13 @@ export default function ContactPage() {
       {/* ===== HERO ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/images/contact-hero.jpg')" }}
+          <Image
+            src="/images/contact-hero.jpg"
+            alt="Contact Us"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
           />
           <div
             className="absolute inset-0"
@@ -48,12 +84,14 @@ export default function ContactPage() {
           />
         </div>
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
-          <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-            Get in touch
-          </span>
-          <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
-            Contact Us
-          </h1>
+          <AnimatedSection>
+            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
+              Get in touch
+            </span>
+            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+              Contact Us
+            </h1>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -62,7 +100,7 @@ export default function ContactPage() {
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-20">
             {/* Contact Information */}
-            <div className="lg:w-[400px] shrink-0">
+            <AnimatedSection direction="left" className="lg:w-[400px] shrink-0">
               <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
                 Contact Information
               </span>
@@ -83,7 +121,7 @@ export default function ContactPage() {
                       Address
                     </h4>
                     <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1">
-                      Cairo, Egypt
+                      {settings.companyAddress || 'Cairo, Egypt'}
                     </p>
                   </div>
                 </div>
@@ -96,8 +134,8 @@ export default function ContactPage() {
                     <h4 className="font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px]">
                       Phone
                     </h4>
-                    <a href="tel:+201151724527" className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
-                      +20 115 172 4527
+                    <a href={`tel:${(settings.companyPhone || '+201151724527').replace(/\s/g, '')}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
+                      {settings.companyPhone || '+20 115 172 4527'}
                     </a>
                   </div>
                 </div>
@@ -110,8 +148,8 @@ export default function ContactPage() {
                     <h4 className="font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px]">
                       Email
                     </h4>
-                    <a href="mailto:info@criteriadesigns.com" className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
-                      info@criteriadesigns.com
+                    <a href={`mailto:${settings.companyEmail || 'info@criteriadesigns.com'}`} className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1 block hover:text-[#B1A490] transition-colors">
+                      {settings.companyEmail || 'info@criteriadesigns.com'}
                     </a>
                   </div>
                 </div>
@@ -125,15 +163,15 @@ export default function ContactPage() {
                       Working Hours
                     </h4>
                     <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[24px] mt-1">
-                      Sun - Thu: 9:00 AM - 6:00 PM
+                      {settings.workingHours || 'Sun - Thu: 9:00 AM - 6:00 PM'}
                     </p>
                   </div>
                 </div>
               </div>
-            </div>
+            </AnimatedSection>
 
             {/* Contact Form */}
-            <div className="flex-1">
+            <AnimatedSection direction="right" className="flex-1">
               {submitted ? (
                 <div className="bg-[#F5F0EB] rounded-lg p-12 text-center">
                   <div className="w-[80px] h-[80px] rounded-full bg-[#B1A490] flex items-center justify-center mx-auto">
@@ -234,7 +272,7 @@ export default function ContactPage() {
                   </button>
                 </form>
               )}
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>

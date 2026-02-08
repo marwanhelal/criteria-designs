@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
@@ -27,7 +28,6 @@ export default async function ProjectDetailPage({ params }: Props) {
     notFound()
   }
 
-  // Fetch more projects for the "More projects" section
   const moreProjects = await prisma.project.findMany({
     where: {
       status: 'PUBLISHED',
@@ -44,14 +44,14 @@ export default async function ProjectDetailPage({ params }: Props) {
   })
 
   const heroImage = project.images.length > 0 ? project.images[0].url : null
-  const galleryImages = project.images.slice(1, 7) // Up to 6 gallery thumbnails
-  const showcaseImages = project.images.slice(7) // Remaining large images
+  const galleryImages = project.images.slice(1, 7)
+  const showcaseImages = project.images.slice(7)
 
   return (
     <>
       <Navbar />
 
-      {/* ===== VERTICAL TIMELINE BAR (Left Side) ===== */}
+      {/* ===== VERTICAL TIMELINE BAR ===== */}
       <div className="hidden lg:block fixed left-[83px] top-0 w-[7px] h-full bg-[#B1A490]/10 z-40" />
 
       {/* ===== PROJECT HEADER ===== */}
@@ -75,7 +75,6 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </p>
               </div>
 
-              {/* Developer / Client */}
               {project.clientName && (
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[0.56px]">
@@ -83,9 +82,13 @@ export default async function ProjectDetailPage({ params }: Props) {
                   </span>
                   <div className="mt-3 flex items-center gap-3">
                     {project.clientLogo ? (
-                      <div
-                        className="w-[120px] h-[40px] bg-contain bg-no-repeat bg-left"
-                        style={{ backgroundImage: `url('${project.clientLogo}')` }}
+                      <Image
+                        src={project.clientLogo}
+                        alt={project.clientName}
+                        width={120}
+                        height={40}
+                        className="object-contain"
+                        unoptimized
                       />
                     ) : (
                       <p className="font-[var(--font-merriweather)] text-[18px] text-[#181C23]">
@@ -97,15 +100,20 @@ export default async function ProjectDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Right - Main Image */}
-            <div className="flex-1 overflow-hidden rounded-lg">
+            {/* Right - Hero Image (fixed 474px height) */}
+            <div className="flex-1 relative h-[340px] lg:h-[474px] rounded-lg overflow-hidden bg-gray-200">
               {heroImage ? (
-                <div
-                  className="w-full h-[340px] lg:h-[474px] bg-cover bg-center rounded-lg"
-                  style={{ backgroundImage: `url('${heroImage}')` }}
+                <Image
+                  src={heroImage}
+                  alt={project.titleEn}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 844px"
+                  className="object-cover"
+                  priority
+                  unoptimized
                 />
               ) : (
-                <div className="w-full h-[340px] lg:h-[474px] bg-gray-200 rounded-lg flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center">
                   <span className="text-gray-400 text-sm">No image</span>
                 </div>
               )}
@@ -114,19 +122,23 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ===== IMAGE GALLERY GRID ===== */}
+      {/* ===== IMAGE GALLERY GRID (fixed 233px height) ===== */}
       {galleryImages.length > 0 && (
         <section className="pt-[40px] px-8 lg:px-[83px]">
           <div className="max-w-[1290px] mx-auto">
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {galleryImages.map((image: { id: string; url: string; alt: string | null }) => (
+              {galleryImages.map((image) => (
                 <div
                   key={image.id}
-                  className="h-[180px] lg:h-[233px] rounded-lg overflow-hidden"
+                  className="relative h-[180px] lg:h-[233px] rounded-lg overflow-hidden bg-gray-200"
                 >
-                  <div
-                    className="w-full h-full bg-cover bg-center hover:scale-105 transition-transform duration-500"
-                    style={{ backgroundImage: `url('${image.url}')` }}
+                  <Image
+                    src={image.url}
+                    alt={image.alt || project.titleEn}
+                    fill
+                    sizes="(max-width: 1024px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    unoptimized
                   />
                 </div>
               ))}
@@ -139,29 +151,23 @@ export default async function ProjectDetailPage({ params }: Props) {
       {project.timeline.length > 0 && (
         <section className="py-[100px] px-8 lg:px-[83px]">
           <div className="max-w-[1290px] mx-auto">
-            {/* Section Title */}
             <h2 className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mb-16">
               project time-line
             </h2>
 
-            {/* Timeline */}
             <div className="relative">
-              {/* Vertical Line */}
               <div className="absolute left-1/2 top-0 bottom-0 w-[4px] bg-[#B1A490]/20 -translate-x-1/2 hidden lg:block" />
 
               <div className="space-y-20">
-                {project.timeline.map((entry: { id: string; titleEn: string; descriptionEn: string; image: string | null }, idx: number) => {
+                {project.timeline.map((entry, idx) => {
                   const isLeft = idx % 2 === 0
-
                   return (
                     <div key={entry.id} className="relative">
-                      {/* Dot on timeline */}
                       <div className="hidden lg:block absolute left-1/2 top-6 w-[14px] h-[14px] bg-[#B1A490] rounded-full -translate-x-1/2 z-10" />
 
                       <div className={`flex flex-col lg:flex-row items-start gap-8 lg:gap-16 ${
                         isLeft ? '' : 'lg:flex-row-reverse'
                       }`}>
-                        {/* Content Side */}
                         <div className={`flex-1 ${isLeft ? 'lg:text-right lg:pr-16' : 'lg:text-left lg:pl-16'}`}>
                           <h3 className="font-[var(--font-merriweather)] text-[24px] lg:text-[28px] text-[#181C23] leading-[36px]">
                             {entry.titleEn}
@@ -171,13 +177,18 @@ export default async function ProjectDetailPage({ params }: Props) {
                           </p>
                         </div>
 
-                        {/* Image Side */}
                         <div className="flex-1">
                           {entry.image && (
-                            <div
-                              className="w-full h-[220px] lg:h-[319px] bg-cover bg-center rounded-lg"
-                              style={{ backgroundImage: `url('${entry.image}')` }}
-                            />
+                            <div className="relative w-full h-[220px] lg:h-[319px] rounded-lg overflow-hidden">
+                              <Image
+                                src={entry.image}
+                                alt={entry.titleEn}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                className="object-cover"
+                                unoptimized
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
@@ -190,18 +201,22 @@ export default async function ProjectDetailPage({ params }: Props) {
         </section>
       )}
 
-      {/* ===== SHOWCASE IMAGES ===== */}
+      {/* ===== SHOWCASE IMAGES (fixed 716px height) ===== */}
       {showcaseImages.length > 0 && (
         <section className="px-8 lg:px-[83px] pb-[80px]">
           <div className="max-w-[1290px] mx-auto space-y-6">
-            {showcaseImages.map((image: { id: string; url: string; alt: string | null }) => (
+            {showcaseImages.map((image) => (
               <div
                 key={image.id}
-                className="w-full h-[400px] lg:h-[716px] rounded-lg overflow-hidden"
+                className="relative w-full h-[400px] lg:h-[716px] rounded-lg overflow-hidden"
               >
-                <div
-                  className="w-full h-full bg-cover bg-center"
-                  style={{ backgroundImage: `url('${image.url}')` }}
+                <Image
+                  src={image.url}
+                  alt={image.alt || project.titleEn}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1290px"
+                  className="object-cover"
+                  unoptimized
                 />
               </div>
             ))}
@@ -209,7 +224,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </section>
       )}
 
-      {/* ===== FULL DESCRIPTION (if longer content) ===== */}
+      {/* ===== FULL DESCRIPTION ===== */}
       {project.descriptionEn.length > 300 && (
         <section className="px-8 lg:px-[83px] pb-[80px]">
           <div className="max-w-[860px] mx-auto">
@@ -233,17 +248,17 @@ export default async function ProjectDetailPage({ params }: Props) {
               {moreProjects.map((p) => {
                 const thumb = p.images.length > 0 ? p.images[0].url : null
                 return (
-                  <Link
-                    key={p.id}
-                    href={`/projects/${p.slug}`}
-                    className="group"
-                  >
+                  <Link key={p.id} href={`/projects/${p.slug}`} className="group">
                     <div className="rounded-lg overflow-hidden bg-gray-200">
-                      <div className="h-[280px] lg:h-[373px] overflow-hidden">
+                      <div className="relative h-[280px] lg:h-[373px] overflow-hidden">
                         {thumb ? (
-                          <div
-                            className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                            style={{ backgroundImage: `url('${thumb}')` }}
+                          <Image
+                            src={thumb}
+                            alt={p.titleEn}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            unoptimized
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-300 flex items-center justify-center">

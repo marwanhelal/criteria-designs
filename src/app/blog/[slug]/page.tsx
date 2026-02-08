@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ArrowLeft, Calendar, User } from 'lucide-react'
@@ -37,14 +38,26 @@ export default async function BlogDetailPage({ params }: Props) {
       {/* ===== HERO ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: post.featuredImage
-                ? `url('${post.featuredImage}')`
-                : "url('/images/blog-placeholder.jpg')"
-            }}
-          />
+          {post.featuredImage ? (
+            <Image
+              src={post.featuredImage}
+              alt={post.titleEn}
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+              unoptimized
+            />
+          ) : (
+            <Image
+              src="/images/blog-placeholder.jpg"
+              alt={post.titleEn}
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+            />
+          )}
           <div
             className="absolute inset-0"
             style={{

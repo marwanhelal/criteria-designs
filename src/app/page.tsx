@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
 import { ChevronDown, ChevronLeft, ChevronRight, Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
 interface Project {
@@ -28,6 +30,7 @@ interface Service {
 interface Settings {
   companyNameEn: string
   seoDescriptionEn: string | null
+  logo: string | null
 }
 
 const iconMap: Record<string, typeof Building> = {
@@ -38,42 +41,33 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [services, setServices] = useState<Service[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
+
   useEffect(() => {
-    // Fetch featured/published projects
     fetch('/api/projects?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
       .then(data => setProjects(data.slice(0, 6)))
       .catch(() => {})
 
-    // Fetch services
     fetch('/api/services')
       .then(res => res.ok ? res.json() : [])
       .then(data => setServices(data.slice(0, 6)))
       .catch(() => {})
 
-    // Fetch settings
     fetch('/api/settings')
       .then(res => res.ok ? res.json() : null)
       .then(data => setSettings(data))
       .catch(() => {})
   }, [])
 
-  // Fallback projects if none from CMS yet
   const displayProjects = projects.length > 0 ? projects : []
   const displayServices = services.length > 0 ? services : []
-
-  // Featured project for the large image
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
   const featuredImage = featuredProject?.images?.[0]?.url || null
 
   const scrollProjects = (dir: 'left' | 'right') => {
     const container = document.getElementById('project-scroll')
     if (container) {
-      const scrollAmount = 440
-      container.scrollBy({
-        left: dir === 'right' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth'
-      })
+      container.scrollBy({ left: dir === 'right' ? 440 : -440, behavior: 'smooth' })
     }
   }
 
@@ -84,14 +78,19 @@ export default function Home() {
       {/* ===== HERO SECTION ===== */}
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[#181C23]"
-            style={{
-              backgroundImage: featuredImage
-                ? `url('${featuredImage}')`
-                : undefined
-            }}
-          />
+          {featuredImage ? (
+            <Image
+              src={featuredImage}
+              alt="Hero"
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+              unoptimized
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[#181C23]" />
+          )}
           <div
             className="absolute inset-0"
             style={{
@@ -102,19 +101,23 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 h-full flex flex-col justify-end pb-20 px-8 lg:px-[315px]">
-          <Link
-            href="/about"
-            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/20 transition-colors w-fit"
-          >
-            Learn more
-          </Link>
+          <AnimatedSection delay={0.3}>
+            <Link
+              href="/about"
+              className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/20 transition-colors w-fit"
+            >
+              Learn more
+            </Link>
+          </AnimatedSection>
 
-          <div className="flex items-center gap-2 mt-16">
-            <ChevronDown size={16} className="text-white" />
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px]">
-              Scroll down
-            </span>
-          </div>
+          <AnimatedSection delay={0.5}>
+            <div className="flex items-center gap-2 mt-16">
+              <ChevronDown size={16} className="text-white" />
+              <span className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px]">
+                Scroll down
+              </span>
+            </div>
+          </AnimatedSection>
         </div>
 
         <div className="absolute right-[96px] top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-2">
@@ -127,14 +130,19 @@ export default function Home() {
       {/* ===== ABOUT SECTION ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <div className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200 shrink-0">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: "url('/images/about-bg.jpg')" }}
-            />
-          </div>
+          <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
+            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200">
+              <Image
+                src="/images/about-bg.jpg"
+                alt="About Criteria Designs"
+                fill
+                sizes="(max-width: 1024px) 100vw, 633px"
+                className="object-cover"
+              />
+            </div>
+          </AnimatedSection>
 
-          <div className="flex flex-col justify-center">
+          <AnimatedSection direction="right" delay={0.2} className="flex flex-col justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Who we are
             </span>
@@ -150,7 +158,7 @@ export default function Home() {
             >
               more About us
             </Link>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -158,7 +166,7 @@ export default function Home() {
       <section className="bg-[#181C23] py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-16">
-            <div className="lg:w-[400px] shrink-0">
+            <AnimatedSection direction="left" className="lg:w-[400px] shrink-0">
               <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
                 What we create
               </span>
@@ -171,36 +179,43 @@ export default function Home() {
               >
                 all projects
               </Link>
-            </div>
+            </AnimatedSection>
 
-            {/* Dynamic Project Cards */}
+            {/* Dynamic Project Cards - Fixed 414x380 aspect ratio */}
             <div id="project-scroll" className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
               {displayProjects.length > 0 ? (
-                displayProjects.map((project) => (
-                  <Link
-                    key={project.id}
-                    href={`/projects/${project.slug}`}
-                    className="min-w-[300px] lg:min-w-[414px] bg-[#1E2330] rounded-lg overflow-hidden group cursor-pointer shrink-0"
-                  >
-                    <div className="h-[380px] bg-gray-700 overflow-hidden">
-                      <div
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                        style={{
-                          backgroundImage: project.images?.length > 0
-                            ? `url('${project.images[0].url}')`
-                            : undefined
-                        }}
-                      />
-                    </div>
-                    <div className="p-8">
-                      <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px]">
-                        {project.location || project.category}
-                      </p>
-                      <h3 className="font-[var(--font-merriweather)] text-[24px] text-white leading-[34px] mt-2">
-                        {project.titleEn}
-                      </h3>
-                    </div>
-                  </Link>
+                displayProjects.map((project, idx) => (
+                  <AnimatedSection key={project.id} direction="right" delay={idx * 0.1}>
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      className="min-w-[300px] lg:min-w-[414px] bg-[#1E2330] rounded-lg overflow-hidden group cursor-pointer shrink-0 block"
+                    >
+                      <div className="relative h-[380px] overflow-hidden">
+                        {project.images?.length > 0 ? (
+                          <Image
+                            src={project.images[0].url}
+                            alt={project.titleEn}
+                            fill
+                            sizes="414px"
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                            <span className="text-gray-500">No image</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-8">
+                        <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px]">
+                          {project.location || project.category}
+                        </p>
+                        <h3 className="font-[var(--font-merriweather)] text-[24px] text-white leading-[34px] mt-2">
+                          {project.titleEn}
+                        </h3>
+                      </div>
+                    </Link>
+                  </AnimatedSection>
                 ))
               ) : (
                 <div className="flex items-center justify-center w-full py-20">
@@ -212,7 +227,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Navigation Arrows */}
           {displayProjects.length > 2 && (
             <div className="flex gap-4 mt-10">
               <button
@@ -231,32 +245,40 @@ export default function Home() {
           )}
 
           {/* Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-20 pt-16 border-t border-white/10">
+          <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-20 pt-16 border-t border-white/10">
             {[
               { number: '+500', label: 'Complete projects' },
               { number: '57', label: 'Projects under construction' },
               { number: '42', label: 'Projects underway' },
               { number: '25', label: 'Years of experience' },
             ].map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <span className="font-[var(--font-merriweather)] text-[48px] lg:text-[64px] text-white leading-[78px]">
-                  {stat.number}
-                </span>
-                <span className="font-[var(--font-open-sans)] text-[14px] text-white/60 leading-[24px] max-w-[100px]">
-                  {stat.label}
-                </span>
-              </div>
+              <StaggerItem key={idx}>
+                <div className="flex items-center gap-4">
+                  <span className="font-[var(--font-merriweather)] text-[48px] lg:text-[64px] text-white leading-[78px]">
+                    {stat.number}
+                  </span>
+                  <span className="font-[var(--font-open-sans)] text-[14px] text-white/60 leading-[24px] max-w-[100px]">
+                    {stat.label}
+                  </span>
+                </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
 
-          {/* Large Featured Image */}
+          {/* Large Featured Image - Fixed 1290x800 aspect ratio */}
           {featuredImage && (
-            <div className="mt-20 h-[400px] lg:h-[800px] rounded-lg overflow-hidden bg-gray-700">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url('${featuredImage}')` }}
-              />
-            </div>
+            <AnimatedSection delay={0.2} className="mt-20">
+              <div className="relative h-[400px] lg:h-[800px] rounded-lg overflow-hidden">
+                <Image
+                  src={featuredImage}
+                  alt="Featured project"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1290px"
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+            </AnimatedSection>
           )}
         </div>
       </section>
@@ -264,35 +286,38 @@ export default function Home() {
       {/* ===== SERVICES SECTION ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
-          <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-            why choose us
-          </span>
-          <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[524px]">
-            Making living spaces affordable
-          </h2>
+          <AnimatedSection>
+            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
+              why choose us
+            </span>
+            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[524px]">
+              Making living spaces affordable
+            </h2>
+          </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 mt-16">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 mt-16" staggerDelay={0.15}>
             {displayServices.length > 0 ? (
               displayServices.map((service) => {
                 const IconComponent = service.icon && iconMap[service.icon]
                   ? iconMap[service.icon]
                   : Building
                 return (
-                  <div key={service.id} className="flex flex-col">
-                    <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
-                      <IconComponent size={50} className="text-[#B1A490]" />
+                  <StaggerItem key={service.id}>
+                    <div className="flex flex-col">
+                      <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                        <IconComponent size={50} className="text-[#B1A490]" />
+                      </div>
+                      <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
+                        {service.titleEn}
+                      </h3>
+                      <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
+                        {service.descriptionEn}
+                      </p>
                     </div>
-                    <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
-                      {service.titleEn}
-                    </h3>
-                    <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
-                      {service.descriptionEn}
-                    </p>
-                  </div>
+                  </StaggerItem>
                 )
               })
             ) : (
-              /* Fallback static services when CMS is empty */
               [
                 { icon: Building, title: 'High Quality Products', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
                 { icon: Leaf, title: 'Natural Environment', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
@@ -301,66 +326,77 @@ export default function Home() {
                 { icon: Armchair, title: 'Comprehensive Amenities', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
                 { icon: Shield, title: 'Absolute Security', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
               ].map((service, idx) => (
-                <div key={idx} className="flex flex-col">
-                  <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
-                    <service.icon size={50} className="text-[#B1A490]" />
+                <StaggerItem key={idx}>
+                  <div className="flex flex-col">
+                    <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                      <service.icon size={50} className="text-[#B1A490]" />
+                    </div>
+                    <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
+                      {service.title}
+                    </h3>
+                    <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
+                      {service.desc}
+                    </p>
                   </div>
-                  <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
-                    {service.title}
-                  </h3>
-                  <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-4 max-w-[366px]">
-                    {service.desc}
-                  </p>
-                </div>
+                </StaggerItem>
               ))
             )}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* ===== TESTIMONIALS SECTION ===== */}
       <section className="bg-[#F5F0EB] py-[100px] px-8">
-        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
-          <div className="relative shrink-0">
-            <div className="w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gray-300 overflow-hidden">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: "url('/images/testimonial-avatar.jpg')" }}
-              />
+        <AnimatedSection>
+          <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
+            <div className="relative shrink-0">
+              <div className="relative w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gray-300 overflow-hidden">
+                <Image
+                  src="/images/testimonial-avatar.jpg"
+                  alt="Testimonial"
+                  fill
+                  sizes="220px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
+                <Quote size={20} className="text-white" />
+              </div>
             </div>
-            <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
-              <Quote size={20} className="text-white" />
+
+            <div>
+              <p className="font-[var(--font-merriweather)] text-[20px] lg:text-[24px] text-[#181C23] leading-[36px] lg:leading-[46px] italic">
+                &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
+              </p>
+              <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-8">
+                Hesham helal / Ceo &amp; founder
+              </p>
+              <div className="flex gap-2 mt-8">
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
+              </div>
             </div>
           </div>
-
-          <div>
-            <p className="font-[var(--font-merriweather)] text-[20px] lg:text-[24px] text-[#181C23] leading-[36px] lg:leading-[46px] italic">
-              &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
-            </p>
-            <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-8">
-              Hesham helal / Ceo &amp; founder
-            </p>
-
-            <div className="flex gap-2 mt-8">
-              <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
-              <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-              <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-            </div>
-          </div>
-        </div>
+        </AnimatedSection>
       </section>
 
       {/* ===== CAREER / JOIN US SECTION ===== */}
       <section className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <div className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200 shrink-0">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: "url('/images/career-bg.jpg')" }}
-            />
-          </div>
+          <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
+            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gray-200">
+              <Image
+                src="/images/career-bg.jpg"
+                alt="Join with us"
+                fill
+                sizes="(max-width: 1024px) 100vw, 633px"
+                className="object-cover"
+              />
+            </div>
+          </AnimatedSection>
 
-          <div className="flex flex-col justify-center">
+          <AnimatedSection direction="right" delay={0.2} className="flex flex-col justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Join with Us
             </span>
@@ -376,7 +412,7 @@ export default function Home() {
             >
               Get Started
             </Link>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 

@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
 
 interface BlogPost {
   id: string
@@ -71,9 +73,13 @@ export default function BlogPage() {
       {/* ===== HERO ===== */}
       <section className="relative h-[60vh] w-full overflow-hidden">
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/images/blog-hero.jpg')" }}
+          <Image
+            src="/images/blog-hero.jpg"
+            alt="Our Blog"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
           />
           <div
             className="absolute inset-0"
@@ -84,12 +90,14 @@ export default function BlogPage() {
           />
         </div>
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
-          <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-            Latest updates
-          </span>
-          <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
-            Our Blog
-          </h1>
+          <AnimatedSection>
+            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
+              Latest updates
+            </span>
+            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+              Our Blog
+            </h1>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -97,7 +105,7 @@ export default function BlogPage() {
       <section className="py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-4 mb-16 justify-center">
+          <AnimatedSection className="flex flex-wrap gap-4 mb-16 justify-center">
             {categories.map((cat) => (
               <button
                 key={cat.value}
@@ -111,7 +119,7 @@ export default function BlogPage() {
                 {cat.label}
               </button>
             ))}
-          </div>
+          </AnimatedSection>
 
           {/* Posts Grid */}
           {loading ? (
@@ -123,58 +131,69 @@ export default function BlogPage() {
               <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">No posts found.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" staggerDelay={0.1}>
               {filteredPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="group"
-                >
-                  <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                    <div className="h-[280px] overflow-hidden bg-gray-200">
-                      <div
-                        className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                        style={{
-                          backgroundImage: post.featuredImage
-                            ? `url('${post.featuredImage}')`
-                            : "url('/images/blog-placeholder.jpg')"
-                        }}
-                      />
-                    </div>
-                    <div className="p-8">
-                      <div className="flex items-center gap-4 mb-4">
-                        <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[0.56px] bg-[#F5F0EB] px-3 py-1 rounded-full">
-                          {post.category}
-                        </span>
-                        {post.publishedAt && (
-                          <span className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
-                            {formatDate(post.publishedAt)}
-                          </span>
+                <StaggerItem key={post.id}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group block"
+                  >
+                    <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                      <div className="relative h-[280px] overflow-hidden bg-gray-200">
+                        {post.featuredImage ? (
+                          <Image
+                            src={post.featuredImage}
+                            alt={post.titleEn}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            unoptimized
+                          />
+                        ) : (
+                          <Image
+                            src="/images/blog-placeholder.jpg"
+                            alt={post.titleEn}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
                         )}
                       </div>
-                      <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[30px] group-hover:text-[#B1A490] transition-colors">
-                        {post.titleEn}
-                      </h3>
-                      {post.excerptEn && (
-                        <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[26px] mt-3 line-clamp-2">
-                          {post.excerptEn}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-3 mt-6 pt-6 border-t border-gray-100">
-                        <div className="w-[36px] h-[36px] rounded-full bg-[#B1A490]/20 flex items-center justify-center">
-                          <span className="font-[var(--font-merriweather)] text-[14px] text-[#B1A490]">
-                            {post.author?.name?.charAt(0) || 'A'}
+                      <div className="p-8">
+                        <div className="flex items-center gap-4 mb-4">
+                          <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[0.56px] bg-[#F5F0EB] px-3 py-1 rounded-full">
+                            {post.category}
+                          </span>
+                          {post.publishedAt && (
+                            <span className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
+                              {formatDate(post.publishedAt)}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[30px] group-hover:text-[#B1A490] transition-colors">
+                          {post.titleEn}
+                        </h3>
+                        {post.excerptEn && (
+                          <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[26px] mt-3 line-clamp-2">
+                            {post.excerptEn}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-3 mt-6 pt-6 border-t border-gray-100">
+                          <div className="w-[36px] h-[36px] rounded-full bg-[#B1A490]/20 flex items-center justify-center">
+                            <span className="font-[var(--font-merriweather)] text-[14px] text-[#B1A490]">
+                              {post.author?.name?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <span className="font-[var(--font-open-sans)] text-[14px] text-[#666]">
+                            {post.author?.name || 'Admin'}
                           </span>
                         </div>
-                        <span className="font-[var(--font-open-sans)] text-[14px] text-[#666]">
-                          {post.author?.name || 'Admin'}
-                        </span>
                       </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           )}
         </div>
       </section>
