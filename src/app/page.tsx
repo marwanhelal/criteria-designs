@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
-import { ChevronDown, ChevronLeft, ChevronRight, Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
 interface Project {
   id: string
@@ -77,8 +77,8 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="pt-[80px]">
+        <div className="relative h-[500px] md:h-[700px] lg:h-[806px] mx-auto overflow-hidden rounded-[10px]">
           {heroImage ? (
             <Image
               src={heroImage}
@@ -90,41 +90,8 @@ export default function Home() {
               unoptimized
             />
           ) : (
-            <div className="absolute inset-0 bg-[#181C23]" />
+            <div className="absolute inset-0 bg-[#D9D9D9]" />
           )}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(24, 28, 35, 0.5) 0%, rgba(24, 28, 35, 0) 100%), linear-gradient(90deg, rgba(24, 28, 35, 0.5) 0%, rgba(24, 28, 35, 0.5) 100%)',
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 h-full flex flex-col justify-end pb-20 px-8 lg:px-[315px]">
-          <AnimatedSection delay={0.3}>
-            <Link
-              href="/about"
-              className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/20 transition-colors w-fit"
-            >
-              Learn more
-            </Link>
-          </AnimatedSection>
-
-          <AnimatedSection delay={0.5}>
-            <div className="flex items-center gap-2 mt-16">
-              <ChevronDown size={16} className="text-white" />
-              <span className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px]">
-                Scroll down
-              </span>
-            </div>
-          </AnimatedSection>
-        </div>
-
-        <div className="absolute right-[96px] top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-2">
-          <div className="w-[3px] h-[20px] bg-white rounded-full" />
-          <div className="w-[3px] h-[20px] bg-white/30 rounded-full" />
-          <div className="w-[3px] h-[20px] bg-white/30 rounded-full" />
         </div>
       </section>
 

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Menu, X } from 'lucide-react'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -13,91 +14,154 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
+interface Settings {
+  logo: string | null
+  companyNameEn: string
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [settings, setSettings] = useState<Settings | null>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 50)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setSettings(data))
+      .catch(() => {})
+  }, [])
+
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#181C23]/95 backdrop-blur-sm shadow-lg'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-[1920px] mx-auto px-8 lg:px-[128px] h-[120px] flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="font-[var(--font-libre-franklin)] text-[28px] text-white leading-[28px]">
-          Criteria
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-[40px]">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] hover:text-[#B1A490] transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Right side */}
-        <div className="hidden lg:flex items-center gap-6">
-          <button className="text-white hover:text-[#B1A490] transition-colors">
-            <Search size={24} />
-          </button>
-          <Link
-            href="/contact"
-            className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] bg-white/10 px-[40px] py-[18px] rounded-[30px] hover:bg-white/20 transition-colors"
-          >
-            Let&apos;s chat
+    <>
+      {/* Navbar */}
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+          scrolled && !menuOpen
+            ? 'bg-[#181C23]/90 backdrop-blur-md'
+            : 'bg-transparent'
+        }`}
+      >
+        <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-16 h-[80px] flex items-center justify-between">
+          {/* Logo - CMS driven */}
+          <Link href="/" className="relative z-[60] flex items-center gap-3">
+            {settings?.logo ? (
+              <Image
+                src={settings.logo}
+                alt={settings.companyNameEn || 'Criteria Design Group'}
+                width={140}
+                height={40}
+                className="h-[36px] w-auto object-contain"
+                unoptimized
+              />
+            ) : (
+              <span className="font-[var(--font-merriweather)] text-[22px] font-bold tracking-wide text-white">
+                Criteria Design Group
+              </span>
+            )}
           </Link>
+
+          {/* Hamburger Button */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative z-[60] w-[48px] h-[48px] flex flex-col items-center justify-center gap-[6px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+              menuOpen ? 'rotate-45 translate-y-[8px]' : ''
+            }`} />
+            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+              menuOpen ? 'opacity-0' : ''
+            }`} />
+            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+              menuOpen ? '-rotate-45 -translate-y-[8px]' : ''
+            }`} />
+          </button>
         </div>
+      </nav>
 
-        {/* Mobile menu button */}
-        <button
-          className="lg:hidden text-white"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
+      {/* Full-screen Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-[55] transition-all duration-500 ${
+          menuOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Background */}
+        <div className="absolute inset-0 bg-[#181C23]" />
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="lg:hidden bg-[#181C23]/95 backdrop-blur-sm px-8 pb-8">
-          <div className="flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="font-[var(--font-libre-franklin)] text-[16px] text-white uppercase tracking-[0.56px] py-2 hover:text-[#B1A490] transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+        {/* Content */}
+        <div className="relative z-10 h-full flex flex-col justify-center items-center">
+          {/* Nav Links */}
+          <div className="flex flex-col items-center gap-2">
+            {navLinks.map((link, index) => {
+              const isActive = pathname === link.href
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`group relative overflow-hidden transition-all duration-500 ${
+                    menuOpen
+                      ? 'translate-y-0 opacity-100'
+                      : 'translate-y-8 opacity-0'
+                  }`}
+                  style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
+                >
+                  <span className={`font-[var(--font-merriweather)] text-[42px] md:text-[56px] lg:text-[64px] leading-[1.2] transition-colors duration-300 ${
+                    isActive
+                      ? 'text-[#B1A490]'
+                      : 'text-white/80 group-hover:text-white'
+                  }`}>
+                    {link.label}
+                  </span>
+                  <span className={`block h-[2px] bg-[#B1A490] transition-all duration-300 ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`} />
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Bottom info */}
+          <div className={`absolute bottom-12 left-0 right-0 px-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
+            menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
+            <p className="font-[var(--font-open-sans)] text-[14px] text-white/40">
+              &copy; {new Date().getFullYear()} Criteria Design Group
+            </p>
             <Link
               href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] bg-white/10 px-[40px] py-[18px] rounded-[30px] text-center hover:bg-white/20 transition-colors mt-4"
+              onClick={() => setMenuOpen(false)}
+              className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[1px] hover:text-white transition-colors"
             >
-              Let&apos;s chat
+              Get in touch &rarr;
             </Link>
           </div>
         </div>
-      )}
-    </nav>
+      </div>
+    </>
   )
 }
