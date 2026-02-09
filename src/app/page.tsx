@@ -77,7 +77,7 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative h-screen w-full">
+      <section className="relative w-full h-dvh min-h-[600px]">
         <div className="absolute inset-0">
           {heroImage ? (
             <Image

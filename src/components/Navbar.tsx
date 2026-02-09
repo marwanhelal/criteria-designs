@@ -50,20 +50,20 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
-        <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-16 h-[80px] flex items-center justify-between">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[70px] md:h-[80px] flex items-center justify-between">
           {/* Logo - CMS driven: image + text side by side */}
-          <Link href="/" className="relative z-[60] flex items-center gap-3">
+          <Link href="/" className="relative z-[60] flex items-center gap-2 md:gap-3">
             {settings?.logo && (
               <Image
                 src={settings.logo}
                 alt={settings.companyNameEn || 'Criteria Design Group'}
                 width={48}
                 height={48}
-                className="h-[48px] w-auto object-contain"
+                className="h-[36px] md:h-[48px] w-auto object-contain"
                 unoptimized
               />
             )}
-            <span className="font-[var(--font-libre-franklin)] text-[20px] font-normal leading-[18px] text-white max-w-[92px]">
+            <span className="font-[var(--font-libre-franklin)] text-[16px] md:text-[20px] font-normal leading-[18px] text-white max-w-[80px] md:max-w-[92px]">
               {settings?.companyNameEn || 'Criteria Design Group'}
             </span>
           </Link>
@@ -71,7 +71,7 @@ export default function Navbar() {
           {/* Hamburger Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative z-[60] w-[48px] h-[48px] flex flex-col items-center justify-center gap-[6px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors"
+            className="relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
             <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
@@ -101,7 +101,7 @@ export default function Navbar() {
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col justify-center items-center">
           {/* Nav Links */}
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-1 md:gap-2">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href
               return (
@@ -116,7 +116,7 @@ export default function Navbar() {
                   }`}
                   style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
                 >
-                  <span className={`font-[var(--font-merriweather)] text-[42px] md:text-[56px] lg:text-[64px] leading-[1.2] transition-colors duration-300 ${
+                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
                     isActive
                       ? 'text-[#B1A490]'
                       : 'text-white/80 group-hover:text-white'
