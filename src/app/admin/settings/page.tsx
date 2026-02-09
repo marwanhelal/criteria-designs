@@ -211,29 +211,57 @@ export default function SettingsPage() {
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Branding</h2>
 
+          {/* Navbar Preview */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Navbar Preview
+            </label>
+            <div className="bg-gray-800 rounded-lg px-6 py-4 flex items-center gap-3">
+              {form.logo && (
+                <img src={form.logo} alt="Logo" className="h-[48px] w-auto object-contain" />
+              )}
+              <span className="text-white text-[20px]" style={{ fontFamily: 'var(--font-libre-franklin), sans-serif' }}>
+                {form.companyNameEn || 'Criteria Design Group'}
+              </span>
+            </div>
+            <p className="text-xs text-gray-400 mt-1">This is how your logo + name appears in the navbar</p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Logo
+                Logo Icon
               </label>
+              <p className="text-xs text-gray-500 mb-2">Appears before the company name in the navbar</p>
               <div className="flex items-center gap-4">
-                <div className="w-32 h-16 bg-gray-100 rounded flex items-center justify-center">
+                <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
                   {form.logo ? (
                     <img src={form.logo} alt="Logo" className="max-h-full max-w-full object-contain" />
                   ) : (
                     <span className="text-gray-400 text-sm">No logo</span>
                   )}
                 </div>
-                <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200">
-                  {uploading === 'logo' ? 'Uploading...' : 'Upload'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'logo')}
-                    className="hidden"
-                    disabled={uploading === 'logo'}
-                  />
-                </label>
+                <div className="flex flex-col gap-2">
+                  <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-center">
+                    {uploading === 'logo' ? 'Uploading...' : 'Upload'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'logo')}
+                      className="hidden"
+                      disabled={uploading === 'logo'}
+                    />
+                  </label>
+                  {form.logo && (
+                    <button
+                      type="button"
+                      onClick={() => setForm(prev => ({ ...prev, logo: '' }))}
+                      className="text-xs text-red-500 hover:text-red-600"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -241,6 +269,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Favicon
               </label>
+              <p className="text-xs text-gray-500 mb-2">Browser tab icon</p>
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
                   {form.favicon ? (
@@ -249,7 +278,7 @@ export default function SettingsPage() {
                     <span className="text-gray-400 text-xs">No icon</span>
                   )}
                 </div>
-                <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200">
+                <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 text-sm">
                   {uploading === 'favicon' ? 'Uploading...' : 'Upload'}
                   <input
                     type="file"

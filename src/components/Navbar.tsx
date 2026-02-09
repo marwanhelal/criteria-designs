@@ -51,22 +51,21 @@ export default function Navbar() {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-16 h-[80px] flex items-center justify-between">
-          {/* Logo - CMS driven */}
+          {/* Logo - CMS driven: image + text side by side */}
           <Link href="/" className="relative z-[60] flex items-center gap-3">
-            {settings?.logo ? (
+            {settings?.logo && (
               <Image
                 src={settings.logo}
                 alt={settings.companyNameEn || 'Criteria Design Group'}
-                width={140}
-                height={40}
-                className="h-[36px] w-auto object-contain"
+                width={48}
+                height={48}
+                className="h-[48px] w-auto object-contain"
                 unoptimized
               />
-            ) : (
-              <span className="font-[var(--font-merriweather)] text-[22px] font-bold tracking-wide text-white">
-                Criteria Design Group
-              </span>
             )}
+            <span className="font-[var(--font-libre-franklin)] text-[20px] font-normal leading-[18px] text-white">
+              {settings?.companyNameEn || 'Criteria Design Group'}
+            </span>
           </Link>
 
           {/* Hamburger Button */}
