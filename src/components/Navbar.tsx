@@ -63,7 +63,7 @@ export default function Navbar() {
                 unoptimized
               />
             )}
-            <span className="font-[var(--font-libre-franklin)] text-[20px] font-normal leading-[18px] text-white">
+            <span className="font-[var(--font-libre-franklin)] text-[20px] font-normal leading-[18px] text-white max-w-[92px]">
               {settings?.companyNameEn || 'Criteria Design Group'}
             </span>
           </Link>

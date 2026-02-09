@@ -77,14 +77,14 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="pt-[80px]">
-        <div className="relative h-[500px] md:h-[700px] lg:h-[806px] mx-auto overflow-hidden rounded-[10px]">
+      <section className="pt-[80px] px-[10px]">
+        <div className="relative h-[500px] md:h-[700px] lg:h-[806px] overflow-hidden rounded-[10px]">
           {heroImage ? (
             <Image
               src={heroImage}
               alt="Hero"
               fill
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, calc(100vw - 20px)"
               className="object-cover"
               priority
               unoptimized
