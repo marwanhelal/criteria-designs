@@ -77,20 +77,20 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="pt-[80px] px-[10px]">
-        <div className="relative h-[500px] md:h-[700px] lg:h-[806px] overflow-hidden rounded-[10px]">
+      <section className="relative h-screen w-full">
+        <div className="absolute inset-0">
           {heroImage ? (
             <Image
               src={heroImage}
               alt="Hero"
               fill
-              sizes="(max-width: 768px) 100vw, calc(100vw - 20px)"
+              sizes="100vw"
               className="object-cover"
               priority
               unoptimized
             />
           ) : (
-            <div className="absolute inset-0 bg-[#D9D9D9]" />
+            <div className="absolute inset-0 bg-[#181C23]" />
           )}
         </div>
       </section>
