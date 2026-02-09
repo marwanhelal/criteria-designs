@@ -20,16 +20,9 @@ interface Settings {
 }
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [settings, setSettings] = useState<Settings | null>(null)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     fetch('/api/settings')
@@ -56,13 +49,7 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-      <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-          scrolled && !menuOpen
-            ? 'bg-[#181C23]/90 backdrop-blur-md'
-            : 'bg-transparent'
-        }`}
-      >
+      <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-16 h-[80px] flex items-center justify-between">
           {/* Logo - CMS driven */}
           <Link href="/" className="relative z-[60] flex items-center gap-3">
