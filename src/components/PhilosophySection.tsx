@@ -1,9 +1,21 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 export default function PhilosophySection() {
+  const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.philosophyImage) setPhilosophyImage(data.philosophyImage)
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <section className="bg-[#181C23] py-[100px] md:py-[140px] px-4 md:px-8 overflow-hidden">
       <div className="max-w-[1400px] mx-auto">
@@ -31,24 +43,22 @@ export default function PhilosophySection() {
           transition={{ duration: 1, ease: [0.25, 0.4, 0.25, 1] }}
           className="group relative rounded-[12px] overflow-hidden"
         >
-          <Image
-            src="/api/uploads/philosophy.jpg"
-            alt="Our Philosophy - Culture, Nature, Art"
-            width={1400}
-            height={800}
-            className="w-full h-auto group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-            unoptimized
-            onError={(e) => {
-              const target = e.currentTarget as HTMLImageElement
-              target.style.display = 'none'
-            }}
-          />
-          {/* Fallback gradient when image not uploaded */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#2C3E2D]/40 via-[#4A7C59]/20 to-[#1E222B] -z-10 min-h-[300px] md:min-h-[500px] flex items-center justify-center">
-            <p className="font-[var(--font-open-sans)] text-[16px] text-white/30">
-              Upload philosophy.jpg via Media Manager
-            </p>
-          </div>
+          {philosophyImage ? (
+            <Image
+              src={philosophyImage}
+              alt="Our Philosophy - Culture, Nature, Art"
+              width={1400}
+              height={800}
+              className="w-full h-auto group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+              unoptimized
+            />
+          ) : (
+            <div className="w-full aspect-[16/9] bg-gradient-to-br from-[#2C3E2D]/40 via-[#4A7C59]/20 to-[#1E222B] flex items-center justify-center">
+              <p className="font-[var(--font-open-sans)] text-[16px] text-white/30">
+                Upload philosophy image in Settings
+              </p>
+            </div>
+          )}
         </motion.div>
       </div>
     </section>

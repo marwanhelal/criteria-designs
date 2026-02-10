@@ -158,6 +158,7 @@ model SiteSettings {
   logo            String?
   favicon         String?
   heroImage       String?
+  philosophyImage String?
   seoTitleEn      String?
   seoTitleAr      String?
   seoDescriptionEn String?
