@@ -52,7 +52,7 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
         <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[70px] md:h-[80px] flex items-center justify-between">
           {/* Logo - CMS driven: image + text side by side */}
-          <Link href="/" className="relative z-[60] flex items-center gap-2 md:gap-3">
+          <Link href="/" className="relative z-[60] flex items-center gap-2 md:gap-3 outline-none">
             {settings?.logo && (
               <Image
                 src={settings.logo}
