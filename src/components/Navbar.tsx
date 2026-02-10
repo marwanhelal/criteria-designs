@@ -50,22 +50,30 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
-        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[70px] md:h-[80px] flex items-center justify-between">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[76px] md:h-[90px] flex items-center justify-between">
           {/* Logo - CMS driven: image + text side by side */}
-          <Link href="/" className="relative z-[60] flex items-center gap-2 md:gap-3 outline-none">
+          <Link href="/" className="group relative z-[60] flex items-center gap-3 md:gap-4 outline-none">
             {settings?.logo && (
-              <Image
-                src={settings.logo}
-                alt={settings.companyNameEn || 'Criteria Design Group'}
-                width={48}
-                height={48}
-                className="h-[36px] md:h-[48px] w-auto object-contain"
-                unoptimized
-              />
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#B1A490]/20 rounded-full blur-lg scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <Image
+                  src={settings.logo}
+                  alt={settings.companyNameEn || 'Criteria Design Group'}
+                  width={64}
+                  height={64}
+                  className="relative h-[44px] md:h-[60px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                  unoptimized
+                />
+              </div>
             )}
-            <span className="font-[var(--font-libre-franklin)] text-[16px] md:text-[20px] font-normal leading-[18px] text-white max-w-[80px] md:max-w-[92px]">
-              {settings?.companyNameEn || 'Criteria Design Group'}
-            </span>
+            <div className="flex flex-col">
+              <span className="font-[var(--font-merriweather)] text-[15px] md:text-[19px] font-normal leading-[1.1] text-white tracking-[0.5px] transition-colors duration-300 group-hover:text-[#B1A490]">
+                {(settings?.companyNameEn || 'Criteria Design Group').split(' ').slice(0, 1).join(' ')}
+              </span>
+              <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light leading-[1.2] text-white/50 uppercase tracking-[2px] md:tracking-[3px] transition-colors duration-300 group-hover:text-white/70">
+                {(settings?.companyNameEn || 'Criteria Design Group').split(' ').slice(1).join(' ')}
+              </span>
+            </div>
           </Link>
 
           {/* Hamburger Button */}
