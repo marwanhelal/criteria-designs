@@ -3,6 +3,30 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 
+const sections = [
+  {
+    title: 'CULTURE',
+    description:
+      'Designing spaces that honor local heritage and foster human connection within the urban fabric.',
+    // Positioned over the dark center panel in the top third
+    position: 'top-[4%] left-[30%] w-[35%] h-[30%]',
+  },
+  {
+    title: 'NATURE',
+    description:
+      'Engineering sustainable, eco-conscious exteriors that harmonize with and protect the natural environment.',
+    // Positioned over the dark area in the middle third
+    position: 'top-[36%] left-[28%] w-[35%] h-[30%]',
+  },
+  {
+    title: 'ART',
+    description:
+      'Crafting architectural expressions that transform structures into timeless works of art.',
+    // Positioned over the dark area in the bottom third
+    position: 'top-[70%] left-[28%] w-[35%] h-[28%]',
+  },
+]
+
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
   const [cultureLit, setCultureLit] = useState(false)
@@ -10,58 +34,48 @@ export default function PhilosophySection() {
   const [artLit, setArtLit] = useState(false)
   const [iconLit, setIconLit] = useState(false)
 
+  const litStates = [cultureLit, natureLit, artLit]
+
   const cultureRef = useRef<HTMLDivElement>(null)
   const natureRef = useRef<HTMLDivElement>(null)
   const artRef = useRef<HTMLDivElement>(null)
+  const sectionRefs = [cultureRef, natureRef, artRef]
 
   // Intersection observers — once triggered, stay lit forever
   useEffect(() => {
-    const options = { threshold: 0.3 }
+    const setters = [setCultureLit, setNatureLit, setArtLit]
+    const observers: IntersectionObserver[] = []
 
-    const cultureObs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setCultureLit(true)
-        cultureObs.disconnect()
-      }
-    }, options)
+    sectionRefs.forEach((ref, i) => {
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setters[i](true)
+            obs.disconnect()
+          }
+        },
+        { threshold: 0.3 }
+      )
+      if (ref.current) obs.observe(ref.current)
+      observers.push(obs)
+    })
 
-    const natureObs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setNatureLit(true)
-        natureObs.disconnect()
-      }
-    }, options)
-
-    const artObs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setArtLit(true)
-        artObs.disconnect()
-      }
-    }, options)
-
-    if (cultureRef.current) cultureObs.observe(cultureRef.current)
-    if (natureRef.current) natureObs.observe(natureRef.current)
-    if (artRef.current) artObs.observe(artRef.current)
-
-    return () => {
-      cultureObs.disconnect()
-      natureObs.disconnect()
-      artObs.disconnect()
-    }
+    return () => observers.forEach((obs) => obs.disconnect())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [philosophyImage])
 
-  // Once all 3 are lit, light up the icon after a short delay
+  // Once all 3 are lit, light up the icon
   useEffect(() => {
     if (cultureLit && natureLit && artLit) {
-      const timer = setTimeout(() => setIconLit(true), 400)
+      const timer = setTimeout(() => setIconLit(true), 500)
       return () => clearTimeout(timer)
     }
   }, [cultureLit, natureLit, artLit])
 
   useEffect(() => {
     fetch('/api/settings')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
         if (data?.philosophyImage) setPhilosophyImage(data.philosophyImage)
       })
       .catch(() => {})
@@ -84,22 +98,18 @@ export default function PhilosophySection() {
 
         {/* Labels that light up */}
         <div className="flex justify-center gap-8 md:gap-14 mb-8 md:mb-12">
-          {[
-            { label: 'Culture', lit: cultureLit },
-            { label: 'Nature', lit: natureLit },
-            { label: 'Art', lit: artLit },
-          ].map(({ label, lit }) => (
-            <div key={label} className="flex flex-col items-center gap-1.5">
+          {sections.map((s, i) => (
+            <div key={s.title} className="flex flex-col items-center gap-1.5">
               <span
                 className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[3px] md:tracking-[4px] transition-all duration-1000 ${
-                  lit ? 'text-[#B1A490]' : 'text-white/15'
+                  litStates[i] ? 'text-[#B1A490]' : 'text-white/15'
                 }`}
               >
-                {label}
+                {s.title}
               </span>
               <span
                 className={`block h-[2px] rounded-full transition-all duration-1000 ${
-                  lit ? 'w-8 bg-[#B1A490]' : 'w-0 bg-transparent'
+                  litStates[i] ? 'w-8 bg-[#B1A490]' : 'w-0 bg-transparent'
                 }`}
               />
             </div>
@@ -107,11 +117,12 @@ export default function PhilosophySection() {
         </div>
       </div>
 
-      {/* Image container */}
+      {/* Image with text overlays */}
       <div className="relative w-full">
+        {/* Background image */}
         <Image
           src={philosophyImage}
-          alt="Our Philosophy - Culture, Nature, Art"
+          alt="Our Philosophy"
           width={1920}
           height={1080}
           className="w-full h-auto block"
@@ -119,47 +130,39 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Culture dark overlay (top ~33%) — fades away when lit */}
-        <div
-          ref={cultureRef}
-          className={`absolute top-0 left-0 w-full h-[34%] pointer-events-none transition-opacity duration-[1500ms] ease-out ${
-            cultureLit ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ background: 'linear-gradient(to bottom, #0D0F13 70%, transparent)' }}
-        />
+        {/* Dark overlays that fade when lit + text that fades in */}
+        {sections.map((s, i) => (
+          <div key={s.title}>
+            {/* Dark cover overlay */}
+            <div
+              ref={sectionRefs[i]}
+              className={`absolute ${s.position} pointer-events-none transition-opacity duration-[1500ms] ease-out ${
+                litStates[i] ? 'opacity-0' : 'opacity-100'
+              }`}
+            >
+              <div className="w-full h-full bg-[#0D0F13]/80" />
+            </div>
 
-        {/* Nature dark overlay (middle ~33%) */}
-        <div
-          ref={natureRef}
-          className={`absolute top-[32%] left-0 w-full h-[36%] pointer-events-none transition-opacity duration-[1500ms] ease-out ${
-            natureLit ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ background: 'linear-gradient(to bottom, transparent, #0D0F13 15%, #0D0F13 85%, transparent)' }}
-        />
+            {/* Text overlay — fades in when lit */}
+            <div
+              className={`absolute ${s.position} pointer-events-none flex flex-col items-center justify-center text-center px-[4%] transition-all duration-[1200ms] ease-out ${
+                litStates[i]
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-4'
+              }`}
+              style={{ transitionDelay: litStates[i] ? '300ms' : '0ms' }}
+            >
+              <h3 className="font-[var(--font-merriweather)] text-[clamp(20px,4vw,64px)] font-normal text-white/90 leading-[1.1] tracking-[2px]">
+                {s.title}
+              </h3>
+              <p className="font-[var(--font-open-sans)] text-[clamp(8px,1.3vw,18px)] text-white/60 leading-[1.6] mt-[clamp(6px,1.2vw,20px)] max-w-[90%]">
+                {s.description}
+              </p>
+            </div>
+          </div>
+        ))}
 
-        {/* Art dark overlay (bottom ~33%) */}
-        <div
-          ref={artRef}
-          className={`absolute top-[66%] left-0 w-full h-[34%] pointer-events-none transition-opacity duration-[1500ms] ease-out ${
-            artLit ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ background: 'linear-gradient(to bottom, transparent, #0D0F13 30%)' }}
-        />
-
-        {/* Golden glow flash when Culture lights up */}
-        <div
-          className={`absolute top-0 left-0 w-full h-[34%] pointer-events-none transition-opacity duration-[2000ms] ${
-            cultureLit ? 'opacity-0' : 'opacity-0'
-          }`}
-        >
-          <div
-            className={`absolute inset-0 bg-[#B1A490]/10 transition-opacity duration-500 ${
-              cultureLit ? 'animate-[flash_1s_ease-out]' : 'opacity-0'
-            }`}
-          />
-        </div>
-
-        {/* Left icon glow — lights up after all 3 sections are revealed */}
+        {/* Left icon glow — after all 3 are lit */}
         <div
           className={`absolute top-[3%] left-[1%] w-[120px] h-[120px] md:w-[180px] md:h-[180px] pointer-events-none transition-all duration-[2000ms] ease-out ${
             iconLit ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
