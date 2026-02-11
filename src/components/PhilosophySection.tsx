@@ -8,31 +8,32 @@ const sections = [
     title: 'CULTURE',
     description:
       'Designing spaces that honor local heritage and foster human connection within the urban fabric.',
-    // Positioned over the dark center panel in the top third
-    position: 'top-[4%] left-[30%] w-[35%] h-[30%]',
+    // Center dark panel, top third
+    position: 'top-[2%] left-[32%] w-[32%] h-[32%]',
   },
   {
     title: 'NATURE',
     description:
       'Engineering sustainable, eco-conscious exteriors that harmonize with and protect the natural environment.',
-    // Positioned over the dark area in the middle third
-    position: 'top-[36%] left-[28%] w-[35%] h-[30%]',
+    // Center dark panel, middle third
+    position: 'top-[35%] left-[32%] w-[32%] h-[32%]',
   },
   {
     title: 'ART',
     description:
-      'Crafting architectural expressions that transform structures into timeless works of art.',
-    // Positioned over the dark area in the bottom third
-    position: 'top-[70%] left-[28%] w-[35%] h-[28%]',
+      'Sculpting functional masterpieces that blend structural precision with visionary aesthetic expression.',
+    // Center dark panel, bottom third
+    position: 'top-[68%] left-[32%] w-[32%] h-[30%]',
   },
 ]
 
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
+  const [logo, setLogo] = useState<string | null>(null)
   const [cultureLit, setCultureLit] = useState(false)
   const [natureLit, setNatureLit] = useState(false)
   const [artLit, setArtLit] = useState(false)
-  const [iconLit, setIconLit] = useState(false)
+  const [logoLit, setLogoLit] = useState(false)
 
   const litStates = [cultureLit, natureLit, artLit]
 
@@ -64,10 +65,10 @@ export default function PhilosophySection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [philosophyImage])
 
-  // Once all 3 are lit, light up the icon
+  // Once all 3 are lit, light up the logo
   useEffect(() => {
     if (cultureLit && natureLit && artLit) {
-      const timer = setTimeout(() => setIconLit(true), 500)
+      const timer = setTimeout(() => setLogoLit(true), 500)
       return () => clearTimeout(timer)
     }
   }, [cultureLit, natureLit, artLit])
@@ -77,6 +78,7 @@ export default function PhilosophySection() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.philosophyImage) setPhilosophyImage(data.philosophyImage)
+        if (data?.logo) setLogo(data.logo)
       })
       .catch(() => {})
   }, [])
@@ -130,55 +132,69 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Dark overlays that fade when lit + text that fades in */}
+        {/* Text overlays for each section */}
         {sections.map((s, i) => (
           <div key={s.title}>
-            {/* Dark cover overlay */}
+            {/* Trigger element for intersection observer */}
             <div
               ref={sectionRefs[i]}
-              className={`absolute ${s.position} pointer-events-none transition-opacity duration-[1500ms] ease-out ${
-                litStates[i] ? 'opacity-0' : 'opacity-100'
-              }`}
-            >
-              <div className="w-full h-full bg-[#0D0F13]/80" />
-            </div>
+              className={`absolute ${s.position} pointer-events-none`}
+            />
 
-            {/* Text overlay — fades in when lit */}
+            {/* Text — fades in + slides up when lit, stays forever */}
             <div
-              className={`absolute ${s.position} pointer-events-none flex flex-col items-center justify-center text-center px-[4%] transition-all duration-[1200ms] ease-out ${
+              className={`absolute ${s.position} pointer-events-none flex flex-col items-center justify-center text-center px-[3%] transition-all duration-[1200ms] ease-out ${
                 litStates[i]
                   ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-4'
+                  : 'opacity-0 translate-y-6'
               }`}
-              style={{ transitionDelay: litStates[i] ? '300ms' : '0ms' }}
+              style={{ transitionDelay: litStates[i] ? '200ms' : '0ms' }}
             >
-              <h3 className="font-[var(--font-merriweather)] text-[clamp(20px,4vw,64px)] font-normal text-white/90 leading-[1.1] tracking-[2px]">
+              <h3 className="font-[var(--font-merriweather)] text-[clamp(18px,3.8vw,60px)] font-normal text-white leading-[1.1] tracking-[2px]">
                 {s.title}
               </h3>
-              <p className="font-[var(--font-open-sans)] text-[clamp(8px,1.3vw,18px)] text-white/60 leading-[1.6] mt-[clamp(6px,1.2vw,20px)] max-w-[90%]">
+              <p className="font-[var(--font-open-sans)] text-[clamp(7px,1.2vw,16px)] text-white/60 leading-[1.6] mt-[clamp(6px,1vw,18px)] max-w-[95%]">
                 {s.description}
               </p>
             </div>
           </div>
         ))}
 
-        {/* Left icon glow — after all 3 are lit */}
-        <div
-          className={`absolute top-[3%] left-[1%] w-[120px] h-[120px] md:w-[180px] md:h-[180px] pointer-events-none transition-all duration-[2000ms] ease-out ${
-            iconLit ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-          }`}
-        >
-          <div className="w-full h-full rounded-full bg-[#B1A490]/35 blur-3xl" />
-        </div>
-
-        {/* Icon ring glow */}
-        <div
-          className={`absolute top-[5%] left-[2.5%] w-[60px] h-[60px] md:w-[90px] md:h-[90px] pointer-events-none transition-all duration-[2000ms] delay-300 ease-out ${
-            iconLit ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <div className="w-full h-full rounded-full border border-[#B1A490]/40 shadow-[0_0_30px_8px_rgba(177,164,144,0.3)]" />
-        </div>
+        {/* Criteria Designs logo on the left dark area */}
+        {logo && (
+          <div
+            className={`absolute top-[30%] left-[3%] w-[22%] pointer-events-none flex flex-col items-center gap-[clamp(4px,0.8vw,12px)] transition-all duration-[2000ms] ease-out ${
+              logoLit ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+            }`}
+          >
+            {/* Logo glow */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className={`w-[60%] h-[60%] rounded-full bg-[#B1A490]/20 blur-3xl transition-opacity duration-[2000ms] ${
+                  logoLit ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            </div>
+            {/* Logo image */}
+            <Image
+              src={logo}
+              alt="Criteria Designs"
+              width={160}
+              height={160}
+              className="relative w-[clamp(40px,8vw,130px)] h-auto object-contain drop-shadow-[0_4px_20px_rgba(177,164,144,0.4)]"
+              unoptimized
+            />
+            {/* Brand text under logo */}
+            <div className="relative text-center">
+              <span className="font-[var(--font-merriweather)] text-[clamp(10px,1.8vw,26px)] text-white/80 leading-[1.1] block">
+                Criteria
+              </span>
+              <span className="font-[var(--font-libre-franklin)] text-[clamp(6px,0.8vw,12px)] text-white/40 uppercase tracking-[3px] block mt-[2px]">
+                Designs
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
