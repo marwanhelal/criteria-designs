@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 
 const sections = [
@@ -8,21 +8,18 @@ const sections = [
     title: 'CULTURE',
     description:
       'Designing spaces that honor local heritage and foster human connection within the urban fabric.',
-    // Left side of top third
     position: 'top-[3%] left-[2%] w-[30%] h-[30%]',
   },
   {
     title: 'NATURE',
     description:
       'Engineering sustainable, eco-conscious exteriors that harmonize with and protect the natural environment.',
-    // Left side of middle third
     position: 'top-[36%] left-[2%] w-[30%] h-[30%]',
   },
   {
     title: 'ART',
     description:
       'Sculpting functional masterpieces that blend structural precision with visionary aesthetic expression.',
-    // Left side of bottom third
     position: 'top-[69%] left-[2%] w-[30%] h-[28%]',
   },
 ]
@@ -32,14 +29,19 @@ export default function PhilosophySection() {
   const [cultureLit, setCultureLit] = useState(false)
   const [natureLit, setNatureLit] = useState(false)
   const [artLit, setArtLit] = useState(false)
+  const [hoveredSection, setHoveredSection] = useState<number | null>(null)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [isMouseInside, setIsMouseInside] = useState(false)
 
   const litStates = [cultureLit, natureLit, artLit]
 
   const cultureRef = useRef<HTMLDivElement>(null)
   const natureRef = useRef<HTMLDivElement>(null)
   const artRef = useRef<HTMLDivElement>(null)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
   const sectionRefs = [cultureRef, natureRef, artRef]
 
+  // Intersection observers for light-up
   useEffect(() => {
     const setters = [setCultureLit, setNatureLit, setArtLit]
     const observers: IntersectionObserver[] = []
@@ -61,6 +63,20 @@ export default function PhilosophySection() {
     return () => observers.forEach((obs) => obs.disconnect())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [philosophyImage])
+
+  // Mouse tracking for spotlight
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    setMousePos({ x, y })
+
+    // Detect which third the mouse is in
+    const yPercent = (e.clientY - rect.top) / rect.height
+    if (yPercent < 0.33) setHoveredSection(0)
+    else if (yPercent < 0.66) setHoveredSection(1)
+    else setHoveredSection(2)
+  }, [])
 
   useEffect(() => {
     fetch('/api/settings')
@@ -85,19 +101,28 @@ export default function PhilosophySection() {
           </h2>
         </div>
 
+        {/* Labels — highlight on hover too */}
         <div className="flex justify-center gap-8 md:gap-14 mb-8 md:mb-12">
           {sections.map((s, i) => (
             <div key={s.title} className="flex flex-col items-center gap-1.5">
               <span
-                className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[3px] md:tracking-[4px] transition-all duration-1000 ${
-                  litStates[i] ? 'text-[#B1A490]' : 'text-white/15'
+                className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[3px] md:tracking-[4px] transition-all duration-500 ${
+                  hoveredSection === i
+                    ? 'text-white scale-110'
+                    : litStates[i]
+                      ? 'text-[#B1A490]'
+                      : 'text-white/15'
                 }`}
               >
                 {s.title}
               </span>
               <span
-                className={`block h-[2px] rounded-full transition-all duration-1000 ${
-                  litStates[i] ? 'w-8 bg-[#B1A490]' : 'w-0 bg-transparent'
+                className={`block h-[2px] rounded-full transition-all duration-500 ${
+                  hoveredSection === i
+                    ? 'w-10 bg-white'
+                    : litStates[i]
+                      ? 'w-8 bg-[#B1A490]'
+                      : 'w-0 bg-transparent'
                 }`}
               />
             </div>
@@ -105,7 +130,17 @@ export default function PhilosophySection() {
         </div>
       </div>
 
-      <div className="relative w-full">
+      {/* Image with interactive overlays */}
+      <div
+        ref={imageContainerRef}
+        className="relative w-full cursor-crosshair"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsMouseInside(true)}
+        onMouseLeave={() => {
+          setIsMouseInside(false)
+          setHoveredSection(null)
+        }}
+      >
         <Image
           src={philosophyImage}
           alt="Our Philosophy"
@@ -116,7 +151,54 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Text overlays — left-aligned, no backdrop, on dark areas */}
+        {/* Cursor-following spotlight glow */}
+        <div
+          className="absolute w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full pointer-events-none transition-opacity duration-300"
+          style={{
+            left: `${mousePos.x}%`,
+            top: `${mousePos.y}%`,
+            transform: 'translate(-50%, -50%)',
+            background:
+              'radial-gradient(circle, rgba(177,164,144,0.12) 0%, rgba(177,164,144,0.04) 40%, transparent 70%)',
+            opacity: isMouseInside ? 1 : 0,
+          }}
+        />
+
+        {/* Three interactive hover zones */}
+        {sections.map((s, i) => {
+          const topPercent = i === 0 ? '0%' : i === 1 ? '33.33%' : '66.66%'
+          return (
+            <div
+              key={`zone-${s.title}`}
+              className="absolute left-0 w-full h-[33.34%] pointer-events-none"
+              style={{ top: topPercent }}
+            >
+              {/* Dim overlay on non-hovered sections */}
+              <div
+                className="absolute inset-0 bg-black/30 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  opacity:
+                    isMouseInside && hoveredSection !== null && hoveredSection !== i
+                      ? 1
+                      : 0,
+                }}
+              />
+              {/* Bright border line at bottom of hovered section */}
+              {i < 2 && (
+                <div
+                  className="absolute bottom-0 left-[5%] w-[90%] h-[1px] transition-opacity duration-500"
+                  style={{
+                    background:
+                      'linear-gradient(90deg, transparent, rgba(177,164,144,0.4), transparent)',
+                    opacity: isMouseInside && hoveredSection === i ? 1 : 0,
+                  }}
+                />
+              )}
+            </div>
+          )
+        })}
+
+        {/* Text overlays */}
         {sections.map((s, i) => (
           <div key={s.title}>
             <div
@@ -125,21 +207,32 @@ export default function PhilosophySection() {
             />
 
             <div
-              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] transition-all duration-[1200ms] ease-out ${
+              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] transition-all ease-out ${
                 litStates[i]
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-6'
               }`}
-              style={{ transitionDelay: litStates[i] ? '200ms' : '0ms' }}
+              style={{
+                transitionDuration: litStates[i] ? '1200ms' : '300ms',
+                transitionDelay: litStates[i] ? '200ms' : '0ms',
+              }}
             >
               <h3
-                className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
+                className={`font-[var(--font-merriweather)] font-bold leading-[1.05] tracking-[1px] transition-all duration-500 ${
+                  hoveredSection === i
+                    ? 'text-[#B1A490] translate-x-2'
+                    : 'text-white translate-x-0'
+                }`}
                 style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
               >
                 {s.title}
               </h3>
               <p
-                className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
+                className={`font-[var(--font-open-sans)] leading-[1.5] mt-[clamp(6px,1vw,16px)] transition-all duration-500 ${
+                  hoveredSection === i
+                    ? 'text-white/90 translate-x-2'
+                    : 'text-white/70 translate-x-0'
+                }`}
                 style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
               >
                 {s.description}
