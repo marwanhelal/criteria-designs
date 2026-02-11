@@ -9,7 +9,7 @@ export default function TermsPage() {
     <>
       <Navbar />
 
-      <section className="pt-[160px] pb-[100px] px-8">
+      <section data-navbar-dark className="pt-[160px] pb-[100px] px-8">
         <div className="max-w-[800px] mx-auto">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">

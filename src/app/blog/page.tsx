@@ -94,7 +94,7 @@ export default function BlogPage() {
       </section>
 
       {/* ===== FILTER & POSTS ===== */}
-      <section className="py-[100px] px-8">
+      <section data-navbar-dark className="py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           {/* Category Filter */}
           <AnimatedSection className="flex flex-wrap gap-4 mb-16 justify-center">

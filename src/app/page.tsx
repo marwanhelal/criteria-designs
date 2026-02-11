@@ -100,7 +100,7 @@ export default function Home() {
       <PhilosophySection />
 
       {/* ===== ABOUT SECTION ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
           <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
             <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
@@ -250,7 +250,7 @@ export default function Home() {
       </section>
 
       {/* ===== SERVICES SECTION ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
@@ -312,7 +312,7 @@ export default function Home() {
       </section>
 
       {/* ===== TESTIMONIALS SECTION ===== */}
-      <section className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
         <AnimatedSection>
           <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="relative shrink-0">
@@ -342,7 +342,7 @@ export default function Home() {
       </section>
 
       {/* ===== CAREER / JOIN US SECTION ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
           <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
             <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">

@@ -56,7 +56,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <div className="hidden lg:block fixed left-[83px] top-0 w-[7px] h-full bg-[#B1A490]/10 z-40" />
 
       {/* ===== PROJECT HEADER ===== */}
-      <section className="pt-[120px] px-8 lg:px-[83px]">
+      <section data-navbar-dark className="pt-[120px] px-8 lg:px-[83px]">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
             {/* Left - Project Info */}
@@ -125,7 +125,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== IMAGE GALLERY GRID (fixed 233px height) ===== */}
       {galleryImages.length > 0 && (
-        <section className="pt-[40px] px-8 lg:px-[83px]">
+        <section data-navbar-dark className="pt-[40px] px-8 lg:px-[83px]">
           <div className="max-w-[1290px] mx-auto">
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {galleryImages.map((image) => (
@@ -150,7 +150,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== PROJECT TIMELINE ===== */}
       {project.timeline.length > 0 && (
-        <section className="py-[100px] px-8 lg:px-[83px]">
+        <section data-navbar-dark className="py-[100px] px-8 lg:px-[83px]">
           <div className="max-w-[1290px] mx-auto">
             <h2 className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mb-16">
               project time-line
@@ -204,7 +204,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== SHOWCASE IMAGES (fixed 716px height) ===== */}
       {showcaseImages.length > 0 && (
-        <section className="px-8 lg:px-[83px] pb-[80px]">
+        <section data-navbar-dark className="px-8 lg:px-[83px] pb-[80px]">
           <div className="max-w-[1290px] mx-auto space-y-6">
             {showcaseImages.map((image) => (
               <div
@@ -227,7 +227,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== FULL DESCRIPTION ===== */}
       {project.descriptionEn.length > 300 && (
-        <section className="px-8 lg:px-[83px] pb-[80px]">
+        <section data-navbar-dark className="px-8 lg:px-[83px] pb-[80px]">
           <div className="max-w-[860px] mx-auto">
             <div
               className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] prose prose-lg max-w-none prose-headings:font-[var(--font-merriweather)] prose-headings:text-[#181C23] prose-a:text-[#B1A490]"
@@ -239,7 +239,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== MORE PROJECTS ===== */}
       {moreProjects.length > 0 && (
-        <section className="bg-[#F5F0EB] py-[80px] px-8 lg:px-[83px]">
+        <section data-navbar-dark className="bg-[#F5F0EB] py-[80px] px-8 lg:px-[83px]">
           <div className="max-w-[1290px] mx-auto">
             <h2 className="font-[var(--font-merriweather)] text-[32px] text-[#181C23] leading-[48px] text-center mb-12">
               More projects

@@ -86,7 +86,7 @@ export default function ContactPage() {
       </section>
 
       {/* ===== CONTACT INFO + FORM ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-20">
             {/* Contact Information */}
@@ -273,7 +273,7 @@ export default function ContactPage() {
       </section>
 
       {/* ===== MAP PLACEHOLDER ===== */}
-      <section className="h-[450px] bg-gray-200 relative">
+      <section data-navbar-dark className="h-[450px] bg-gray-200 relative">
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">
             Map will be embedded here

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -22,6 +22,7 @@ interface Settings {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [settings, setSettings] = useState<Settings | null>(null)
+  const [isDark, setIsDark] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -46,6 +47,48 @@ export default function Navbar() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  // Detect light/dark sections behind navbar
+  const checkBackground = useCallback(() => {
+    if (menuOpen) return // menu is dark, always white
+    const navMidY = 55 // roughly center of navbar
+    const sections = document.querySelectorAll('[data-navbar-dark]')
+    let onLight = false
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect()
+      if (rect.top <= navMidY && rect.bottom >= navMidY) onLight = true
+    })
+    setIsDark(onLight)
+  }, [menuOpen])
+
+  useEffect(() => {
+    checkBackground()
+    window.addEventListener('scroll', checkBackground, { passive: true })
+    window.addEventListener('resize', checkBackground, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', checkBackground)
+      window.removeEventListener('resize', checkBackground)
+    }
+  }, [checkBackground])
+
+  // When menu opens, force light (white) text; recheck on close
+  useEffect(() => {
+    if (menuOpen) {
+      setIsDark(false)
+    } else {
+      checkBackground()
+    }
+  }, [menuOpen, checkBackground])
+
+  // Colors based on background
+  const logoTextColor = isDark ? 'text-[#181C23]' : 'text-white'
+  const logoHoverColor = isDark ? 'group-hover:text-[#8a7a66]' : 'group-hover:text-[#B1A490]'
+  const subtitleColor = isDark ? 'text-[#666]' : 'text-white/50'
+  const subtitleHover = isDark ? 'group-hover:text-[#444]' : 'group-hover:text-white/70'
+  const lineColor = isDark ? 'bg-[#B1A490]/80' : 'bg-[#B1A490]/60'
+  const hamburgerBg = isDark ? 'bg-white hover:bg-gray-100' : 'bg-[#181C23] hover:bg-[#2a2f3a]'
+  const hamburgerLine = isDark ? 'bg-[#181C23]' : 'bg-white'
+  const logoFilter = isDark ? 'brightness-0' : ''
+
   return (
     <>
       {/* Navbar */}
@@ -61,18 +104,18 @@ export default function Navbar() {
                   alt={settings.companyNameEn || 'Criteria Design Group'}
                   width={80}
                   height={80}
-                  className="relative h-[56px] md:h-[74px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:scale-105"
+                  className={`relative h-[56px] md:h-[74px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
                   unoptimized
                 />
               </div>
             )}
             <div className="flex flex-col gap-[2px]">
-              <span className="font-[var(--font-merriweather)] text-[20px] md:text-[26px] font-normal leading-[1.1] text-white tracking-[0.5px] transition-colors duration-300 group-hover:text-[#B1A490]">
+              <span className={`font-[var(--font-merriweather)] text-[20px] md:text-[26px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
               <div className="flex items-center gap-2">
-                <span className="block w-[18px] md:w-[24px] h-[1px] bg-[#B1A490]/60" />
-                <span className="font-[var(--font-libre-franklin)] text-[9px] md:text-[11px] font-light text-white/50 uppercase tracking-[3px] md:tracking-[4px] transition-colors duration-300 group-hover:text-white/70">
+                <span className={`block w-[18px] md:w-[24px] h-[1px] transition-colors duration-500 ${lineColor}`} />
+                <span className={`font-[var(--font-libre-franklin)] text-[9px] md:text-[11px] font-light uppercase tracking-[3px] md:tracking-[4px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
                   Designs
                 </span>
               </div>
@@ -82,16 +125,16 @@ export default function Navbar() {
           {/* Hamburger Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors"
+            className={`relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full transition-colors duration-500 ${hamburgerBg}`}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
-            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+            <span className={`block w-[22px] h-[2px] rounded-full transition-all duration-300 ${hamburgerLine} ${
               menuOpen ? 'rotate-45 translate-y-[8px]' : ''
             }`} />
-            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+            <span className={`block w-[22px] h-[2px] rounded-full transition-all duration-300 ${hamburgerLine} ${
               menuOpen ? 'opacity-0' : ''
             }`} />
-            <span className={`block w-[22px] h-[2px] bg-white rounded-full transition-all duration-300 ${
+            <span className={`block w-[22px] h-[2px] rounded-full transition-all duration-300 ${hamburgerLine} ${
               menuOpen ? '-rotate-45 -translate-y-[8px]' : ''
             }`} />
           </button>

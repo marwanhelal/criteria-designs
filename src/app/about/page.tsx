@@ -54,7 +54,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== ABOUT INTRO ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
           <AnimatedSection direction="left" className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 shrink-0 relative flex items-center justify-center">
             <Building size={120} className="text-[#B1A490]/30" />
@@ -111,7 +111,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== STATS ===== */}
-      <section className="py-[100px] px-8">
+      <section data-navbar-dark className="py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
             {[
@@ -139,7 +139,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== VALUES ===== */}
-      <section className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
@@ -184,7 +184,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
           <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] max-w-[600px] mx-auto">
             Ready to start your next project?

@@ -60,7 +60,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ===== SERVICES GRID ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
@@ -147,7 +147,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
           <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] max-w-[600px] mx-auto">
             Let&apos;s build something amazing together

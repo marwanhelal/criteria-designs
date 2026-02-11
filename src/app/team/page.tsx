@@ -58,7 +58,7 @@ export default function TeamPage() {
       </section>
 
       {/* ===== LEADERSHIP ===== */}
-      <section className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[140px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
@@ -176,7 +176,7 @@ export default function TeamPage() {
       </section>
 
       {/* ===== JOIN CTA ===== */}
-      <section className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
           <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
             Join with us

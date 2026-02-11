@@ -94,7 +94,7 @@ export default async function BlogDetailPage({ params }: Props) {
       </section>
 
       {/* ===== CONTENT ===== */}
-      <section className="py-[80px] px-8">
+      <section data-navbar-dark className="py-[80px] px-8">
         <div className="max-w-[860px] mx-auto">
           {post.excerptEn && (
             <p className="font-[var(--font-open-sans)] text-[18px] text-[#181C23] leading-[32px] font-medium mb-10 pb-10 border-b border-gray-100">
@@ -123,7 +123,7 @@ export default async function BlogDetailPage({ params }: Props) {
       </section>
 
       {/* ===== MORE POSTS ===== */}
-      <section className="bg-[#F5F0EB] py-[80px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[80px] px-8">
         <div className="max-w-[1290px] mx-auto text-center">
           <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
             Keep reading
