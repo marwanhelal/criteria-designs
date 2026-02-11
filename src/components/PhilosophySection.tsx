@@ -145,14 +145,14 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Spotlight — moved via DOM, not React state */}
+        {/* Bright spotlight — moved via DOM, not React state */}
         <div
           ref={spotlightRef}
-          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none z-[1]"
+          className="absolute w-[350px] h-[350px] md:w-[550px] md:h-[550px] rounded-full pointer-events-none z-[1]"
           style={{
             transform: 'translate(-50%, -50%)',
             background:
-              'radial-gradient(circle, rgba(177,164,144,0.12) 0%, rgba(177,164,144,0.04) 35%, transparent 65%)',
+              'radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(177,164,144,0.10) 25%, rgba(177,164,144,0.04) 50%, transparent 70%)',
             opacity: 0,
             transition: 'opacity 0.3s',
             willChange: 'left, top',
