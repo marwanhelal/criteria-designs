@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 
 const sections = [
@@ -30,13 +30,9 @@ const sections = [
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
   const [revealed, setRevealed] = useState([false, false, false])
-  const zoneRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ]
+  const spotlightRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  // Reveal on hover — once revealed, stays forever
   const handleHover = (index: number) => {
     setRevealed((prev) => {
       if (prev[index]) return prev
@@ -45,6 +41,32 @@ export default function PhilosophySection() {
       return next
     })
   }
+
+  // Move spotlight via DOM directly — no React state, no re-renders
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!spotlightRef.current || !containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    spotlightRef.current.style.left = `${x}px`
+    spotlightRef.current.style.top = `${y}px`
+    spotlightRef.current.style.opacity = '1'
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    if (spotlightRef.current) spotlightRef.current.style.opacity = '0'
+  }, [])
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    el.addEventListener('mousemove', handleMouseMove)
+    el.addEventListener('mouseleave', handleMouseLeave)
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove)
+      el.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [handleMouseMove, handleMouseLeave])
 
   useEffect(() => {
     fetch('/api/settings')
@@ -59,6 +81,20 @@ export default function PhilosophySection() {
 
   return (
     <section className="bg-[#0D0F13] pt-[80px] md:pt-[120px] pb-0 overflow-hidden">
+      <style>{`
+        .phi-zone { position: absolute; left: 0; width: 100%; height: 33.34%; z-index: 2; }
+        .phi-zone .phi-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        .phi-zone .phi-line { position: absolute; bottom: 0; left: 5%; width: 90%; height: 1px; opacity: 0; transition: opacity 0.5s; pointer-events: none;
+          background: linear-gradient(90deg, transparent, rgba(177,164,144,0.5), transparent); }
+
+        /* When ANY zone is hovered, dim ALL zones */
+        .phi-container:hover .phi-zone .phi-dim { opacity: 1; }
+        /* But un-dim the hovered zone */
+        .phi-container:hover .phi-zone:hover .phi-dim { opacity: 0; }
+        /* Show line on hovered zone */
+        .phi-zone:hover .phi-line { opacity: 1; }
+      `}</style>
+
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="text-center mb-12 md:mb-20">
           <span className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#B1A490] uppercase tracking-[3px]">
@@ -69,7 +105,6 @@ export default function PhilosophySection() {
           </h2>
         </div>
 
-        {/* Labels */}
         <div className="flex justify-center gap-8 md:gap-14 mb-8 md:mb-12">
           {sections.map((s, i) => (
             <div key={s.title} className="flex flex-col items-center gap-1.5">
@@ -89,7 +124,6 @@ export default function PhilosophySection() {
           ))}
         </div>
 
-        {/* Hint */}
         <p
           className={`text-center font-[var(--font-open-sans)] text-[12px] text-white/25 mb-4 transition-opacity duration-700 ${
             revealed[0] ? 'opacity-0' : 'opacity-100'
@@ -99,8 +133,8 @@ export default function PhilosophySection() {
         </p>
       </div>
 
-      {/* Image */}
-      <div className="relative w-full">
+      {/* Image with interactions */}
+      <div ref={containerRef} className="phi-container relative w-full overflow-hidden">
         <Image
           src={philosophyImage}
           alt="Our Philosophy"
@@ -111,43 +145,60 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Hover zones + text */}
-        {sections.map((s, i) => (
-          <div key={s.title}>
-            {/* Invisible hover trigger zone */}
-            <div
-              ref={zoneRefs[i]}
-              className="absolute left-0 w-full h-[33.34%]"
-              style={{ top: s.zoneTop }}
-              onMouseEnter={() => handleHover(i)}
-            />
+        {/* Spotlight — moved via DOM, not React state */}
+        <div
+          ref={spotlightRef}
+          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none z-[1]"
+          style={{
+            transform: 'translate(-50%, -50%)',
+            background:
+              'radial-gradient(circle, rgba(177,164,144,0.12) 0%, rgba(177,164,144,0.04) 35%, transparent 65%)',
+            opacity: 0,
+            transition: 'opacity 0.3s',
+            willChange: 'left, top',
+          }}
+        />
 
-            {/* Text — appears on first hover, stays forever */}
+        {/* CSS-powered hover zones — no React state for hover */}
+        {sections.map((s, i) => (
+          <div
+            key={`zone-${s.title}`}
+            className="phi-zone"
+            style={{ top: s.zoneTop }}
+            onMouseEnter={() => handleHover(i)}
+          >
+            <div className="phi-dim" />
+            {i < 2 && <div className="phi-line" />}
+          </div>
+        ))}
+
+        {/* Text — revealed permanently on first hover */}
+        {sections.map((s, i) => (
+          <div
+            key={s.title}
+            className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-[3] transition-all duration-700 ease-out ${
+              revealed[i]
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-4'
+            }`}
+          >
             <div
-              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] transition-all duration-700 ease-out ${
-                revealed[i]
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-4'
+              className={`h-[2px] bg-[#B1A490] mb-[clamp(6px,1vw,14px)] transition-all duration-700 delay-100 ${
+                revealed[i] ? 'w-[40px] md:w-[60px]' : 'w-0'
               }`}
+            />
+            <h3
+              className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
+              style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
             >
-              <div
-                className={`h-[2px] bg-[#B1A490] mb-[clamp(6px,1vw,14px)] transition-all duration-700 delay-100 ${
-                  revealed[i] ? 'w-[40px] md:w-[60px]' : 'w-0'
-                }`}
-              />
-              <h3
-                className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
-                style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
-              >
-                {s.title}
-              </h3>
-              <p
-                className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
-                style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
-              >
-                {s.description}
-              </p>
-            </div>
+              {s.title}
+            </h3>
+            <p
+              className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
+              style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
+            >
+              {s.description}
+            </p>
           </div>
         ))}
       </div>
