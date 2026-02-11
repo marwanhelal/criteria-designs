@@ -92,7 +92,7 @@ export default function PhilosophySection() {
   if (!philosophyImage) return null
 
   return (
-    <section className="bg-[#0D0F13] pt-[80px] md:pt-[120px] pb-0 overflow-hidden">
+    <section className="bg-[#0D0F13] pt-[40px] md:pt-[60px] pb-0 overflow-hidden">
       <style>{`
         .phi-container { cursor: crosshair; --mx: 0; --my: 0; }
 
@@ -150,7 +150,7 @@ export default function PhilosophySection() {
       `}</style>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-        <div className="text-center mb-12 md:mb-20">
+        <div className="text-center mb-6 md:mb-10">
           <span className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#B1A490] uppercase tracking-[3px]">
             What drives us
           </span>
@@ -159,7 +159,7 @@ export default function PhilosophySection() {
           </h2>
         </div>
 
-        <div className="flex justify-center gap-8 md:gap-14 mb-8 md:mb-12">
+        <div className="flex justify-center gap-8 md:gap-14 mb-4 md:mb-6">
           {sections.map((s, i) => (
             <div key={s.title} className="flex flex-col items-center gap-1.5">
               <span
@@ -179,7 +179,7 @@ export default function PhilosophySection() {
         </div>
 
         <p
-          className={`text-center font-[var(--font-open-sans)] text-[12px] text-white/25 mb-4 transition-opacity duration-700 ${
+          className={`text-center font-[var(--font-open-sans)] text-[12px] text-white/25 mb-2 transition-opacity duration-700 ${
             revealed[0] ? 'opacity-0' : 'opacity-100'
           }`}
         >
