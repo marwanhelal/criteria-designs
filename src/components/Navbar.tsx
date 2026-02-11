@@ -50,29 +50,32 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
-        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[76px] md:h-[90px] flex items-center justify-between">
-          {/* Logo - CMS driven: image + text side by side */}
-          <Link href="/" className="group relative z-[60] flex items-center gap-3 md:gap-4 outline-none">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[90px] md:h-[110px] flex items-center justify-between">
+          {/* Logo - CMS driven: image + text */}
+          <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
-              <div className="relative">
-                <div className="absolute inset-0 bg-[#B1A490]/20 rounded-full blur-lg scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative flex-shrink-0">
+                <div className="absolute inset-[-8px] bg-[#B1A490]/15 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <Image
                   src={settings.logo}
                   alt={settings.companyNameEn || 'Criteria Design Group'}
-                  width={64}
-                  height={64}
-                  className="relative h-[44px] md:h-[60px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                  width={80}
+                  height={80}
+                  className="relative h-[56px] md:h-[74px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:scale-105"
                   unoptimized
                 />
               </div>
             )}
-            <div className="flex flex-col">
-              <span className="font-[var(--font-merriweather)] text-[15px] md:text-[19px] font-normal leading-[1.1] text-white tracking-[0.5px] transition-colors duration-300 group-hover:text-[#B1A490]">
-                {(settings?.companyNameEn || 'Criteria Design Group').split(' ').slice(0, 1).join(' ')}
+            <div className="flex flex-col gap-[2px]">
+              <span className="font-[var(--font-merriweather)] text-[20px] md:text-[26px] font-normal leading-[1.1] text-white tracking-[0.5px] transition-colors duration-300 group-hover:text-[#B1A490]">
+                Criteria
               </span>
-              <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light leading-[1.2] text-white/50 uppercase tracking-[2px] md:tracking-[3px] transition-colors duration-300 group-hover:text-white/70">
-                {(settings?.companyNameEn || 'Criteria Design Group').split(' ').slice(1).join(' ')}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="block w-[18px] md:w-[24px] h-[1px] bg-[#B1A490]/60" />
+                <span className="font-[var(--font-libre-franklin)] text-[9px] md:text-[11px] font-light text-white/50 uppercase tracking-[3px] md:tracking-[4px] transition-colors duration-300 group-hover:text-white/70">
+                  Designs
+                </span>
+              </div>
             </div>
           </Link>
 
