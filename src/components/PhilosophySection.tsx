@@ -6,29 +6,38 @@ import Image from 'next/image'
 
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
-  const [activeSection, setActiveSection] = useState(0) // 0=none, 1=culture, 2=nature, 3=art
+  const [activeSection, setActiveSection] = useState(0)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start 0.8', 'end 0.2'],
+    offset: ['start end', 'end start'],
   })
 
-  // Map scroll progress to section reveals
-  // 0-0.2: nothing revealed, 0.2-0.4: culture, 0.4-0.6: nature, 0.6-0.8: art, 0.8+: all revealed
-  const cultureOpacity = useTransform(scrollYProgress, [0.1, 0.3], [1, 0])
-  const natureOpacity = useTransform(scrollYProgress, [0.3, 0.5], [1, 0])
-  const artOpacity = useTransform(scrollYProgress, [0.5, 0.7], [1, 0])
-  const iconGlow = useTransform(scrollYProgress, [0.05, 0.25], [0, 1])
+  // Tighter reveal ranges so animation happens in a shorter scroll distance
+  // Culture: fades from dark to bright between 15%-30%
+  // Nature: 30%-45%
+  // Art: 45%-60%
+  const cultureOverlay = useTransform(scrollYProgress, [0.15, 0.28], [0.88, 0])
+  const natureOverlay = useTransform(scrollYProgress, [0.28, 0.42], [0.88, 0])
+  const artOverlay = useTransform(scrollYProgress, [0.42, 0.56], [0.88, 0])
+
+  // Golden glow line at reveal edge — peaks briefly during each reveal
+  const cultureGlow = useTransform(scrollYProgress, [0.15, 0.22, 0.28], [0, 1, 0])
+  const natureGlow = useTransform(scrollYProgress, [0.28, 0.35, 0.42], [0, 1, 0])
+  const artGlow = useTransform(scrollYProgress, [0.42, 0.49, 0.56], [0, 1, 0])
+
+  // Icon glow
+  const iconGlow = useTransform(scrollYProgress, [0.12, 0.25], [0, 1])
+
+  // Parallax
   const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '-5%'])
-  const sweepTop = useTransform(scrollYProgress, [0, 1], ['0%', '80%'])
-  const sweepOpacity = useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 0.4, 0.4, 0])
 
   // Track active section for label highlights
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    if (v < 0.15) setActiveSection(0)
+    if (v < 0.2) setActiveSection(0)
     else if (v < 0.35) setActiveSection(1)
-    else if (v < 0.55) setActiveSection(2)
+    else if (v < 0.48) setActiveSection(2)
     else setActiveSection(3)
   })
 
@@ -71,16 +80,24 @@ export default function PhilosophySection() {
           className="flex justify-center gap-6 md:gap-12 mb-8 md:mb-12"
         >
           {['Culture', 'Nature', 'Art'].map((label, i) => (
-            <span
-              key={label}
-              className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[2px] md:tracking-[3px] transition-all duration-700 ${
-                activeSection >= i + 1
-                  ? 'text-[#B1A490] scale-105'
-                  : 'text-white/20'
-              }`}
-            >
-              {label}
-            </span>
+            <div key={label} className="flex flex-col items-center gap-1">
+              <span
+                className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[2px] md:tracking-[3px] transition-all duration-700 ${
+                  activeSection >= i + 1
+                    ? 'text-[#B1A490]'
+                    : 'text-white/20'
+                }`}
+              >
+                {label}
+              </span>
+              <span
+                className={`block h-[2px] rounded-full transition-all duration-700 ${
+                  activeSection >= i + 1
+                    ? 'w-6 bg-[#B1A490]'
+                    : 'w-0 bg-transparent'
+                }`}
+              />
+            </div>
           ))}
         </motion.div>
       </div>
@@ -93,8 +110,8 @@ export default function PhilosophySection() {
         transition={{ duration: 1, ease: [0.25, 0.4, 0.25, 1] }}
         className="relative w-full overflow-hidden"
       >
-        {/* Parallax image container */}
         <motion.div style={{ y: imageY }} className="relative">
+          {/* Base image — always visible */}
           <Image
             src={philosophyImage}
             alt="Our Philosophy - Culture, Nature, Art"
@@ -105,44 +122,52 @@ export default function PhilosophySection() {
             priority
           />
 
-          {/* Dark overlay for Culture section (top ~33%) */}
+          {/* Culture overlay — semi-transparent dark, fades to reveal */}
           <motion.div
-            style={{ opacity: cultureOpacity }}
-            className="absolute top-0 left-0 w-full h-[36%] bg-[#0D0F13] pointer-events-none"
+            style={{ opacity: cultureOverlay }}
+            className="absolute top-0 left-0 w-full h-[35%] bg-black/90 pointer-events-none"
+          />
+          {/* Culture reveal glow line */}
+          <motion.div
+            style={{ opacity: cultureGlow }}
+            className="absolute top-[33%] left-0 w-full h-[4px] pointer-events-none"
           >
-            <div className="absolute bottom-0 left-0 w-full h-[30px] bg-gradient-to-t from-transparent to-[#0D0F13]" />
+            <div className="w-full h-full bg-[#B1A490] shadow-[0_0_20px_4px_rgba(177,164,144,0.6)]" />
           </motion.div>
 
-          {/* Dark overlay for Nature section (middle ~33%) */}
+          {/* Nature overlay */}
           <motion.div
-            style={{ opacity: natureOpacity }}
-            className="absolute top-[33%] left-0 w-full h-[36%] bg-[#0D0F13] pointer-events-none"
+            style={{ opacity: natureOverlay }}
+            className="absolute top-[33%] left-0 w-full h-[35%] bg-black/90 pointer-events-none"
+          />
+          {/* Nature reveal glow line */}
+          <motion.div
+            style={{ opacity: natureGlow }}
+            className="absolute top-[66%] left-0 w-full h-[4px] pointer-events-none"
           >
-            <div className="absolute top-0 left-0 w-full h-[30px] bg-gradient-to-b from-transparent to-[#0D0F13]" />
-            <div className="absolute bottom-0 left-0 w-full h-[30px] bg-gradient-to-t from-transparent to-[#0D0F13]" />
+            <div className="w-full h-full bg-[#B1A490] shadow-[0_0_20px_4px_rgba(177,164,144,0.6)]" />
           </motion.div>
 
-          {/* Dark overlay for Art section (bottom ~33%) */}
+          {/* Art overlay */}
           <motion.div
-            style={{ opacity: artOpacity }}
-            className="absolute top-[66%] left-0 w-full h-[34%] bg-[#0D0F13] pointer-events-none"
+            style={{ opacity: artOverlay }}
+            className="absolute top-[66%] left-0 w-full h-[34%] bg-black/90 pointer-events-none"
+          />
+          {/* Art reveal glow line */}
+          <motion.div
+            style={{ opacity: artGlow }}
+            className="absolute top-[96%] left-0 w-full h-[4px] pointer-events-none"
           >
-            <div className="absolute top-0 left-0 w-full h-[30px] bg-gradient-to-b from-transparent to-[#0D0F13]" />
+            <div className="w-full h-full bg-[#B1A490] shadow-[0_0_20px_4px_rgba(177,164,144,0.6)]" />
           </motion.div>
 
           {/* Left icon glow effect */}
           <motion.div
             style={{ opacity: iconGlow }}
-            className="absolute top-[5%] left-[2%] w-[80px] h-[80px] md:w-[120px] md:h-[120px] pointer-events-none"
+            className="absolute top-[4%] left-[1%] w-[100px] h-[100px] md:w-[160px] md:h-[160px] pointer-events-none"
           >
-            <div className="w-full h-full rounded-full bg-[#B1A490]/25 blur-2xl animate-pulse" />
+            <div className="w-full h-full rounded-full bg-[#B1A490]/30 blur-3xl" />
           </motion.div>
-
-          {/* Ambient light sweep that follows scroll */}
-          <motion.div
-            style={{ top: sweepTop, opacity: sweepOpacity }}
-            className="absolute left-0 w-full h-[25%] pointer-events-none bg-gradient-to-b from-[#B1A490]/8 via-[#B1A490]/4 to-transparent"
-          />
         </motion.div>
       </motion.div>
     </section>
