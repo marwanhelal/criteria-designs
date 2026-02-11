@@ -5,6 +5,7 @@ import Image from 'next/image'
 
 const sections = [
   {
+    num: '01',
     title: 'CULTURE',
     description:
       'Designing spaces that honor local heritage and foster human connection within the urban fabric.',
@@ -12,6 +13,7 @@ const sections = [
     zoneTop: '0%',
   },
   {
+    num: '02',
     title: 'NATURE',
     description:
       'Engineering sustainable, eco-conscious exteriors that harmonize with and protect the natural environment.',
@@ -19,6 +21,7 @@ const sections = [
     zoneTop: '33.33%',
   },
   {
+    num: '03',
     title: 'ART',
     description:
       'Sculpting functional masterpieces that blend structural precision with visionary aesthetic expression.',
@@ -33,6 +36,8 @@ export default function PhilosophySection() {
   const spotlightRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  const allRevealed = revealed[0] && revealed[1] && revealed[2]
+
   const handleHover = (index: number) => {
     setRevealed((prev) => {
       if (prev[index]) return prev
@@ -42,7 +47,7 @@ export default function PhilosophySection() {
     })
   }
 
-  // Move spotlight via DOM directly — no React state, no re-renders
+  // Move spotlight + set CSS custom properties for parallax — via DOM, no re-renders
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!spotlightRef.current || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
@@ -51,10 +56,17 @@ export default function PhilosophySection() {
     spotlightRef.current.style.left = `${x}px`
     spotlightRef.current.style.top = `${y}px`
     spotlightRef.current.style.opacity = '1'
+    // Parallax values: -1 to 1 range
+    containerRef.current.style.setProperty('--mx', `${(x / rect.width - 0.5) * 2}`)
+    containerRef.current.style.setProperty('--my', `${(y / rect.height - 0.5) * 2}`)
   }, [])
 
   const handleMouseLeave = useCallback(() => {
     if (spotlightRef.current) spotlightRef.current.style.opacity = '0'
+    if (containerRef.current) {
+      containerRef.current.style.setProperty('--mx', '0')
+      containerRef.current.style.setProperty('--my', '0')
+    }
   }, [])
 
   useEffect(() => {
@@ -82,10 +94,23 @@ export default function PhilosophySection() {
   return (
     <section className="bg-[#0D0F13] pt-[80px] md:pt-[120px] pb-0 overflow-hidden">
       <style>{`
+        .phi-container { cursor: crosshair; --mx: 0; --my: 0; }
+
         .phi-zone { position: absolute; left: 0; width: 100%; height: 33.34%; z-index: 2; }
         .phi-zone .phi-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .phi-zone .phi-line { position: absolute; bottom: 0; left: 5%; width: 90%; height: 1px; opacity: 0; transition: opacity 0.5s; pointer-events: none;
           background: linear-gradient(90deg, transparent, rgba(177,164,144,0.5), transparent); }
+
+        /* Scan line — sweeps across zone on hover */
+        .phi-zone .phi-scan { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+        .phi-zone .phi-scan::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px;
+          background: linear-gradient(90deg, transparent 0%, rgba(177,164,144,0.6) 30%, rgba(255,255,255,0.3) 50%, rgba(177,164,144,0.6) 70%, transparent 100%);
+          transform: translateX(-100%); opacity: 0; }
+        .phi-zone:hover .phi-scan::after { animation: phiScan 0.8s ease-out forwards; }
+        @keyframes phiScan {
+          0% { transform: translateX(-100%); opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
+        }
 
         /* When ANY zone is hovered, dim ALL zones */
         .phi-container:hover .phi-zone .phi-dim { opacity: 1; }
@@ -101,7 +126,27 @@ export default function PhilosophySection() {
         .phi-container:has(.phi-zone-0:hover) .phi-text-0 p,
         .phi-container:has(.phi-zone-1:hover) .phi-text-1 p,
         .phi-container:has(.phi-zone-2:hover) .phi-text-2 p { color: rgba(177,164,144,0.85); }
-        .phi-text h3, .phi-text p { transition: color 0.4s; }
+        .phi-container:has(.phi-zone-0:hover) .phi-text-0 .phi-num,
+        .phi-container:has(.phi-zone-1:hover) .phi-text-1 .phi-num,
+        .phi-container:has(.phi-zone-2:hover) .phi-text-2 .phi-num { color: rgba(177,164,144,0.3); }
+        .phi-text h3, .phi-text p, .phi-text .phi-num { transition: color 0.4s; }
+
+        /* Parallax on text — subtle shift based on mouse position */
+        .phi-text { transition: transform 0.6s cubic-bezier(0.23,1,0.32,1), opacity 0.7s ease-out; will-change: transform;
+          transform: translate(calc(var(--mx) * 6px), calc(var(--my) * 4px)); }
+        .phi-text.phi-hidden { opacity: 0; transform: translate(0, 16px); }
+
+        /* Progress tracker */
+        .phi-progress-dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+          background: transparent; transition: all 0.5s; }
+        .phi-progress-dot.active { background: #B1A490; border-color: #B1A490; box-shadow: 0 0 8px rgba(177,164,144,0.4); }
+        .phi-progress-line { width: 1px; height: 20px; background: rgba(255,255,255,0.1); transition: background 0.5s; }
+        .phi-progress-line.active { background: rgba(177,164,144,0.4); }
+
+        /* Completion glow */
+        .phi-complete-glow { position: absolute; inset: 0; pointer-events: none; z-index: 1;
+          box-shadow: inset 0 0 80px rgba(177,164,144,0.06); opacity: 0; transition: opacity 1s; }
+        .phi-complete-glow.show { opacity: 1; }
       `}</style>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
@@ -154,6 +199,9 @@ export default function PhilosophySection() {
           priority
         />
 
+        {/* Completion inner glow — appears when all 3 explored */}
+        <div className={`phi-complete-glow ${allRevealed ? 'show' : ''}`} />
+
         {/* Bright spotlight — moved via DOM, not React state */}
         <div
           ref={spotlightRef}
@@ -177,20 +225,26 @@ export default function PhilosophySection() {
             onMouseEnter={() => handleHover(i)}
           >
             <div className="phi-dim" />
+            <div className="phi-scan" />
             {i < 2 && <div className="phi-line" />}
           </div>
         ))}
 
-        {/* Text — revealed permanently on first hover */}
+        {/* Text — revealed permanently on first hover, with parallax */}
         {sections.map((s, i) => (
           <div
             key={s.title}
-            className={`phi-text phi-text-${i} absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-[3] transition-all duration-700 ease-out ${
-              revealed[i]
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-4'
+            className={`phi-text phi-text-${i} absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-[3] ${
+              revealed[i] ? '' : 'phi-hidden'
             }`}
           >
+            {/* Ghost section number */}
+            <span
+              className="phi-num font-[var(--font-libre-franklin)] font-light text-white/10 leading-none absolute top-[5%] right-[5%]"
+              style={{ fontSize: 'clamp(40px, 8vw, 120px)' }}
+            >
+              {s.num}
+            </span>
             <div
               className={`h-[2px] bg-[#B1A490] mb-[clamp(6px,1vw,14px)] transition-all duration-700 delay-100 ${
                 revealed[i] ? 'w-[40px] md:w-[60px]' : 'w-0'
@@ -210,6 +264,25 @@ export default function PhilosophySection() {
             </p>
           </div>
         ))}
+
+        {/* Right-side progress tracker */}
+        <div className="absolute right-[2.5%] top-1/2 -translate-y-1/2 z-[4] flex-col items-center gap-0 hidden md:flex">
+          {sections.map((_, i) => (
+            <div key={`prog-${i}`} className="flex flex-col items-center">
+              <div className={`phi-progress-dot ${revealed[i] ? 'active' : ''}`} />
+              {i < 2 && (
+                <div className={`phi-progress-line ${revealed[i] && revealed[i + 1] ? 'active' : ''}`} />
+              )}
+            </div>
+          ))}
+          {/* Fraction counter */}
+          <span
+            className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 mt-3 tracking-[2px] transition-colors duration-500"
+            style={{ color: allRevealed ? 'rgba(177,164,144,0.6)' : undefined }}
+          >
+            {revealed.filter(Boolean).length}/3
+          </span>
+        </div>
       </div>
     </section>
   )
