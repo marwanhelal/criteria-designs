@@ -8,29 +8,30 @@ const sections = [
     title: 'CULTURE',
     description:
       'Designing spaces that honor local heritage and foster human connection within the urban fabric.',
-    position: 'top-[2%] left-[30%] w-[35%] h-[32%]',
+    // Left side of top third
+    position: 'top-[3%] left-[2%] w-[30%] h-[30%]',
   },
   {
     title: 'NATURE',
     description:
       'Engineering sustainable, eco-conscious exteriors that harmonize with and protect the natural environment.',
-    position: 'top-[34%] left-[30%] w-[35%] h-[33%]',
+    // Left side of middle third
+    position: 'top-[36%] left-[2%] w-[30%] h-[30%]',
   },
   {
     title: 'ART',
     description:
       'Sculpting functional masterpieces that blend structural precision with visionary aesthetic expression.',
-    position: 'top-[67%] left-[30%] w-[35%] h-[31%]',
+    // Left side of bottom third
+    position: 'top-[69%] left-[2%] w-[30%] h-[28%]',
   },
 ]
 
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
-  const [logo, setLogo] = useState<string | null>(null)
   const [cultureLit, setCultureLit] = useState(false)
   const [natureLit, setNatureLit] = useState(false)
   const [artLit, setArtLit] = useState(false)
-  const [logoLit, setLogoLit] = useState(false)
 
   const litStates = [cultureLit, natureLit, artLit]
 
@@ -62,18 +63,10 @@ export default function PhilosophySection() {
   }, [philosophyImage])
 
   useEffect(() => {
-    if (cultureLit && natureLit && artLit) {
-      const timer = setTimeout(() => setLogoLit(true), 500)
-      return () => clearTimeout(timer)
-    }
-  }, [cultureLit, natureLit, artLit])
-
-  useEffect(() => {
     fetch('/api/settings')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.philosophyImage) setPhilosophyImage(data.philosophyImage)
-        if (data?.logo) setLogo(data.logo)
       })
       .catch(() => {})
   }, [])
@@ -123,7 +116,7 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Text overlays with dark backdrop for readability */}
+        {/* Text overlays — left-aligned, no backdrop, on dark areas */}
         {sections.map((s, i) => (
           <div key={s.title}>
             <div
@@ -132,50 +125,28 @@ export default function PhilosophySection() {
             />
 
             <div
-              className={`absolute ${s.position} pointer-events-none flex flex-col items-center justify-center text-center transition-all duration-[1200ms] ease-out ${
+              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] transition-all duration-[1200ms] ease-out ${
                 litStates[i]
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-6'
               }`}
               style={{ transitionDelay: litStates[i] ? '200ms' : '0ms' }}
             >
-              {/* Dark backdrop behind text */}
-              <div className="absolute inset-0 bg-[#0D0F13]/70 backdrop-blur-[2px]" />
-              <div className="relative px-[8%] py-[5%]">
-                <h3 className="font-[var(--font-merriweather)] text-[clamp(20px,4vw,64px)] font-normal text-white leading-[1.1] tracking-[2px]">
-                  {s.title}
-                </h3>
-                <p className="font-[var(--font-open-sans)] text-[clamp(8px,1.2vw,16px)] text-white/70 leading-[1.6] mt-[clamp(8px,1.2vw,20px)] max-w-[95%] mx-auto">
-                  {s.description}
-                </p>
-              </div>
+              <h3
+                className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
+                style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
+              >
+                {s.title}
+              </h3>
+              <p
+                className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
+                style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
+              >
+                {s.description}
+              </p>
             </div>
           </div>
         ))}
-
-        {/* Logo on left — large, clear, no text */}
-        {logo && (
-          <div
-            className={`absolute top-1/2 left-[3%] -translate-y-1/2 w-[20%] pointer-events-none flex items-center justify-center transition-all duration-[2500ms] ease-out ${
-              logoLit ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-            }`}
-          >
-            {/* Glow behind logo */}
-            <div
-              className={`absolute w-[80%] aspect-square rounded-full bg-[#B1A490]/25 blur-[60px] transition-opacity duration-[2500ms] ${
-                logoLit ? 'opacity-100' : 'opacity-0'
-              }`}
-            />
-            <Image
-              src={logo}
-              alt="Criteria Designs"
-              width={300}
-              height={300}
-              className="relative w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(177,164,144,0.5)]"
-              unoptimized
-            />
-          </div>
-        )}
       </div>
     </section>
   )
