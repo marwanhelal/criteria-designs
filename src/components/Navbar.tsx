@@ -87,7 +87,7 @@ export default function Navbar() {
   const lineColor = isDark ? 'bg-[#B1A490]/80' : 'bg-[#B1A490]/60'
   const hamburgerBg = isDark ? 'bg-white hover:bg-gray-100' : 'bg-[#181C23] hover:bg-[#2a2f3a]'
   const hamburgerLine = isDark ? 'bg-[#181C23]' : 'bg-white'
-  const logoFilter = isDark ? 'brightness-0' : ''
+  const logoFilter = '' // logo image stays unchanged
 
   return (
     <>
