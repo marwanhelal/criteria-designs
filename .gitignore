@@ -41,6 +41,9 @@ yarn-error.log*
 /public/uploads/*
 !/public/uploads/.gitkeep
 
+# chunked upload temp files
+/tmp/chunks/
+
 # vercel
 .vercel
 

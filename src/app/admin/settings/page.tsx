@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react'
 import { Save, Upload } from 'lucide-react'
 
+const CHUNK_SIZE = 2 * 1024 * 1024 // 2MB chunks
+
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   const [form, setForm] = useState({
     companyNameEn: '',
@@ -72,6 +75,12 @@ export default function SettingsPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Use chunked upload for videos (files > 2MB)
+    const videoTypes = ['video/mp4', 'video/webm', 'video/quicktime']
+    if (videoTypes.includes(file.type) && file.size > CHUNK_SIZE) {
+      return handleChunkedUpload(file, field)
+    }
+
     setUploading(field)
     try {
       const formData = new FormData()
@@ -85,11 +94,63 @@ export default function SettingsPage() {
       if (res.ok) {
         const media = await res.json()
         setForm(prev => ({ ...prev, [field]: media.url }))
+      } else {
+        const err = await res.json()
+        alert(err.error || 'Upload failed')
       }
     } catch (error) {
-      console.error('Error uploading image:', error)
+      console.error('Error uploading:', error)
+      alert('Upload failed. Please try again.')
     } finally {
       setUploading(null)
+    }
+  }
+
+  const handleChunkedUpload = async (file: File, field: string) => {
+    setUploading(field)
+    setUploadProgress(0)
+
+    const uploadId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
+
+    try {
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * CHUNK_SIZE
+        const end = Math.min(start + CHUNK_SIZE, file.size)
+        const chunk = file.slice(start, end)
+
+        const formData = new FormData()
+        formData.append('chunk', chunk)
+        formData.append('uploadId', uploadId)
+        formData.append('chunkIndex', String(i))
+        formData.append('totalChunks', String(totalChunks))
+        formData.append('fileName', file.name)
+        formData.append('fileType', file.type)
+        formData.append('fileSize', String(file.size))
+
+        const res = await fetch('/api/upload/chunk', {
+          method: 'POST',
+          body: formData
+        })
+
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || 'Chunk upload failed')
+        }
+
+        const result = await res.json()
+        setUploadProgress(Math.round(((i + 1) / totalChunks) * 100))
+
+        if (result.assembled && result.media) {
+          setForm(prev => ({ ...prev, [field]: result.media.url }))
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading video:', error)
+      alert(error instanceof Error ? error.message : 'Video upload failed. Please try again.')
+    } finally {
+      setUploading(null)
+      setUploadProgress(0)
     }
   }
 
@@ -351,7 +412,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center gap-3">
                 <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 text-sm">
-                  {uploading === 'heroVideo' ? 'Uploading...' : 'Upload Video'}
+                  {uploading === 'heroVideo' ? (uploadProgress > 0 ? `Uploading ${uploadProgress}%` : 'Uploading...') : 'Upload Video'}
                   <input
                     type="file"
                     accept="video/mp4,video/webm,video/quicktime"
@@ -370,6 +431,11 @@ export default function SettingsPage() {
                   </button>
                 )}
               </div>
+              {uploading === 'heroVideo' && uploadProgress > 0 && (
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
+                </div>
+              )}
               <p className="text-xs text-gray-400 mt-2">MP4, WebM, or MOV. Max 100MB. Plays muted and looped.</p>
             </div>
           </div>
