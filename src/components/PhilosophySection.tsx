@@ -93,6 +93,15 @@ export default function PhilosophySection() {
         .phi-container:hover .phi-zone:hover .phi-dim { opacity: 0; }
         /* Show line on hovered zone */
         .phi-zone:hover .phi-line { opacity: 1; }
+
+        /* Text color change on hover — warm gold */
+        .phi-container:has(.phi-zone-0:hover) .phi-text-0 h3,
+        .phi-container:has(.phi-zone-1:hover) .phi-text-1 h3,
+        .phi-container:has(.phi-zone-2:hover) .phi-text-2 h3 { color: #B1A490; }
+        .phi-container:has(.phi-zone-0:hover) .phi-text-0 p,
+        .phi-container:has(.phi-zone-1:hover) .phi-text-1 p,
+        .phi-container:has(.phi-zone-2:hover) .phi-text-2 p { color: rgba(177,164,144,0.85); }
+        .phi-text h3, .phi-text p { transition: color 0.4s; }
       `}</style>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
@@ -163,7 +172,7 @@ export default function PhilosophySection() {
         {sections.map((s, i) => (
           <div
             key={`zone-${s.title}`}
-            className="phi-zone"
+            className={`phi-zone phi-zone-${i}`}
             style={{ top: s.zoneTop }}
             onMouseEnter={() => handleHover(i)}
           >
@@ -176,7 +185,7 @@ export default function PhilosophySection() {
         {sections.map((s, i) => (
           <div
             key={s.title}
-            className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-[3] transition-all duration-700 ease-out ${
+            className={`phi-text phi-text-${i} absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-[3] transition-all duration-700 ease-out ${
               revealed[i]
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-4'
