@@ -26,52 +26,18 @@ const sections = [
 
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
-  const [cultureLit, setCultureLit] = useState(false)
-  const [natureLit, setNatureLit] = useState(false)
-  const [artLit, setArtLit] = useState(false)
   const [hoveredSection, setHoveredSection] = useState<number | null>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
   const [isMouseInside, setIsMouseInside] = useState(false)
-
-  const litStates = [cultureLit, natureLit, artLit]
-
-  const cultureRef = useRef<HTMLDivElement>(null)
-  const natureRef = useRef<HTMLDivElement>(null)
-  const artRef = useRef<HTMLDivElement>(null)
   const imageContainerRef = useRef<HTMLDivElement>(null)
-  const sectionRefs = [cultureRef, natureRef, artRef]
 
-  // Intersection observers for light-up
-  useEffect(() => {
-    const setters = [setCultureLit, setNatureLit, setArtLit]
-    const observers: IntersectionObserver[] = []
-
-    sectionRefs.forEach((ref, i) => {
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setters[i](true)
-            obs.disconnect()
-          }
-        },
-        { threshold: 0.3 }
-      )
-      if (ref.current) obs.observe(ref.current)
-      observers.push(obs)
-    })
-
-    return () => observers.forEach((obs) => obs.disconnect())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [philosophyImage])
-
-  // Mouse tracking for spotlight
+  // Mouse tracking
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
     setMousePos({ x, y })
 
-    // Detect which third the mouse is in
     const yPercent = (e.clientY - rect.top) / rect.height
     if (yPercent < 0.33) setHoveredSection(0)
     else if (yPercent < 0.66) setHoveredSection(1)
@@ -89,6 +55,10 @@ export default function PhilosophySection() {
 
   if (!philosophyImage) return null
 
+  // Subtle 3D tilt based on mouse position
+  const tiltX = isMouseInside ? (mousePos.y - 50) * 0.04 : 0
+  const tiltY = isMouseInside ? (mousePos.x - 50) * -0.04 : 0
+
   return (
     <section className="bg-[#0D0F13] pt-[80px] md:pt-[120px] pb-0 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
@@ -101,7 +71,7 @@ export default function PhilosophySection() {
           </h2>
         </div>
 
-        {/* Labels — highlight on hover too */}
+        {/* Labels — react to hover */}
         <div className="flex justify-center gap-8 md:gap-14 mb-8 md:mb-12">
           {sections.map((s, i) => (
             <div key={s.title} className="flex flex-col items-center gap-1.5">
@@ -109,9 +79,7 @@ export default function PhilosophySection() {
                 className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[3px] md:tracking-[4px] transition-all duration-500 ${
                   hoveredSection === i
                     ? 'text-white scale-110'
-                    : litStates[i]
-                      ? 'text-[#B1A490]'
-                      : 'text-white/15'
+                    : 'text-white/20'
                 }`}
               >
                 {s.title}
@@ -119,21 +87,29 @@ export default function PhilosophySection() {
               <span
                 className={`block h-[2px] rounded-full transition-all duration-500 ${
                   hoveredSection === i
-                    ? 'w-10 bg-white'
-                    : litStates[i]
-                      ? 'w-8 bg-[#B1A490]'
-                      : 'w-0 bg-transparent'
+                    ? 'w-10 bg-[#B1A490]'
+                    : 'w-0 bg-transparent'
                 }`}
               />
             </div>
           ))}
         </div>
+
+        {/* Hint text */}
+        <p
+          className={`text-center font-[var(--font-open-sans)] text-[12px] text-white/25 mb-4 transition-opacity duration-700 ${
+            isMouseInside ? 'opacity-0' : 'opacity-100'
+          }`}
+        >
+          Hover to explore
+        </p>
       </div>
 
-      {/* Image with interactive overlays */}
+      {/* Image with interactions */}
       <div
         ref={imageContainerRef}
-        className="relative w-full cursor-crosshair"
+        className="relative w-full cursor-none overflow-hidden"
+        style={{ perspective: '1200px' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsMouseInside(true)}
         onMouseLeave={() => {
@@ -141,105 +117,155 @@ export default function PhilosophySection() {
           setHoveredSection(null)
         }}
       >
-        <Image
-          src={philosophyImage}
-          alt="Our Philosophy"
-          width={1920}
-          height={1080}
-          className="w-full h-auto block"
-          unoptimized
-          priority
-        />
-
-        {/* Cursor-following spotlight glow */}
+        {/* 3D tilt wrapper */}
         <div
-          className="absolute w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full pointer-events-none transition-opacity duration-300"
+          className="relative transition-transform duration-300 ease-out"
           style={{
-            left: `${mousePos.x}%`,
-            top: `${mousePos.y}%`,
-            transform: 'translate(-50%, -50%)',
-            background:
-              'radial-gradient(circle, rgba(177,164,144,0.12) 0%, rgba(177,164,144,0.04) 40%, transparent 70%)',
-            opacity: isMouseInside ? 1 : 0,
+            transform: `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
           }}
-        />
+        >
+          <Image
+            src={philosophyImage}
+            alt="Our Philosophy"
+            width={1920}
+            height={1080}
+            className="w-full h-auto block"
+            unoptimized
+            priority
+          />
 
-        {/* Three interactive hover zones */}
-        {sections.map((s, i) => {
-          const topPercent = i === 0 ? '0%' : i === 1 ? '33.33%' : '66.66%'
-          return (
-            <div
-              key={`zone-${s.title}`}
-              className="absolute left-0 w-full h-[33.34%] pointer-events-none"
-              style={{ top: topPercent }}
-            >
-              {/* Dim overlay on non-hovered sections */}
+          {/* Custom cursor dot */}
+          <div
+            className="absolute w-3 h-3 rounded-full border-2 border-[#B1A490] pointer-events-none transition-all duration-100 z-20"
+            style={{
+              left: `${mousePos.x}%`,
+              top: `${mousePos.y}%`,
+              transform: 'translate(-50%, -50%)',
+              opacity: isMouseInside ? 1 : 0,
+            }}
+          />
+
+          {/* Custom cursor outer ring */}
+          <div
+            className="absolute w-10 h-10 rounded-full border border-[#B1A490]/30 pointer-events-none transition-all duration-300 z-20"
+            style={{
+              left: `${mousePos.x}%`,
+              top: `${mousePos.y}%`,
+              transform: `translate(-50%, -50%) scale(${hoveredSection !== null ? 1.5 : 1})`,
+              opacity: isMouseInside ? 1 : 0,
+            }}
+          />
+
+          {/* Spotlight glow */}
+          <div
+            className="absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full pointer-events-none transition-opacity duration-300 z-10"
+            style={{
+              left: `${mousePos.x}%`,
+              top: `${mousePos.y}%`,
+              transform: 'translate(-50%, -50%)',
+              background:
+                'radial-gradient(circle, rgba(177,164,144,0.10) 0%, rgba(177,164,144,0.03) 40%, transparent 65%)',
+              opacity: isMouseInside ? 1 : 0,
+            }}
+          />
+
+          {/* Section hover zones + dim/highlight */}
+          {sections.map((s, i) => {
+            const topPercent = i === 0 ? '0%' : i === 1 ? '33.33%' : '66.66%'
+            return (
               <div
-                className="absolute inset-0 bg-black/30 transition-opacity duration-500 pointer-events-none"
-                style={{
-                  opacity:
-                    isMouseInside && hoveredSection !== null && hoveredSection !== i
-                      ? 1
-                      : 0,
-                }}
-              />
-              {/* Bright border line at bottom of hovered section */}
-              {i < 2 && (
+                key={`zone-${s.title}`}
+                className="absolute left-0 w-full h-[33.34%] pointer-events-none"
+                style={{ top: topPercent }}
+              >
+                {/* Dim non-hovered */}
                 <div
-                  className="absolute bottom-0 left-[5%] w-[90%] h-[1px] transition-opacity duration-500"
+                  className="absolute inset-0 bg-black/40 transition-opacity duration-500"
                   style={{
-                    background:
-                      'linear-gradient(90deg, transparent, rgba(177,164,144,0.4), transparent)',
-                    opacity: isMouseInside && hoveredSection === i ? 1 : 0,
+                    opacity:
+                      isMouseInside && hoveredSection !== null && hoveredSection !== i
+                        ? 1
+                        : 0,
                   }}
                 />
-              )}
-            </div>
-          )
-        })}
+                {/* Gold separator line */}
+                {i < 2 && (
+                  <div
+                    className="absolute bottom-0 left-[5%] w-[90%] h-[1px] transition-opacity duration-500"
+                    style={{
+                      background:
+                        'linear-gradient(90deg, transparent, rgba(177,164,144,0.5), transparent)',
+                      opacity: isMouseInside && hoveredSection === i ? 1 : 0,
+                    }}
+                  />
+                )}
+              </div>
+            )
+          })}
 
-        {/* Text overlays */}
-        {sections.map((s, i) => (
-          <div key={s.title}>
+          {/* Text — ONLY visible on hover */}
+          {sections.map((s, i) => (
             <div
-              ref={sectionRefs[i]}
-              className={`absolute ${s.position} pointer-events-none`}
-            />
-
-            <div
-              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] transition-all ease-out ${
-                litStates[i]
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-6'
+              key={s.title}
+              className={`absolute ${s.position} pointer-events-none flex flex-col justify-center text-left pl-[2%] z-10 transition-all duration-500 ease-out ${
+                hoveredSection === i
+                  ? 'opacity-100 translate-y-0 translate-x-0'
+                  : 'opacity-0 translate-y-4 -translate-x-2'
               }`}
-              style={{
-                transitionDuration: litStates[i] ? '1200ms' : '300ms',
-                transitionDelay: litStates[i] ? '200ms' : '0ms',
-              }}
             >
-              <h3
-                className={`font-[var(--font-merriweather)] font-bold leading-[1.05] tracking-[1px] transition-all duration-500 ${
-                  hoveredSection === i
-                    ? 'text-[#B1A490] translate-x-2'
-                    : 'text-white translate-x-0'
+              {/* Gold accent line before title */}
+              <div
+                className={`h-[2px] bg-[#B1A490] mb-[clamp(6px,1vw,14px)] transition-all duration-500 ${
+                  hoveredSection === i ? 'w-[40px] md:w-[60px]' : 'w-0'
                 }`}
+              />
+              <h3
+                className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
                 style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
               >
                 {s.title}
               </h3>
               <p
-                className={`font-[var(--font-open-sans)] leading-[1.5] mt-[clamp(6px,1vw,16px)] transition-all duration-500 ${
-                  hoveredSection === i
-                    ? 'text-white/90 translate-x-2'
-                    : 'text-white/70 translate-x-0'
-                }`}
+                className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
                 style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
               >
                 {s.description}
               </p>
             </div>
+          ))}
+
+          {/* Side progress indicator */}
+          <div
+            className={`absolute right-[2%] top-[10%] h-[80%] w-[2px] pointer-events-none transition-opacity duration-500 ${
+              isMouseInside ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="relative w-full h-full bg-white/10 rounded-full">
+              {/* Active indicator dot */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-[8px] h-[8px] rounded-full bg-[#B1A490] transition-all duration-500 shadow-[0_0_10px_rgba(177,164,144,0.6)]"
+                style={{
+                  top:
+                    hoveredSection === 0
+                      ? '15%'
+                      : hoveredSection === 1
+                        ? '48%'
+                        : hoveredSection === 2
+                          ? '82%'
+                          : '48%',
+                }}
+              />
+              {/* Track marks */}
+              {[15, 48, 82].map((pos) => (
+                <div
+                  key={pos}
+                  className="absolute left-1/2 -translate-x-1/2 w-[4px] h-[4px] rounded-full bg-white/20"
+                  style={{ top: `${pos}%` }}
+                />
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </section>
   )
