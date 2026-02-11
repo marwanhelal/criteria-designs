@@ -33,6 +33,7 @@ interface Settings {
   seoDescriptionEn: string | null
   logo: string | null
   heroImage: string | null
+  heroVideo: string | null
 }
 
 const iconMap: Record<string, typeof Building> = {
@@ -65,6 +66,7 @@ export default function Home() {
   const displayServices = services.length > 0 ? services : []
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
   const heroImage = settings?.heroImage || featuredProject?.images?.[0]?.url || null
+  const heroVideo = settings?.heroVideo || null
 
   const scrollProjects = (dir: 'left' | 'right') => {
     const container = document.getElementById('project-scroll')
@@ -80,7 +82,31 @@ export default function Home() {
       {/* ===== HERO SECTION ===== */}
       <section className="relative w-full h-dvh min-h-[600px]">
         <div className="absolute inset-0">
-          {heroImage ? (
+          {heroVideo ? (
+            <>
+              <video
+                src={heroVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Fallback poster image (shows while video loads) */}
+              {heroImage && (
+                <Image
+                  src={heroImage}
+                  alt="Hero"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+                  unoptimized
+                  style={{ zIndex: -1 }}
+                />
+              )}
+            </>
+          ) : heroImage ? (
             <Image
               src={heroImage}
               alt="Hero"

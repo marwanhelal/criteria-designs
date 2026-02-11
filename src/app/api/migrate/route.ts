@@ -57,7 +57,17 @@ export async function POST() {
       results.push(`✗ philosophyImage: ${e instanceof Error ? e.message : String(e)}`)
     }
 
-    // 5. Create index on ProjectTimeline.projectId if it doesn't exist
+    // 5. Add heroVideo column to SiteSettings table if it doesn't exist
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "heroVideo" TEXT;
+      `)
+      results.push('✓ heroVideo column ensured on SiteSettings table')
+    } catch (e) {
+      results.push(`✗ heroVideo: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 6. Create index on ProjectTimeline.projectId if it doesn't exist
     try {
       await prisma.$executeRawUnsafe(`
         CREATE INDEX IF NOT EXISTS "ProjectTimeline_projectId_idx" ON "ProjectTimeline"("projectId");

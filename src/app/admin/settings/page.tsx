@@ -22,6 +22,7 @@ export default function SettingsPage() {
     logo: '',
     favicon: '',
     heroImage: '',
+    heroVideo: '',
     philosophyImage: '',
     seoTitleEn: '',
     seoTitleAr: '',
@@ -52,6 +53,7 @@ export default function SettingsPage() {
           logo: settings.logo || '',
           favicon: settings.favicon || '',
           heroImage: settings.heroImage || '',
+          heroVideo: settings.heroVideo || '',
           philosophyImage: settings.philosophyImage || '',
           seoTitleEn: settings.seoTitleEn || '',
           seoTitleAr: settings.seoTitleAr || '',
@@ -66,7 +68,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'philosophyImage') => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -296,38 +298,79 @@ export default function SettingsPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="font-semibold text-lg border-b pb-2">Homepage Hero Image</h2>
-          <p className="text-sm text-gray-500">This image will be displayed as the full-screen background on the homepage hero section.</p>
-          <div>
-            <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden mb-4">
-              {form.heroImage ? (
-                <img src={form.heroImage} alt="Hero" className="w-full h-full object-cover" />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  No hero image set
-                </div>
-              )}
+          <h2 className="font-semibold text-lg border-b pb-2">Homepage Hero</h2>
+          <p className="text-sm text-gray-500">Upload an image and/or video for the homepage hero section. If a video is set, it plays as the background with the image as a fallback/poster.</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Hero Image */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Hero Image (Fallback / Poster)</label>
+              <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden mb-3">
+                {form.heroImage ? (
+                  <img src={form.heroImage} alt="Hero" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                    No image set
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 text-sm">
+                  {uploading === 'heroImage' ? 'Uploading...' : 'Upload Image'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'heroImage')}
+                    className="hidden"
+                    disabled={uploading === 'heroImage'}
+                  />
+                </label>
+                {form.heroImage && (
+                  <button
+                    type="button"
+                    onClick={() => setForm(prev => ({ ...prev, heroImage: '' }))}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700">
-                {uploading === 'heroImage' ? 'Uploading...' : 'Upload Hero Image'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, 'heroImage')}
-                  className="hidden"
-                  disabled={uploading === 'heroImage'}
-                />
-              </label>
-              {form.heroImage && (
-                <button
-                  type="button"
-                  onClick={() => setForm(prev => ({ ...prev, heroImage: '' }))}
-                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-                >
-                  Remove
-                </button>
-              )}
+
+            {/* Hero Video */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Hero Video (Background)</label>
+              <div className="relative w-full h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                {form.heroVideo ? (
+                  <video src={form.heroVideo} className="w-full h-full object-cover" muted playsInline loop autoPlay />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                    No video set
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 text-sm">
+                  {uploading === 'heroVideo' ? 'Uploading...' : 'Upload Video'}
+                  <input
+                    type="file"
+                    accept="video/mp4,video/webm,video/quicktime"
+                    onChange={(e) => handleImageUpload(e, 'heroVideo')}
+                    className="hidden"
+                    disabled={uploading === 'heroVideo'}
+                  />
+                </label>
+                {form.heroVideo && (
+                  <button
+                    type="button"
+                    onClick={() => setForm(prev => ({ ...prev, heroVideo: '' }))}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-gray-400 mt-2">MP4, WebM, or MOV. Max 100MB. Plays muted and looped.</p>
             </div>
           </div>
         </div>
