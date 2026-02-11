@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir, readdir, readFile, unlink, rmdir } from 'fs/promises'
 import { join } from 'path'
+import { tmpdir } from 'os'
 import { prisma } from '@/lib/db'
 
 export const runtime = 'nodejs'
@@ -41,8 +42,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Save chunk to temp directory
-    const chunksDir = join(process.cwd(), 'tmp', 'chunks', uploadId)
+    // Save chunk to OS temp directory (always writable in Docker)
+    const chunksDir = join(tmpdir(), 'upload-chunks', uploadId)
     await mkdir(chunksDir, { recursive: true })
 
     const bytes = await chunk.arrayBuffer()
