@@ -89,6 +89,35 @@ export async function DELETE(
         where: { image: url },
         data: { image: null }
       }),
+      // CEO Banner: nullify image fields
+      prisma.siteSettings.updateMany({
+        where: { ceoImage: url },
+        data: { ceoImage: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoBgImage: url },
+        data: { ceoBgImage: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoLogo1: url },
+        data: { ceoLogo1: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoLogo2: url },
+        data: { ceoLogo2: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoLogo3: url },
+        data: { ceoLogo3: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoLogo4: url },
+        data: { ceoLogo4: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { ceoLogo5: url },
+        data: { ceoLogo5: null }
+      }),
     ])
 
     // Delete from media table

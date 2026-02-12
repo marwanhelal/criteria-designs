@@ -164,6 +164,37 @@ model SiteSettings {
   seoTitleAr      String?
   seoDescriptionEn String?
   seoDescriptionAr String?
+
+  // CEO Banner
+  ceoNameEn        String?
+  ceoNameAr        String?
+  ceoTitleEn       String?
+  ceoTitleAr       String?
+  ceoImage         String?
+  ceoBgImage       String?
+  ceoStat1Number   String?
+  ceoStat1LabelEn  String?
+  ceoStat1LabelAr  String?
+  ceoStat1DescEn   String?
+  ceoStat1DescAr   String?
+  ceoStat2Number   String?
+  ceoStat2LabelEn  String?
+  ceoStat2LabelAr  String?
+  ceoStat3Number   String?
+  ceoStat3LabelEn  String?
+  ceoStat3LabelAr  String?
+  ceoStat4Number   String?
+  ceoStat4LabelEn  String?
+  ceoStat4LabelAr  String?
+  ceoLogo1         String?
+  ceoLogo2         String?
+  ceoLogo3         String?
+  ceoLogo4         String?
+  ceoLogo5         String?
+  ceoBtnTextEn     String?
+  ceoBtnTextAr     String?
+  ceoBtnLink       String?
+
   updatedAt       DateTime @updatedAt
 }
 

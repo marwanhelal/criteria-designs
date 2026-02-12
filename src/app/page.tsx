@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PhilosophySection from '@/components/PhilosophySection'
+import CeoBanner from '@/components/CeoBanner'
 import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
 import { ChevronLeft, ChevronRight, Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
@@ -124,6 +125,9 @@ export default function Home() {
 
       {/* ===== PHILOSOPHY SECTION ===== */}
       <PhilosophySection />
+
+      {/* ===== CEO BANNER ===== */}
+      <CeoBanner />
 
       {/* ===== ABOUT SECTION ===== */}
       <section data-navbar-dark className="py-[140px] px-8">

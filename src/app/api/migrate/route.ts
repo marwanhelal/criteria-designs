@@ -77,6 +77,28 @@ export async function POST() {
       results.push(`✗ ProjectTimeline index: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 7. CEO Banner columns on SiteSettings
+    const ceoColumns = [
+      'ceoNameEn', 'ceoNameAr', 'ceoTitleEn', 'ceoTitleAr',
+      'ceoImage', 'ceoBgImage',
+      'ceoStat1Number', 'ceoStat1LabelEn', 'ceoStat1LabelAr', 'ceoStat1DescEn', 'ceoStat1DescAr',
+      'ceoStat2Number', 'ceoStat2LabelEn', 'ceoStat2LabelAr',
+      'ceoStat3Number', 'ceoStat3LabelEn', 'ceoStat3LabelAr',
+      'ceoStat4Number', 'ceoStat4LabelEn', 'ceoStat4LabelAr',
+      'ceoLogo1', 'ceoLogo2', 'ceoLogo3', 'ceoLogo4', 'ceoLogo5',
+      'ceoBtnTextEn', 'ceoBtnTextAr', 'ceoBtnLink',
+    ]
+    for (const col of ceoColumns) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)
@@ -114,6 +136,14 @@ export async function GET() {
       status.projectTimeline = 'exists'
     } catch {
       status.projectTimeline = 'missing'
+    }
+
+    // Check CEO banner columns
+    try {
+      await prisma.$queryRawUnsafe(`SELECT "ceoNameEn" FROM "SiteSettings" LIMIT 1`)
+      status.ceoBanner = 'exists'
+    } catch {
+      status.ceoBanner = 'missing'
     }
 
     return NextResponse.json({ status })

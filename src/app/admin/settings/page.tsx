@@ -30,7 +30,36 @@ export default function SettingsPage() {
     seoTitleEn: '',
     seoTitleAr: '',
     seoDescriptionEn: '',
-    seoDescriptionAr: ''
+    seoDescriptionAr: '',
+    // CEO Banner
+    ceoNameEn: '',
+    ceoNameAr: '',
+    ceoTitleEn: '',
+    ceoTitleAr: '',
+    ceoImage: '',
+    ceoBgImage: '',
+    ceoStat1Number: '',
+    ceoStat1LabelEn: '',
+    ceoStat1LabelAr: '',
+    ceoStat1DescEn: '',
+    ceoStat1DescAr: '',
+    ceoStat2Number: '',
+    ceoStat2LabelEn: '',
+    ceoStat2LabelAr: '',
+    ceoStat3Number: '',
+    ceoStat3LabelEn: '',
+    ceoStat3LabelAr: '',
+    ceoStat4Number: '',
+    ceoStat4LabelEn: '',
+    ceoStat4LabelAr: '',
+    ceoLogo1: '',
+    ceoLogo2: '',
+    ceoLogo3: '',
+    ceoLogo4: '',
+    ceoLogo5: '',
+    ceoBtnTextEn: '',
+    ceoBtnTextAr: '',
+    ceoBtnLink: '',
   })
 
   useEffect(() => {
@@ -61,7 +90,36 @@ export default function SettingsPage() {
           seoTitleEn: settings.seoTitleEn || '',
           seoTitleAr: settings.seoTitleAr || '',
           seoDescriptionEn: settings.seoDescriptionEn || '',
-          seoDescriptionAr: settings.seoDescriptionAr || ''
+          seoDescriptionAr: settings.seoDescriptionAr || '',
+          // CEO Banner
+          ceoNameEn: settings.ceoNameEn || '',
+          ceoNameAr: settings.ceoNameAr || '',
+          ceoTitleEn: settings.ceoTitleEn || '',
+          ceoTitleAr: settings.ceoTitleAr || '',
+          ceoImage: settings.ceoImage || '',
+          ceoBgImage: settings.ceoBgImage || '',
+          ceoStat1Number: settings.ceoStat1Number || '',
+          ceoStat1LabelEn: settings.ceoStat1LabelEn || '',
+          ceoStat1LabelAr: settings.ceoStat1LabelAr || '',
+          ceoStat1DescEn: settings.ceoStat1DescEn || '',
+          ceoStat1DescAr: settings.ceoStat1DescAr || '',
+          ceoStat2Number: settings.ceoStat2Number || '',
+          ceoStat2LabelEn: settings.ceoStat2LabelEn || '',
+          ceoStat2LabelAr: settings.ceoStat2LabelAr || '',
+          ceoStat3Number: settings.ceoStat3Number || '',
+          ceoStat3LabelEn: settings.ceoStat3LabelEn || '',
+          ceoStat3LabelAr: settings.ceoStat3LabelAr || '',
+          ceoStat4Number: settings.ceoStat4Number || '',
+          ceoStat4LabelEn: settings.ceoStat4LabelEn || '',
+          ceoStat4LabelAr: settings.ceoStat4LabelAr || '',
+          ceoLogo1: settings.ceoLogo1 || '',
+          ceoLogo2: settings.ceoLogo2 || '',
+          ceoLogo3: settings.ceoLogo3 || '',
+          ceoLogo4: settings.ceoLogo4 || '',
+          ceoLogo5: settings.ceoLogo5 || '',
+          ceoBtnTextEn: settings.ceoBtnTextEn || '',
+          ceoBtnTextAr: settings.ceoBtnTextAr || '',
+          ceoBtnLink: settings.ceoBtnLink || '',
         })
       }
     } catch (error) {
@@ -71,7 +129,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage') => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage' | 'ceoImage' | 'ceoBgImage' | 'ceoLogo1' | 'ceoLogo2' | 'ceoLogo3' | 'ceoLogo4' | 'ceoLogo5') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -587,6 +645,155 @@ export default function SettingsPage() {
                 rows={3}
                 dir="rtl"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* CEO / Founder Banner */}
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <h2 className="font-semibold text-lg border-b pb-2">CEO / Founder Banner</h2>
+          <p className="text-sm text-gray-500">This banner appears on the homepage after the Philosophy section. Leave the name empty to hide the section.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name (English)</label>
+              <input type="text" value={form.ceoNameEn} onChange={(e) => setForm({ ...form, ceoNameEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="HESHAM A. HELAL" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name (Arabic)</label>
+              <input type="text" value={form.ceoNameAr} onChange={(e) => setForm({ ...form, ceoNameAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" dir="rtl" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title (English)</label>
+              <input type="text" value={form.ceoTitleEn} onChange={(e) => setForm({ ...form, ceoTitleEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="CEO & FOUNDER, M.Sc" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title (Arabic)</label>
+              <input type="text" value={form.ceoTitleAr} onChange={(e) => setForm({ ...form, ceoTitleAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" dir="rtl" />
+            </div>
+          </div>
+
+          {/* Portrait + Background Image */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Portrait Photo</label>
+              <p className="text-xs text-gray-500 mb-2">Displayed in a circle on the left side of the banner</p>
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                  {form.ceoImage ? (
+                    <img src={form.ceoImage} alt="CEO" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-gray-400 text-xs">No photo</span>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 text-sm text-center">
+                    {uploading === 'ceoImage' ? 'Uploading...' : 'Upload'}
+                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'ceoImage')} className="hidden" disabled={uploading === 'ceoImage'} />
+                  </label>
+                  {form.ceoImage && (
+                    <button type="button" onClick={() => setForm(prev => ({ ...prev, ceoImage: '' }))} className="text-xs text-red-500 hover:text-red-600">Remove</button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Background Image</label>
+              <p className="text-xs text-gray-500 mb-2">Architectural image shown behind the banner</p>
+              <div className="relative w-full h-24 bg-gray-100 rounded-lg overflow-hidden mb-2">
+                {form.ceoBgImage ? (
+                  <img src={form.ceoBgImage} alt="BG" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400 text-sm">No background</div>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 text-sm">
+                  {uploading === 'ceoBgImage' ? 'Uploading...' : 'Upload'}
+                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'ceoBgImage')} className="hidden" disabled={uploading === 'ceoBgImage'} />
+                </label>
+                {form.ceoBgImage && (
+                  <button type="button" onClick={() => setForm(prev => ({ ...prev, ceoBgImage: '' }))} className="text-xs text-red-500 hover:text-red-600">Remove</button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <h3 className="font-medium text-sm text-gray-700 border-t pt-4 mt-4">Stats (4 items)</h3>
+          {[1, 2, 3, 4].map((n) => {
+            const numKey = `ceoStat${n}Number` as keyof typeof form
+            const labelEnKey = `ceoStat${n}LabelEn` as keyof typeof form
+            const labelArKey = `ceoStat${n}LabelAr` as keyof typeof form
+            return (
+              <div key={n} className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Stat {n} Number</label>
+                  <input type="text" value={form[numKey]} onChange={(e) => setForm({ ...form, [numKey]: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder={n === 1 ? '+25' : n === 2 ? '+500' : n === 3 ? '6' : '5'} />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Label (EN)</label>
+                  <input type="text" value={form[labelEnKey]} onChange={(e) => setForm({ ...form, [labelEnKey]: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder={n === 1 ? 'YEARS' : n === 2 ? 'COMPLETED PROJECTS' : n === 3 ? 'PUBLISHED PAPERS' : 'COUNTRIES'} />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Label (AR)</label>
+                  <input type="text" value={form[labelArKey]} onChange={(e) => setForm({ ...form, [labelArKey]: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" dir="rtl" />
+                </div>
+              </div>
+            )
+          })}
+          {/* Stat 1 description */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Stat 1 Description (EN)</label>
+              <input type="text" value={form.ceoStat1DescEn} onChange={(e) => setForm({ ...form, ceoStat1DescEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="merging creativity with functionality" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Stat 1 Description (AR)</label>
+              <input type="text" value={form.ceoStat1DescAr} onChange={(e) => setForm({ ...form, ceoStat1DescAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" dir="rtl" />
+            </div>
+          </div>
+
+          {/* Logos */}
+          <h3 className="font-medium text-sm text-gray-700 border-t pt-4 mt-4">Conference / Certification Logos (up to 5)</h3>
+          <div className="flex flex-wrap gap-4">
+            {(['ceoLogo1', 'ceoLogo2', 'ceoLogo3', 'ceoLogo4', 'ceoLogo5'] as const).map((logoKey, i) => (
+              <div key={logoKey} className="flex flex-col items-center gap-2">
+                <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                  {form[logoKey] ? (
+                    <img src={form[logoKey]} alt={`Logo ${i + 1}`} className="max-h-full max-w-full object-contain" />
+                  ) : (
+                    <span className="text-gray-300 text-xs">{i + 1}</span>
+                  )}
+                </div>
+                <label className="px-3 py-1 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 text-xs">
+                  {uploading === logoKey ? '...' : 'Upload'}
+                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, logoKey)} className="hidden" disabled={uploading === logoKey} />
+                </label>
+                {form[logoKey] && (
+                  <button type="button" onClick={() => setForm(prev => ({ ...prev, [logoKey]: '' }))} className="text-xs text-red-500">Remove</button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Button */}
+          <h3 className="font-medium text-sm text-gray-700 border-t pt-4 mt-4">Button</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Button Text (EN)</label>
+              <input type="text" value={form.ceoBtnTextEn} onChange={(e) => setForm({ ...form, ceoBtnTextEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="SEE MORE" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Button Text (AR)</label>
+              <input type="text" value={form.ceoBtnTextAr} onChange={(e) => setForm({ ...form, ceoBtnTextAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" dir="rtl" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Button Link</label>
+              <input type="text" value={form.ceoBtnLink} onChange={(e) => setForm({ ...form, ceoBtnLink: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="/about" />
             </div>
           </div>
         </div>
