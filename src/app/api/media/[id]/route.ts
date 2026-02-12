@@ -20,17 +20,78 @@ export async function DELETE(
       )
     }
 
+    const url = media.url
+
     // Delete file from disk
     // URL is stored as /api/uploads/filename, actual file is at public/uploads/filename
     try {
-      const filename = media.url.replace(/^\/api\/uploads\//, '')
+      const filename = url.replace(/^\/api\/uploads\//, '')
       const filepath = join(process.cwd(), 'public', 'uploads', filename)
       await unlink(filepath)
     } catch {
       // File may not exist, continue with database deletion
     }
 
-    // Delete from database
+    // Clear all references to this media URL across all tables
+    await Promise.all([
+      // SiteSettings: nullify any field matching this URL
+      prisma.siteSettings.updateMany({
+        where: { logo: url },
+        data: { logo: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { favicon: url },
+        data: { favicon: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { heroImage: url },
+        data: { heroImage: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { heroVideo: url },
+        data: { heroVideo: null }
+      }),
+      prisma.siteSettings.updateMany({
+        where: { philosophyImage: url },
+        data: { philosophyImage: null }
+      }),
+      // ProjectImage: delete records referencing this URL
+      prisma.projectImage.deleteMany({
+        where: { url }
+      }),
+      // ProjectTimeline: nullify image
+      prisma.projectTimeline.updateMany({
+        where: { image: url },
+        data: { image: null }
+      }),
+      // Project: nullify clientLogo
+      prisma.project.updateMany({
+        where: { clientLogo: url },
+        data: { clientLogo: null }
+      }),
+      // TeamMember: nullify photo
+      prisma.teamMember.updateMany({
+        where: { photo: url },
+        data: { photo: null }
+      }),
+      // Service: nullify image
+      prisma.service.updateMany({
+        where: { image: url },
+        data: { image: null }
+      }),
+      // BlogPost: nullify featuredImage
+      prisma.blogPost.updateMany({
+        where: { featuredImage: url },
+        data: { featuredImage: null }
+      }),
+      // User: nullify image
+      prisma.user.updateMany({
+        where: { image: url },
+        data: { image: null }
+      }),
+    ])
+
+    // Delete from media table
     await prisma.media.delete({ where: { id } })
 
     return NextResponse.json({ success: true })
