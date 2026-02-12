@@ -108,7 +108,7 @@ export default function SettingsPage() {
 
   const handleChunkedUpload = async (file: File, field: string) => {
     setUploading(field)
-    setUploadProgress(0)
+    setUploadProgress(1)
 
     const uploadId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
@@ -412,7 +412,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center gap-3">
                 <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 text-sm">
-                  {uploading === 'heroVideo' ? (uploadProgress > 0 ? `Uploading ${uploadProgress}%` : 'Uploading...') : 'Upload Video'}
+                  {uploading === 'heroVideo' ? `Uploading ${uploadProgress}%` : 'Upload Video'}
                   <input
                     type="file"
                     accept="video/mp4,video/webm,video/quicktime"
@@ -431,12 +431,12 @@ export default function SettingsPage() {
                   </button>
                 )}
               </div>
-              {uploading === 'heroVideo' && uploadProgress > 0 && (
+              {uploading === 'heroVideo' && (
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
                 </div>
               )}
-              <p className="text-xs text-gray-400 mt-2">MP4, WebM, or MOV. Max 100MB. Plays muted and looped.</p>
+              <p className="text-xs text-gray-400 mt-2">MP4, WebM, or MOV. Max 150MB. Plays muted and looped.</p>
             </div>
           </div>
         </div>

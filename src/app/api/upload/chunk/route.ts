@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     // Validate total file size
     const totalSize = parseInt(fileSize)
     const isVideo = videoTypes.includes(fileType)
-    const maxSize = isVideo ? 100 * 1024 * 1024 : 5 * 1024 * 1024
+    const maxSize = isVideo ? 150 * 1024 * 1024 : 5 * 1024 * 1024
     if (totalSize > maxSize) {
       return NextResponse.json(
         { error: `File too large. Maximum size is ${isVideo ? '100MB' : '5MB'}` },
