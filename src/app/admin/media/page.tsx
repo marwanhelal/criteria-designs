@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Upload, Trash2, Copy, Check } from 'lucide-react'
+import { Upload, Trash2, Copy, Check, Download } from 'lucide-react'
 
 interface Media {
   id: string
@@ -92,6 +92,23 @@ export default function MediaPage() {
     setTimeout(() => setCopied(null), 2000)
   }
 
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const blobUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(blobUrl)
+    } catch (error) {
+      console.error('Error downloading file:', error)
+    }
+  }
+
   const formatSize = (bytes: number) => {
     if (bytes < 1024) return bytes + ' B'
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
@@ -174,6 +191,13 @@ export default function MediaPage() {
                     ) : (
                       <Copy size={16} />
                     )}
+                  </button>
+                  <button
+                    onClick={() => handleDownload(item.url, item.filename)}
+                    className="p-2 bg-white rounded-full hover:bg-gray-100 text-blue-600"
+                    title="Download"
+                  >
+                    <Download size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
