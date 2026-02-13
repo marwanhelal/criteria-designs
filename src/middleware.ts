@@ -11,7 +11,6 @@ const PROTECTED_API_ROUTES = [
   '/api/settings',
   '/api/media',
   '/api/upload',
-  '/api/migrate',
 ]
 
 // Routes that are always public
@@ -20,6 +19,7 @@ const PUBLIC_API_ROUTES = [
   '/api/setup',
   '/api/contact',
   '/api/uploads',
+  '/api/migrate',
 ]
 
 export async function middleware(request: NextRequest) {
