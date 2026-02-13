@@ -92,14 +92,14 @@ export default function PhilosophySection() {
   if (!philosophyImage) return null
 
   return (
-    <section className="bg-[#F5F1EB] pt-[40px] md:pt-[60px] pb-0 overflow-hidden">
+    <section className="bg-[#0D0F13] pt-[40px] md:pt-[60px] pb-0 overflow-hidden">
       <style>{`
         .phi-container { cursor: crosshair; --mx: 0; --my: 0; }
 
         .phi-zone { position: absolute; left: 0; width: 100%; height: 33.34%; z-index: 2; }
-        .phi-zone .phi-dim { position: absolute; inset: 0; background: rgba(13,15,19,0.12); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        .phi-zone .phi-dim { position: absolute; inset: 0; background: rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .phi-zone .phi-line { position: absolute; bottom: 0; left: 5%; width: 90%; height: 1px; opacity: 0; transition: opacity 0.5s; pointer-events: none;
-          background: linear-gradient(90deg, transparent, rgba(177,164,144,0.6), transparent); }
+          background: linear-gradient(90deg, transparent, rgba(177,164,144,0.5), transparent); }
 
         /* Scan line — sweeps across zone on hover */
         .phi-zone .phi-scan { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
@@ -137,15 +137,15 @@ export default function PhilosophySection() {
         .phi-text.phi-hidden { opacity: 0; transform: translate(0, 16px); }
 
         /* Progress tracker */
-        .phi-progress-dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(44,44,44,0.2);
+        .phi-progress-dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
           background: transparent; transition: all 0.5s; }
-        .phi-progress-dot.active { background: #B1A490; border-color: #B1A490; box-shadow: 0 0 10px rgba(177,164,144,0.5); }
-        .phi-progress-line { width: 1px; height: 20px; background: rgba(44,44,44,0.15); transition: background 0.5s; }
-        .phi-progress-line.active { background: rgba(177,164,144,0.5); }
+        .phi-progress-dot.active { background: #B1A490; border-color: #B1A490; box-shadow: 0 0 8px rgba(177,164,144,0.4); }
+        .phi-progress-line { width: 1px; height: 20px; background: rgba(255,255,255,0.1); transition: background 0.5s; }
+        .phi-progress-line.active { background: rgba(177,164,144,0.4); }
 
         /* Completion glow */
         .phi-complete-glow { position: absolute; inset: 0; pointer-events: none; z-index: 1;
-          box-shadow: inset 0 0 100px rgba(177,164,144,0.15); opacity: 0; transition: opacity 1s; }
+          box-shadow: inset 0 0 80px rgba(177,164,144,0.06); opacity: 0; transition: opacity 1s; }
         .phi-complete-glow.show { opacity: 1; }
       `}</style>
 
@@ -154,7 +154,7 @@ export default function PhilosophySection() {
           <span className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#B1A490] uppercase tracking-[3px]">
             What drives us
           </span>
-          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-[#2C2C2C] leading-[1.15] mt-4">
+          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-white leading-[1.15] mt-4">
             Our Philosophy
           </h2>
         </div>
@@ -164,7 +164,7 @@ export default function PhilosophySection() {
             <div key={s.title} className="flex flex-col items-center gap-1.5">
               <span
                 className={`font-[var(--font-libre-franklin)] text-[11px] md:text-[13px] uppercase tracking-[3px] md:tracking-[4px] transition-all duration-700 ${
-                  revealed[i] ? 'text-[#B1A490]' : 'text-[#2C2C2C]/25'
+                  revealed[i] ? 'text-[#B1A490]' : 'text-white/20'
                 }`}
               >
                 {s.title}
@@ -179,7 +179,7 @@ export default function PhilosophySection() {
         </div>
 
         <p
-          className={`text-center font-[var(--font-open-sans)] text-[12px] text-[#2C2C2C]/30 mb-2 transition-opacity duration-700 ${
+          className={`text-center font-[var(--font-open-sans)] text-[12px] text-white/25 mb-2 transition-opacity duration-700 ${
             revealed[0] ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -202,14 +202,14 @@ export default function PhilosophySection() {
         {/* Completion inner glow — appears when all 3 explored */}
         <div className={`phi-complete-glow ${allRevealed ? 'show' : ''}`} />
 
-        {/* Warm spotlight — moved via DOM, not React state */}
+        {/* Bright spotlight — moved via DOM, not React state */}
         <div
           ref={spotlightRef}
           className="absolute w-[350px] h-[350px] md:w-[550px] md:h-[550px] rounded-full pointer-events-none z-[1]"
           style={{
             transform: 'translate(-50%, -50%)',
             background:
-              'radial-gradient(circle, rgba(177,164,144,0.28) 0%, rgba(177,164,144,0.18) 25%, rgba(177,164,144,0.10) 50%, transparent 70%)',
+              'radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(177,164,144,0.10) 25%, rgba(177,164,144,0.04) 50%, transparent 70%)',
             opacity: 0,
             transition: 'opacity 0.3s',
             willChange: 'left, top',
@@ -240,7 +240,7 @@ export default function PhilosophySection() {
           >
             {/* Ghost section number */}
             <span
-              className="phi-num font-[var(--font-libre-franklin)] font-light text-[#2C2C2C]/08 leading-none absolute top-[5%] right-[5%]"
+              className="phi-num font-[var(--font-libre-franklin)] font-light text-white/10 leading-none absolute top-[5%] right-[5%]"
               style={{ fontSize: 'clamp(40px, 8vw, 120px)' }}
             >
               {s.num}
@@ -251,13 +251,13 @@ export default function PhilosophySection() {
               }`}
             />
             <h3
-              className="font-[var(--font-merriweather)] font-bold text-[#2C2C2C] leading-[1.05] tracking-[1px]"
+              className="font-[var(--font-merriweather)] font-bold text-white leading-[1.05] tracking-[1px]"
               style={{ fontSize: 'clamp(24px, 5vw, 72px)' }}
             >
               {s.title}
             </h3>
             <p
-              className="font-[var(--font-open-sans)] text-[#2C2C2C]/75 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
+              className="font-[var(--font-open-sans)] text-white/70 leading-[1.5] mt-[clamp(6px,1vw,16px)]"
               style={{ fontSize: 'clamp(8px, 1.1vw, 15px)' }}
             >
               {s.description}
@@ -277,8 +277,8 @@ export default function PhilosophySection() {
           ))}
           {/* Fraction counter */}
           <span
-            className="font-[var(--font-libre-franklin)] text-[10px] text-[#2C2C2C]/40 mt-3 tracking-[2px] transition-colors duration-500"
-            style={{ color: allRevealed ? 'rgba(177,164,144,0.75)' : undefined }}
+            className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 mt-3 tracking-[2px] transition-colors duration-500"
+            style={{ color: allRevealed ? 'rgba(177,164,144,0.6)' : undefined }}
           >
             {revealed.filter(Boolean).length}/3
           </span>
