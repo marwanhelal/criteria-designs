@@ -142,415 +142,37 @@ export default function CeoBanner() {
       data-navbar-dark
       className="relative w-full overflow-hidden bg-[#F8F8F8]"
     >
-      {/* Animated architectural blueprint background with parallax */}
-      <motion.div
-        className="absolute inset-[-40px] pointer-events-none"
-        style={{ y: bgY, scale: bgScale }}
-      >
-        <svg
-          className="w-full h-full"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="xMidYMid slice"
-          viewBox="0 0 1200 800"
+      {/* CMS background image with parallax (if uploaded) */}
+      {data.ceoBgImage && (
+        <motion.div
+          className="absolute inset-[-20px] pointer-events-none"
+          style={{ y: bgY, scale: bgScale }}
         >
-          <defs>
-            <pattern id="bp-grid-sm" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#B1A490" strokeWidth="0.3" opacity="0.5" />
-            </pattern>
-            <pattern id="bp-grid-md" width="100" height="100" patternUnits="userSpaceOnUse">
-              <rect width="100" height="100" fill="url(#bp-grid-sm)" />
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#B1A490" strokeWidth="0.5" opacity="0.6" />
-            </pattern>
-          </defs>
-
-          {/* Base grid - fades in */}
-          <motion.rect
-            width="1200" height="800" fill="url(#bp-grid-md)"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 1.5 }}
+          <Image
+            src={data.ceoBgImage}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-[0.07]"
+            unoptimized
           />
-
-          {/* Floor plan rooms - line-drawing animation */}
-          <motion.g
-            stroke="#9A8B78" fill="none" strokeWidth="1.5"
-            initial={{ opacity: 0, pathLength: 0 }}
-            animate={isInView ? { opacity: 0.35 } : { opacity: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            {/* Large room left - draws itself */}
-            <motion.rect
-              x="60" y="120" width="280" height="220"
-              strokeDasharray="1000"
-              initial={{ strokeDashoffset: 1000 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 1000 }}
-              transition={{ duration: 2, delay: 0.5, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="60" y1="240" x2="340" y2="240"
-              strokeDasharray="280"
-              initial={{ strokeDashoffset: 280 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 280 }}
-              transition={{ duration: 1.2, delay: 0.8, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="180" y1="120" x2="180" y2="240"
-              strokeDasharray="120"
-              initial={{ strokeDashoffset: 120 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 120 }}
-              transition={{ duration: 0.8, delay: 1.0, ease: 'easeInOut' }}
-            />
-            <motion.rect
-              x="70" y="130" width="100" height="100"
-              strokeDasharray="4,4" strokeWidth="0.8"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.6, delay: 1.5 }}
-            />
-
-            {/* Central corridor */}
-            <motion.rect
-              x="340" y="160" width="120" height="320" strokeWidth="1"
-              strokeDasharray="880"
-              initial={{ strokeDashoffset: 880 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 880 }}
-              transition={{ duration: 2, delay: 0.7, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="340" y1="320" x2="460" y2="320"
-              strokeDasharray="3,3" strokeWidth="0.8"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.6, delay: 1.8 }}
-            />
-
-            {/* Right wing rooms */}
-            <motion.rect
-              x="460" y="100" width="320" height="180"
-              strokeDasharray="1000"
-              initial={{ strokeDashoffset: 1000 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 1000 }}
-              transition={{ duration: 2.2, delay: 0.6, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="620" y1="100" x2="620" y2="280"
-              strokeDasharray="180"
-              initial={{ strokeDashoffset: 180 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 180 }}
-              transition={{ duration: 1, delay: 1.2, ease: 'easeInOut' }}
-            />
-            <motion.rect
-              x="470" y="110" width="140" height="80"
-              strokeDasharray="4,4" strokeWidth="0.8"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.6, delay: 2.0 }}
-            />
-            <motion.rect
-              x="630" y="110" width="140" height="80"
-              strokeDasharray="4,4" strokeWidth="0.8"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.6, delay: 2.2 }}
-            />
-
-            {/* Bottom rooms */}
-            <motion.rect
-              x="460" y="340" width="200" height="160"
-              strokeDasharray="720"
-              initial={{ strokeDashoffset: 720 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 720 }}
-              transition={{ duration: 1.8, delay: 1.0, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="560" y1="340" x2="560" y2="500"
-              strokeDasharray="160"
-              initial={{ strokeDashoffset: 160 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 160 }}
-              transition={{ duration: 0.8, delay: 1.5, ease: 'easeInOut' }}
-            />
-            <motion.rect
-              x="700" y="340" width="160" height="160"
-              strokeDasharray="640"
-              initial={{ strokeDashoffset: 640 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 640 }}
-              transition={{ duration: 1.6, delay: 1.2, ease: 'easeInOut' }}
-            />
-
-            {/* Staircase - steps appear one by one */}
-            {[0, 10, 20, 30, 40, 50].map((yOff, i) => (
-              <motion.line
-                key={`stair-${i}`}
-                x1={370} y1={180 + yOff} x2={430} y2={180 + yOff}
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ duration: 0.15, delay: 1.8 + i * 0.08 }}
-              />
-            ))}
-            <motion.line
-              x1={400} y1={180} x2={400} y2={230}
-              strokeWidth="0.3"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.4 }}
-            />
-
-            {/* Top-right rooms */}
-            <motion.rect
-              x="820" y="100" width="200" height="140"
-              strokeDasharray="680"
-              initial={{ strokeDashoffset: 680 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 680 }}
-              transition={{ duration: 1.8, delay: 0.9, ease: 'easeInOut' }}
-            />
-            <motion.line
-              x1="920" y1="100" x2="920" y2="240"
-              strokeWidth="1"
-              strokeDasharray="140"
-              initial={{ strokeDashoffset: 140 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 140 }}
-              transition={{ duration: 0.8, delay: 1.4, ease: 'easeInOut' }}
-            />
-            <motion.rect
-              x="830" y="250" width="190" height="120"
-              strokeWidth="1"
-              strokeDasharray="620"
-              initial={{ strokeDashoffset: 620 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 620 }}
-              transition={{ duration: 1.6, delay: 1.1, ease: 'easeInOut' }}
-            />
-          </motion.g>
-
-          {/* Building perspective - draws with delay */}
-          <motion.g
-            stroke="#8A7A66" fill="none" strokeWidth="1.2"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 0.2 } : { opacity: 0 }}
-            transition={{ duration: 1, delay: 1.5 }}
-          >
-            <motion.path
-              d="M 900 600 L 900 380 L 1050 320 L 1050 560 Z"
-              strokeDasharray="800"
-              initial={{ strokeDashoffset: 800 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 800 }}
-              transition={{ duration: 2.5, delay: 1.5, ease: 'easeInOut' }}
-            />
-            {[360, 400, 440, 480].map((y, i) => (
-              <motion.line
-                key={`floor-l-${i}`}
-                x1="900" y1={y + 60} x2="1050" y2={y}
-                strokeDasharray="170"
-                initial={{ strokeDashoffset: 170 }}
-                animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 170 }}
-                transition={{ duration: 0.8, delay: 2.2 + i * 0.15, ease: 'easeInOut' }}
-              />
-            ))}
-            {/* Windows fade in */}
-            {[395, 445, 495].map((y, i) => (
-              <motion.g
-                key={`win-row-${i}`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.4, delay: 2.8 + i * 0.12 }}
-              >
-                <rect x="915" y={y} width="25" height="35" />
-                <rect x="950" y={y} width="25" height="35" />
-              </motion.g>
-            ))}
-            {/* Second face */}
-            <motion.path
-              d="M 1050 320 L 1160 370 L 1160 610 L 1050 560"
-              strokeDasharray="700"
-              initial={{ strokeDashoffset: 700 }}
-              animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 700 }}
-              transition={{ duration: 2.2, delay: 1.8, ease: 'easeInOut' }}
-            />
-            {[410, 450, 490, 530].map((y, i) => (
-              <motion.line
-                key={`floor-r-${i}`}
-                x1="1050" y1={y - 50} x2="1160" y2={y}
-                strokeDasharray="130"
-                initial={{ strokeDashoffset: 130 }}
-                animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 130 }}
-                transition={{ duration: 0.6, delay: 2.5 + i * 0.15, ease: 'easeInOut' }}
-              />
-            ))}
-          </motion.g>
-
-          {/* Diagonal construction lines - sweep in from corners */}
-          <motion.g stroke="#B1A490" strokeWidth="0.8">
-            {[
-              { x1: 0, y1: 0, x2: 600, y2: 400, len: 721 },
-              { x1: 1200, y1: 0, x2: 600, y2: 400, len: 721 },
-              { x1: 0, y1: 800, x2: 600, y2: 400, len: 721 },
-              { x1: 1200, y1: 800, x2: 600, y2: 400, len: 721 },
-            ].map((l, i) => (
-              <motion.line
-                key={`diag-${i}`}
-                x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
-                strokeDasharray={l.len}
-                initial={{ strokeDashoffset: l.len, opacity: 0 }}
-                animate={isInView ? { strokeDashoffset: 0, opacity: 0.15 } : { strokeDashoffset: l.len, opacity: 0 }}
-                transition={{ duration: 3, delay: 0.5 + i * 0.3, ease: 'easeInOut' }}
-              />
-            ))}
-          </motion.g>
-
-          {/* Dimension lines - slide in */}
-          <motion.g
-            stroke="#9A8B78" fill="none" strokeWidth="0.8"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 0.25 } : { opacity: 0 }}
-            transition={{ duration: 0.8, delay: 2.0 }}
-          >
-            {/* Horizontal dimension - expands from center */}
-            <motion.line
-              x1="200" y1="370" x2="200" y2="370"
-              animate={isInView ? { x1: 60, x2: 340 } : { x1: 200, x2: 200 }}
-              transition={{ duration: 1.2, delay: 2.2, ease: 'easeOut' }}
-            />
-            <motion.line x1="60" y1="365" x2="60" y2="375"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.5 }}
-            />
-            <motion.line x1="340" y1="365" x2="340" y2="375"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.5 }}
-            />
-            {/* Vertical dimension */}
-            <motion.line
-              x1="30" y1="230" x2="30" y2="230"
-              animate={isInView ? { y1: 120, y2: 340 } : { y1: 230, y2: 230 }}
-              transition={{ duration: 1.2, delay: 2.4, ease: 'easeOut' }}
-            />
-            <motion.line x1="25" y1="120" x2="35" y2="120"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.7 }}
-            />
-            <motion.line x1="25" y1="340" x2="35" y2="340"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.7 }}
-            />
-            {/* Right side dimension */}
-            <motion.line
-              x1="810" y1="185" x2="810" y2="185"
-              animate={isInView ? { y1: 90, y2: 280 } : { y1: 185, y2: 185 }}
-              transition={{ duration: 1.2, delay: 2.6, ease: 'easeOut' }}
-            />
-            <motion.line x1="805" y1="90" x2="815" y2="90"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.9 }}
-            />
-            <motion.line x1="805" y1="280" x2="815" y2="280"
-              initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: 0.3, delay: 2.9 }}
-            />
-          </motion.g>
-
-          {/* Column markers - pulse in with ripple */}
-          {[
-            [60, 120], [340, 120], [60, 340], [340, 340],
-            [460, 100], [780, 100], [460, 280], [780, 280],
-            [460, 500], [660, 500], [860, 500],
-          ].map(([cx, cy], i) => (
-            <motion.g key={`col-${i}`}>
-              <motion.circle
-                cx={cx} cy={cy} r="5"
-                fill="none" stroke="#B1A490" strokeWidth="0.8"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={isInView ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0 }}
-                transition={{ duration: 0.4, delay: 2.0 + i * 0.08, ease: 'backOut' }}
-              />
-              {/* Pulse ring */}
-              <motion.circle
-                cx={cx} cy={cy} r="5"
-                fill="none" stroke="#B1A490" strokeWidth="0.5"
-                initial={{ opacity: 0, scale: 1 }}
-                animate={isInView ? {
-                  opacity: [0, 0.3, 0],
-                  scale: [1, 2.5, 3],
-                } : { opacity: 0 }}
-                transition={{
-                  duration: 2,
-                  delay: 3.5 + i * 0.15,
-                  repeat: Infinity,
-                  repeatDelay: 6 + i * 0.5,
-                }}
-              />
-            </motion.g>
-          ))}
-
-          {/* Compass rose - rotates in and keeps slowly spinning */}
-          <motion.g
-            transform="translate(100, 650)"
-            stroke="#B1A490" fill="none" strokeWidth="1"
-            initial={{ opacity: 0, rotate: -180 }}
-            animate={isInView ? { opacity: 0.3, rotate: 0 } : { opacity: 0, rotate: -180 }}
-            transition={{ duration: 2, delay: 2.5, ease: 'easeOut' }}
-            style={{ originX: '100px', originY: '650px' }}
-          >
-            <circle cx="0" cy="0" r="25" />
-            <motion.g
-              animate={isInView ? { rotate: [0, 360] } : { rotate: 0 }}
-              transition={{ duration: 60, repeat: Infinity, ease: 'linear', delay: 4 }}
-            >
-              <line x1="0" y1="-30" x2="0" y2="30" />
-              <line x1="-30" y1="0" x2="30" y2="0" />
-              <path d="M 0 -25 L 4 -8 L 0 -12 L -4 -8 Z" fill="#B1A490" opacity="0.4" />
-            </motion.g>
-          </motion.g>
-
-          {/* Door arcs - sweep animation */}
-          <motion.g stroke="#9A8B78" fill="none" strokeWidth="0.8">
-            <motion.path
-              d="M 200 340 A 40 40 0 0 1 240 340"
-              strokeDasharray="63"
-              initial={{ strokeDashoffset: 63, opacity: 0 }}
-              animate={isInView ? { strokeDashoffset: 0, opacity: 0.3 } : { strokeDashoffset: 63, opacity: 0 }}
-              transition={{ duration: 0.8, delay: 2.5, ease: 'easeInOut' }}
-            />
-            <motion.path
-              d="M 620 280 A 30 30 0 0 0 650 280"
-              strokeDasharray="47"
-              initial={{ strokeDashoffset: 47, opacity: 0 }}
-              animate={isInView ? { strokeDashoffset: 0, opacity: 0.3 } : { strokeDashoffset: 47, opacity: 0 }}
-              transition={{ duration: 0.8, delay: 2.7, ease: 'easeInOut' }}
-            />
-          </motion.g>
-
-          {/* Floating measurement scan line - continuously sweeps */}
-          <motion.line
-            x1="0" y1="0" x2="1200" y2="0"
-            stroke="#B1A490" strokeWidth="0.8"
-            initial={{ opacity: 0 }}
-            animate={isInView ? {
-              y1: [0, 800, 0],
-              y2: [0, 800, 0],
-              opacity: [0, 0.2, 0],
-            } : { opacity: 0 }}
-            transition={{
-              duration: 8,
-              delay: 3,
-              repeat: Infinity,
-              repeatDelay: 4,
-              ease: 'easeInOut',
-            }}
-          />
-        </svg>
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* Decorative corner accents */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, delay: 1.2 }}
-        className="absolute top-8 right-8 w-[60px] h-[60px] border-t border-r border-[#B1A490]/20 hidden lg:block"
+        whileHover={{ scale: 1.3, rotate: 5, transition: { duration: 0.4 } }}
+        className="absolute top-8 right-8 w-[60px] h-[60px] border-t border-r border-[#B1A490]/20 hidden lg:block cursor-pointer hover:border-[#B1A490]/50 transition-colors duration-300"
       />
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, delay: 1.2 }}
-        className="absolute bottom-8 left-8 w-[60px] h-[60px] border-b border-l border-[#B1A490]/20 hidden lg:block"
+        whileHover={{ scale: 1.3, rotate: -5, transition: { duration: 0.4 } }}
+        className="absolute bottom-8 left-8 w-[60px] h-[60px] border-b border-l border-[#B1A490]/20 hidden lg:block cursor-pointer hover:border-[#B1A490]/50 transition-colors duration-300"
       />
 
       <div className="relative z-10 max-w-[1290px] mx-auto px-8 py-[70px] lg:py-[90px]">
@@ -602,7 +224,8 @@ export default function CeoBanner() {
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="hidden lg:inline-block font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[4px] mb-4"
+              whileHover={{ letterSpacing: '6px', transition: { duration: 0.3 } }}
+              className="hidden lg:inline-block font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[4px] mb-4 cursor-default hover:text-[#181C23] transition-colors duration-300"
             >
               Our Founder
             </motion.span>
@@ -612,7 +235,8 @@ export default function CeoBanner() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-[#181C23] leading-[1.1] font-bold uppercase tracking-[2px]"
+              whileHover={{ letterSpacing: '4px', transition: { duration: 0.4 } }}
+              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-[#181C23] leading-[1.1] font-bold uppercase tracking-[2px] cursor-default"
             >
               {data.ceoNameEn}
             </motion.h2>
@@ -623,15 +247,16 @@ export default function CeoBanner() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex items-center justify-center lg:justify-start gap-3 mt-3"
+                whileHover={{ x: 6, transition: { duration: 0.3 } }}
+                className="group/title flex items-center justify-center lg:justify-start gap-3 mt-3 cursor-default"
               >
                 <motion.span
                   initial={{ width: 0 }}
                   animate={isInView ? { width: 40 } : { width: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="h-[1px] bg-[#B1A490] hidden lg:block"
+                  className="h-[1px] bg-[#B1A490] hidden lg:block transition-all duration-300 group-hover/title:w-[60px] group-hover/title:bg-[#181C23]"
                 />
-                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-[#555] uppercase tracking-[3px]">
+                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-[#555] uppercase tracking-[3px] transition-colors duration-300 group-hover/title:text-[#181C23]">
                   {data.ceoTitleEn}
                 </p>
               </motion.div>
@@ -659,14 +284,15 @@ export default function CeoBanner() {
                       initial={{ opacity: 0, y: 25 }}
                       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
                       transition={{ duration: 0.5, delay: 0.6 + i * 0.12 }}
-                      className={`flex flex-col px-5 lg:px-8 py-2 ${
+                      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                      className={`group/stat flex flex-col px-5 lg:px-8 py-3 cursor-default rounded-md transition-colors duration-300 hover:bg-[#B1A490]/[0.06] ${
                         i > 0 ? 'border-l border-[#181C23]/10' : ''
                       }`}
                     >
-                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-[#181C23] leading-none font-bold">
+                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
                         <CountUpStat raw={stat.number!} inView={isInView} />
                       </span>
-                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-[#888] uppercase tracking-[2px] mt-2">
+                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-[#888] uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-[#555]">
                         {stat.label}
                       </span>
                       {'desc' in stat && stat.desc && (
