@@ -44,27 +44,6 @@ export default function PhilosophySection() {
       data-navbar-dark
       className="relative w-full bg-white overflow-hidden"
     >
-      <style>{`
-        .phi-title {
-          -webkit-text-stroke: 1.5px rgba(255,255,255,0.7);
-          color: transparent;
-          transition: all 0.6s cubic-bezier(0.23,1,0.32,1);
-        }
-        .group\\/word:hover .phi-title {
-          -webkit-text-stroke: 2px rgba(255,255,255,0.9);
-          color: rgba(255,255,255,0.15);
-          text-shadow: 0 0 40px rgba(177,164,144,0.3);
-        }
-        @media (max-width: 768px) {
-          .phi-title {
-            -webkit-text-stroke: 1px rgba(255,255,255,0.7);
-          }
-          .group\\/word:hover .phi-title {
-            -webkit-text-stroke: 1.5px rgba(255,255,255,0.9);
-          }
-        }
-      `}</style>
-
       {/* Section header */}
       <div className="max-w-[1290px] mx-auto px-6 md:px-8 pt-[60px] md:pt-[80px] pb-8 md:pb-10">
         <motion.div
@@ -88,7 +67,7 @@ export default function PhilosophySection() {
         </motion.div>
       </div>
 
-      {/* Full-width image with creative text overlay */}
+      {/* Full-width image with vertical text overlay */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
@@ -106,51 +85,40 @@ export default function PhilosophySection() {
           priority
         />
 
-        {/* Subtle gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/25 pointer-events-none" />
+        {/* Vertical text on the left side */}
+        <div className="absolute left-4 md:left-8 lg:left-12 top-0 bottom-0 flex flex-col justify-center gap-8 md:gap-12 lg:gap-16 pointer-events-none z-[2]">
+          {pillars.map((pillar, i) => (
+            <motion.div
+              key={pillar.title}
+              initial={{ opacity: 0, x: -30 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+              transition={{ duration: 0.7, delay: 0.5 + i * 0.2 }}
+              className="pointer-events-auto group/word flex items-center gap-3 md:gap-5 cursor-default"
+            >
+              {/* Number */}
+              <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] text-[#181C23]/30 tracking-[2px] transition-colors duration-400 group-hover/word:text-[#B1A490]">
+                {pillar.num}
+              </span>
 
-        {/* Creative text overlay */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-end gap-8 md:gap-16 lg:gap-24">
-            {pillars.map((pillar, i) => (
+              {/* Vertical accent line */}
               <motion.div
-                key={pillar.title}
-                initial={{ opacity: 0, y: 40 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                transition={{ duration: 0.8, delay: 0.5 + i * 0.2 }}
-                className="pointer-events-auto group/word flex flex-col items-center cursor-default relative"
-              >
-                {/* Large ghost number behind */}
-                <span
-                  className="absolute -top-[50px] md:-top-[80px] lg:-top-[100px] font-[var(--font-merriweather)] font-bold text-white/[0.06] leading-none select-none transition-all duration-700 group-hover/word:text-white/[0.12]"
-                  style={{ fontSize: 'clamp(80px, 14vw, 180px)' }}
-                >
-                  {pillar.num}
-                </span>
+                initial={{ scaleY: 0 }}
+                animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 + i * 0.15 }}
+                className="w-[1px] h-[30px] md:h-[40px] bg-[#181C23]/15 origin-top transition-all duration-500 group-hover/word:h-[50px] md:group-hover/word:h-[60px] group-hover/word:bg-[#B1A490]"
+              />
 
-                {/* Outlined title */}
-                <h3
-                  className="phi-title font-[var(--font-merriweather)] font-bold tracking-[6px] md:tracking-[8px] lg:tracking-[10px] leading-none relative z-[1]"
-                  style={{ fontSize: 'clamp(28px, 5vw, 64px)' }}
-                >
+              {/* Title + description */}
+              <div className="flex flex-col">
+                <h3 className="font-[var(--font-merriweather)] text-[20px] md:text-[32px] lg:text-[42px] text-[#181C23]/80 font-bold tracking-[3px] md:tracking-[5px] lg:tracking-[6px] leading-none transition-all duration-500 group-hover/word:text-[#181C23] group-hover/word:tracking-[5px] md:group-hover/word:tracking-[8px] lg:group-hover/word:tracking-[10px]">
                   {pillar.title}
                 </h3>
-
-                {/* Thin accent line */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-                  transition={{ duration: 0.6, delay: 0.9 + i * 0.2 }}
-                  className="w-[40px] md:w-[60px] h-[1px] bg-white/30 mt-3 md:mt-4 origin-center transition-all duration-500 group-hover/word:w-[80px] md:group-hover/word:w-[100px] group-hover/word:bg-[#B1A490]"
-                />
-
-                {/* Subtle description — appears softly on hover */}
-                <p className="font-[var(--font-libre-franklin)] text-[9px] md:text-[11px] lg:text-[12px] text-white/0 uppercase tracking-[2px] md:tracking-[3px] mt-2 transition-all duration-600 group-hover/word:text-white/50 group-hover/word:mt-3 whitespace-nowrap">
+                <p className="font-[var(--font-libre-franklin)] text-[8px] md:text-[10px] lg:text-[11px] text-[#181C23]/0 uppercase tracking-[2px] md:tracking-[3px] mt-0 transition-all duration-500 group-hover/word:text-[#181C23]/40 group-hover/word:mt-2">
                   {pillar.description}
                 </p>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Decorative corner accents */}
@@ -158,13 +126,13 @@ export default function PhilosophySection() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="absolute top-6 left-6 w-[40px] h-[40px] border-t border-l border-white/20 pointer-events-none hidden md:block"
+          className="absolute top-6 right-6 w-[40px] h-[40px] border-t border-r border-[#181C23]/10 pointer-events-none hidden md:block"
         />
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-6 right-6 w-[40px] h-[40px] border-b border-r border-white/20 pointer-events-none hidden md:block"
+          className="absolute bottom-6 left-6 w-[40px] h-[40px] border-b border-l border-[#181C23]/10 pointer-events-none hidden md:block"
         />
       </motion.div>
 
