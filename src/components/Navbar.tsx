@@ -93,7 +93,7 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
-        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[90px] md:h-[110px] flex items-center justify-between">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between">
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
@@ -104,13 +104,13 @@ export default function Navbar() {
                   alt={settings.companyNameEn || 'Criteria Design Group'}
                   width={80}
                   height={80}
-                  className={`relative h-[56px] md:h-[74px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
+                  className={`relative h-[44px] md:h-[60px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
                   unoptimized
                 />
               </div>
             )}
             <div className="flex flex-col gap-[2px]">
-              <span className={`font-[var(--font-merriweather)] text-[20px] md:text-[26px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
+              <span className={`font-[var(--font-merriweather)] text-[18px] md:text-[22px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
               <div className="flex items-center gap-2">

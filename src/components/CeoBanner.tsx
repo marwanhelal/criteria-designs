@@ -79,12 +79,12 @@ export default function CeoBanner() {
         }}
       />
 
-      <div className="relative z-10 max-w-[1290px] mx-auto px-8 py-[80px] lg:py-[120px]">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+      <div className="relative z-10 max-w-[1290px] mx-auto px-8 py-[60px] lg:py-[80px]">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           {/* Portrait */}
           {data.ceoImage && (
             <div className="shrink-0">
-              <div className="relative w-[200px] h-[200px] lg:w-[280px] lg:h-[280px] rounded-full overflow-hidden ring-2 ring-[#B1A490]/40 ring-offset-4 ring-offset-[#181C23]">
+              <div className="relative w-[160px] h-[160px] lg:w-[220px] lg:h-[220px] rounded-full overflow-hidden ring-2 ring-[#B1A490]/40 ring-offset-4 ring-offset-[#181C23]">
                 <Image
                   src={data.ceoImage}
                   alt={data.ceoNameEn || 'CEO'}
@@ -100,7 +100,7 @@ export default function CeoBanner() {
           {/* Content */}
           <div className="flex-1 text-center lg:text-left">
             {/* Name & title */}
-            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[40px] text-white leading-[1.2] font-bold uppercase tracking-[1px]">
+            <h2 className="font-[var(--font-merriweather)] text-[24px] lg:text-[32px] text-white leading-[1.2] font-bold uppercase tracking-[1px]">
               {data.ceoNameEn}
             </h2>
             {data.ceoTitleEn && (
@@ -115,11 +115,11 @@ export default function CeoBanner() {
                 {stats.map((stat, i) => (
                   <div
                     key={i}
-                    className={`flex flex-col px-5 lg:px-8 py-2 ${
+                    className={`flex flex-col px-4 lg:px-6 py-2 ${
                       i > 0 ? 'border-l border-white/15' : ''
                     }`}
                   >
-                    <span className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-white leading-none font-bold">
+                    <span className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-none font-bold">
                       {stat.number}
                     </span>
                     <span className="font-[var(--font-libre-franklin)] text-[11px] lg:text-[13px] text-white/60 uppercase tracking-[2px] mt-2">

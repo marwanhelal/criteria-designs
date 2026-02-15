@@ -81,7 +81,7 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative w-full h-dvh min-h-[600px]">
+      <section className="relative w-full h-dvh min-h-[500px]">
         <div className="absolute inset-0">
           {heroVideo ? (
             <>
@@ -130,11 +130,11 @@ export default function Home() {
       <CeoBanner />
 
       {/* ===== ABOUT SECTION ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
-        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
-            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
-              <Building size={120} className="text-[#B1A490]/30" />
+      <section data-navbar-dark className="py-[80px] lg:py-[100px] px-8">
+        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
+          <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
+            <div className="relative w-full h-[350px] lg:h-[460px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
+              <Building size={80} className="text-[#B1A490]/30" />
             </div>
           </AnimatedSection>
 
@@ -142,7 +142,7 @@ export default function Home() {
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Who we are
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[547px]">
+            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-[#181C23] leading-[40px] lg:leading-[48px] mt-4 max-w-[547px]">
               We build quality real estate projects since 1978
             </h2>
             <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-8 max-w-[526px]">
@@ -159,14 +159,14 @@ export default function Home() {
       </section>
 
       {/* ===== PROJECTS SECTION ===== */}
-      <section className="bg-[#181C23] py-[140px] px-8">
+      <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-16">
             <AnimatedSection direction="left" className="lg:w-[400px] shrink-0">
               <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
                 What we create
               </span>
-              <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-white leading-[48px] lg:leading-[56px] mt-4">
+              <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-[40px] lg:leading-[48px] mt-4">
                 Explore latest projects
               </h2>
               <Link
@@ -241,7 +241,7 @@ export default function Home() {
           )}
 
           {/* Stats */}
-          <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-20 pt-16 border-t border-white/10">
+          <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-14 pt-12 border-t border-white/10">
             {[
               { number: '+500', label: 'Complete projects' },
               { number: '57', label: 'Projects under construction' },
@@ -250,7 +250,7 @@ export default function Home() {
             ].map((stat, idx) => (
               <StaggerItem key={idx}>
                 <div className="flex items-center gap-4">
-                  <span className="font-[var(--font-merriweather)] text-[48px] lg:text-[64px] text-white leading-[78px]">
+                  <span className="font-[var(--font-merriweather)] text-[36px] lg:text-[48px] text-white leading-[58px]">
                     {stat.number}
                   </span>
                   <span className="font-[var(--font-open-sans)] text-[14px] text-white/60 leading-[24px] max-w-[100px]">
@@ -263,8 +263,8 @@ export default function Home() {
 
           {/* Large Featured Image - Fixed 1290x800 aspect ratio */}
           {heroImage && (
-            <AnimatedSection delay={0.2} className="mt-20">
-              <div className="relative h-[400px] lg:h-[800px] rounded-lg overflow-hidden">
+            <AnimatedSection delay={0.2} className="mt-14">
+              <div className="relative h-[350px] lg:h-[560px] rounded-lg overflow-hidden">
                 <Image
                   src={heroImage}
                   alt="Featured project"
@@ -280,18 +280,18 @@ export default function Home() {
       </section>
 
       {/* ===== SERVICES SECTION ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[80px] lg:py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               why choose us
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[524px]">
+            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-[#181C23] leading-[40px] lg:leading-[48px] mt-4 max-w-[524px]">
               Making living spaces affordable
             </h2>
           </AnimatedSection>
 
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 mt-16" staggerDelay={0.15}>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 mt-14" staggerDelay={0.15}>
             {displayServices.length > 0 ? (
               displayServices.map((service) => {
                 const IconComponent = service.icon && iconMap[service.icon]
@@ -300,8 +300,8 @@ export default function Home() {
                 return (
                   <StaggerItem key={service.id}>
                     <div className="flex flex-col">
-                      <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
-                        <IconComponent size={50} className="text-[#B1A490]" />
+                      <div className="w-[90px] h-[90px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                        <IconComponent size={36} className="text-[#B1A490]" />
                       </div>
                       <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
                         {service.titleEn}
@@ -324,8 +324,8 @@ export default function Home() {
               ].map((service, idx) => (
                 <StaggerItem key={idx}>
                   <div className="flex flex-col">
-                    <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
-                      <service.icon size={50} className="text-[#B1A490]" />
+                    <div className="w-[90px] h-[90px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                      <service.icon size={36} className="text-[#B1A490]" />
                     </div>
                     <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
                       {service.title}
@@ -342,12 +342,12 @@ export default function Home() {
       </section>
 
       {/* ===== TESTIMONIALS SECTION ===== */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[70px] lg:py-[80px] px-8">
         <AnimatedSection>
           <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="relative shrink-0">
-              <div className="relative w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-[#181C23]/20 overflow-hidden flex items-center justify-center">
-                <Users size={64} className="text-[#B1A490]/40" />
+              <div className="relative w-[140px] h-[140px] lg:w-[170px] lg:h-[170px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-[#181C23]/20 overflow-hidden flex items-center justify-center">
+                <Users size={48} className="text-[#B1A490]/40" />
               </div>
               <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
                 <Quote size={20} className="text-white" />
@@ -372,11 +372,11 @@ export default function Home() {
       </section>
 
       {/* ===== CAREER / JOIN US SECTION ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
-        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <AnimatedSection direction="left" className="w-full lg:w-[633px] shrink-0">
-            <div className="relative w-full h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
-              <Users size={120} className="text-[#B1A490]/30" />
+      <section data-navbar-dark className="py-[80px] lg:py-[100px] px-8">
+        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
+          <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
+            <div className="relative w-full h-[350px] lg:h-[460px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 flex items-center justify-center">
+              <Users size={80} className="text-[#B1A490]/30" />
             </div>
           </AnimatedSection>
 
@@ -384,7 +384,7 @@ export default function Home() {
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Join with Us
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[547px]">
+            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-[#181C23] leading-[40px] lg:leading-[48px] mt-4 max-w-[547px]">
               Expand career and make your move to housale
             </h2>
             <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-8 max-w-[526px]">

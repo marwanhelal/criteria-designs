@@ -21,8 +21,8 @@ const footerLinks = {
 export default function Footer() {
   return (
     <footer className="bg-[#181C23] text-white">
-      <div className="max-w-[1290px] mx-auto px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="max-w-[1290px] mx-auto px-8 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
             <Link href="/" className="font-[var(--font-libre-franklin)] text-[28px] leading-[28px]">
@@ -114,7 +114,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-[var(--font-open-sans)] text-[14px] text-gray-500">
             &copy; {new Date().getFullYear()} Criteria Designs. All rights reserved.
           </p>
