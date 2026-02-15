@@ -42,15 +42,15 @@ export default function PhilosophySection() {
     <section
       ref={sectionRef}
       data-navbar-dark
-      className="relative w-full bg-white overflow-hidden"
+      className="relative w-full bg-[#F8F8F8] overflow-hidden py-[60px] md:py-[90px]"
     >
-      {/* Section header */}
-      <div className="max-w-[1290px] mx-auto px-6 md:px-8 pt-[60px] md:pt-[80px] pb-8 md:pb-10">
+      <div className="max-w-[1290px] mx-auto px-6 md:px-8">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center"
+          className="text-center mb-12 md:mb-16"
         >
           <span className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#B1A490] uppercase tracking-[4px]">
             What drives us
@@ -65,79 +65,75 @@ export default function PhilosophySection() {
             className="w-[60px] h-[2px] bg-[#B1A490] mx-auto mt-5 origin-center"
           />
         </motion.div>
-      </div>
 
-      {/* Full-width image with vertical text overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, delay: 0.3 }}
-        className="relative w-full"
-        style={{ height: 'clamp(400px, 56vw, 700px)' }}
-      >
-        <Image
-          src={philosophyImage}
-          alt="Our Philosophy"
-          fill
-          sizes="100vw"
-          className="object-cover"
-          unoptimized
-          priority
-        />
-
-        {/* Vertical text on the left side */}
-        <div className="absolute left-4 md:left-8 lg:left-12 top-0 bottom-0 flex flex-col justify-center gap-8 md:gap-12 lg:gap-16 pointer-events-none z-[2]">
-          {pillars.map((pillar, i) => (
-            <motion.div
-              key={pillar.title}
-              initial={{ opacity: 0, x: -30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-              transition={{ duration: 0.7, delay: 0.5 + i * 0.2 }}
-              className="pointer-events-auto group/word flex items-center gap-3 md:gap-5 cursor-default"
-            >
-              {/* Number */}
-              <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] text-[#181C23]/30 tracking-[2px] transition-colors duration-400 group-hover/word:text-[#B1A490]">
-                {pillar.num}
-              </span>
-
-              {/* Vertical accent line */}
+        {/* Two-column layout: pillars left, image right */}
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+          {/* Left: Philosophy pillars */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="flex flex-col gap-10 md:gap-12 lg:shrink-0 lg:w-[340px]"
+          >
+            {pillars.map((pillar, i) => (
               <motion.div
-                initial={{ scaleY: 0 }}
-                animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 + i * 0.15 }}
-                className="w-[1px] h-[30px] md:h-[40px] bg-[#181C23]/15 origin-top transition-all duration-500 group-hover/word:h-[50px] md:group-hover/word:h-[60px] group-hover/word:bg-[#B1A490]"
+                key={pillar.title}
+                initial={{ opacity: 0, y: 25 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+                transition={{ duration: 0.6, delay: 0.5 + i * 0.15 }}
+                className="group/item flex items-start gap-5 cursor-default"
+              >
+                {/* Number + line */}
+                <div className="flex flex-col items-center pt-1">
+                  <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] tracking-[2px] transition-colors duration-300 group-hover/item:text-[#181C23]">
+                    {pillar.num}
+                  </span>
+                  <motion.div
+                    initial={{ scaleY: 0 }}
+                    animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 + i * 0.15 }}
+                    className="w-[1px] h-[40px] bg-[#B1A490]/30 mt-2 origin-top transition-all duration-500 group-hover/item:h-[55px] group-hover/item:bg-[#B1A490]"
+                  />
+                </div>
+
+                {/* Title + description */}
+                <div className="flex flex-col">
+                  <h3 className="font-[var(--font-merriweather)] text-[24px] md:text-[30px] lg:text-[36px] text-[#181C23] font-bold tracking-[3px] md:tracking-[4px] leading-none transition-all duration-500 group-hover/item:tracking-[6px] md:group-hover/item:tracking-[8px] group-hover/item:text-[#B1A490]">
+                    {pillar.title}
+                  </h3>
+                  <p className="font-[var(--font-libre-franklin)] text-[10px] md:text-[11px] text-[#999] uppercase tracking-[2px] mt-3 transition-all duration-500 group-hover/item:text-[#666] group-hover/item:tracking-[3px]">
+                    {pillar.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Right: Contained image */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="relative flex-1 w-full lg:w-auto"
+          >
+            <div className="relative aspect-[4/5] md:aspect-[3/4] lg:aspect-[3/4] w-full max-w-[600px] mx-auto lg:mx-0 rounded-lg overflow-hidden shadow-lg">
+              <Image
+                src={philosophyImage}
+                alt="Our Philosophy"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 hover:scale-105"
+                unoptimized
+                priority
               />
+            </div>
 
-              {/* Title + description */}
-              <div className="flex flex-col">
-                <h3 className="font-[var(--font-merriweather)] text-[20px] md:text-[32px] lg:text-[42px] text-[#181C23]/80 font-bold tracking-[3px] md:tracking-[5px] lg:tracking-[6px] leading-none transition-all duration-500 group-hover/word:text-[#181C23] group-hover/word:tracking-[5px] md:group-hover/word:tracking-[8px] lg:group-hover/word:tracking-[10px]">
-                  {pillar.title}
-                </h3>
-                <p className="font-[var(--font-libre-franklin)] text-[8px] md:text-[10px] lg:text-[11px] text-[#181C23]/0 uppercase tracking-[2px] md:tracking-[3px] mt-0 transition-all duration-500 group-hover/word:text-[#181C23]/40 group-hover/word:mt-2">
-                  {pillar.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+            {/* Decorative corner accents on image */}
+            <div className="absolute -top-3 -left-3 w-[40px] h-[40px] border-t border-l border-[#B1A490]/30 hidden lg:block" />
+            <div className="absolute -bottom-3 -right-3 w-[40px] h-[40px] border-b border-r border-[#B1A490]/30 hidden lg:block" />
+          </motion.div>
         </div>
-
-        {/* Decorative corner accents */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="absolute top-6 right-6 w-[40px] h-[40px] border-t border-r border-[#181C23]/10 pointer-events-none hidden md:block"
-        />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-6 left-6 w-[40px] h-[40px] border-b border-l border-[#181C23]/10 pointer-events-none hidden md:block"
-        />
-      </motion.div>
-
-      {/* Bottom padding */}
-      <div className="h-[40px] md:h-[60px]" />
+      </div>
     </section>
   )
 }
