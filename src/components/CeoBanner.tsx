@@ -153,7 +153,7 @@ export default function CeoBanner() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-[0.07]"
+            className="object-cover opacity-[0.18]"
             unoptimized
           />
         </motion.div>
