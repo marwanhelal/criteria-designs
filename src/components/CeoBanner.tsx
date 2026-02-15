@@ -84,18 +84,18 @@ export default function CeoBanner() {
       .catch(() => {})
   }, [])
 
-  if (!data) return null
-
-  const stats = [
+  const stats = data ? [
     { number: data.ceoStat1Number, label: data.ceoStat1LabelEn, desc: data.ceoStat1DescEn },
     { number: data.ceoStat2Number, label: data.ceoStat2LabelEn },
     { number: data.ceoStat3Number, label: data.ceoStat3LabelEn },
     { number: data.ceoStat4Number, label: data.ceoStat4LabelEn },
-  ].filter((s) => s.number)
+  ].filter((s) => s.number) : []
 
-  const logos = [data.ceoLogo1, data.ceoLogo2, data.ceoLogo3, data.ceoLogo4, data.ceoLogo5].filter(
+  const logos = data ? [data.ceoLogo1, data.ceoLogo2, data.ceoLogo3, data.ceoLogo4, data.ceoLogo5].filter(
     Boolean
-  ) as string[]
+  ) as string[] : []
+
+  if (!data) return <section ref={sectionRef} />
 
   return (
     <section
