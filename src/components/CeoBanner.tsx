@@ -155,11 +155,11 @@ export default function CeoBanner() {
         >
           <defs>
             <pattern id="bp-grid-sm" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#B1A490" strokeWidth="0.15" opacity="0.25" />
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#B1A490" strokeWidth="0.3" opacity="0.5" />
             </pattern>
             <pattern id="bp-grid-md" width="100" height="100" patternUnits="userSpaceOnUse">
               <rect width="100" height="100" fill="url(#bp-grid-sm)" />
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#B1A490" strokeWidth="0.3" opacity="0.3" />
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#B1A490" strokeWidth="0.5" opacity="0.6" />
             </pattern>
           </defs>
 
@@ -173,9 +173,9 @@ export default function CeoBanner() {
 
           {/* Floor plan rooms - line-drawing animation */}
           <motion.g
-            stroke="#9A8B78" fill="none" strokeWidth="0.8"
+            stroke="#9A8B78" fill="none" strokeWidth="1.5"
             initial={{ opacity: 0, pathLength: 0 }}
-            animate={isInView ? { opacity: 0.12 } : { opacity: 0 }}
+            animate={isInView ? { opacity: 0.35 } : { opacity: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
             {/* Large room left - draws itself */}
@@ -202,7 +202,7 @@ export default function CeoBanner() {
             />
             <motion.rect
               x="70" y="130" width="100" height="100"
-              strokeDasharray="4,4" strokeWidth="0.4"
+              strokeDasharray="4,4" strokeWidth="0.8"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, delay: 1.5 }}
@@ -210,7 +210,7 @@ export default function CeoBanner() {
 
             {/* Central corridor */}
             <motion.rect
-              x="340" y="160" width="120" height="320" strokeWidth="0.5"
+              x="340" y="160" width="120" height="320" strokeWidth="1"
               strokeDasharray="880"
               initial={{ strokeDashoffset: 880 }}
               animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 880 }}
@@ -218,7 +218,7 @@ export default function CeoBanner() {
             />
             <motion.line
               x1="340" y1="320" x2="460" y2="320"
-              strokeDasharray="3,3" strokeWidth="0.4"
+              strokeDasharray="3,3" strokeWidth="0.8"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, delay: 1.8 }}
@@ -241,14 +241,14 @@ export default function CeoBanner() {
             />
             <motion.rect
               x="470" y="110" width="140" height="80"
-              strokeDasharray="4,4" strokeWidth="0.4"
+              strokeDasharray="4,4" strokeWidth="0.8"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, delay: 2.0 }}
             />
             <motion.rect
               x="630" y="110" width="140" height="80"
-              strokeDasharray="4,4" strokeWidth="0.4"
+              strokeDasharray="4,4" strokeWidth="0.8"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, delay: 2.2 }}
@@ -305,7 +305,7 @@ export default function CeoBanner() {
             />
             <motion.line
               x1="920" y1="100" x2="920" y2="240"
-              strokeWidth="0.5"
+              strokeWidth="1"
               strokeDasharray="140"
               initial={{ strokeDashoffset: 140 }}
               animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 140 }}
@@ -313,7 +313,7 @@ export default function CeoBanner() {
             />
             <motion.rect
               x="830" y="250" width="190" height="120"
-              strokeWidth="0.5"
+              strokeWidth="1"
               strokeDasharray="620"
               initial={{ strokeDashoffset: 620 }}
               animate={isInView ? { strokeDashoffset: 0 } : { strokeDashoffset: 620 }}
@@ -323,9 +323,9 @@ export default function CeoBanner() {
 
           {/* Building perspective - draws with delay */}
           <motion.g
-            stroke="#8A7A66" fill="none" strokeWidth="0.6"
+            stroke="#8A7A66" fill="none" strokeWidth="1.2"
             initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 0.06 } : { opacity: 0 }}
+            animate={isInView ? { opacity: 0.2 } : { opacity: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
           >
             <motion.path
@@ -378,7 +378,7 @@ export default function CeoBanner() {
           </motion.g>
 
           {/* Diagonal construction lines - sweep in from corners */}
-          <motion.g stroke="#B1A490" strokeWidth="0.4">
+          <motion.g stroke="#B1A490" strokeWidth="0.8">
             {[
               { x1: 0, y1: 0, x2: 600, y2: 400, len: 721 },
               { x1: 1200, y1: 0, x2: 600, y2: 400, len: 721 },
@@ -390,7 +390,7 @@ export default function CeoBanner() {
                 x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
                 strokeDasharray={l.len}
                 initial={{ strokeDashoffset: l.len, opacity: 0 }}
-                animate={isInView ? { strokeDashoffset: 0, opacity: 0.04 } : { strokeDashoffset: l.len, opacity: 0 }}
+                animate={isInView ? { strokeDashoffset: 0, opacity: 0.15 } : { strokeDashoffset: l.len, opacity: 0 }}
                 transition={{ duration: 3, delay: 0.5 + i * 0.3, ease: 'easeInOut' }}
               />
             ))}
@@ -398,9 +398,9 @@ export default function CeoBanner() {
 
           {/* Dimension lines - slide in */}
           <motion.g
-            stroke="#9A8B78" fill="none" strokeWidth="0.4"
+            stroke="#9A8B78" fill="none" strokeWidth="0.8"
             initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 0.08 } : { opacity: 0 }}
+            animate={isInView ? { opacity: 0.25 } : { opacity: 0 }}
             transition={{ duration: 0.8, delay: 2.0 }}
           >
             {/* Horizontal dimension - expands from center */}
@@ -455,19 +455,19 @@ export default function CeoBanner() {
           ].map(([cx, cy], i) => (
             <motion.g key={`col-${i}`}>
               <motion.circle
-                cx={cx} cy={cy} r="4"
-                fill="none" stroke="#B1A490" strokeWidth="0.4"
+                cx={cx} cy={cy} r="5"
+                fill="none" stroke="#B1A490" strokeWidth="0.8"
                 initial={{ opacity: 0, scale: 0 }}
-                animate={isInView ? { opacity: 0.15, scale: 1 } : { opacity: 0, scale: 0 }}
+                animate={isInView ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0 }}
                 transition={{ duration: 0.4, delay: 2.0 + i * 0.08, ease: 'backOut' }}
               />
               {/* Pulse ring */}
               <motion.circle
-                cx={cx} cy={cy} r="4"
-                fill="none" stroke="#B1A490" strokeWidth="0.2"
+                cx={cx} cy={cy} r="5"
+                fill="none" stroke="#B1A490" strokeWidth="0.5"
                 initial={{ opacity: 0, scale: 1 }}
                 animate={isInView ? {
-                  opacity: [0, 0.12, 0],
+                  opacity: [0, 0.3, 0],
                   scale: [1, 2.5, 3],
                 } : { opacity: 0 }}
                 transition={{
@@ -483,9 +483,9 @@ export default function CeoBanner() {
           {/* Compass rose - rotates in and keeps slowly spinning */}
           <motion.g
             transform="translate(100, 650)"
-            stroke="#B1A490" fill="none" strokeWidth="0.5"
+            stroke="#B1A490" fill="none" strokeWidth="1"
             initial={{ opacity: 0, rotate: -180 }}
-            animate={isInView ? { opacity: 0.1, rotate: 0 } : { opacity: 0, rotate: -180 }}
+            animate={isInView ? { opacity: 0.3, rotate: 0 } : { opacity: 0, rotate: -180 }}
             transition={{ duration: 2, delay: 2.5, ease: 'easeOut' }}
             style={{ originX: '100px', originY: '650px' }}
           >
@@ -496,24 +496,24 @@ export default function CeoBanner() {
             >
               <line x1="0" y1="-30" x2="0" y2="30" />
               <line x1="-30" y1="0" x2="30" y2="0" />
-              <path d="M 0 -25 L 4 -8 L 0 -12 L -4 -8 Z" fill="#B1A490" opacity="0.15" />
+              <path d="M 0 -25 L 4 -8 L 0 -12 L -4 -8 Z" fill="#B1A490" opacity="0.4" />
             </motion.g>
           </motion.g>
 
           {/* Door arcs - sweep animation */}
-          <motion.g stroke="#9A8B78" fill="none" strokeWidth="0.3">
+          <motion.g stroke="#9A8B78" fill="none" strokeWidth="0.8">
             <motion.path
               d="M 200 340 A 40 40 0 0 1 240 340"
               strokeDasharray="63"
               initial={{ strokeDashoffset: 63, opacity: 0 }}
-              animate={isInView ? { strokeDashoffset: 0, opacity: 0.1 } : { strokeDashoffset: 63, opacity: 0 }}
+              animate={isInView ? { strokeDashoffset: 0, opacity: 0.3 } : { strokeDashoffset: 63, opacity: 0 }}
               transition={{ duration: 0.8, delay: 2.5, ease: 'easeInOut' }}
             />
             <motion.path
               d="M 620 280 A 30 30 0 0 0 650 280"
               strokeDasharray="47"
               initial={{ strokeDashoffset: 47, opacity: 0 }}
-              animate={isInView ? { strokeDashoffset: 0, opacity: 0.1 } : { strokeDashoffset: 47, opacity: 0 }}
+              animate={isInView ? { strokeDashoffset: 0, opacity: 0.3 } : { strokeDashoffset: 47, opacity: 0 }}
               transition={{ duration: 0.8, delay: 2.7, ease: 'easeInOut' }}
             />
           </motion.g>
@@ -521,12 +521,12 @@ export default function CeoBanner() {
           {/* Floating measurement scan line - continuously sweeps */}
           <motion.line
             x1="0" y1="0" x2="1200" y2="0"
-            stroke="#B1A490" strokeWidth="0.3"
+            stroke="#B1A490" strokeWidth="0.8"
             initial={{ opacity: 0 }}
             animate={isInView ? {
               y1: [0, 800, 0],
               y2: [0, 800, 0],
-              opacity: [0, 0.06, 0],
+              opacity: [0, 0.2, 0],
             } : { opacity: 0 }}
             transition={{
               duration: 8,
