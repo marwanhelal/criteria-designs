@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
 
@@ -28,33 +28,7 @@ const pillars = [
 export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1, margin: '0px 0px -50px 0px' })
-
-  // 3D tilt state — via DOM for performance
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!imageRef.current) return
-    const rect = imageRef.current.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5 // -0.5 to 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    imageRef.current.style.transform = `perspective(1000px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) scale(1.02)`
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    if (!imageRef.current) return
-    imageRef.current.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)'
-  }, [])
-
-  useEffect(() => {
-    const el = imageRef.current
-    if (!el) return
-    el.addEventListener('mousemove', handleMouseMove)
-    el.addEventListener('mouseleave', handleMouseLeave)
-    return () => {
-      el.removeEventListener('mousemove', handleMouseMove)
-      el.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [handleMouseMove, handleMouseLeave])
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
 
   useEffect(() => {
     fetch('/api/settings')
@@ -70,20 +44,21 @@ export default function PhilosophySection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0D0F13] py-[60px] md:py-[90px] overflow-hidden"
+      data-navbar-dark
+      className="relative w-full bg-white overflow-hidden"
     >
-      <div className="max-w-[1290px] mx-auto px-6 md:px-8">
-        {/* Section header */}
+      {/* Section header */}
+      <div className="max-w-[1290px] mx-auto px-6 md:px-8 pt-[60px] md:pt-[80px] pb-8 md:pb-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-10 md:mb-14"
+          className="text-center"
         >
           <span className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#B1A490] uppercase tracking-[4px]">
             What drives us
           </span>
-          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-white leading-[1.1] mt-4">
+          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-[#181C23] leading-[1.1] mt-4">
             Our Philosophy
           </h2>
           <motion.div
@@ -93,88 +68,77 @@ export default function PhilosophySection() {
             className="w-[60px] h-[2px] bg-[#B1A490] mx-auto mt-5 origin-center"
           />
         </motion.div>
-
-        {/* Interactive image with 3D tilt */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative mb-12 md:mb-16"
-        >
-          <div
-            ref={imageRef}
-            className="relative w-full overflow-hidden rounded-lg cursor-default"
-            style={{
-              transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-              transformStyle: 'preserve-3d',
-              maxHeight: '600px',
-            }}
-          >
-            <Image
-              src={philosophyImage}
-              alt="Our Philosophy"
-              width={1920}
-              height={1080}
-              className="w-full h-auto block object-cover"
-              style={{ maxHeight: '600px' }}
-              unoptimized
-              priority
-            />
-            {/* Bottom gradient fade into dark background */}
-            <div className="absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-[#0D0F13] via-[#0D0F13]/50 to-transparent pointer-events-none" />
-            {/* Subtle warm overlay on hover */}
-            <div className="absolute inset-0 bg-[#B1A490]/0 hover:bg-[#B1A490]/[0.04] transition-colors duration-700 pointer-events-none" />
-          </div>
-
-          {/* Decorative corner accents on the image */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="absolute top-4 left-4 w-[40px] h-[40px] border-t border-l border-[#B1A490]/30 pointer-events-none hidden md:block"
-          />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="absolute bottom-4 right-4 w-[40px] h-[40px] border-b border-r border-[#B1A490]/30 pointer-events-none hidden md:block"
-          />
-        </motion.div>
-
-        {/* Philosophy pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-          {pillars.map((pillar, i) => (
-            <motion.div
-              key={pillar.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-              transition={{ duration: 0.6, delay: 0.6 + i * 0.15 }}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className={`group/card relative flex flex-col px-6 lg:px-10 py-8 cursor-default transition-colors duration-300 hover:bg-white/[0.03] rounded-md ${
-                i > 0 ? 'md:border-l md:border-white/[0.08]' : ''
-              } ${i < 2 ? 'border-b md:border-b-0 border-white/[0.08]' : ''}`}
-            >
-              {/* Number */}
-              <span className="font-[var(--font-libre-franklin)] text-[11px] text-white/20 tracking-[3px] transition-colors duration-300 group-hover/card:text-[#B1A490]/40">
-                {pillar.num}
-              </span>
-
-              {/* Accent line */}
-              <div className="w-[30px] h-[2px] bg-white/10 mt-4 mb-4 transition-all duration-500 group-hover/card:w-[50px] group-hover/card:bg-[#B1A490]" />
-
-              {/* Title */}
-              <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] text-white font-bold tracking-[2px] leading-[1.1] transition-colors duration-300 group-hover/card:text-[#B1A490]">
-                {pillar.title}
-              </h3>
-
-              {/* Description */}
-              <p className="font-[var(--font-open-sans)] text-[13px] lg:text-[14px] text-white/50 leading-[1.7] mt-3 transition-colors duration-300 group-hover/card:text-white/70">
-                {pillar.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
       </div>
+
+      {/* Full-width image with overlay text */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        className="relative w-full"
+        style={{ height: 'clamp(400px, 56vw, 700px)' }}
+      >
+        <Image
+          src={philosophyImage}
+          alt="Our Philosophy"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          unoptimized
+          priority
+        />
+
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+
+        {/* Pillar words overlaid on image */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="flex items-center gap-6 md:gap-12 lg:gap-20">
+            {pillars.map((pillar, i) => (
+              <motion.div
+                key={pillar.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ duration: 0.7, delay: 0.5 + i * 0.2 }}
+                className="pointer-events-auto group/word flex flex-col items-center cursor-default"
+              >
+                <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[11px] text-white/40 tracking-[3px] mb-2 transition-colors duration-300 group-hover/word:text-[#B1A490]/70">
+                  {pillar.num}
+                </span>
+                <h3 className="font-[var(--font-merriweather)] text-[24px] md:text-[40px] lg:text-[56px] text-white font-bold tracking-[4px] md:tracking-[6px] lg:tracking-[8px] leading-none transition-all duration-500 group-hover/word:tracking-[10px] md:group-hover/word:tracking-[14px] lg:group-hover/word:tracking-[18px] group-hover/word:text-white">
+                  {pillar.title}
+                </h3>
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={isInView ? { width: '100%' } : { width: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 + i * 0.2 }}
+                  className="h-[1px] bg-white/30 mt-3 transition-colors duration-300 group-hover/word:bg-[#B1A490]"
+                />
+                <p className="font-[var(--font-open-sans)] text-[0px] md:text-[12px] lg:text-[13px] text-white/0 leading-[1.6] mt-0 max-w-[200px] text-center transition-all duration-500 group-hover/word:text-white/70 group-hover/word:mt-3">
+                  {pillar.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Decorative corner accents */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="absolute top-6 left-6 w-[40px] h-[40px] border-t border-l border-white/25 pointer-events-none hidden md:block"
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="absolute bottom-6 right-6 w-[40px] h-[40px] border-b border-r border-white/25 pointer-events-none hidden md:block"
+        />
+      </motion.div>
+
+      {/* Bottom padding */}
+      <div className="h-[40px] md:h-[60px]" />
     </section>
   )
 }
