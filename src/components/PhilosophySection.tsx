@@ -29,7 +29,7 @@ export default function PhilosophySection() {
   const [philosophyImage, setPhilosophyImage] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1, margin: '0px 0px -50px 0px' })
 
   // 3D tilt state — via DOM for performance
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -65,7 +65,7 @@ export default function PhilosophySection() {
       .catch(() => {})
   }, [])
 
-  if (!philosophyImage) return null
+  if (!philosophyImage) return <section ref={sectionRef} />
 
   return (
     <section
