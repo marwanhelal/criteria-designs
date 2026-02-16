@@ -159,7 +159,10 @@ model SiteSettings {
   favicon         String?
   heroImage       String?
   heroVideo       String?
-  philosophyImage String?
+  philosophyImage        String?
+  philosophyCultureImage String?
+  philosophyNatureImage  String?
+  philosophyArtImage     String?
   seoTitleEn      String?
   seoTitleAr      String?
   seoDescriptionEn String?

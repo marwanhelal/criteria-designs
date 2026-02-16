@@ -27,6 +27,9 @@ export default function SettingsPage() {
     heroImage: '',
     heroVideo: '',
     philosophyImage: '',
+    philosophyCultureImage: '',
+    philosophyNatureImage: '',
+    philosophyArtImage: '',
     seoTitleEn: '',
     seoTitleAr: '',
     seoDescriptionEn: '',
@@ -87,6 +90,9 @@ export default function SettingsPage() {
           heroImage: settings.heroImage || '',
           heroVideo: settings.heroVideo || '',
           philosophyImage: settings.philosophyImage || '',
+          philosophyCultureImage: settings.philosophyCultureImage || '',
+          philosophyNatureImage: settings.philosophyNatureImage || '',
+          philosophyArtImage: settings.philosophyArtImage || '',
           seoTitleEn: settings.seoTitleEn || '',
           seoTitleAr: settings.seoTitleAr || '',
           seoDescriptionEn: settings.seoDescriptionEn || '',
@@ -129,7 +135,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage' | 'ceoImage' | 'ceoBgImage' | 'ceoLogo1' | 'ceoLogo2' | 'ceoLogo3' | 'ceoLogo4' | 'ceoLogo5') => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage' | 'philosophyCultureImage' | 'philosophyNatureImage' | 'philosophyArtImage' | 'ceoImage' | 'ceoBgImage' | 'ceoLogo1' | 'ceoLogo2' | 'ceoLogo3' | 'ceoLogo4' | 'ceoLogo5') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -500,39 +506,35 @@ export default function SettingsPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="font-semibold text-lg border-b pb-2">Philosophy Section Image</h2>
-          <p className="text-sm text-gray-500">This image appears in the &quot;Our Philosophy&quot; section on the homepage (Culture, Nature, Art).</p>
-          <div>
-            <div className="relative w-full h-48 bg-gray-900 rounded-lg overflow-hidden mb-4">
-              {form.philosophyImage ? (
-                <img src={form.philosophyImage} alt="Philosophy" className="w-full h-full object-cover" />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  No philosophy image set
+          <h2 className="font-semibold text-lg border-b pb-2">Philosophy Section Images</h2>
+          <p className="text-sm text-gray-500">Upload 3 images for Culture, Nature, and Art pillars. These appear in the &quot;Our Philosophy&quot; section.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {([
+              { field: 'philosophyCultureImage' as const, label: 'Culture' },
+              { field: 'philosophyNatureImage' as const, label: 'Nature' },
+              { field: 'philosophyArtImage' as const, label: 'Art' },
+            ]).map(({ field, label }) => (
+              <div key={field}>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+                <div className="relative w-full h-36 bg-gray-100 rounded-lg overflow-hidden mb-2">
+                  {form[field] ? (
+                    <img src={form[field]} alt={label} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-400 text-sm">No image</div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="flex items-center gap-4">
-              <label className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700">
-                {uploading === 'philosophyImage' ? 'Uploading...' : 'Upload Philosophy Image'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, 'philosophyImage')}
-                  className="hidden"
-                  disabled={uploading === 'philosophyImage'}
-                />
-              </label>
-              {form.philosophyImage && (
-                <button
-                  type="button"
-                  onClick={() => setForm(prev => ({ ...prev, philosophyImage: '' }))}
-                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
+                <div className="flex items-center gap-2">
+                  <label className="px-3 py-1.5 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 text-sm">
+                    {uploading === field ? 'Uploading...' : 'Upload'}
+                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field)} className="hidden" disabled={uploading === field} />
+                  </label>
+                  {form[field] && (
+                    <button type="button" onClick={() => setForm(prev => ({ ...prev, [field]: '' }))} className="text-xs text-red-500 hover:text-red-600">Remove</button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
