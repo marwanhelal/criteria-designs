@@ -66,12 +66,14 @@ function CountUpStat({ raw, inView }: { raw: string; inView: boolean }) {
   )
 }
 
-/* Animated SVG ring that draws in on scroll */
+/* Animated SVG ring that draws in on scroll, then slowly rotates */
 function AnimatedRing({ inView }: { inView: boolean }) {
   return (
-    <svg
+    <motion.svg
       className="absolute inset-[-20px] lg:inset-[-30px] w-[calc(100%+40px)] h-[calc(100%+40px)] lg:w-[calc(100%+60px)] lg:h-[calc(100%+60px)]"
       viewBox="0 0 100 100"
+      animate={inView ? { rotate: 360 } : {}}
+      transition={{ duration: 60, repeat: Infinity, ease: 'linear', delay: 2.5 }}
     >
       {/* Outer ring — draws in */}
       <motion.circle
@@ -86,7 +88,7 @@ function AnimatedRing({ inView }: { inView: boolean }) {
         animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: 301.6 }}
         transition={{ duration: 2, delay: 0.3, ease: 'easeInOut' }}
       />
-      {/* Inner ring — draws in reverse */}
+      {/* Inner ring — dashed, draws in reverse */}
       <motion.circle
         cx="50"
         cy="50"
@@ -94,13 +96,13 @@ function AnimatedRing({ inView }: { inView: boolean }) {
         fill="none"
         stroke="#B1A490"
         strokeWidth="0.25"
-        strokeDasharray="289"
-        opacity={0.5}
+        strokeDasharray="4 8"
+        opacity={0.4}
         initial={{ strokeDashoffset: -289 }}
         animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: -289 }}
         transition={{ duration: 2.5, delay: 0.6, ease: 'easeInOut' }}
       />
-      {/* Decorative dots on the ring */}
+      {/* Decorative dots on the ring — pulsing */}
       {[0, 90, 180, 270].map((angle) => (
         <motion.circle
           key={angle}
@@ -108,12 +110,32 @@ function AnimatedRing({ inView }: { inView: boolean }) {
           cy={50 + 48 * Math.sin((angle * Math.PI) / 180)}
           r="0.8"
           fill="#B1A490"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 0.6, scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: 2.2 + (angle / 360) * 0.5 }}
+          initial={{ opacity: 0 }}
+          animate={inView ? {
+            opacity: [0, 0.7, 0.3, 0.7],
+            r: [0.5, 1, 0.5, 1],
+          } : {}}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            delay: 2.2 + (angle / 360) * 0.5,
+            ease: 'easeInOut',
+          }}
         />
       ))}
-    </svg>
+      {/* Traveling dot along outer ring */}
+      <motion.circle
+        r="1"
+        fill="#B1A490"
+        opacity={0.5}
+        initial={{ offsetDistance: '0%' }}
+        animate={inView ? { offsetDistance: '100%' } : {}}
+        transition={{ duration: 8, repeat: Infinity, ease: 'linear', delay: 2.5 }}
+        style={{
+          offsetPath: 'path("M 50 2 A 48 48 0 1 1 49.99 2")',
+        }}
+      />
+    </motion.svg>
   )
 }
 
@@ -243,12 +265,22 @@ export default function CeoBanner() {
       <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[60px] lg:py-[80px]">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
-          {/* Portrait — LEFT side with 3D tilt */}
+          {/* Portrait — LEFT side with 3D tilt + gentle float */}
           {data.ceoImage && (
             <motion.div
               initial={{ opacity: 0, x: -60, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
-              transition={{ duration: 1, ease: [0.25, 0.4, 0.25, 1] }}
+              animate={isInView ? {
+                opacity: 1,
+                x: 0,
+                scale: 1,
+                y: [0, -8, 0],
+              } : {}}
+              transition={{
+                opacity: { duration: 1 },
+                x: { duration: 1, ease: [0.25, 0.4, 0.25, 1] },
+                scale: { duration: 1 },
+                y: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 },
+              }}
               className="shrink-0"
             >
               <motion.div
@@ -343,13 +375,21 @@ export default function CeoBanner() {
               </motion.div>
             )}
 
-            {/* Separator line — animated draw */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={isInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1, delay: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
-              className="h-[2px] bg-[#181C23]/15 mt-8 mb-8 origin-left max-w-[600px] mx-auto lg:mx-0"
-            />
+            {/* Separator line — animated draw with shimmer */}
+            <div className="relative mt-8 mb-8 max-w-[600px] mx-auto lg:mx-0">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1, delay: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
+                className="h-[2px] bg-[#181C23]/15 origin-left"
+              />
+              <motion.div
+                className="absolute top-0 left-0 h-[2px] w-[60px] bg-gradient-to-r from-transparent via-[#B1A490]/60 to-transparent"
+                initial={{ x: '-60px' }}
+                animate={isInView ? { x: '600px' } : {}}
+                transition={{ duration: 2, delay: 1.7, ease: 'easeInOut', repeat: Infinity, repeatDelay: 4 }}
+              />
+            </div>
 
             {/* Stats row — staggered slide-up */}
             {stats.length > 0 && (
@@ -365,7 +405,7 @@ export default function CeoBanner() {
                       ease: [0.25, 0.4, 0.25, 1],
                     }}
                     whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                    className={`group/stat flex flex-col px-5 lg:px-7 py-2 cursor-default ${
+                    className={`group/stat relative flex flex-col px-5 lg:px-7 py-2 cursor-default ${
                       i > 0 ? 'border-l-2 border-[#181C23]/15' : ''
                     }`}
                   >
@@ -380,6 +420,8 @@ export default function CeoBanner() {
                         {stat.desc}
                       </span>
                     )}
+                    {/* Gold underline that slides in on hover */}
+                    <span className="absolute bottom-0 left-[20px] right-[20px] h-[2px] bg-[#B1A490] origin-left scale-x-0 group-hover/stat:scale-x-100 transition-transform duration-400" />
                   </motion.div>
                 ))}
               </div>
@@ -433,7 +475,7 @@ export default function CeoBanner() {
                       alt={`Partner ${i + 1}`}
                       fill
                       sizes="110px"
-                      className="object-contain transition-all duration-300 grayscale hover:grayscale-0"
+                      className="object-contain"
                       unoptimized
                     />
                   </motion.div>
