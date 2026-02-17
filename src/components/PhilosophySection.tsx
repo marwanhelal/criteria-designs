@@ -102,15 +102,19 @@ function PillarBlock({
 }
 
 function MarqueeStrip() {
-  const text = 'DESIGN TO ADD VALUE'
-  const separator = ' \u00B7 CRITERIA DESIGNS \u00B7 '
-  const repeated = Array(8).fill(`${text}${separator}`).join('')
+  const content = 'DESIGN THAT ADDS VALUE \u2014 CRITERIA DESIGNS \u2014 '
+  const repeated = Array(6).fill(content).join('')
 
   return (
-    <div className="w-full overflow-hidden py-8 md:py-10 border-t border-b border-[#181C23]/[0.07]">
-      <div className="flex whitespace-nowrap animate-[marquee_15s_linear_infinite]">
-        <span className="font-[var(--font-playfair)] text-[40px] md:text-[56px] lg:text-[72px] text-transparent font-black tracking-[4px] select-none uppercase"
-          style={{ WebkitTextStroke: '1.5px rgba(24,28,35,0.35)' }}
+    <div className="w-full overflow-hidden py-10 md:py-14">
+      <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
+        <span
+          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] text-[#181C23]/[0.07] font-black tracking-[2px] select-none uppercase shrink-0"
+        >
+          {repeated}
+        </span>
+        <span
+          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] text-[#181C23]/[0.07] font-black tracking-[2px] select-none uppercase shrink-0"
         >
           {repeated}
         </span>
