@@ -50,9 +50,7 @@ function PillarBlock({
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7 }}
-      className={`flex flex-col lg:flex-row ${!isLeft ? 'lg:flex-row-reverse' : ''} ${
-        isLeft ? 'lg:-ml-8 lg:mr-[8%]' : 'lg:-mr-8 lg:ml-[8%]'
-      }`}
+      className={`flex flex-col lg:flex-row ${!isLeft ? 'lg:flex-row-reverse' : ''}`}
     >
       {/* Image */}
       <div className="relative w-full lg:w-[62%] h-[350px] md:h-[450px] lg:h-[520px] overflow-hidden group">
@@ -154,7 +152,7 @@ export default function PhilosophySection() {
       </div>
 
       {/* Zigzag pillar blocks */}
-      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pb-[60px] md:pb-[80px] flex flex-col gap-8 md:gap-12">
+      <div className="flex flex-col gap-8 md:gap-12 pb-[60px] md:pb-[80px]">
         {pillars.map((pillar, i) => (
           <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} index={i} />
         ))}
