@@ -142,7 +142,7 @@ export default function CeoBanner() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-[0.12]"
+            className="object-cover opacity-[0.45]"
             unoptimized
           />
         </div>
@@ -271,14 +271,14 @@ export default function CeoBanner() {
               </motion.div>
             )}
 
-            {/* Button + Logos */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 1.0 }}
-              className="flex flex-col lg:flex-row items-center gap-8 mt-10"
-            >
-              {data.ceoBtnTextEn && data.ceoBtnLink && (
+            {/* Button */}
+            {data.ceoBtnTextEn && data.ceoBtnLink && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                className="mt-10"
+              >
                 <Link
                   href={data.ceoBtnLink}
                   className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px] border border-[#181C23]/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-white hover:border-[#181C23]"
@@ -286,34 +286,41 @@ export default function CeoBanner() {
                   <span className="absolute inset-0 bg-[#181C23] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
                   <span className="relative">{data.ceoBtnTextEn}</span>
                 </Link>
-              )}
-
-              {logos.length > 0 && (
-                <div className="flex items-center gap-5 lg:gap-6 lg:ml-4">
-                  <span className="hidden lg:block w-[1px] h-[30px] bg-[#181C23]/10" />
-                  {logos.map((logo, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ duration: 0.4, delay: 1.2 + i * 0.1 }}
-                      className="relative w-[50px] h-[35px] lg:w-[70px] lg:h-[45px] opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-110"
-                    >
-                      <Image
-                        src={logo}
-                        alt={`Partner ${i + 1}`}
-                        fill
-                        sizes="70px"
-                        className="object-contain"
-                        unoptimized
-                      />
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </div>
+
+        {/* Logos row — separate at bottom */}
+        {logos.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            className="mt-14 pt-10 border-t border-[#181C23]/10"
+          >
+            <div className="flex items-center justify-center lg:justify-start gap-8 lg:gap-12">
+              {logos.map((logo, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 1.3 + i * 0.1 }}
+                  className="relative w-[70px] h-[45px] lg:w-[100px] lg:h-[55px] hover:scale-110 transition-all duration-300"
+                >
+                  <Image
+                    src={logo}
+                    alt={`Partner ${i + 1}`}
+                    fill
+                    sizes="100px"
+                    className="object-contain"
+                    unoptimized
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   )
