@@ -34,55 +34,80 @@ interface PhilosophyData {
 function PillarBlock({
   pillar,
   image,
+  index,
 }: {
   pillar: (typeof pillars)[0]
   image: string | null
+  index: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.3 })
+  const inView = useInView(ref, { once: true, amount: 0.25 })
+  const isLeft = index % 2 === 0
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.8 }}
-      className="w-full"
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7 }}
+      className={`flex flex-col lg:flex-row ${!isLeft ? 'lg:flex-row-reverse' : ''}`}
     >
-      <div className="flex flex-col lg:flex-row">
-        {/* Image */}
-        <div className="relative w-full lg:w-[65%] h-[350px] md:h-[450px] lg:h-[520px] overflow-hidden group">
-          {image && (
-            <Image
-              src={image}
-              alt={pillar.title}
-              fill
-              sizes="(max-width: 1024px) 100vw, 65vw"
-              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
-              unoptimized
-            />
-          )}
-          {/* Title label at bottom of image */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/50 to-transparent">
-            <span className="font-[var(--font-merriweather)] text-[15px] md:text-[17px] text-white/90 tracking-[1px]">
-              {pillar.title}
-            </span>
-          </div>
+      {/* Image */}
+      <div className="relative w-full lg:w-[62%] h-[350px] md:h-[450px] lg:h-[520px] overflow-hidden group">
+        {image && (
+          <Image
+            src={image}
+            alt={pillar.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 62vw"
+            className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+            unoptimized
+          />
+        )}
+        {/* Title at bottom of image */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/60 to-transparent">
+          <h3 className="font-[var(--font-merriweather)] text-[22px] md:text-[26px] text-white tracking-[1px]">
+            {pillar.title}
+          </h3>
         </div>
+      </div>
 
-        {/* Quote panel */}
-        <div className="w-full lg:w-[35%] bg-[#222] flex items-center">
-          <div className="p-8 md:p-10 lg:p-14">
-            <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] lg:text-[18px] text-white/70 leading-[1.8] italic">
-              &ldquo;{pillar.quote}&rdquo;
-            </p>
-            <span className="block mt-6 font-[var(--font-libre-franklin)] text-[11px] text-white/40 tracking-[3px] uppercase">
-              Criteria Designs
-            </span>
-          </div>
+      {/* Quote */}
+      <div className="w-full lg:w-[38%] bg-[#1a1a1a] flex items-center">
+        <div className="p-8 md:p-10 lg:p-14">
+          <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] text-white/60 leading-[1.85] italic">
+            &ldquo;{pillar.quote}&rdquo;
+          </p>
+          <span className="block mt-6 font-[var(--font-libre-franklin)] text-[10px] text-white/30 tracking-[3px] uppercase">
+            Criteria Designs
+          </span>
         </div>
       </div>
     </motion.div>
+  )
+}
+
+function MarqueeStrip() {
+  const text = 'DESIGN TO ADD VALUE'
+  const separator = ' · CRITERIA DESIGNS · '
+  const repeated = Array(8).fill(`${text}${separator}`).join('')
+
+  return (
+    <div className="w-full overflow-hidden py-8 md:py-10 border-t border-b border-white/[0.07]">
+      <div className="flex whitespace-nowrap animate-[marquee_30s_linear_infinite]">
+        <span className="font-[var(--font-merriweather)] text-[40px] md:text-[56px] lg:text-[72px] text-transparent font-bold tracking-[4px] select-none"
+          style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}
+        >
+          {repeated}
+        </span>
+      </div>
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+    </div>
   )
 }
 
@@ -126,12 +151,15 @@ export default function PhilosophySection() {
         </motion.div>
       </div>
 
-      {/* Pillar blocks */}
-      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pb-[80px] md:pb-[100px] flex flex-col gap-10 md:gap-14">
+      {/* Zigzag pillar blocks */}
+      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pb-[60px] md:pb-[80px] flex flex-col gap-8 md:gap-12">
         {pillars.map((pillar, i) => (
-          <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} />
+          <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} index={i} />
         ))}
       </div>
+
+      {/* Scrolling marquee strip */}
+      <MarqueeStrip />
     </section>
   )
 }
