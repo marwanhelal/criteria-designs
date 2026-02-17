@@ -141,7 +141,7 @@ export default function CeoBanner() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-[0.18]"
+            className="object-cover opacity-[0.35]"
             unoptimized
           />
         </div>
@@ -303,7 +303,7 @@ export default function CeoBanner() {
                         alt={`Partner ${i + 1}`}
                         fill
                         sizes="70px"
-                        className="object-contain invert"
+                        className="object-contain"
                         unoptimized
                       />
                     </motion.div>
