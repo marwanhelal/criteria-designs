@@ -2,32 +2,26 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 const pillars = [
   {
     key: 'culture',
-    num: '01',
     title: 'Culture',
-    subtitle: 'Rooted in Heritage',
-    description:
-      'Every space we design begins with a deep understanding of the people who will inhabit it — honoring heritage, celebrating identity, and fostering human connection.',
+    quote:
+      'Every space we design begins with a deep understanding of the people who will inhabit it. We believe architecture must honor local heritage, celebrate identity, and foster meaningful human connection.',
   },
   {
     key: 'nature',
-    num: '02',
     title: 'Nature',
-    subtitle: 'In Harmony with Earth',
-    description:
-      'Sustainability is the foundation, not an afterthought. We engineer environments that breathe with the natural world, integrating eco-conscious materials and biophilic design.',
+    quote:
+      'Sustainability is the foundation, not an afterthought. We engineer environments that breathe with the natural world, integrating eco-conscious materials and biophilic principles into every project.',
   },
   {
     key: 'art',
-    num: '03',
     title: 'Art',
-    subtitle: 'Sculpted with Vision',
-    description:
-      'Architecture is functional sculpture at human scale. We blend structural precision with aesthetic expression to create buildings that inspire and endure.',
+    quote:
+      'Architecture is functional sculpture at human scale. We blend structural precision with aesthetic expression to create buildings that inspire awe and stand as testaments to visionary design.',
   },
 ]
 
@@ -40,120 +34,55 @@ interface PhilosophyData {
 function PillarBlock({
   pillar,
   image,
-  index,
 }: {
   pillar: (typeof pillars)[0]
   image: string | null
-  index: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.2 })
-  const isEven = index % 2 === 0
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const imgY = useTransform(scrollYProgress, [0, 1], [-40, 40])
-
-  // Mouse follow
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 16
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 16
-    setOffset({ x, y })
-  }
-  const handleMouseLeave = () => setOffset({ x: 0, y: 0 })
+  const inView = useInView(ref, { once: true, amount: 0.3 })
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className="relative w-full min-h-[500px] md:min-h-[600px] lg:min-h-[100vh]"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.8 }}
+      className="w-full"
     >
-      <div
-        className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-stretch min-h-[inherit]`}
-      >
-        {/* Full-bleed image side */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="relative w-full lg:w-[60%] h-[400px] md:h-[500px] lg:h-auto overflow-hidden"
-        >
+      <div className="flex flex-col lg:flex-row">
+        {/* Image */}
+        <div className="relative w-full lg:w-[65%] h-[350px] md:h-[450px] lg:h-[520px] overflow-hidden group">
           {image && (
-            <motion.div
-              className="absolute inset-[-40px]"
-              style={{ y: imgY }}
-              animate={{ x: offset.x, y: offset.y }}
-              transition={{ type: 'spring', stiffness: 120, damping: 25 }}
-            >
-              <Image
-                src={image}
-                alt={pillar.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover"
-                unoptimized
-              />
-            </motion.div>
+            <Image
+              src={image}
+              alt={pillar.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 65vw"
+              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+              unoptimized
+            />
           )}
+          {/* Title label at bottom of image */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/50 to-transparent">
+            <span className="font-[var(--font-merriweather)] text-[15px] md:text-[17px] text-white/90 tracking-[1px]">
+              {pillar.title}
+            </span>
+          </div>
+        </div>
 
-          {/* Edge gradient blending into text panel */}
-          <div
-            className={`absolute inset-y-0 w-[160px] pointer-events-none hidden lg:block ${
-              isEven
-                ? 'right-0 bg-gradient-to-l from-[#181C23] to-transparent'
-                : 'left-0 bg-gradient-to-r from-[#181C23] to-transparent'
-            }`}
-          />
-          <div className="absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-[#181C23] to-transparent lg:hidden" />
-        </motion.div>
-
-        {/* Text side */}
-        <div className="w-full lg:w-[40%] bg-[#181C23] flex items-center relative">
-          <div className={`px-8 md:px-12 lg:px-16 py-14 lg:py-0 ${isEven ? '' : 'lg:text-right'}`}>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-[var(--font-merriweather)] text-[72px] md:text-[96px] text-white/[0.04] font-bold leading-none select-none block"
-            >
-              {pillar.num}
-            </motion.span>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="-mt-10 lg:-mt-14"
-            >
-              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] tracking-[4px] uppercase">
-                {pillar.subtitle}
-              </span>
-
-              <h3 className="font-[var(--font-merriweather)] text-[34px] md:text-[40px] lg:text-[48px] text-white font-bold mt-3 leading-[1.05] tracking-[2px]">
-                {pillar.title}
-              </h3>
-
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={inView ? { scaleX: 1 } : {}}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className={`w-[32px] h-[2px] bg-[#B1A490] mt-6 mb-6 ${isEven ? 'origin-left' : 'origin-right lg:ml-auto'}`}
-              />
-
-              <p className="font-[var(--font-open-sans)] text-[13px] md:text-[15px] text-white/40 leading-[1.9] max-w-[380px]">
-                {pillar.description}
-              </p>
-            </motion.div>
+        {/* Quote panel */}
+        <div className="w-full lg:w-[35%] bg-[#222] flex items-center">
+          <div className="p-8 md:p-10 lg:p-14">
+            <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] lg:text-[18px] text-white/70 leading-[1.8] italic">
+              &ldquo;{pillar.quote}&rdquo;
+            </p>
+            <span className="block mt-6 font-[var(--font-libre-franklin)] text-[11px] text-white/40 tracking-[3px] uppercase">
+              Criteria Designs
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -180,34 +109,29 @@ export default function PhilosophySection() {
   if (!data) return <section ref={sectionRef} />
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-[#181C23] overflow-hidden">
-      {/* Section header */}
-      <div className="py-[70px] md:py-[100px]">
+    <section ref={sectionRef} className="relative w-full bg-[#111] overflow-hidden">
+      {/* Header */}
+      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pt-[80px] md:pt-[100px] pb-[50px] md:pb-[60px]">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="max-w-[1290px] mx-auto px-6 md:px-8 text-center"
+          transition={{ duration: 0.6 }}
         >
-          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
-            What drives us
-          </span>
-          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-white leading-[1.1] mt-5">
+          <h2 className="font-[var(--font-merriweather)] text-[32px] md:text-[42px] lg:text-[48px] text-white leading-[1.15]">
             Our Philosophy
           </h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="w-[40px] h-[2px] bg-[#B1A490] mx-auto mt-6 origin-center"
-          />
+          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-white/35 mt-4 max-w-[500px] leading-[1.7]">
+            Three pillars that define who we are and how we create.
+          </p>
         </motion.div>
       </div>
 
       {/* Pillar blocks */}
-      {pillars.map((pillar, i) => (
-        <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} index={i} />
-      ))}
+      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pb-[80px] md:pb-[100px] flex flex-col gap-10 md:gap-14">
+        {pillars.map((pillar, i) => (
+          <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} />
+        ))}
+      </div>
     </section>
   )
 }
