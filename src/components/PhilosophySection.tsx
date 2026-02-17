@@ -50,7 +50,9 @@ function PillarBlock({
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7 }}
-      className={`flex flex-col lg:flex-row ${!isLeft ? 'lg:flex-row-reverse' : ''}`}
+      className={`flex flex-col lg:flex-row ${!isLeft ? 'lg:flex-row-reverse' : ''} ${
+        isLeft ? 'lg:-ml-8 lg:mr-[8%]' : 'lg:-mr-8 lg:ml-[8%]'
+      }`}
     >
       {/* Image */}
       <div className="relative w-full lg:w-[62%] h-[350px] md:h-[450px] lg:h-[520px] overflow-hidden group">
