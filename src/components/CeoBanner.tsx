@@ -303,7 +303,7 @@ export default function CeoBanner() {
                         alt={`Partner ${i + 1}`}
                         fill
                         sizes="70px"
-                        className="object-contain brightness-0 invert"
+                        className="object-contain invert"
                         unoptimized
                       />
                     </motion.div>

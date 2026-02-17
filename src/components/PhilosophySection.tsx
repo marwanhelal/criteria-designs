@@ -133,12 +133,12 @@ function MarqueeStrip() {
           {repeated}
         </span>
       </div>
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-      `}</style>
+      `}} />
     </div>
   )
 }
