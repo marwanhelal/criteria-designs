@@ -107,14 +107,28 @@ function MarqueeStrip() {
 
   return (
     <div className="w-full overflow-hidden py-10 md:py-14">
-      <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
+      <div
+        className="flex whitespace-nowrap"
+        style={{
+          animation: 'marquee 12s linear infinite',
+          willChange: 'transform',
+        }}
+      >
         <span
-          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] text-[#181C23]/[0.07] font-black tracking-[2px] select-none uppercase shrink-0"
+          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-black tracking-[2px] select-none uppercase shrink-0"
+          style={{
+            color: 'transparent',
+            WebkitTextStroke: '1.5px rgba(24, 28, 35, 0.18)',
+          }}
         >
           {repeated}
         </span>
         <span
-          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] text-[#181C23]/[0.07] font-black tracking-[2px] select-none uppercase shrink-0"
+          className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-black tracking-[2px] select-none uppercase shrink-0"
+          style={{
+            color: 'transparent',
+            WebkitTextStroke: '1.5px rgba(24, 28, 35, 0.18)',
+          }}
         >
           {repeated}
         </span>

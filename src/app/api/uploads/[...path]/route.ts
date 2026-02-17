@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stat, open } from 'fs/promises'
+import { createReadStream } from 'fs'
 import { resolve } from 'path'
 
 const MIME_TYPES: Record<string, string> = {
@@ -13,6 +14,8 @@ const MIME_TYPES: Record<string, string> = {
   '.webm': 'video/webm',
   '.mov': 'video/quicktime',
 }
+
+const VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mov'])
 
 export async function GET(
   request: NextRequest,
@@ -41,23 +44,37 @@ export async function GET(
     const ext = '.' + filename.split('.').pop()?.toLowerCase()
     const contentType = MIME_TYPES[ext] || 'application/octet-stream'
     const fileSize = fileStat.size
+    const isVideo = VIDEO_EXTENSIONS.has(ext)
 
-    // Handle Range requests (needed for video playback)
+    // Handle Range requests (critical for video playback)
     const range = request.headers.get('range')
 
     if (range) {
       const match = range.match(/bytes=(\d+)-(\d*)/)
       if (match) {
         const start = parseInt(match[1])
-        const end = match[2] ? parseInt(match[2]) : fileSize - 1
+        const end = match[2] ? parseInt(match[2]) : Math.min(start + 2 * 1024 * 1024 - 1, fileSize - 1)
         const chunkSize = end - start + 1
 
-        const fileHandle = await open(filepath, 'r')
-        const buffer = Buffer.alloc(chunkSize)
-        await fileHandle.read(buffer, 0, chunkSize, start)
-        await fileHandle.close()
+        const stream = createReadStream(filepath, { start, end })
+        const readable = new ReadableStream({
+          start(controller) {
+            stream.on('data', (chunk: unknown) => {
+              controller.enqueue(new Uint8Array(chunk as ArrayBuffer))
+            })
+            stream.on('end', () => {
+              controller.close()
+            })
+            stream.on('error', (err) => {
+              controller.error(err)
+            })
+          },
+          cancel() {
+            stream.destroy()
+          },
+        })
 
-        return new NextResponse(buffer, {
+        return new NextResponse(readable, {
           status: 206,
           headers: {
             'Content-Type': contentType,
@@ -70,13 +87,62 @@ export async function GET(
       }
     }
 
-    // Full file response for non-range requests (images, small files)
-    const fileHandle = await open(filepath, 'r')
-    const buffer = Buffer.alloc(fileSize)
-    await fileHandle.read(buffer, 0, fileSize, 0)
-    await fileHandle.close()
+    // For videos without range header, return headers to encourage range requests
+    if (isVideo) {
+      // Send first 2MB chunk and indicate range support so browser switches to range requests
+      const end = Math.min(2 * 1024 * 1024 - 1, fileSize - 1)
+      const chunkSize = end + 1
 
-    return new NextResponse(buffer, {
+      const stream = createReadStream(filepath, { start: 0, end })
+      const readable = new ReadableStream({
+        start(controller) {
+          stream.on('data', (chunk: unknown) => {
+            controller.enqueue(new Uint8Array(chunk as ArrayBuffer))
+          })
+          stream.on('end', () => {
+            controller.close()
+          })
+          stream.on('error', (err) => {
+            controller.error(err)
+          })
+        },
+        cancel() {
+          stream.destroy()
+        },
+      })
+
+      return new NextResponse(readable, {
+        status: 206,
+        headers: {
+          'Content-Type': contentType,
+          'Content-Range': `bytes 0-${end}/${fileSize}`,
+          'Content-Length': String(chunkSize),
+          'Accept-Ranges': 'bytes',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      })
+    }
+
+    // Full file response for non-video files (images, small files) — use streaming too
+    const stream = createReadStream(filepath)
+    const readable = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk: unknown) => {
+          controller.enqueue(new Uint8Array(chunk as ArrayBuffer))
+        })
+        stream.on('end', () => {
+          controller.close()
+        })
+        stream.on('error', (err) => {
+          controller.error(err)
+        })
+      },
+      cancel() {
+        stream.destroy()
+      },
+    })
+
+    return new NextResponse(readable, {
       headers: {
         'Content-Type': contentType,
         'Content-Length': String(fileSize),

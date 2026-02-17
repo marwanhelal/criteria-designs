@@ -84,14 +84,15 @@ export default function Home() {
       <section className="relative w-full h-dvh min-h-[500px]">
         <div className="absolute inset-0">
           {heroVideo ? (
-            <>
+            <div className="absolute inset-0 bg-black">
               <video
                 src={heroVideo}
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover"
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-contain"
               />
               {/* Fallback poster image (shows while video loads) */}
               {heroImage && (
@@ -100,13 +101,13 @@ export default function Home() {
                   alt="Hero"
                   fill
                   sizes="100vw"
-                  className="object-cover"
+                  className="object-contain"
                   priority
                   unoptimized
                   style={{ zIndex: -1 }}
                 />
               )}
-            </>
+            </div>
           ) : heroImage ? (
             <Image
               src={heroImage}
