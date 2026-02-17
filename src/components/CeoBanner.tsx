@@ -142,7 +142,7 @@ export default function CeoBanner() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-[0.06]"
+            className="object-cover opacity-[0.18]"
             unoptimized
           />
         </div>
