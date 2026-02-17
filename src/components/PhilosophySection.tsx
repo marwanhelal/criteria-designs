@@ -54,16 +54,15 @@ function PillarBlock({
     target: ref,
     offset: ['start end', 'end start'],
   })
-  const imgY = useTransform(scrollYProgress, [0, 1], [40, -40])
-  const textY = useTransform(scrollYProgress, [0, 1], [20, -20])
+  const imgY = useTransform(scrollYProgress, [0, 1], [-40, 40])
 
-  // Mouse follow for image
+  // Mouse follow
   const [offset, setOffset] = useState({ x: 0, y: 0 })
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 12
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 16
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 16
     setOffset({ x, y })
   }
   const handleMouseLeave = () => setOffset({ x: 0, y: 0 })
@@ -71,73 +70,88 @@ function PillarBlock({
   return (
     <div
       ref={ref}
-      className="relative max-w-[1290px] mx-auto px-6 md:px-8"
+      className="relative w-full min-h-[500px] md:min-h-[600px] lg:min-h-[100vh]"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-4 lg:gap-0 py-10 lg:py-20`}
+        className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-stretch min-h-[inherit]`}
       >
-        {/* Artistic image — displayed with contain so organic edges show */}
+        {/* Full-bleed image side */}
         <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, ease: [0.25, 0.4, 0.25, 1] }}
-          className="relative w-full lg:w-[60%]"
-          style={{ y: imgY }}
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 1, ease: 'easeOut' }}
+          className="relative w-full lg:w-[60%] h-[400px] md:h-[500px] lg:h-auto overflow-hidden"
         >
           {image && (
             <motion.div
+              className="absolute inset-[-40px]"
+              style={{ y: imgY }}
               animate={{ x: offset.x, y: offset.y }}
-              transition={{ type: 'spring', stiffness: 150, damping: 25 }}
-              className="relative w-full"
-              style={{ aspectRatio: '4/3' }}
+              transition={{ type: 'spring', stiffness: 120, damping: 25 }}
             >
               <Image
                 src={image}
                 alt={pillar.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-contain"
+                className="object-cover"
                 unoptimized
               />
             </motion.div>
           )}
+
+          {/* Edge gradient blending into text panel */}
+          <div
+            className={`absolute inset-y-0 w-[160px] pointer-events-none hidden lg:block ${
+              isEven
+                ? 'right-0 bg-gradient-to-l from-[#181C23] to-transparent'
+                : 'left-0 bg-gradient-to-r from-[#181C23] to-transparent'
+            }`}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-[#181C23] to-transparent lg:hidden" />
         </motion.div>
 
-        {/* Text — overlapping slightly on desktop */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.25 }}
-          style={{ y: textY }}
-          className={`relative w-full lg:w-[45%] z-10 ${
-            isEven ? 'lg:-ml-[5%]' : 'lg:-mr-[5%]'
-          }`}
-        >
-          <div className={`bg-white/80 backdrop-blur-sm p-8 md:p-10 lg:p-12 ${isEven ? 'lg:text-left' : 'lg:text-right'}`}>
-            {/* Number */}
-            <span className="font-[var(--font-merriweather)] text-[48px] md:text-[60px] text-[#181C23]/[0.06] font-bold leading-none block">
+        {/* Text side */}
+        <div className="w-full lg:w-[40%] bg-[#181C23] flex items-center relative">
+          <div className={`px-8 md:px-12 lg:px-16 py-14 lg:py-0 ${isEven ? '' : 'lg:text-right'}`}>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="font-[var(--font-merriweather)] text-[72px] md:text-[96px] text-white/[0.04] font-bold leading-none select-none block"
+            >
               {pillar.num}
-            </span>
+            </motion.span>
 
-            <div className="-mt-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="-mt-10 lg:-mt-14"
+            >
               <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] tracking-[4px] uppercase">
                 {pillar.subtitle}
               </span>
 
-              <h3 className="font-[var(--font-merriweather)] text-[30px] md:text-[36px] lg:text-[42px] text-[#181C23] font-bold mt-2 leading-[1.1] tracking-[1px]">
+              <h3 className="font-[var(--font-merriweather)] text-[34px] md:text-[40px] lg:text-[48px] text-white font-bold mt-3 leading-[1.05] tracking-[2px]">
                 {pillar.title}
               </h3>
 
-              <div className={`w-[28px] h-[2px] bg-[#B1A490] mt-5 mb-5 ${isEven ? '' : 'lg:ml-auto'}`} />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={inView ? { scaleX: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className={`w-[32px] h-[2px] bg-[#B1A490] mt-6 mb-6 ${isEven ? 'origin-left' : 'origin-right lg:ml-auto'}`}
+              />
 
-              <p className="font-[var(--font-open-sans)] text-[13px] md:text-[14px] text-[#777] leading-[1.9] max-w-[360px] lg:max-w-none">
+              <p className="font-[var(--font-open-sans)] text-[13px] md:text-[15px] text-white/40 leading-[1.9] max-w-[380px]">
                 {pillar.description}
               </p>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   )
@@ -166,9 +180,9 @@ export default function PhilosophySection() {
   if (!data) return <section ref={sectionRef} />
 
   return (
-    <section ref={sectionRef} data-navbar-dark className="relative w-full bg-white overflow-hidden">
+    <section ref={sectionRef} className="relative w-full bg-[#181C23] overflow-hidden">
       {/* Section header */}
-      <div className="pt-[80px] md:pt-[120px] pb-[20px] md:pb-[40px]">
+      <div className="py-[70px] md:py-[100px]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -178,7 +192,7 @@ export default function PhilosophySection() {
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
             What drives us
           </span>
-          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-[#181C23] leading-[1.1] mt-5">
+          <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[56px] text-white leading-[1.1] mt-5">
             Our Philosophy
           </h2>
           <motion.div
@@ -194,8 +208,6 @@ export default function PhilosophySection() {
       {pillars.map((pillar, i) => (
         <PillarBlock key={pillar.key} pillar={pillar} image={images[i]} index={i} />
       ))}
-
-      <div className="h-[40px] md:h-[60px]" />
     </section>
   )
 }
