@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Merriweather, Open_Sans, Libre_Franklin } from "next/font/google";
+import { Merriweather, Open_Sans, Libre_Franklin, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const merriweather = Merriweather({
@@ -20,6 +20,12 @@ const libreFranklin = Libre_Franklin({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+});
+
 export const metadata: Metadata = {
   title: "Criteria Designs | Architecture & Interior Design",
   description:
@@ -34,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} antialiased`}
+        className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} ${playfairDisplay.variable} antialiased`}
       >
         {children}
       </body>
