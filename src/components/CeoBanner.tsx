@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, useMotionValue, useTransform, useSpring, useScroll } from 'framer-motion'
+import { motion, useInView, useTransform, useScroll } from 'framer-motion'
 
 interface CeoData {
   ceoNameEn: string | null
@@ -102,39 +102,6 @@ function AnimatedRing({ inView }: { inView: boolean }) {
         animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: -289 }}
         transition={{ duration: 2.5, delay: 0.6, ease: 'easeInOut' }}
       />
-      {/* Decorative dots on the ring — pulsing */}
-      {[0, 90, 180, 270].map((angle) => (
-        <motion.circle
-          key={angle}
-          cx={50 + 48 * Math.cos((angle * Math.PI) / 180)}
-          cy={50 + 48 * Math.sin((angle * Math.PI) / 180)}
-          r="0.8"
-          fill="#B1A490"
-          initial={{ opacity: 0 }}
-          animate={inView ? {
-            opacity: [0, 0.7, 0.3, 0.7],
-            r: [0.5, 1, 0.5, 1],
-          } : {}}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            delay: 2.2 + (angle / 360) * 0.5,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-      {/* Traveling dot along outer ring */}
-      <motion.circle
-        r="1"
-        fill="#B1A490"
-        opacity={0.5}
-        initial={{ offsetDistance: '0%' }}
-        animate={inView ? { offsetDistance: '100%' } : {}}
-        transition={{ duration: 8, repeat: Infinity, ease: 'linear', delay: 2.5 }}
-        style={{
-          offsetPath: 'path("M 50 2 A 48 48 0 1 1 49.99 2")',
-        }}
-      />
     </motion.svg>
   )
 }
@@ -182,13 +149,6 @@ export default function CeoBanner() {
   const portraitRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
-  // Mouse tracking for 3D tilt on portrait
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 150, damping: 20 })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 150, damping: 20 })
-  const circleTranslateX = useTransform(mouseX, [-0.5, 0.5], [-10, 10])
-  const circleTranslateY = useTransform(mouseY, [-0.5, 0.5], [-10, 10])
 
   // Scroll parallax for background
   const { scrollYProgress } = useScroll({
@@ -197,19 +157,6 @@ export default function CeoBanner() {
   })
   const bgY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!portraitRef.current) return
-    const rect = portraitRef.current.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-    mouseX.set((e.clientX - centerX) / rect.width)
-    mouseY.set((e.clientY - centerY) / rect.height)
-  }, [mouseX, mouseY])
-
-  const handleMouseLeave = useCallback(() => {
-    mouseX.set(0)
-    mouseY.set(0)
-  }, [mouseX, mouseY])
 
   useEffect(() => {
     fetch('/api/settings')
@@ -242,8 +189,6 @@ export default function CeoBanner() {
       ref={sectionRef}
       data-navbar-dark
       className="relative w-full overflow-hidden bg-[#F8F7F4]"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
     >
       {/* Background architectural drawing with scroll parallax */}
       {data.ceoBgImage && (
@@ -283,24 +228,9 @@ export default function CeoBanner() {
               }}
               className="shrink-0"
             >
-              <motion.div
-                ref={portraitRef}
-                className="relative"
-                style={{
-                  rotateX,
-                  rotateY,
-                  transformPerspective: 800,
-                  transformStyle: 'preserve-3d',
-                }}
-              >
-                {/* Gray circle background — reacts to mouse */}
-                <motion.div
-                  className="absolute inset-[-25px] lg:inset-[-35px] rounded-full bg-[#D5D5D5]/25"
-                  style={{
-                    translateX: circleTranslateX,
-                    translateY: circleTranslateY,
-                  }}
-                />
+              <div ref={portraitRef} className="relative">
+                {/* Gray circle background */}
+                <div className="absolute inset-[-25px] lg:inset-[-35px] rounded-full bg-[#D5D5D5]/25" />
                 {/* Animated SVG rings */}
                 <AnimatedRing inView={isInView} />
                 {/* Portrait image */}
@@ -325,7 +255,7 @@ export default function CeoBanner() {
                     transition={{ duration: 0.8 }}
                   />
                 </motion.div>
-              </motion.div>
+              </div>
             </motion.div>
           )}
 
