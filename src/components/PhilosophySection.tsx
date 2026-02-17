@@ -7,18 +7,21 @@ import { motion, useInView } from 'framer-motion'
 const pillars = [
   {
     key: 'culture',
+    num: '01',
     title: 'Culture',
     quote:
       'Every space we design begins with a deep understanding of the people who will inhabit it. We believe architecture must honor local heritage, celebrate identity, and foster meaningful human connection.',
   },
   {
     key: 'nature',
+    num: '02',
     title: 'Nature',
     quote:
       'Sustainability is the foundation, not an afterthought. We engineer environments that breathe with the natural world, integrating eco-conscious materials and biophilic principles into every project.',
   },
   {
     key: 'art',
+    num: '03',
     title: 'Art',
     quote:
       'Architecture is functional sculpture at human scale. We blend structural precision with aesthetic expression to create buildings that inspire awe and stand as testaments to visionary design.',
@@ -64,23 +67,34 @@ function PillarBlock({
             unoptimized
           />
         )}
-        {/* Title at bottom of image */}
+        {/* Title overlay at bottom */}
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/60 to-transparent">
-          <h3 className="font-[var(--font-merriweather)] text-[22px] md:text-[26px] text-white tracking-[1px]">
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-white/50 tracking-[3px] uppercase">
+            {pillar.num}
+          </span>
+          <h3 className="font-[var(--font-playfair)] text-[26px] md:text-[32px] text-white tracking-[1px] mt-1">
             {pillar.title}
           </h3>
         </div>
       </div>
 
-      {/* Quote */}
+      {/* Quote panel */}
       <div className="w-full lg:w-[38%] bg-[#F2F1EE] flex items-center">
         <div className="p-8 md:p-10 lg:p-14">
-          <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] text-[#444] leading-[1.85] italic">
-            &ldquo;{pillar.quote}&rdquo;
-          </p>
-          <span className="block mt-6 font-[var(--font-libre-franklin)] text-[10px] text-[#181C23]/30 tracking-[3px] uppercase">
-            Criteria Designs
+          {/* Decorative quote mark */}
+          <span className="font-[var(--font-playfair)] text-[60px] md:text-[72px] text-[#B1A490]/20 leading-none block -mb-6">
+            &ldquo;
           </span>
+          <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] lg:text-[20px] text-[#333] leading-[1.75] italic">
+            {pillar.quote}
+          </p>
+          {/* Attribution */}
+          <div className="flex items-center gap-3 mt-8">
+            <span className="w-[24px] h-[1px] bg-[#B1A490]" />
+            <span className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-[#B1A490] tracking-[3px] uppercase">
+              Criteria Designs
+            </span>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -89,7 +103,7 @@ function PillarBlock({
 
 function MarqueeStrip() {
   const text = 'DESIGN TO ADD VALUE'
-  const separator = ' · CRITERIA DESIGNS · '
+  const separator = ' \u00B7 CRITERIA DESIGNS \u00B7 '
   const repeated = Array(8).fill(`${text}${separator}`).join('')
 
   return (
@@ -136,18 +150,34 @@ export default function PhilosophySection() {
   return (
     <section ref={sectionRef} data-navbar-dark className="relative w-full bg-[#F8F7F4] overflow-hidden">
       {/* Header */}
-      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pt-[80px] md:pt-[100px] pb-[50px] md:pb-[60px]">
+      <div className="max-w-[1400px] mx-auto px-8 md:px-12 pt-[80px] md:pt-[120px] pb-[50px] md:pb-[70px]">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
+          className="text-center"
         >
-          <h2 className="font-[var(--font-merriweather)] text-[32px] md:text-[42px] lg:text-[48px] text-[#181C23] leading-[1.15]">
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="w-[40px] h-[1px] bg-[#B1A490] mx-auto origin-center mb-6"
+          />
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
+            What Drives Us
+          </span>
+          <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-[#181C23] leading-[1.1] mt-4 italic">
             Our Philosophy
           </h2>
-          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-[#181C23]/35 mt-4 max-w-[500px] leading-[1.7]">
+          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-[#181C23]/40 mt-5 max-w-[520px] mx-auto leading-[1.8]">
             Three pillars that define who we are and how we create.
           </p>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="w-[40px] h-[1px] bg-[#B1A490] mx-auto origin-center mt-6"
+          />
         </motion.div>
       </div>
 

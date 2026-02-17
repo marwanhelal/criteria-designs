@@ -138,6 +138,8 @@ export default function SettingsPage() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'favicon' | 'heroImage' | 'heroVideo' | 'philosophyImage' | 'philosophyCultureImage' | 'philosophyNatureImage' | 'philosophyArtImage' | 'ceoImage' | 'ceoBgImage' | 'ceoLogo1' | 'ceoLogo2' | 'ceoLogo3' | 'ceoLogo4' | 'ceoLogo5') => {
     const file = e.target.files?.[0]
     if (!file) return
+    // Reset input so same file can be re-selected
+    e.target.value = ''
 
     // Use chunked upload for videos (files > 2MB)
     const videoTypes = ['video/mp4', 'video/webm', 'video/quicktime']
