@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 interface CeoData {
   ceoNameEn: string | null
@@ -66,7 +66,6 @@ function CountUpStat({ raw, inView }: { raw: string; inView: boolean }) {
   )
 }
 
-// Animated SVG ring that draws itself around the portrait
 function AnimatedRing({ inView }: { inView: boolean }) {
   return (
     <svg
@@ -107,13 +106,6 @@ export default function CeoBanner() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  const bgY = useTransform(scrollYProgress, [0, 1], [-40, 40])
-  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.05, 1, 1.05])
-
   useEffect(() => {
     fetch('/api/settings')
       .then((res) => (res.ok ? res.json() : null))
@@ -139,51 +131,31 @@ export default function CeoBanner() {
   return (
     <section
       ref={sectionRef}
-      data-navbar-dark
-      className="relative w-full overflow-hidden bg-[#F8F8F8]"
+      className="relative w-full overflow-hidden bg-[#111]"
     >
       {/* CMS background image with parallax (if uploaded) */}
       {data.ceoBgImage && (
-        <motion.div
-          className="absolute inset-[-20px] pointer-events-none"
-          style={{ y: bgY, scale: bgScale }}
-        >
+        <div className="absolute inset-0 pointer-events-none">
           <Image
             src={data.ceoBgImage}
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-[0.18]"
+            className="object-cover opacity-[0.08]"
             unoptimized
           />
-        </motion.div>
+        </div>
       )}
 
-      {/* Decorative corner accents */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, delay: 1.2 }}
-        whileHover={{ scale: 1.3, rotate: 5, transition: { duration: 0.4 } }}
-        className="absolute top-8 right-8 w-[60px] h-[60px] border-t border-r border-[#B1A490]/20 hidden lg:block cursor-pointer hover:border-[#B1A490]/50 transition-colors duration-300"
-      />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, delay: 1.2 }}
-        whileHover={{ scale: 1.3, rotate: -5, transition: { duration: 0.4 } }}
-        className="absolute bottom-8 left-8 w-[60px] h-[60px] border-b border-l border-[#B1A490]/20 hidden lg:block cursor-pointer hover:border-[#B1A490]/50 transition-colors duration-300"
-      />
-
-      <div className="relative z-10 max-w-[1290px] mx-auto px-8 py-[70px] lg:py-[90px]">
-        {/* Section label */}
+      <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[70px] lg:py-[90px]">
+        {/* Mobile label */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-10 lg:mb-0 lg:text-left lg:hidden"
         >
-          <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[4px]">
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
             Our Founder
           </span>
         </motion.div>
@@ -192,18 +164,15 @@ export default function CeoBanner() {
           {/* Portrait with animated ring */}
           {data.ceoImage && (
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -40 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
               className="shrink-0"
             >
               <div className="group relative">
-                {/* Animated SVG ring */}
                 <AnimatedRing inView={isInView} />
-                {/* Glow on hover */}
-                <div className="absolute inset-[-20px] rounded-full bg-[#B1A490]/0 group-hover:bg-[#B1A490]/10 transition-all duration-700 blur-2xl" />
-                {/* Portrait image */}
-                <div className="relative w-[220px] h-[220px] lg:w-[300px] lg:h-[300px] rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-shadow duration-500">
+                <div className="absolute inset-[-20px] rounded-full bg-[#B1A490]/0 group-hover:bg-[#B1A490]/5 transition-all duration-700 blur-2xl" />
+                <div className="relative w-[220px] h-[220px] lg:w-[300px] lg:h-[300px] rounded-full overflow-hidden group-hover:shadow-2xl transition-shadow duration-500">
                   <Image
                     src={data.ceoImage}
                     alt={data.ceoNameEn || 'CEO'}
@@ -221,11 +190,10 @@ export default function CeoBanner() {
           <div className="flex-1 text-center lg:text-left">
             {/* Desktop label */}
             <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.2 }}
-              whileHover={{ letterSpacing: '6px', transition: { duration: 0.3 } }}
-              className="hidden lg:inline-block font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[4px] mb-4 cursor-default hover:text-[#181C23] transition-colors duration-300"
+              className="hidden lg:inline-block font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px] mb-4"
             >
               Our Founder
             </motion.span>
@@ -233,70 +201,66 @@ export default function CeoBanner() {
             {/* Name */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.3 }}
-              whileHover={{ letterSpacing: '4px', transition: { duration: 0.4 } }}
-              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-[#181C23] leading-[1.1] font-bold uppercase tracking-[2px] cursor-default"
+              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-white leading-[1.1] font-bold uppercase tracking-[2px]"
             >
               {data.ceoNameEn}
             </motion.h2>
 
-            {/* Title with animated line */}
+            {/* Title */}
             {data.ceoTitleEn && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                whileHover={{ x: 6, transition: { duration: 0.3 } }}
-                className="group/title flex items-center justify-center lg:justify-start gap-3 mt-3 cursor-default"
+                className="flex items-center justify-center lg:justify-start gap-3 mt-3"
               >
                 <motion.span
                   initial={{ width: 0 }}
                   animate={isInView ? { width: 40 } : { width: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="h-[1px] bg-[#B1A490] hidden lg:block transition-all duration-300 group-hover/title:w-[60px] group-hover/title:bg-[#181C23]"
+                  className="h-[1px] bg-[#B1A490] hidden lg:block"
                 />
-                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-[#555] uppercase tracking-[3px] transition-colors duration-300 group-hover/title:text-[#181C23]">
+                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-white/40 uppercase tracking-[3px]">
                   {data.ceoTitleEn}
                 </p>
               </motion.div>
             )}
 
-            {/* Stats with counting animation */}
+            {/* Stats */}
             {stats.length > 0 && (
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mt-10"
               >
-                {/* Animated divider line */}
                 <motion.div
                   initial={{ scaleX: 0 }}
-                  animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+                  animate={isInView ? { scaleX: 1 } : {}}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="h-[1px] bg-gradient-to-r from-transparent via-[#B1A490]/40 to-transparent origin-left mb-8"
+                  className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent origin-left mb-8"
                 />
                 <div className="flex flex-wrap justify-center lg:justify-start gap-0">
                   {stats.map((stat, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 25 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.5, delay: 0.6 + i * 0.12 }}
-                      whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                      className={`group/stat flex flex-col px-5 lg:px-8 py-3 cursor-default rounded-md transition-colors duration-300 hover:bg-[#B1A490]/[0.06] ${
-                        i > 0 ? 'border-l border-[#181C23]/10' : ''
+                      className={`group/stat flex flex-col px-5 lg:px-8 py-3 cursor-default rounded-md transition-colors duration-300 hover:bg-white/[0.03] ${
+                        i > 0 ? 'border-l border-white/10' : ''
                       }`}
                     >
-                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
+                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-white leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
                         <CountUpStat raw={stat.number!} inView={isInView} />
                       </span>
-                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-[#888] uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-[#555]">
+                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-white/40 uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-white/60">
                         {stat.label}
                       </span>
                       {'desc' in stat && stat.desc && (
-                        <span className="font-[var(--font-open-sans)] text-[11px] text-[#aaa] mt-1 max-w-[160px] italic leading-[1.4]">
+                        <span className="font-[var(--font-open-sans)] text-[11px] text-white/25 mt-1 max-w-[160px] italic leading-[1.4]">
                           {stat.desc}
                         </span>
                       )}
@@ -306,40 +270,40 @@ export default function CeoBanner() {
               </motion.div>
             )}
 
-            {/* Button + Logos row */}
+            {/* Button + Logos */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
               className="flex flex-col lg:flex-row items-center gap-8 mt-10"
             >
               {data.ceoBtnTextEn && data.ceoBtnLink && (
                 <Link
                   href={data.ceoBtnLink}
-                  className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px] border border-[#181C23]/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-white hover:border-[#181C23]"
+                  className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-white uppercase tracking-[3px] border border-white/20 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-[#111] hover:border-white"
                 >
-                  <span className="absolute inset-0 bg-[#181C23] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
+                  <span className="absolute inset-0 bg-white -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
                   <span className="relative">{data.ceoBtnTextEn}</span>
                 </Link>
               )}
 
               {logos.length > 0 && (
                 <div className="flex items-center gap-5 lg:gap-6 lg:ml-4">
-                  <span className="hidden lg:block w-[1px] h-[30px] bg-[#181C23]/10" />
+                  <span className="hidden lg:block w-[1px] h-[30px] bg-white/10" />
                   {logos.map((logo, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, scale: 0.8 }}
-                      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
                       transition={{ duration: 0.4, delay: 1.2 + i * 0.1 }}
-                      className="relative w-[50px] h-[35px] lg:w-[70px] lg:h-[45px] opacity-40 hover:opacity-100 transition-all duration-300 hover:scale-110"
+                      className="relative w-[50px] h-[35px] lg:w-[70px] lg:h-[45px] opacity-30 hover:opacity-90 transition-all duration-300 hover:scale-110"
                     >
                       <Image
                         src={logo}
                         alt={`Partner ${i + 1}`}
                         fill
                         sizes="70px"
-                        className="object-contain"
+                        className="object-contain brightness-0 invert"
                         unoptimized
                       />
                     </motion.div>
