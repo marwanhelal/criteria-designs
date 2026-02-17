@@ -87,43 +87,7 @@ export async function GET(
       }
     }
 
-    // For videos without range header, return headers to encourage range requests
-    if (isVideo) {
-      // Send first 2MB chunk and indicate range support so browser switches to range requests
-      const end = Math.min(2 * 1024 * 1024 - 1, fileSize - 1)
-      const chunkSize = end + 1
-
-      const stream = createReadStream(filepath, { start: 0, end })
-      const readable = new ReadableStream({
-        start(controller) {
-          stream.on('data', (chunk: unknown) => {
-            controller.enqueue(new Uint8Array(chunk as ArrayBuffer))
-          })
-          stream.on('end', () => {
-            controller.close()
-          })
-          stream.on('error', (err) => {
-            controller.error(err)
-          })
-        },
-        cancel() {
-          stream.destroy()
-        },
-      })
-
-      return new NextResponse(readable, {
-        status: 206,
-        headers: {
-          'Content-Type': contentType,
-          'Content-Range': `bytes 0-${end}/${fileSize}`,
-          'Content-Length': String(chunkSize),
-          'Accept-Ranges': 'bytes',
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      })
-    }
-
-    // Full file response for non-video files (images, small files) — use streaming too
+    // Full file response (streamed) — works for both images and videos
     const stream = createReadStream(filepath)
     const readable = new ReadableStream({
       start(controller) {
