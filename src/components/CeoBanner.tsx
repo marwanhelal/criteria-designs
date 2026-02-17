@@ -165,6 +165,8 @@ export default function CeoBanner() {
   const mouseY = useMotionValue(0)
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 150, damping: 20 })
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 150, damping: 20 })
+  const circleTranslateX = useTransform(mouseX, [-0.5, 0.5], [-10, 10])
+  const circleTranslateY = useTransform(mouseY, [-0.5, 0.5], [-10, 10])
 
   // Scroll parallax for background
   const { scrollYProgress } = useScroll({
@@ -263,8 +265,8 @@ export default function CeoBanner() {
                 <motion.div
                   className="absolute inset-[-25px] lg:inset-[-35px] rounded-full bg-[#D5D5D5]/25"
                   style={{
-                    translateX: useTransform(mouseX, [-0.5, 0.5], [-10, 10]),
-                    translateY: useTransform(mouseY, [-0.5, 0.5], [-10, 10]),
+                    translateX: circleTranslateX,
+                    translateY: circleTranslateY,
                   }}
                 />
                 {/* Animated SVG rings */}
