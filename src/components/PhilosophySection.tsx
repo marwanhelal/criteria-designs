@@ -75,12 +75,12 @@ function PillarBlock({
       </div>
 
       {/* Quote */}
-      <div className="w-full lg:w-[38%] bg-[#1a1a1a] flex items-center">
+      <div className="w-full lg:w-[38%] bg-[#F2F1EE] flex items-center">
         <div className="p-8 md:p-10 lg:p-14">
-          <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] text-white/60 leading-[1.85] italic">
+          <p className="font-[var(--font-open-sans)] text-[15px] md:text-[17px] text-[#444] leading-[1.85] italic">
             &ldquo;{pillar.quote}&rdquo;
           </p>
-          <span className="block mt-6 font-[var(--font-libre-franklin)] text-[10px] text-white/30 tracking-[3px] uppercase">
+          <span className="block mt-6 font-[var(--font-libre-franklin)] text-[10px] text-[#181C23]/30 tracking-[3px] uppercase">
             Criteria Designs
           </span>
         </div>
@@ -95,10 +95,10 @@ function MarqueeStrip() {
   const repeated = Array(8).fill(`${text}${separator}`).join('')
 
   return (
-    <div className="w-full overflow-hidden py-8 md:py-10 border-t border-b border-white/[0.07]">
+    <div className="w-full overflow-hidden py-8 md:py-10 border-t border-b border-[#181C23]/[0.07]">
       <div className="flex whitespace-nowrap animate-[marquee_30s_linear_infinite]">
         <span className="font-[var(--font-merriweather)] text-[40px] md:text-[56px] lg:text-[72px] text-transparent font-bold tracking-[4px] select-none"
-          style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}
+          style={{ WebkitTextStroke: '1px rgba(24,28,35,0.12)' }}
         >
           {repeated}
         </span>
@@ -136,7 +136,7 @@ export default function PhilosophySection() {
   if (!data) return <section ref={sectionRef} />
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-[#111] overflow-hidden">
+    <section ref={sectionRef} data-navbar-dark className="relative w-full bg-[#F8F7F4] overflow-hidden">
       {/* Header */}
       <div className="max-w-[1400px] mx-auto px-8 md:px-12 pt-[80px] md:pt-[100px] pb-[50px] md:pb-[60px]">
         <motion.div
@@ -144,10 +144,10 @@ export default function PhilosophySection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-[var(--font-merriweather)] text-[32px] md:text-[42px] lg:text-[48px] text-white leading-[1.15]">
+          <h2 className="font-[var(--font-merriweather)] text-[32px] md:text-[42px] lg:text-[48px] text-[#181C23] leading-[1.15]">
             Our Philosophy
           </h2>
-          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-white/35 mt-4 max-w-[500px] leading-[1.7]">
+          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-[#181C23]/35 mt-4 max-w-[500px] leading-[1.7]">
             Three pillars that define who we are and how we create.
           </p>
         </motion.div>
