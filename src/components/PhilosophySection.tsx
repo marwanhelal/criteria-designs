@@ -79,13 +79,13 @@ function PillarBlock({
       </div>
 
       {/* Quote panel */}
-      <div className="w-full lg:w-[38%] bg-[#F2F1EE] flex items-center">
+      <div className="w-full lg:w-[38%] bg-[#1E2330] flex items-center">
         <div className="p-8 md:p-10 lg:p-14">
           {/* Decorative quote mark */}
           <span className="font-[var(--font-playfair)] text-[60px] md:text-[72px] text-[#B1A490]/20 leading-none block -mb-6">
             &ldquo;
           </span>
-          <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] lg:text-[20px] text-[#333] leading-[1.75] italic">
+          <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] lg:text-[20px] text-white/80 leading-[1.75] italic">
             {pillar.quote}
           </p>
           {/* Attribution */}
@@ -118,7 +118,7 @@ function MarqueeStrip() {
           className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-black tracking-[2px] select-none uppercase shrink-0"
           style={{
             color: 'transparent',
-            WebkitTextStroke: '1.5px rgba(24, 28, 35, 0.18)',
+            WebkitTextStroke: '1.5px rgba(255, 255, 255, 0.12)',
           }}
         >
           {repeated}
@@ -127,7 +127,7 @@ function MarqueeStrip() {
           className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-black tracking-[2px] select-none uppercase shrink-0"
           style={{
             color: 'transparent',
-            WebkitTextStroke: '1.5px rgba(24, 28, 35, 0.18)',
+            WebkitTextStroke: '1.5px rgba(255, 255, 255, 0.12)',
           }}
         >
           {repeated}
@@ -166,7 +166,7 @@ export default function PhilosophySection() {
   if (!data) return <section ref={sectionRef} />
 
   return (
-    <section ref={sectionRef} data-navbar-dark className="relative w-full bg-[#F8F7F4] overflow-hidden">
+    <section ref={sectionRef} className="relative w-full bg-[#181C23] overflow-hidden">
       {/* Header */}
       <div className="max-w-[1400px] mx-auto px-8 md:px-12 pt-[80px] md:pt-[120px] pb-[50px] md:pb-[70px]">
         <motion.div
@@ -184,10 +184,10 @@ export default function PhilosophySection() {
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
             What Drives Us
           </span>
-          <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-[#181C23] leading-[1.1] mt-4 italic">
+          <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white leading-[1.1] mt-4 italic">
             Our Philosophy
           </h2>
-          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-[#181C23]/40 mt-5 max-w-[520px] mx-auto leading-[1.8]">
+          <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-white/40 mt-5 max-w-[520px] mx-auto leading-[1.8]">
             Three pillars that define who we are and how we create.
           </p>
           <motion.div

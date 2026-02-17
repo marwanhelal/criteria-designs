@@ -131,8 +131,7 @@ export default function CeoBanner() {
   return (
     <section
       ref={sectionRef}
-      data-navbar-dark
-      className="relative w-full overflow-hidden bg-[#F8F7F4]"
+      className="relative w-full overflow-hidden bg-[#181C23]"
     >
       {/* CMS background image with parallax (if uploaded) */}
       {data.ceoBgImage && (
@@ -204,7 +203,7 @@ export default function CeoBanner() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-[#181C23] leading-[1.1] font-bold uppercase tracking-[2px]"
+              className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-white leading-[1.1] font-bold uppercase tracking-[2px]"
             >
               {data.ceoNameEn}
             </motion.h2>
@@ -223,7 +222,7 @@ export default function CeoBanner() {
                   transition={{ duration: 0.8, delay: 0.6 }}
                   className="h-[1px] bg-[#B1A490] hidden lg:block"
                 />
-                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-[#555] uppercase tracking-[3px]">
+                <p className="font-[var(--font-libre-franklin)] text-[14px] lg:text-[17px] text-white/60 uppercase tracking-[3px]">
                   {data.ceoTitleEn}
                 </p>
               </motion.div>
@@ -241,7 +240,7 @@ export default function CeoBanner() {
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="h-[1px] bg-gradient-to-r from-transparent via-[#181C23]/10 to-transparent origin-left mb-8"
+                  className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent origin-left mb-8"
                 />
                 <div className="flex flex-wrap justify-center lg:justify-start gap-0">
                   {stats.map((stat, i) => (
@@ -250,18 +249,18 @@ export default function CeoBanner() {
                       initial={{ opacity: 0, y: 25 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.5, delay: 0.6 + i * 0.12 }}
-                      className={`group/stat flex flex-col px-5 lg:px-8 py-3 cursor-default rounded-md transition-colors duration-300 hover:bg-[#181C23]/[0.03] ${
-                        i > 0 ? 'border-l border-[#181C23]/10' : ''
+                      className={`group/stat flex flex-col px-5 lg:px-8 py-3 cursor-default rounded-md transition-colors duration-300 hover:bg-white/[0.05] ${
+                        i > 0 ? 'border-l border-white/10' : ''
                       }`}
                     >
-                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
+                      <span className="font-[var(--font-merriweather)] text-[30px] lg:text-[40px] text-white leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
                         <CountUpStat raw={stat.number!} inView={isInView} />
                       </span>
-                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-[#888] uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-[#555]">
+                      <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[12px] text-white/50 uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-white/70">
                         {stat.label}
                       </span>
                       {'desc' in stat && stat.desc && (
-                        <span className="font-[var(--font-open-sans)] text-[11px] text-[#aaa] mt-1 max-w-[160px] italic leading-[1.4]">
+                        <span className="font-[var(--font-open-sans)] text-[11px] text-white/40 mt-1 max-w-[160px] italic leading-[1.4]">
                           {stat.desc}
                         </span>
                       )}
@@ -281,16 +280,16 @@ export default function CeoBanner() {
               {data.ceoBtnTextEn && data.ceoBtnLink && (
                 <Link
                   href={data.ceoBtnLink}
-                  className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px] border border-[#181C23]/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-white hover:border-[#181C23]"
+                  className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-white uppercase tracking-[3px] border border-white/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-[#181C23] hover:border-white"
                 >
-                  <span className="absolute inset-0 bg-[#181C23] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
+                  <span className="absolute inset-0 bg-white -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
                   <span className="relative">{data.ceoBtnTextEn}</span>
                 </Link>
               )}
 
               {logos.length > 0 && (
                 <div className="flex items-center gap-5 lg:gap-6 lg:ml-4">
-                  <span className="hidden lg:block w-[1px] h-[30px] bg-[#181C23]/10" />
+                  <span className="hidden lg:block w-[1px] h-[30px] bg-white/10" />
                   {logos.map((logo, i) => (
                     <motion.div
                       key={i}
@@ -304,7 +303,7 @@ export default function CeoBanner() {
                         alt={`Partner ${i + 1}`}
                         fill
                         sizes="70px"
-                        className="object-contain"
+                        className="object-contain brightness-0 invert"
                         unoptimized
                       />
                     </motion.div>
