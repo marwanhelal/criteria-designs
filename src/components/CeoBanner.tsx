@@ -161,33 +161,8 @@ export default function CeoBanner() {
           </span>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
-          {/* Portrait with animated ring */}
-          {data.ceoImage && (
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
-              className="shrink-0"
-            >
-              <div className="group relative">
-                <AnimatedRing inView={isInView} />
-                <div className="absolute inset-[-20px] rounded-full bg-[#B1A490]/0 group-hover:bg-[#B1A490]/5 transition-all duration-700 blur-2xl" />
-                <div className="relative w-[220px] h-[220px] lg:w-[300px] lg:h-[300px] rounded-full overflow-hidden group-hover:shadow-2xl transition-shadow duration-500">
-                  <Image
-                    src={data.ceoImage}
-                    alt={data.ceoNameEn || 'CEO'}
-                    fill
-                    sizes="300px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    unoptimized
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Content */}
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-20">
+          {/* Content — LEFT side */}
           <div className="flex-1 text-center lg:text-left">
             {/* Desktop label */}
             <motion.span
@@ -271,27 +246,50 @@ export default function CeoBanner() {
               </motion.div>
             )}
 
-            {/* Button */}
-            {data.ceoBtnTextEn && data.ceoBtnLink && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 1.0 }}
-                className="mt-10"
+            {/* SEE MORE button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              className="mt-10"
+            >
+              <Link
+                href={data.ceoBtnLink || '#'}
+                className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px] border border-[#181C23]/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-white hover:border-[#181C23]"
               >
-                <Link
-                  href={data.ceoBtnLink}
-                  className="group/btn relative inline-flex items-center font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px] border border-[#181C23]/25 px-[36px] py-[14px] overflow-hidden transition-all duration-500 hover:text-white hover:border-[#181C23]"
-                >
-                  <span className="absolute inset-0 bg-[#181C23] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
-                  <span className="relative">{data.ceoBtnTextEn}</span>
-                </Link>
-              </motion.div>
-            )}
+                <span className="absolute inset-0 bg-[#181C23] -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500" />
+                <span className="relative">{data.ceoBtnTextEn || 'SEE MORE'}</span>
+              </Link>
+            </motion.div>
           </div>
+
+          {/* Portrait with animated ring — RIGHT side */}
+          {data.ceoImage && (
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+              className="shrink-0"
+            >
+              <div className="group relative">
+                <AnimatedRing inView={isInView} />
+                <div className="absolute inset-[-20px] rounded-full bg-[#B1A490]/0 group-hover:bg-[#B1A490]/5 transition-all duration-700 blur-2xl" />
+                <div className="relative w-[220px] h-[220px] lg:w-[300px] lg:h-[300px] rounded-full overflow-hidden group-hover:shadow-2xl transition-shadow duration-500">
+                  <Image
+                    src={data.ceoImage}
+                    alt={data.ceoNameEn || 'CEO'}
+                    fill
+                    sizes="300px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
-        {/* Logos row — separate at bottom */}
+        {/* Logos row — right-aligned at bottom */}
         {logos.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -299,7 +297,7 @@ export default function CeoBanner() {
             transition={{ duration: 0.6, delay: 1.2 }}
             className="mt-14 pt-10 border-t border-[#181C23]/10"
           >
-            <div className="flex items-center justify-center lg:justify-start gap-8 lg:gap-12">
+            <div className="flex items-center justify-center lg:justify-end gap-8 lg:gap-12">
               {logos.map((logo, i) => (
                 <motion.div
                   key={i}
