@@ -81,10 +81,10 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative w-full h-dvh min-h-[500px]">
+      <section className="relative w-full h-screen min-h-[500px]">
         <div className="absolute inset-0">
           {heroVideo ? (
-            <div className="absolute inset-0 bg-black">
+            <>
               <video
                 src={heroVideo}
                 autoPlay
@@ -92,7 +92,7 @@ export default function Home() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Fallback poster image (shows while video loads) */}
               {heroImage && (
@@ -101,13 +101,13 @@ export default function Home() {
                   alt="Hero"
                   fill
                   sizes="100vw"
-                  className="object-contain"
+                  className="object-cover"
                   priority
                   unoptimized
                   style={{ zIndex: -1 }}
                 />
               )}
-            </div>
+            </>
           ) : heroImage ? (
             <Image
               src={heroImage}
