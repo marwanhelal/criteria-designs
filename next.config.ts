@@ -16,13 +16,17 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return [
-      {
-        // Redirect old /uploads/* URLs to the API route
-        source: '/uploads/:path*',
-        destination: '/api/uploads/:path*',
-      },
-    ]
+    return {
+      // afterFiles rewrites only apply when no static file matches,
+      // so videos/images in public/uploads/ are served directly (fast)
+      // and only missing files fall through to the API route
+      afterFiles: [
+        {
+          source: '/uploads/:path*',
+          destination: '/api/uploads/:path*',
+        },
+      ],
+    }
   },
 };
 
