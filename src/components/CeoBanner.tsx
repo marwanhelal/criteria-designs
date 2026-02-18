@@ -384,7 +384,7 @@ export default function CeoBanner() {
               </motion.div>
             </motion.div>
 
-            {/* Logos — staggered fade with hover lift */}
+            {/* Logos — staggered fade with pop hover */}
             {logos.length > 0 && (
               <div className="mt-10 flex items-center justify-center lg:justify-end gap-8 lg:gap-10">
                 {logos.map((logo, i) => (
@@ -397,8 +397,13 @@ export default function CeoBanner() {
                       delay: 1.5 + i * 0.12,
                       ease: [0.25, 0.4, 0.25, 1],
                     }}
-                    whileHover={{ y: -5, scale: 1.1 }}
-                    className="relative w-[80px] h-[45px] lg:w-[110px] lg:h-[55px] cursor-pointer"
+                    whileHover={{
+                      y: -8,
+                      scale: 1.15,
+                      transition: { duration: 0.2, ease: 'easeOut' },
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative w-[80px] h-[45px] lg:w-[110px] lg:h-[55px] cursor-pointer drop-shadow-sm hover:drop-shadow-lg"
                   >
                     <Image
                       src={logo}
