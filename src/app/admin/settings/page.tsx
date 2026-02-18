@@ -509,13 +509,39 @@ export default function SettingsPage() {
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Philosophy Section Images</h2>
-          <p className="text-sm text-gray-500">Upload 3 images for Culture, Nature, and Art pillars. These appear in the &quot;Our Philosophy&quot; section.</p>
+          <p className="text-sm text-gray-500">Upload the combined logo and 3 card images for Culture, Nature, and Art. These appear in the &quot;Our Philosophy&quot; section.</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Combined logo — shown at center when the three elements merge, then settles bottom-left */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Combined Logo <span className="text-gray-400 font-normal">(appears when Culture + Nature + Art merge)</span>
+            </label>
+            <div className="flex items-start gap-4">
+              <div className="relative w-36 h-36 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                {form.philosophyImage ? (
+                  <img src={form.philosophyImage} alt="Combined Logo" className="w-full h-full object-contain p-2" />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400 text-sm text-center px-2">No image</div>
+                )}
+              </div>
+              <div className="flex flex-col gap-2 pt-1">
+                <label className="px-3 py-1.5 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 text-sm inline-block">
+                  {uploading === 'philosophyImage' ? 'Uploading...' : 'Upload Combined Logo'}
+                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'philosophyImage')} className="hidden" disabled={uploading === 'philosophyImage'} />
+                </label>
+                {form.philosophyImage && (
+                  <button type="button" onClick={() => setForm(prev => ({ ...prev, philosophyImage: '' }))} className="text-xs text-red-500 hover:text-red-600 text-left">Remove</button>
+                )}
+                <p className="text-xs text-gray-400 max-w-[260px]">Upload the final Criteria Designs logo (PNG with transparent background recommended).</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t pt-4">
             {([
-              { field: 'philosophyCultureImage' as const, label: 'Culture' },
-              { field: 'philosophyNatureImage' as const, label: 'Nature' },
-              { field: 'philosophyArtImage' as const, label: 'Art' },
+              { field: 'philosophyCultureImage' as const, label: 'Culture Card Image' },
+              { field: 'philosophyNatureImage' as const, label: 'Nature Card Image' },
+              { field: 'philosophyArtImage' as const, label: 'Art Card Image' },
             ]).map(({ field, label }) => (
               <div key={field}>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
