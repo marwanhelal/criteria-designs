@@ -423,9 +423,6 @@ export default function PhilosophySection() {
             <p className="font-[var(--font-playfair)] text-[22px] text-white italic leading-none">
               Criteria Designs
             </p>
-            <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[5px] uppercase">
-              Architecture &amp; Interior Design
-            </p>
           </div>
         </motion.div>
 
@@ -466,7 +463,7 @@ export default function PhilosophySection() {
                 >
                   <LogoEl size={94} />
                 </div>
-                <p className="font-[var(--font-libre-franklin)] text-[8px] text-[#B1A490] tracking-[5px] uppercase">
+                <p className="font-[var(--font-playfair)] text-[17px] text-white italic leading-none">
                   Criteria Designs
                 </p>
               </motion.div>
