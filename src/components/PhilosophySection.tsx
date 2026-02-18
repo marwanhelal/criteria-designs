@@ -12,9 +12,9 @@ interface PhilosophyData {
 }
 
 const pillars = [
-  { key: 'culture', num: '01', label: 'CULTURE', accent: '#C4A87A' },
-  { key: 'nature',  num: '02', label: 'NATURE',  accent: '#3D8B5A' },
-  { key: 'art',     num: '03', label: 'ART',      accent: '#D4A82C' },
+  { key: 'culture', num: '01', label: 'Culture', accent: '#C4A87A', desc: 'Heritage expressed through space and form.' },
+  { key: 'nature',  num: '02', label: 'Nature',  accent: '#3D8B5A', desc: 'Organic forms shaped by the living world.' },
+  { key: 'art',     num: '03', label: 'Art',      accent: '#D4A82C', desc: 'Aesthetic vision elevated in every detail.' },
 ]
 
 const PHILOSOPHY_TEXT =
@@ -114,25 +114,40 @@ function ThreeCardCarousel({
               </motion.div>
             </AnimatePresence>
 
-            {/* Label + arrows — always on the center position */}
+            {/* Label + arrows — center card only */}
             {isActive && (
               <div className="absolute inset-0 z-20 flex flex-col justify-end pointer-events-none">
-                <div className="bg-gradient-to-t from-black/75 via-black/20 to-transparent px-5 py-5 flex items-center justify-between pointer-events-auto">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); prev() }}
-                    className="text-white/70 hover:text-white text-lg transition-colors w-8 flex items-center justify-center"
+                <div className="bg-gradient-to-t from-black/95 via-black/60 to-transparent px-5 pb-6 pt-20 pointer-events-auto">
+                  {/* Pillar number */}
+                  <p
+                    className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-2 opacity-70"
+                    style={{ color: pillars[idx].accent }}
                   >
-                    ←
-                  </button>
-                  <span className="font-[var(--font-libre-franklin)] text-[11px] text-white tracking-[5px] uppercase">
-                    {pillars[idx].label}
-                  </span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); next() }}
-                    className="text-white/70 hover:text-white text-lg transition-colors w-8 flex items-center justify-center"
-                  >
-                    →
-                  </button>
+                    {pillars[idx].num}
+                  </p>
+                  {/* Navigation row */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); prev() }}
+                      className="w-8 h-8 rounded-full border border-white/35 hover:border-white/80 hover:bg-white/10 flex items-center justify-center transition-all flex-shrink-0 text-white text-base"
+                    >
+                      ‹
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-[var(--font-playfair)] text-[19px] font-bold text-white italic leading-tight">
+                        {pillars[idx].label}
+                      </p>
+                      <p className="font-[var(--font-open-sans)] text-[11px] text-white/55 mt-0.5 leading-snug">
+                        {pillars[idx].desc}
+                      </p>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); next() }}
+                      className="w-8 h-8 rounded-full border border-white/35 hover:border-white/80 hover:bg-white/10 flex items-center justify-center transition-all flex-shrink-0 text-white text-base"
+                    >
+                      ›
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -352,12 +367,28 @@ export default function PhilosophySection() {
         transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
         className="pb-20 md:pb-28 pt-4"
       >
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10 px-12 md:px-20 max-w-[1100px] mx-auto">
-          <LogoEl size={130} />
+        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14 px-12 md:px-20 max-w-[1100px] mx-auto">
+          {/* Logo + wordmark */}
+          <div className="flex flex-col items-center gap-3 flex-shrink-0">
+            <div
+              className="rounded-2xl overflow-hidden flex items-center justify-center"
+              style={{ width: 120, height: 120, background: 'rgba(177,164,144,0.06)', border: '1px solid rgba(177,164,144,0.2)' }}
+            >
+              <LogoEl size={104} />
+            </div>
+            <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[5px] uppercase">
+              Criteria Designs
+            </p>
+          </div>
           <div className="hidden md:block w-px self-stretch bg-white/10" />
-          <p className="font-[var(--font-open-sans)] text-white/80 text-[15px] md:text-[16px] leading-[1.9] font-medium text-center md:text-left">
-            {PHILOSOPHY_TEXT}
-          </p>
+          <div>
+            <p className="font-[var(--font-playfair)] text-[13px] text-[#B1A490] italic tracking-wide mb-3">
+              Culture · Nature · Art
+            </p>
+            <p className="font-[var(--font-open-sans)] text-white/75 text-[15px] md:text-[16px] leading-[1.95] text-center md:text-left">
+              {PHILOSOPHY_TEXT}
+            </p>
+          </div>
         </div>
       </motion.div>
 
