@@ -32,8 +32,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Install system deps and global tools
-RUN apk add --no-cache libc6-compat
+# Install system deps and global tools (ffmpeg for video transcoding)
+RUN apk add --no-cache libc6-compat ffmpeg
 RUN npm install -g prisma tsx
 
 COPY --from=builder /app/public ./public

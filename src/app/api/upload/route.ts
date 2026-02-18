@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { prisma } from '@/lib/db'
+import { transcodeAndUpdate } from '@/lib/transcode'
 
-// Allow large uploads (videos up to 100MB)
 export const runtime = 'nodejs'
-export const maxDuration = 60
+export const maxDuration = 300
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,6 +65,13 @@ export async function POST(request: NextRequest) {
         alt: formData.get('alt') as string || null
       }
     })
+
+    // Background transcoding for videos (fire-and-forget, updates DB when done)
+    if (isVideo) {
+      transcodeAndUpdate(filepath, media.id).catch(err =>
+        console.error('[transcode] Background error:', err)
+      )
+    }
 
     return NextResponse.json(media, { status: 201 })
   } catch (error) {

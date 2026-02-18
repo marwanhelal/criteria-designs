@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Save, Upload } from 'lucide-react'
 
-const CHUNK_SIZE = 2 * 1024 * 1024 // 2MB chunks
+const CHUNK_SIZE = 512 * 1024 // 512 KB — safely below any reverse-proxy body-size limit
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
