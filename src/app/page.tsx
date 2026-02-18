@@ -67,8 +67,11 @@ export default function Home() {
   const displayServices = services.length > 0 ? services : []
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
   const heroImage = settings?.heroImage || featuredProject?.images?.[0]?.url || null
-  // Use direct static path for video (bypasses Node.js API route for better performance)
-  const heroVideo = settings?.heroVideo?.replace('/api/uploads/', '/uploads/') || null
+  // Always use /api/uploads/ route — guaranteed to work in Docker standalone
+  const heroVideo = settings?.heroVideo || null
+  const heroVideoMime = heroVideo?.endsWith('.webm') ? 'video/webm'
+    : heroVideo?.endsWith('.mov') ? 'video/quicktime'
+    : 'video/mp4'
 
   const scrollProjects = (dir: 'left' | 'right') => {
     const container = document.getElementById('project-scroll')
@@ -95,7 +98,7 @@ export default function Home() {
                 disablePictureInPicture
                 className="absolute inset-0 w-full h-full object-cover"
               >
-                <source src={heroVideo} type="video/mp4" />
+                <source src={heroVideo} type={heroVideoMime} />
               </video>
               {/* Fallback poster image (shows while video loads) */}
               {heroImage && (

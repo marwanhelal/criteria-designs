@@ -17,18 +17,9 @@ const MIME_TYPES: Record<string, string> = {
 
 const VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mov'])
 
-function createStreamResponse(
-  filepath: string,
-  start: number,
-  end: number,
-  fileSize: number,
-  contentType: string,
-  partial: boolean
-) {
-  const chunkSize = end - start + 1
+function streamFile(filepath: string, start: number, end: number) {
   const stream = createReadStream(filepath, { start, end })
-
-  const readable = new ReadableStream({
+  return new ReadableStream({
     start(controller) {
       stream.on('data', (chunk: unknown) => {
         controller.enqueue(new Uint8Array(chunk as ArrayBuffer))
@@ -39,22 +30,6 @@ function createStreamResponse(
     cancel() {
       stream.destroy()
     },
-  })
-
-  const headers: Record<string, string> = {
-    'Content-Type': contentType,
-    'Content-Length': String(chunkSize),
-    'Accept-Ranges': 'bytes',
-    'Cache-Control': 'public, max-age=31536000, immutable',
-  }
-
-  if (partial) {
-    headers['Content-Range'] = `bytes ${start}-${end}/${fileSize}`
-  }
-
-  return new NextResponse(readable, {
-    status: partial ? 206 : 200,
-    headers,
   })
 }
 
@@ -81,19 +56,24 @@ export async function GET(
       return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
-    const ext = '.' + filename.split('.').pop()?.toLowerCase()
+    const ext = ('.' + filename.split('.').pop()?.toLowerCase()) as string
     const contentType = MIME_TYPES[ext] || 'application/octet-stream'
     const fileSize = fileStat.size
     const isVideo = VIDEO_EXTENSIONS.has(ext)
 
+    const baseHeaders: Record<string, string> = {
+      'Content-Type': contentType,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'X-Content-Type-Options': 'nosniff',
+    }
+
     const range = request.headers.get('range')
 
-    if (range && isVideo) {
+    if (isVideo && range) {
       const match = range.match(/bytes=(\d+)-(\d*)/)
       if (match) {
         const start = parseInt(match[1])
-        // If no end specified, serve to the end of file (not just 2MB)
-        // This lets the browser buffer the full video in one request
         const end = match[2] ? parseInt(match[2]) : fileSize - 1
 
         if (start >= fileSize || end >= fileSize || start > end) {
@@ -103,12 +83,25 @@ export async function GET(
           })
         }
 
-        return createStreamResponse(filepath, start, end, fileSize, contentType, true)
+        return new NextResponse(streamFile(filepath, start, end), {
+          status: 206,
+          headers: {
+            ...baseHeaders,
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Content-Length': String(end - start + 1),
+          },
+        })
       }
     }
 
-    // Full file — stream entire file
-    return createStreamResponse(filepath, 0, fileSize - 1, fileSize, contentType, false)
+    // Full file stream
+    return new NextResponse(streamFile(filepath, 0, fileSize - 1), {
+      status: 200,
+      headers: {
+        ...baseHeaders,
+        'Content-Length': String(fileSize),
+      },
+    })
   } catch (error) {
     console.error('Error serving upload:', error)
     return NextResponse.json({ error: 'Failed to serve file' }, { status: 500 })
