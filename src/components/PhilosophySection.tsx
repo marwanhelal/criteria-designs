@@ -197,7 +197,7 @@ export default function PhilosophySection() {
       const next = new Set(prev)
       next.add(idx)
       if (next.size === 3) {
-        setTimeout(() => setShowFinale(true), 700)
+        setTimeout(() => setShowFinale(true), 2800)
       }
       return next
     })
