@@ -10,6 +10,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [unsavedVideo, setUnsavedVideo] = useState(false)
 
   const [form, setForm] = useState({
     companyNameEn: '',
@@ -209,6 +210,7 @@ export default function SettingsPage() {
 
         if (result.assembled && result.media) {
           setForm(prev => ({ ...prev, [field]: result.media.url }))
+          setUnsavedVideo(true)
         }
       }
     } catch (error) {
@@ -232,6 +234,7 @@ export default function SettingsPage() {
       })
 
       if (res.ok) {
+        setUnsavedVideo(false)
         alert('Settings saved successfully!')
       } else {
         const error = await res.json()
@@ -503,6 +506,11 @@ export default function SettingsPage() {
                 </div>
               )}
               <p className="text-xs text-gray-400 mt-2">MP4, WebM, or MOV. Max 150MB. Plays muted and looped.</p>
+              {unsavedVideo && (
+                <p className="text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded px-3 py-2 mt-2">
+                  Video uploaded — click <strong>Save Settings</strong> below to apply it to the site.
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir, readdir, appendFile, unlink, rmdir } from 'fs/promises'
+import { writeFile, mkdir, readdir, readFile, appendFile, unlink, rmdir } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { prisma } from '@/lib/db'
@@ -123,6 +123,5 @@ export async function POST(request: NextRequest) {
 
 // Helper: read a chunk file into a Buffer
 async function readFile_safe(path: string): Promise<Buffer> {
-  const { readFile } = await import('fs/promises')
   return readFile(path)
 }
