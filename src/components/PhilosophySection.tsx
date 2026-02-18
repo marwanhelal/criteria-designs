@@ -258,7 +258,13 @@ export default function PhilosophySection() {
       </motion.div>
 
       {/* ── Animation Canvas ──────────────────────────────────────── */}
-      <div ref={canvasRef} className="relative w-full" style={{ height: 460 }}>
+      <motion.div
+        ref={canvasRef}
+        className="relative w-full overflow-hidden"
+        animate={{ height: showFinale ? 290 : 460 }}
+        transition={{ duration: 0.9, ease: EASE, delay: showFinale ? 0.15 : 0 }}
+        style={{ height: 460 }}
+      >
 
         {/* Orbit rings (phases 1–3) */}
         <svg
@@ -403,28 +409,28 @@ export default function PhilosophySection() {
           style={{ pointerEvents: 'none' }}
         >
           <div
-            className="rounded-[28px] overflow-hidden flex items-center justify-center"
+            className="rounded-[22px] overflow-hidden flex items-center justify-center"
             style={{
-              width: 200, height: 200,
+              width: 160, height: 160,
               background: 'rgba(177,164,144,0.05)',
               border: '1px solid rgba(177,164,144,0.18)',
             }}
           >
-            <LogoEl size={176} />
+            <LogoEl size={138} />
           </div>
           <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[6px] uppercase">
             Criteria Designs
           </p>
         </motion.div>
 
-      </div>{/* /canvas */}
+      </motion.div>{/* /canvas */}
 
       {/* ── Content below canvas ─────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="pb-24 md:pb-32 pt-6 px-8 max-w-[860px] mx-auto"
+        className="pb-20 md:pb-24 pt-3 px-8 max-w-[860px] mx-auto"
       >
         <AnimatePresence mode="wait">
 
@@ -498,7 +504,7 @@ export default function PhilosophySection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.38, ease: EASE }}
-                    className="font-[var(--font-open-sans)] text-white/60 text-[15px] md:text-[17px] leading-[2.1] text-center md:text-left"
+                    className="font-[var(--font-open-sans)] text-white/85 text-[16px] md:text-[18px] leading-[2.0] text-center md:text-left font-medium"
                   >
                     {PILLAR_TEXTS[activeCard]}
                   </motion.p>
@@ -515,12 +521,12 @@ export default function PhilosophySection() {
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.0, ease: EASE, delay: 0.6 }}
-              className="text-center max-w-[640px] mx-auto pt-8"
+              className="text-center max-w-[640px] mx-auto pt-2"
             >
               <p className="font-[var(--font-playfair)] text-[15px] text-[#B1A490] italic tracking-wide mb-6">
                 Culture · Nature · Art
               </p>
-              <p className="font-[var(--font-open-sans)] text-white/65 text-[16px] md:text-[18px] leading-[2.1]">
+              <p className="font-[var(--font-open-sans)] text-white/85 text-[16px] md:text-[18px] leading-[2.0] font-medium">
                 {PHILOSOPHY_TEXT}
               </p>
             </motion.div>
