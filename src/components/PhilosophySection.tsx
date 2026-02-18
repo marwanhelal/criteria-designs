@@ -12,17 +12,23 @@ interface PhilosophyData {
 }
 
 const pillars = [
-  { key: 'culture', num: '01', label: 'Culture', accent: '#C4A87A', desc: 'Heritage expressed through space and form.' },
-  { key: 'nature',  num: '02', label: 'Nature',  accent: '#3D8B5A', desc: 'Organic forms shaped by the living world.' },
-  { key: 'art',     num: '03', label: 'Art',      accent: '#D4A82C', desc: 'Aesthetic vision elevated in every detail.' },
+  { key: 'culture', num: '01', label: 'Culture', accent: '#C4A87A' },
+  { key: 'nature',  num: '02', label: 'Nature',  accent: '#3D8B5A' },
+  { key: 'art',     num: '03', label: 'Art',      accent: '#D4A82C' },
+]
+
+const PILLAR_TEXTS = [
+  'Architecture as cultural memory — each space we design carries the weight of heritage, the richness of tradition, and the identity of the people who inhabit it. We honor the past while building boldly for the future.',
+  'Informed by organic form and ecological wisdom — we weave natural light, living materials, and landscape into every structure we create, crafting spaces that breathe, evolve, and belong to their environment.',
+  'Every line is intentional, every surface a composition — we elevate the built environment into art, designing spaces that inspire the eye, challenge perception, and endure long beyond their time.',
 ]
 
 const PHILOSOPHY_TEXT =
   'Our trilogy — Culture, Nature, and Art — forms a unified philosophy that shapes every project we create. Together, these three pillars define an architecture that is meaningful, sustainable, and beautifully human.'
 
 const EASE = [0.25, 0.4, 0.25, 1] as [number, number, number, number]
-const EL   = 175  // element image size during animation
-const LOGO = 240  // combined logo size during flash
+const EL   = 175
+const LOGO = 240
 
 // ── Element image during animation ─────────────────────────────────
 function ElementImg({ src, label, color }: { src: string | null; label: string; color: string }) {
@@ -42,9 +48,39 @@ function ElementImg({ src, label, color }: { src: string | null; label: string; 
   )
 }
 
-// ── Three-card carousel ─────────────────────────────────────────────
-// Positions: -1=left, 0=center, +1=right
-// key on outer div = position (stays fixed), key on inner = card idx (fades on change)
+// ── Minimal line-arrow navigation button ────────────────────────────
+function ArrowBtn({ dir, onClick }: { dir: 'left' | 'right'; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group flex items-center gap-2 text-white/25 hover:text-[#B1A490] transition-colors duration-300"
+      aria-label={dir === 'left' ? 'Previous' : 'Next'}
+    >
+      {dir === 'left' && (
+        <>
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none"
+            className="flex-shrink-0 transition-transform duration-300 group-hover:-translate-x-1">
+            <path d="M6 1L1 6L6 11" stroke="currentColor" strokeWidth="1.3"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="block h-px bg-current transition-all duration-300 w-10 group-hover:w-16" />
+        </>
+      )}
+      {dir === 'right' && (
+        <>
+          <span className="block h-px bg-current transition-all duration-300 w-10 group-hover:w-16" />
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none"
+            className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1">
+            <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="1.3"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </>
+      )}
+    </button>
+  )
+}
+
+// ── Three-card carousel — images only, no text overlay ──────────────
 function ThreeCardCarousel({
   activeCard,
   cardImages,
@@ -54,9 +90,6 @@ function ThreeCardCarousel({
   cardImages: (string | null | undefined)[]
   goCard: (i: number) => void
 }) {
-  const prev = () => goCard((activeCard - 1 + 3) % 3)
-  const next = () => goCard((activeCard + 1) % 3)
-
   return (
     <div className="flex items-end justify-center gap-4 md:gap-6">
       {([-1, 0, 1] as const).map((offset) => {
@@ -68,26 +101,25 @@ function ThreeCardCarousel({
             key={offset}
             animate={{
               scale: isActive ? 1 : 0.82,
-              opacity: isActive ? 1 : 0.55,
+              opacity: isActive ? 1 : 0.4,
               zIndex: isActive ? 10 : 5,
             }}
             transition={{ duration: 0.42, ease: EASE }}
             className="relative rounded-2xl overflow-hidden flex-shrink-0"
             style={{
               width: isActive ? 280 : 210,
-              height: isActive ? 390 : 310,
+              height: isActive ? 400 : 310,
               cursor: isActive ? 'default' : 'pointer',
             }}
             onClick={() => { if (!isActive) goCard(idx) }}
           >
-            {/* Card content — fades in/out when the card changes */}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={idx}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.28 }}
+                transition={{ duration: 0.3 }}
                 className="absolute inset-0"
               >
                 {cardImages[idx] ? (
@@ -114,42 +146,10 @@ function ThreeCardCarousel({
               </motion.div>
             </AnimatePresence>
 
-            {/* Label + arrows — center card only */}
+            {/* Subtle vignette on active card only */}
             {isActive && (
-              <div className="absolute inset-0 z-20 flex flex-col justify-end pointer-events-none">
-                <div className="bg-gradient-to-t from-black/95 via-black/60 to-transparent px-5 pb-6 pt-20 pointer-events-auto">
-                  {/* Pillar number */}
-                  <p
-                    className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-2 opacity-70"
-                    style={{ color: pillars[idx].accent }}
-                  >
-                    {pillars[idx].num}
-                  </p>
-                  {/* Navigation row */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); prev() }}
-                      className="w-8 h-8 rounded-full border border-white/35 hover:border-white/80 hover:bg-white/10 flex items-center justify-center transition-all flex-shrink-0 text-white text-base"
-                    >
-                      ‹
-                    </button>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-[var(--font-playfair)] text-[19px] font-bold text-white italic leading-tight">
-                        {pillars[idx].label}
-                      </p>
-                      <p className="font-[var(--font-open-sans)] text-[11px] text-white/55 mt-0.5 leading-snug">
-                        {pillars[idx].desc}
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); next() }}
-                      className="w-8 h-8 rounded-full border border-white/35 hover:border-white/80 hover:bg-white/10 flex items-center justify-center transition-all flex-shrink-0 text-white text-base"
-                    >
-                      ›
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <div className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{ boxShadow: 'inset 0 -60px 60px -20px rgba(24,28,35,0.5)' }} />
             )}
           </motion.div>
         )
@@ -160,15 +160,16 @@ function ThreeCardCarousel({
 
 // ── Main Section ────────────────────────────────────────────────────
 export default function PhilosophySection() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const canvasRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 })
-  // Trigger animation only when the canvas itself is visible — not just the section header
+  const sectionRef  = useRef<HTMLElement>(null)
+  const canvasRef   = useRef<HTMLDivElement>(null)
+  const isInView    = useInView(sectionRef,  { once: true, amount: 0.15 })
   const isCanvasInView = useInView(canvasRef, { once: true, amount: 0.25 })
 
-  const [phase, setPhase] = useState(0)
+  const [phase,      setPhase]      = useState(0)
   const [activeCard, setActiveCard] = useState(0)
-  const [data, setData] = useState<PhilosophyData | null>(null)
+  const [viewedSet,  setViewedSet]  = useState<Set<number>>(new Set([0]))
+  const [showFinale, setShowFinale] = useState(false)
+  const [data,       setData]       = useState<PhilosophyData | null>(null)
 
   useEffect(() => {
     fetch('/api/settings')
@@ -183,13 +184,30 @@ export default function PhilosophySection() {
       setTimeout(() => setPhase(1), 150),   // elements appear at screen edges
       setTimeout(() => setPhase(2), 1500),   // elements converge to center
       setTimeout(() => setPhase(3), 2600),   // combined logo materialises
-      setTimeout(() => setPhase(4), 3400),   // canvas logo fades; content slides in
+      setTimeout(() => setPhase(4), 3400),   // canvas logo fades; carousel slides in
       setTimeout(() => setPhase(5), 4300),   // carousel fully interactive
     ]
     return () => t.forEach(clearTimeout)
   }, [isCanvasInView])
 
+  const handleGoCard = (idx: number) => {
+    if (showFinale) return
+    setActiveCard(idx)
+    setViewedSet(prev => {
+      const next = new Set(prev)
+      next.add(idx)
+      if (next.size === 3) {
+        setTimeout(() => setShowFinale(true), 700)
+      }
+      return next
+    })
+  }
+
+  const prev = () => handleGoCard((activeCard - 1 + 3) % 3)
+  const next = () => handleGoCard((activeCard + 1) % 3)
+
   const cardImages = [data?.philosophyCultureImage, data?.philosophyNatureImage, data?.philosophyArtImage]
+
   const LogoEl = ({ size }: { size: number }) =>
     data?.philosophyImage ? (
       <div className="relative" style={{ width: size, height: size }}>
@@ -209,7 +227,7 @@ export default function PhilosophySection() {
   return (
     <section ref={sectionRef} className="relative bg-[#181C23] w-full overflow-hidden">
 
-      {/* ── Section Header ──────────────────────────────────────── */}
+      {/* ── Section Header ──────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -217,9 +235,19 @@ export default function PhilosophySection() {
         className="text-center pt-20 md:pt-28 pb-12 px-8"
       >
         <div className="flex items-center justify-center gap-4 mb-5">
-          <motion.div initial={{ scaleX: 0 }} animate={isInView ? { scaleX: 1 } : {}} transition={{ duration: 0.7, delay: 0.2 }} className="w-10 h-px bg-[#B1A490] origin-right" />
-          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">What Drives Us</span>
-          <motion.div initial={{ scaleX: 0 }} animate={isInView ? { scaleX: 1 } : {}} transition={{ duration: 0.7, delay: 0.2 }} className="w-10 h-px bg-[#B1A490] origin-left" />
+          <motion.div
+            initial={{ scaleX: 0 }} animate={isInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-10 h-px bg-[#B1A490] origin-right"
+          />
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
+            What Drives Us
+          </span>
+          <motion.div
+            initial={{ scaleX: 0 }} animate={isInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-10 h-px bg-[#B1A490] origin-left"
+          />
         </div>
         <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white italic leading-[1.1]">
           Our Philosophy
@@ -229,9 +257,10 @@ export default function PhilosophySection() {
         </p>
       </motion.div>
 
-      {/* ── Animation Canvas ────────────────────────────────────── */}
-      <div ref={canvasRef} className="relative w-full" style={{ height: 500 }}>
-        {/* Orbit rings */}
+      {/* ── Animation Canvas ──────────────────────────────────────── */}
+      <div ref={canvasRef} className="relative w-full" style={{ height: 460 }}>
+
+        {/* Orbit rings (phases 1–3) */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
           style={{ opacity: phase >= 1 && phase < 4 ? 0.07 : 0, transition: 'opacity 0.8s' }}
@@ -242,59 +271,65 @@ export default function PhilosophySection() {
 
         <div className="absolute inset-0">
 
-          {/* CULTURE — from left screen edge */}
+          {/* CULTURE — enters from left screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             initial={{ x: -1200, y: 0, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: -1200, y: 0, opacity: 0, scale: 0.8 }
-              : phase === 1 ? { x: -650, y: 0, opacity: 1, scale: 1 }
+              phase === 0 ? { x: -1200, y: 0, opacity: 0,  scale: 0.8 }
+              : phase === 1 ? { x: -650,  y: 0, opacity: 1,  scale: 1   }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 1.0, ease: EASE }}
           >
             <ElementImg src={data?.philosophyCultureImage ?? null} label="CULTURE" color="#C4A87A" />
-            <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#C4A87A] tracking-[4px] uppercase whitespace-nowrap">
+            <motion.span
+              animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#C4A87A] tracking-[4px] uppercase whitespace-nowrap"
+            >
               Culture
             </motion.span>
           </motion.div>
 
-          {/* NATURE — from top screen edge */}
+          {/* NATURE — enters from top screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             initial={{ x: 0, y: -800, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: 0, y: -800, opacity: 0, scale: 0.8 }
-              : phase === 1 ? { x: 0, y: -170, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 0, y: -800, opacity: 0,  scale: 0.8 }
+              : phase === 1 ? { x: 0, y: -170, opacity: 1,  scale: 1   }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 1.05, delay: 0.05, ease: EASE }}
           >
             <ElementImg src={data?.philosophyNatureImage ?? null} label="NATURE" color="#3D8B5A" />
-            <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#3D8B5A] tracking-[4px] uppercase whitespace-nowrap">
+            <motion.span
+              animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#3D8B5A] tracking-[4px] uppercase whitespace-nowrap"
+            >
               Nature
             </motion.span>
           </motion.div>
 
-          {/* ART — from right screen edge */}
+          {/* ART — enters from right screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             initial={{ x: 1200, y: 0, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: 1200, y: 0, opacity: 0, scale: 0.8 }
-              : phase === 1 ? { x: 650, y: 0, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 1200, y: 0, opacity: 0,  scale: 0.8 }
+              : phase === 1 ? { x: 650,  y: 0, opacity: 1,  scale: 1   }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 1.05, delay: 0.1, ease: EASE }}
           >
             <ElementImg src={data?.philosophyArtImage ?? null} label="ART" color="#D4A82C" />
-            <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#D4A82C] tracking-[4px] uppercase whitespace-nowrap">
+            <motion.span
+              animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#D4A82C] tracking-[4px] uppercase whitespace-nowrap"
+            >
               Art
             </motion.span>
           </motion.div>
@@ -310,7 +345,7 @@ export default function PhilosophySection() {
               style={{
                 background: 'radial-gradient(circle, #B1A490 0%, transparent 70%)',
                 left: 'calc(50% - 24px)',
-                top: 'calc(50% - 24px)',
+                top:  'calc(50% - 24px)',
               }}
             />
           )}
@@ -319,9 +354,9 @@ export default function PhilosophySection() {
           <motion.div
             className="absolute rounded-full pointer-events-none"
             style={{
-              width: LOGO + 40, height: LOGO + 40,
+              width:  LOGO + 40, height: LOGO + 40,
               left: `calc(50% - ${(LOGO + 40) / 2}px)`,
-              top: `calc(50% - ${(LOGO + 40) / 2}px)`,
+              top:  `calc(50% - ${(LOGO + 40) / 2}px)`,
               border: '1.5px solid #B1A490',
               boxShadow: '0 0 35px 8px rgba(177,164,144,0.18)',
             }}
@@ -329,13 +364,13 @@ export default function PhilosophySection() {
             transition={{ duration: 0.65 }}
           />
 
-          {/* Combined logo at canvas center — phase 3 only */}
+          {/* Combined logo — visible during phase 3 flash only */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: LOGO, height: LOGO, left: `calc(50% - ${LOGO / 2}px)`, top: `calc(50% - ${LOGO / 2}px)` }}
             animate={{
               opacity: phase === 3 ? 1 : 0,
-              scale: phase === 3 ? 1 : phase < 3 ? 0.25 : 0.6,
+              scale:   phase === 3 ? 1 : phase < 3 ? 0.25 : 0.6,
             }}
             transition={{ duration: 0.7, ease: EASE }}
           >
@@ -344,53 +379,127 @@ export default function PhilosophySection() {
 
         </div>
 
-        {/* ── Carousel: appears in the same space where the logo collision happened ── */}
+        {/* ── Carousel (phase 4+, before finale) ── images only, no text ── */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           initial={{ opacity: 0 }}
-          animate={phase >= 4 ? { opacity: 1 } : { opacity: 0 }}
+          animate={phase >= 4 && !showFinale ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.9, ease: EASE }}
-          style={{ pointerEvents: phase >= 5 ? 'auto' : 'none' }}
+          style={{ pointerEvents: phase >= 5 && !showFinale ? 'auto' : 'none' }}
         >
           <ThreeCardCarousel
             activeCard={activeCard}
             cardImages={cardImages}
-            goCard={setActiveCard}
+            goCard={handleGoCard}
           />
         </motion.div>
-      </div>
 
-      {/* ── Bottom bar: logo + description ──── */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
-        className="pb-20 md:pb-28 pt-4"
-      >
-        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14 px-12 md:px-20 max-w-[1100px] mx-auto">
-          {/* Logo + wordmark */}
-          <div className="flex flex-col items-center gap-3 flex-shrink-0">
-            <div
-              className="rounded-2xl overflow-hidden flex items-center justify-center"
-              style={{ width: 120, height: 120, background: 'rgba(177,164,144,0.06)', border: '1px solid rgba(177,164,144,0.2)' }}
+        {/* ── Finale logo — rises up after all three pillars are viewed ── */}
+        <motion.div
+          className="absolute inset-0 flex flex-col items-center justify-center gap-5"
+          initial={{ opacity: 0, y: 50 }}
+          animate={showFinale ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          transition={{ duration: 1.1, ease: EASE }}
+          style={{ pointerEvents: 'none' }}
+        >
+          <div
+            className="rounded-[28px] overflow-hidden flex items-center justify-center"
+            style={{
+              width: 200, height: 200,
+              background: 'rgba(177,164,144,0.05)',
+              border: '1px solid rgba(177,164,144,0.18)',
+            }}
+          >
+            <LogoEl size={176} />
+          </div>
+          <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[6px] uppercase">
+            Criteria Designs
+          </p>
+        </motion.div>
+
+      </div>{/* /canvas */}
+
+      {/* ── Content below canvas ─────────────────────────────────── */}
+      <div className="pb-24 md:pb-32 pt-2">
+        <AnimatePresence mode="wait">
+
+          {/* Interactive state: navigation arrows + dynamic pillar text */}
+          {!showFinale && (
+            <motion.div
+              key="interactive"
+              initial={{ opacity: 0, y: 20 }}
+              animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.8, ease: EASE }}
+              className="flex flex-col items-center"
             >
-              <LogoEl size={104} />
-            </div>
-            <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[5px] uppercase">
-              Criteria Designs
-            </p>
-          </div>
-          <div className="hidden md:block w-px self-stretch bg-white/10" />
-          <div>
-            <p className="font-[var(--font-playfair)] text-[13px] text-[#B1A490] italic tracking-wide mb-3">
-              Culture · Nature · Art
-            </p>
-            <p className="font-[var(--font-open-sans)] text-white/75 text-[15px] md:text-[16px] leading-[1.95] text-center md:text-left">
-              {PHILOSOPHY_TEXT}
-            </p>
-          </div>
-        </div>
-      </motion.div>
+              {/* Navigation row */}
+              <div className="flex items-center justify-center gap-10 md:gap-14 pt-6 pb-8">
+                <ArrowBtn dir="left" onClick={prev} />
+
+                <div className="text-center" style={{ minWidth: 160 }}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeCard}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.22 }}
+                    >
+                      <p
+                        className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-2"
+                        style={{ color: pillars[activeCard].accent }}
+                      >
+                        {pillars[activeCard].num}
+                      </p>
+                      <p className="font-[var(--font-playfair)] text-[32px] md:text-[40px] text-white italic leading-none">
+                        {pillars[activeCard].label}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <ArrowBtn dir="right" onClick={next} />
+              </div>
+
+              {/* Pillar-specific description — changes with active card */}
+              <div className="max-w-[600px] mx-auto px-8 text-center">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={activeCard}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -14 }}
+                    transition={{ duration: 0.38, ease: EASE }}
+                    className="font-[var(--font-open-sans)] text-white/60 text-[15px] md:text-[17px] leading-[2.1]"
+                  >
+                    {PILLAR_TEXTS[activeCard]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Finale state: philosophy text */}
+          {showFinale && (
+            <motion.div
+              key="finale"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.0, ease: EASE, delay: 0.55 }}
+              className="max-w-[640px] mx-auto px-8 pt-12 text-center"
+            >
+              <p className="font-[var(--font-playfair)] text-[15px] text-[#B1A490] italic tracking-wide mb-6">
+                Culture · Nature · Art
+              </p>
+              <p className="font-[var(--font-open-sans)] text-white/65 text-[16px] md:text-[18px] leading-[2.1]">
+                {PHILOSOPHY_TEXT}
+              </p>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
+      </div>
 
     </section>
   )
