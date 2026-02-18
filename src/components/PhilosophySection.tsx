@@ -146,7 +146,10 @@ function ThreeCardCarousel({
 // ── Main Section ────────────────────────────────────────────────────
 export default function PhilosophySection() {
   const sectionRef = useRef<HTMLElement>(null)
+  const canvasRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 })
+  // Trigger animation only when the canvas itself is visible — not just the section header
+  const isCanvasInView = useInView(canvasRef, { once: true, amount: 0.25 })
 
   const [phase, setPhase] = useState(0)
   const [activeCard, setActiveCard] = useState(0)
@@ -160,16 +163,16 @@ export default function PhilosophySection() {
   }, [])
 
   useEffect(() => {
-    if (!isInView) return
+    if (!isCanvasInView) return
     const t = [
-      setTimeout(() => setPhase(1), 300),   // elements appear at outer positions
-      setTimeout(() => setPhase(2), 1400),   // elements converge to center
-      setTimeout(() => setPhase(3), 2500),   // combined logo materialises
-      setTimeout(() => setPhase(4), 3300),   // canvas logo fades; content slides in
-      setTimeout(() => setPhase(5), 4200),   // carousel fully interactive
+      setTimeout(() => setPhase(1), 150),   // elements appear at screen edges
+      setTimeout(() => setPhase(2), 1500),   // elements converge to center
+      setTimeout(() => setPhase(3), 2600),   // combined logo materialises
+      setTimeout(() => setPhase(4), 3400),   // canvas logo fades; content slides in
+      setTimeout(() => setPhase(5), 4300),   // carousel fully interactive
     ]
     return () => t.forEach(clearTimeout)
-  }, [isInView])
+  }, [isCanvasInView])
 
   const cardImages = [data?.philosophyCultureImage, data?.philosophyNatureImage, data?.philosophyArtImage]
   const LogoEl = ({ size }: { size: number }) =>
@@ -212,7 +215,7 @@ export default function PhilosophySection() {
       </motion.div>
 
       {/* ── Animation Canvas ────────────────────────────────────── */}
-      <div className="relative w-full" style={{ height: 440 }}>
+      <div ref={canvasRef} className="relative w-full" style={{ height: 440 }}>
         {/* Orbit rings */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
@@ -224,16 +227,17 @@ export default function PhilosophySection() {
 
         <div className="absolute inset-0">
 
-          {/* CULTURE — from left */}
+          {/* CULTURE — from left screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
+            initial={{ x: -1200, y: 0, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: -900, y: 0, opacity: 0, scale: 0.7 }
-              : phase === 1 ? { x: -240, y: 0, opacity: 1, scale: 1 }
+              phase === 0 ? { x: -1200, y: 0, opacity: 0, scale: 0.8 }
+              : phase === 1 ? { x: -650, y: 0, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
-            transition={{ duration: 0.9, ease: EASE }}
+            transition={{ duration: 1.0, ease: EASE }}
           >
             <ElementImg src={data?.philosophyCultureImage ?? null} label="CULTURE" color="#C4A87A" />
             <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
@@ -242,16 +246,17 @@ export default function PhilosophySection() {
             </motion.span>
           </motion.div>
 
-          {/* NATURE — from top */}
+          {/* NATURE — from top screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
+            initial={{ x: 0, y: -800, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: 0, y: -600, opacity: 0, scale: 0.7 }
-              : phase === 1 ? { x: 0, y: -155, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 0, y: -800, opacity: 0, scale: 0.8 }
+              : phase === 1 ? { x: 0, y: -170, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
-            transition={{ duration: 0.95, delay: 0.08, ease: EASE }}
+            transition={{ duration: 1.05, delay: 0.05, ease: EASE }}
           >
             <ElementImg src={data?.philosophyNatureImage ?? null} label="NATURE" color="#3D8B5A" />
             <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
@@ -260,16 +265,17 @@ export default function PhilosophySection() {
             </motion.span>
           </motion.div>
 
-          {/* ART — from right */}
+          {/* ART — from right screen edge */}
           <motion.div
             className="absolute pointer-events-none"
             style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
+            initial={{ x: 1200, y: 0, opacity: 0, scale: 0.8 }}
             animate={
-              phase === 0 ? { x: 900, y: 0, opacity: 0, scale: 0.7 }
-              : phase === 1 ? { x: 240, y: 0, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 1200, y: 0, opacity: 0, scale: 0.8 }
+              : phase === 1 ? { x: 650, y: 0, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
-            transition={{ duration: 0.95, delay: 0.16, ease: EASE }}
+            transition={{ duration: 1.05, delay: 0.1, ease: EASE }}
           >
             <ElementImg src={data?.philosophyArtImage ?? null} label="ART" color="#D4A82C" />
             <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
