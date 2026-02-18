@@ -215,7 +215,7 @@ export default function PhilosophySection() {
       </motion.div>
 
       {/* ── Animation Canvas ────────────────────────────────────── */}
-      <div ref={canvasRef} className="relative w-full" style={{ height: 440 }}>
+      <div ref={canvasRef} className="relative w-full" style={{ height: 500 }}>
         {/* Orbit rings */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
@@ -328,25 +328,30 @@ export default function PhilosophySection() {
           </motion.div>
 
         </div>
-      </div>
 
-      {/* ── Post-animation: three-card carousel + bottom bar ──── */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ duration: 0.9, ease: EASE }}
-        className="pb-20 md:pb-28"
-      >
-        {/* Three-card carousel */}
-        <div className="flex items-center justify-center px-4 md:px-8 pt-4 pb-10">
+        {/* ── Carousel: appears in the same space where the logo collision happened ── */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={phase >= 4 ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.9, ease: EASE }}
+          style={{ pointerEvents: phase >= 5 ? 'auto' : 'none' }}
+        >
           <ThreeCardCarousel
             activeCard={activeCard}
             cardImages={cardImages}
             goCard={setActiveCard}
           />
-        </div>
+        </motion.div>
+      </div>
 
-        {/* Bottom bar: logo + separator + description text */}
+      {/* ── Bottom bar: logo + description ──── */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+        transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
+        className="pb-20 md:pb-28 pt-4"
+      >
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10 px-12 md:px-20 max-w-[1100px] mx-auto">
           <LogoEl size={130} />
           <div className="hidden md:block w-px self-stretch bg-white/10" />
