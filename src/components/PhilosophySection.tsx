@@ -541,6 +541,58 @@ export default function PhilosophySection() {
         </AnimatePresence>
       </motion.div>
 
+      {/* ── Scrolling marquee — bridges dark philosophy → light founder ── */}
+      <div
+        className="relative overflow-hidden"
+        style={{ borderTop: '1px solid rgba(177,164,144,0.12)' }}
+      >
+        {/* Gradient fade: dark top → near-transparent bottom (eases into light section) */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to right, #181C23 0%, transparent 6%, transparent 94%, #181C23 100%)',
+          }}
+        />
+
+        <div
+          className="flex whitespace-nowrap py-5 md:py-7"
+          style={{ animation: 'criteria-marquee 36s linear infinite', width: 'max-content' }}
+        >
+          {Array(8).fill(null).map((_, i) => (
+            <span
+              key={i}
+              className="font-[var(--font-playfair)] italic inline-flex items-center gap-0 select-none"
+              style={{
+                fontSize: 'clamp(38px, 5vw, 72px)',
+                WebkitTextStroke: '1.2px rgba(177,164,144,0.60)',
+                color: 'transparent',
+                paddingRight: '3rem',
+                letterSpacing: '0.01em',
+              }}
+            >
+              Criteria Designs — Design That Adds Value
+              <span
+                style={{
+                  WebkitTextStroke: '1px rgba(177,164,144,0.35)',
+                  fontSize: '0.38em',
+                  marginLeft: '2.5rem',
+                  verticalAlign: 'middle',
+                }}
+              >
+                ◇
+              </span>
+            </span>
+          ))}
+        </div>
+
+        <style>{`
+          @keyframes criteria-marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+        `}</style>
+      </div>
+
     </section>
   )
 }
