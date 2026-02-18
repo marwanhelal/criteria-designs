@@ -195,14 +195,18 @@ export default function SettingsPage() {
         formData.append('fileType', file.type)
         formData.append('fileSize', String(file.size))
 
-        const res = await fetch('/api/upload/chunk', {
-          method: 'POST',
-          body: formData
-        })
+          // Retry up to 3 times on transient errors (502, 503, 504)
+        let res!: Response
+        for (let attempt = 0; attempt < 3; attempt++) {
+          res = await fetch('/api/upload/chunk', { method: 'POST', body: formData })
+          if (res.ok || (res.status < 500 && res.status !== 408)) break
+          if (attempt < 2) await new Promise(r => setTimeout(r, 2000 * (attempt + 1)))
+        }
 
         if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Chunk upload failed')
+          let errMsg = 'Chunk upload failed'
+          try { errMsg = (await res.json()).error || errMsg } catch { /* plain-text body */ }
+          throw new Error(errMsg)
         }
 
         const result = await res.json()
