@@ -87,14 +87,16 @@ export default function Home() {
           {heroVideo ? (
             <>
               <video
-                src={heroVideo}
                 autoPlay
                 muted
                 loop
                 playsInline
                 preload="auto"
+                disablePictureInPicture
                 className="absolute inset-0 w-full h-full object-cover"
-              />
+              >
+                <source src={heroVideo} type="video/mp4" />
+              </video>
               {/* Fallback poster image (shows while video loads) */}
               {heroImage && (
                 <Image
