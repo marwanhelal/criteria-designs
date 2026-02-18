@@ -420,74 +420,102 @@ export default function PhilosophySection() {
       </div>{/* /canvas */}
 
       {/* ── Content below canvas ─────────────────────────────────── */}
-      <div className="pb-24 md:pb-32 pt-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.8, ease: EASE }}
+        className="pb-24 md:pb-32 pt-6 px-8 max-w-[860px] mx-auto"
+      >
         <AnimatePresence mode="wait">
 
-          {/* Interactive state: navigation arrows + dynamic pillar text */}
+          {/* Interactive: logo left + nav/text right */}
           {!showFinale && (
             <motion.div
               key="interactive"
-              initial={{ opacity: 0, y: 20 }}
-              animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.8, ease: EASE }}
-              className="flex flex-col items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12"
             >
-              {/* Navigation row */}
-              <div className="flex items-center justify-center gap-10 md:gap-14 pt-6 pb-8">
-                <ArrowBtn dir="left" onClick={prev} />
 
-                <div className="text-center" style={{ minWidth: 160 }}>
+              {/* Logo — left side, exits upward on finale */}
+              <motion.div
+                exit={{ opacity: 0, y: -50, transition: { duration: 0.7, ease: EASE } }}
+                className="flex-shrink-0 flex flex-col items-center gap-3"
+              >
+                <div
+                  className="rounded-[20px] overflow-hidden flex items-center justify-center"
+                  style={{
+                    width: 110, height: 110,
+                    background: 'rgba(177,164,144,0.05)',
+                    border: '1px solid rgba(177,164,144,0.18)',
+                  }}
+                >
+                  <LogoEl size={94} />
+                </div>
+                <p className="font-[var(--font-libre-franklin)] text-[8px] text-[#B1A490] tracking-[5px] uppercase">
+                  Criteria Designs
+                </p>
+              </motion.div>
+
+              {/* Thin vertical divider */}
+              <div className="hidden md:block w-px self-stretch" style={{ background: 'rgba(255,255,255,0.07)' }} />
+
+              {/* Navigation + pillar text — right side */}
+              <div className="flex-1 min-w-0 flex flex-col items-center md:items-start">
+
+                {/* Navigation row: ← [num · label] → */}
+                <div className="flex items-center gap-6 mb-5">
+                  <ArrowBtn dir="left" onClick={prev} />
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeCard}
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 7 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
+                      exit={{ opacity: 0, y: -7 }}
                       transition={{ duration: 0.22 }}
                     >
                       <p
-                        className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-2"
+                        className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-1.5"
                         style={{ color: pillars[activeCard].accent }}
                       >
                         {pillars[activeCard].num}
                       </p>
-                      <p className="font-[var(--font-playfair)] text-[32px] md:text-[40px] text-white italic leading-none">
+                      <p className="font-[var(--font-playfair)] text-[30px] md:text-[36px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
                     </motion.div>
                   </AnimatePresence>
+                  <ArrowBtn dir="right" onClick={next} />
                 </div>
 
-                <ArrowBtn dir="right" onClick={next} />
-              </div>
-
-              {/* Pillar-specific description — changes with active card */}
-              <div className="max-w-[600px] mx-auto px-8 text-center">
+                {/* Pillar description */}
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={activeCard}
-                    initial={{ opacity: 0, y: 14 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -14 }}
+                    exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.38, ease: EASE }}
-                    className="font-[var(--font-open-sans)] text-white/60 text-[15px] md:text-[17px] leading-[2.1]"
+                    className="font-[var(--font-open-sans)] text-white/60 text-[15px] md:text-[17px] leading-[2.1] text-center md:text-left"
                   >
                     {PILLAR_TEXTS[activeCard]}
                   </motion.p>
                 </AnimatePresence>
+
               </div>
             </motion.div>
           )}
 
-          {/* Finale state: philosophy text */}
+          {/* Finale: philosophy text (logo is now in canvas above) */}
           {showFinale && (
             <motion.div
               key="finale"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0, ease: EASE, delay: 0.55 }}
-              className="max-w-[640px] mx-auto px-8 pt-12 text-center"
+              transition={{ duration: 1.0, ease: EASE, delay: 0.6 }}
+              className="text-center max-w-[640px] mx-auto pt-8"
             >
               <p className="font-[var(--font-playfair)] text-[15px] text-[#B1A490] italic tracking-wide mb-6">
                 Culture · Nature · Art
@@ -499,7 +527,7 @@ export default function PhilosophySection() {
           )}
 
         </AnimatePresence>
-      </div>
+      </motion.div>
 
     </section>
   )
