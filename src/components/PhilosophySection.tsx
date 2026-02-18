@@ -222,15 +222,15 @@ export default function PhilosophySection() {
           <ellipse cx="50%" cy="50%" rx="19%" ry="25%" stroke="#B1A490" strokeWidth="0.4" strokeDasharray="3 8" fill="none" />
         </svg>
 
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0">
 
-          {/* CULTURE — from top */}
+          {/* CULTURE — from left */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ width: EL, height: EL, left: -EL / 2, top: -EL / 2 }}
+            style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             animate={
-              phase === 0 ? { x: 0, y: -215, opacity: 0, scale: 0.65 }
-              : phase === 1 ? { x: 0, y: -185, opacity: 1, scale: 1 }
+              phase === 0 ? { x: -900, y: 0, opacity: 0, scale: 0.7 }
+              : phase === 1 ? { x: -240, y: 0, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 0.9, ease: EASE }}
@@ -242,20 +242,20 @@ export default function PhilosophySection() {
             </motion.span>
           </motion.div>
 
-          {/* NATURE — from left */}
+          {/* NATURE — from top */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ width: EL, height: EL, left: -EL / 2, top: -EL / 2 }}
+            style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             animate={
-              phase === 0 ? { x: -225, y: 25, opacity: 0, scale: 0.65 }
-              : phase === 1 ? { x: -195, y: 25, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 0, y: -600, opacity: 0, scale: 0.7 }
+              : phase === 1 ? { x: 0, y: -155, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 0.95, delay: 0.08, ease: EASE }}
           >
             <ElementImg src={data?.philosophyNatureImage ?? null} label="NATURE" color="#3D8B5A" />
             <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
-              className="absolute right-full top-1/2 -translate-y-1/2 mr-3 font-[var(--font-libre-franklin)] text-[10px] text-[#3D8B5A] tracking-[4px] uppercase whitespace-nowrap">
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#3D8B5A] tracking-[4px] uppercase whitespace-nowrap">
               Nature
             </motion.span>
           </motion.div>
@@ -263,17 +263,17 @@ export default function PhilosophySection() {
           {/* ART — from right */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ width: EL, height: EL, left: -EL / 2, top: -EL / 2 }}
+            style={{ width: EL, height: EL, left: `calc(50% - ${EL / 2}px)`, top: `calc(50% - ${EL / 2}px)` }}
             animate={
-              phase === 0 ? { x: 225, y: 25, opacity: 0, scale: 0.65 }
-              : phase === 1 ? { x: 195, y: 25, opacity: 1, scale: 1 }
+              phase === 0 ? { x: 900, y: 0, opacity: 0, scale: 0.7 }
+              : phase === 1 ? { x: 240, y: 0, opacity: 1, scale: 1 }
               : { x: 0, y: 0, opacity: phase >= 3 ? 0 : 1, scale: phase >= 3 ? 0.35 : 1 }
             }
             transition={{ duration: 0.95, delay: 0.16, ease: EASE }}
           >
             <ElementImg src={data?.philosophyArtImage ?? null} label="ART" color="#D4A82C" />
             <motion.span animate={{ opacity: phase <= 1 ? 1 : 0 }} transition={{ duration: 0.4 }}
-              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 font-[var(--font-libre-franklin)] text-[10px] text-[#D4A82C] tracking-[4px] uppercase whitespace-nowrap">
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2 font-[var(--font-libre-franklin)] text-[10px] text-[#D4A82C] tracking-[4px] uppercase whitespace-nowrap">
               Art
             </motion.span>
           </motion.div>
@@ -283,10 +283,14 @@ export default function PhilosophySection() {
             <motion.div
               key="flash"
               initial={{ scale: 0.1, opacity: 0.65 }}
-              animate={{ scale: 10, opacity: 0 }}
+              animate={{ scale: 12, opacity: 0 }}
               transition={{ duration: 1.3, ease: 'easeOut' }}
               className="absolute w-12 h-12 rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, #B1A490 0%, transparent 70%)' }}
+              style={{
+                background: 'radial-gradient(circle, #B1A490 0%, transparent 70%)',
+                left: 'calc(50% - 24px)',
+                top: 'calc(50% - 24px)',
+              }}
             />
           )}
 
@@ -295,7 +299,8 @@ export default function PhilosophySection() {
             className="absolute rounded-full pointer-events-none"
             style={{
               width: LOGO + 40, height: LOGO + 40,
-              left: -(LOGO + 40) / 2, top: -(LOGO + 40) / 2,
+              left: `calc(50% - ${(LOGO + 40) / 2}px)`,
+              top: `calc(50% - ${(LOGO + 40) / 2}px)`,
               border: '1.5px solid #B1A490',
               boxShadow: '0 0 35px 8px rgba(177,164,144,0.18)',
             }}
@@ -306,7 +311,7 @@ export default function PhilosophySection() {
           {/* Combined logo at canvas center — phase 3 only */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ width: LOGO, height: LOGO, left: -LOGO / 2, top: -LOGO / 2 }}
+            style={{ width: LOGO, height: LOGO, left: `calc(50% - ${LOGO / 2}px)`, top: `calc(50% - ${LOGO / 2}px)` }}
             animate={{
               opacity: phase === 3 ? 1 : 0,
               scale: phase === 3 ? 1 : phase < 3 ? 0.25 : 0.6,
