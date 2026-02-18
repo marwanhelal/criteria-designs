@@ -261,7 +261,7 @@ export default function PhilosophySection() {
       <motion.div
         ref={canvasRef}
         className="relative w-full overflow-hidden"
-        animate={{ height: showFinale ? 290 : 460 }}
+        animate={{ height: showFinale ? 330 : 460 }}
         transition={{ duration: 0.9, ease: EASE, delay: showFinale ? 0.15 : 0 }}
         style={{ height: 460 }}
       >
@@ -418,9 +418,15 @@ export default function PhilosophySection() {
           >
             <LogoEl size={138} />
           </div>
-          <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[6px] uppercase">
-            Criteria Designs
-          </p>
+          <div className="flex flex-col items-center gap-2 mt-1">
+            <div className="w-10 h-px bg-[#B1A490]/35" />
+            <p className="font-[var(--font-playfair)] text-[22px] text-white italic leading-none">
+              Criteria Designs
+            </p>
+            <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[5px] uppercase">
+              Architecture &amp; Interior Design
+            </p>
+          </div>
         </motion.div>
 
       </motion.div>{/* /canvas */}
