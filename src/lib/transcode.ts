@@ -33,11 +33,11 @@ export async function transcodeAndUpdate(
     await execFileAsync('ffmpeg', [
       '-i',        inputPath,
       '-c:v',      'libx264',
-      '-crf',      '28',
-      '-preset',   'medium',
-      '-movflags', '+faststart',
-      '-vf',       "scale='min(1920,iw):-2'",
-      '-an',
+      '-crf',      '32',           // More aggressive: ~5-12MB for a 60s background clip
+      '-preset',   'fast',         // Faster encode, still good compression
+      '-movflags', '+faststart',   // moov atom at front → plays instantly, no full download
+      '-vf',       "scale='min(1280,iw):-2'", // 1280px max — plenty for a full-screen background
+      '-an',                       // No audio (hero background video)
       '-y',
       tmpPath,
     ], { maxBuffer: 10 * 1024 * 1024 }) // 10 MB buffer for ffmpeg stderr logs

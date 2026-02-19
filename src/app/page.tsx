@@ -96,6 +96,7 @@ export default function Home() {
                 playsInline
                 preload="auto"
                 disablePictureInPicture
+                poster={heroImage || undefined}
                 className="absolute inset-0 w-full h-full object-cover"
               >
                 <source src={heroVideo} type={heroVideoMime} />
