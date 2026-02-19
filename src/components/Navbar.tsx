@@ -102,20 +102,20 @@ export default function Navbar() {
                 <Image
                   src={settings.logo}
                   alt={settings.companyNameEn || 'Criteria Design Group'}
-                  width={80}
-                  height={80}
-                  className={`relative h-[44px] md:h-[60px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
+                  width={100}
+                  height={100}
+                  className={`relative h-[52px] md:h-[72px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
                   unoptimized
                 />
               </div>
             )}
             <div className="flex flex-col gap-[2px]">
-              <span className={`font-[var(--font-merriweather)] text-[18px] md:text-[22px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
+              <span className={`font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
               <div className="flex items-center gap-2">
-                <span className={`block w-[18px] md:w-[24px] h-[1px] transition-colors duration-500 ${lineColor}`} />
-                <span className={`font-[var(--font-libre-franklin)] text-[9px] md:text-[11px] font-light uppercase tracking-[3px] md:tracking-[4px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
+                <span className={`block w-[22px] md:w-[30px] h-[1px] transition-colors duration-500 ${lineColor}`} />
+                <span className={`font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
                   Designs
                 </span>
               </div>
