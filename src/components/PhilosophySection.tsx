@@ -240,7 +240,7 @@ export default function PhilosophySection() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="w-10 h-px bg-[#B1A490] origin-right"
           />
-          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[6px]">
             What Drives Us
           </span>
           <motion.div
@@ -252,7 +252,7 @@ export default function PhilosophySection() {
         <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white italic leading-[1.1]">
           Our Philosophy
         </h2>
-        <p className="font-[var(--font-open-sans)] text-[14px] md:text-[16px] text-white/40 mt-4 max-w-[460px] mx-auto leading-[1.8]">
+        <p className="font-[var(--font-open-sans)] text-[15px] md:text-[16px] text-white/40 mt-4 max-w-[460px] mx-auto leading-[1.8] font-light">
           Three pillars converge into one unified vision.
         </p>
       </motion.div>
@@ -486,12 +486,12 @@ export default function PhilosophySection() {
                       transition={{ duration: 0.22 }}
                     >
                       <p
-                        className="font-[var(--font-libre-franklin)] text-[9px] tracking-[5px] uppercase mb-1.5"
+                        className="font-[var(--font-libre-franklin)] text-[11px] tracking-[6px] uppercase mb-2"
                         style={{ color: pillars[activeCard].accent }}
                       >
                         {pillars[activeCard].num}
                       </p>
-                      <p className="font-[var(--font-playfair)] text-[30px] md:text-[36px] text-white italic leading-none">
+                      <p className="font-[var(--font-playfair)] text-[36px] md:text-[46px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
                     </motion.div>
@@ -507,7 +507,7 @@ export default function PhilosophySection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.38, ease: EASE }}
-                    className="font-[var(--font-open-sans)] text-white/85 text-[16px] md:text-[18px] leading-[2.0] text-center md:text-left font-medium"
+                    className="font-[var(--font-open-sans)] text-white/80 text-[16px] md:text-[18px] leading-[1.9] text-center md:text-left font-light"
                   >
                     {PILLAR_TEXTS[activeCard]}
                   </motion.p>
@@ -529,7 +529,7 @@ export default function PhilosophySection() {
               <p className="font-[var(--font-playfair)] text-[15px] text-[#B1A490] italic tracking-wide mb-6">
                 Culture · Nature · Art
               </p>
-              <p className="font-[var(--font-open-sans)] text-white/85 text-[16px] md:text-[18px] leading-[2.0] font-medium">
+              <p className="font-[var(--font-open-sans)] text-white/80 text-[16px] md:text-[18px] leading-[1.9] font-light">
                 {PHILOSOPHY_TEXT}
               </p>
             </motion.div>
