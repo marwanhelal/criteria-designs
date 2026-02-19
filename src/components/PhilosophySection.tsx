@@ -552,31 +552,32 @@ export default function PhilosophySection() {
         />
 
         <div
-          className="flex whitespace-nowrap py-5 md:py-7"
-          style={{ animation: 'criteria-marquee 36s linear infinite', width: 'max-content' }}
+          className="flex whitespace-nowrap py-6 md:py-9"
+          style={{ animation: 'criteria-marquee 44s linear infinite', width: 'max-content' }}
         >
           {Array(8).fill(null).map((_, i) => (
             <span
               key={i}
               className="font-[var(--font-playfair)] italic inline-flex items-center gap-0 select-none"
               style={{
-                fontSize: 'clamp(38px, 5vw, 72px)',
-                WebkitTextStroke: '1.2px rgba(177,164,144,0.60)',
-                color: 'transparent',
-                paddingRight: '3rem',
-                letterSpacing: '0.01em',
+                fontSize: 'clamp(44px, 5.5vw, 82px)',
+                WebkitTextStroke: i % 2 === 0 ? '1.8px rgba(177,164,144,0.85)' : '0px',
+                color: i % 2 === 0 ? 'transparent' : 'rgba(177,164,144,0.16)',
+                paddingRight: '4rem',
+                letterSpacing: '0.03em',
               }}
             >
               Criteria Designs — Design That Adds Value
               <span
                 style={{
-                  WebkitTextStroke: '1px rgba(177,164,144,0.35)',
-                  fontSize: '0.38em',
-                  marginLeft: '2.5rem',
+                  WebkitTextStroke: '0px',
+                  color: 'rgba(177,164,144,0.50)',
+                  fontSize: '0.32em',
+                  marginLeft: '3rem',
                   verticalAlign: 'middle',
                 }}
               >
-                ◇
+                ✦
               </span>
             </span>
           ))}
