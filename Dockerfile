@@ -33,7 +33,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Install system deps and global tools (ffmpeg for video transcoding)
-RUN apk add --no-cache libc6-compat ffmpeg
+RUN apk add --no-cache libc6-compat ffmpeg nginx
 RUN npm install -g prisma tsx
 
 COPY --from=builder /app/public ./public
@@ -60,8 +60,9 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+# nginx owns :3000; Next.js binds to :3001 (set in start.sh)
+COPY --from=builder --chown=nextjs:nodejs /app/nginx.conf ./nginx.conf
+
 # Copy startup script
 COPY --from=builder --chown=nextjs:nodejs /app/start.sh ./start.sh
 RUN chmod +x start.sh
