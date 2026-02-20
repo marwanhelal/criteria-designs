@@ -79,7 +79,7 @@ export default function Home() {
   const displayProjects = projects.length > 0 ? projects : []
   const displayServices = services.length > 0 ? services : []
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
-  const heroImage = settings?.heroImage || featuredProject?.images?.[0]?.url || null
+  const heroImage = settings?.heroImage || null
   // Always use /api/uploads/ route — guaranteed to work in Docker standalone
   const heroVideo = settings?.heroVideo || null
   const heroVideoMime = heroVideo?.endsWith('.webm') ? 'video/webm'
