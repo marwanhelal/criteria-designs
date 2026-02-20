@@ -248,26 +248,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Stats */}
-          <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-14 pt-12 border-t border-white/10">
-            {[
-              { number: '+500', label: 'Complete projects' },
-              { number: '57', label: 'Projects under construction' },
-              { number: '42', label: 'Projects underway' },
-              { number: '25', label: 'Years of experience' },
-            ].map((stat, idx) => (
-              <StaggerItem key={idx}>
-                <div className="flex items-center gap-4">
-                  <span className="font-[var(--font-merriweather)] text-[36px] lg:text-[48px] text-white leading-[58px]">
-                    {stat.number}
-                  </span>
-                  <span className="font-[var(--font-open-sans)] text-[14px] text-white/60 leading-[24px] max-w-[100px]">
-                    {stat.label}
-                  </span>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
 
           {/* Large Featured Image - Fixed 1290x800 aspect ratio */}
           {heroImage && (
