@@ -128,35 +128,6 @@ export default function Home() {
       <PhilosophySection />
       <CeoBanner />
 
-      {/* ===== ABOUT SECTION ===== */}
-      <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">
-        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
-          <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
-            <div className="relative w-full h-[350px] lg:h-[460px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-white/5 flex items-center justify-center">
-              <Building size={80} className="text-[#B1A490]/30" />
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection direction="right" delay={0.2} className="flex flex-col justify-center">
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              Who we are
-            </span>
-            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-[40px] lg:leading-[48px] mt-4 max-w-[547px]">
-              We build quality real estate projects since 1978
-            </h2>
-            <p className="font-[var(--font-open-sans)] text-[16px] text-white/60 leading-[30px] mt-8 max-w-[526px]">
-              {settings?.seoDescriptionEn || 'Criteria Designs is a leading architecture and interior design firm dedicated to creating spaces that inspire. With decades of experience, we deliver exceptional quality in every project.'}
-            </p>
-            <Link
-              href="/about"
-              className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/20 transition-colors w-fit mt-10"
-            >
-              more About us
-            </Link>
-          </AnimatedSection>
-        </div>
-      </section>
-
       {/* ===== PROJECTS SECTION ===== */}
       <section className="bg-[#181C23] py-[80px] lg:py-[120px] px-8">
         <div className="max-w-[1290px] mx-auto">
