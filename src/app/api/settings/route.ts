@@ -19,7 +19,37 @@ export async function GET() {
       })
     }
 
-    return NextResponse.json(settings)
+    // Fetch enriched showcase projects
+    const showcaseIds = [
+      settings.showcaseProject1Id,
+      settings.showcaseProject2Id,
+      settings.showcaseProject3Id,
+      settings.showcaseProject4Id,
+      settings.showcaseProject5Id,
+    ].filter(Boolean) as string[]
+
+    let showcaseProjects: object[] = []
+    if (showcaseIds.length > 0) {
+      const projects = await prisma.project.findMany({
+        where: { id: { in: showcaseIds } },
+        select: {
+          id: true,
+          slug: true,
+          titleEn: true,
+          category: true,
+          location: true,
+          yearCompleted: true,
+          clientName: true,
+          images: { orderBy: { order: 'asc' }, take: 2, select: { url: true, alt: true } },
+        },
+      })
+      // Preserve order set by admin
+      showcaseProjects = showcaseIds
+        .map(id => projects.find(p => p.id === id))
+        .filter(Boolean) as object[]
+    }
+
+    return NextResponse.json({ ...settings, showcaseProjects })
   } catch (error) {
     console.error('Error fetching settings:', error)
     return NextResponse.json(
@@ -88,6 +118,12 @@ export async function PUT(request: NextRequest) {
         ceoBtnTextEn: data.ceoBtnTextEn || null,
         ceoBtnTextAr: data.ceoBtnTextAr || null,
         ceoBtnLink: data.ceoBtnLink || null,
+        // Showcase projects
+        showcaseProject1Id: data.showcaseProject1Id || null,
+        showcaseProject2Id: data.showcaseProject2Id || null,
+        showcaseProject3Id: data.showcaseProject3Id || null,
+        showcaseProject4Id: data.showcaseProject4Id || null,
+        showcaseProject5Id: data.showcaseProject5Id || null,
       },
       create: {
         id: 'main',
@@ -142,6 +178,12 @@ export async function PUT(request: NextRequest) {
         ceoBtnTextEn: data.ceoBtnTextEn || null,
         ceoBtnTextAr: data.ceoBtnTextAr || null,
         ceoBtnLink: data.ceoBtnLink || null,
+        // Showcase projects
+        showcaseProject1Id: data.showcaseProject1Id || null,
+        showcaseProject2Id: data.showcaseProject2Id || null,
+        showcaseProject3Id: data.showcaseProject3Id || null,
+        showcaseProject4Id: data.showcaseProject4Id || null,
+        showcaseProject5Id: data.showcaseProject5Id || null,
       }
     })
 

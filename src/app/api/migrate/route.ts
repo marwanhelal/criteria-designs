@@ -99,6 +99,22 @@ export async function POST() {
       }
     }
 
+    // 8. Showcase project columns on SiteSettings
+    const showcaseColumns = [
+      'showcaseProject1Id', 'showcaseProject2Id', 'showcaseProject3Id',
+      'showcaseProject4Id', 'showcaseProject5Id',
+    ]
+    for (const col of showcaseColumns) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

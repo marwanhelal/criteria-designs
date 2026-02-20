@@ -168,6 +168,13 @@ model SiteSettings {
   seoDescriptionEn String?
   seoDescriptionAr String?
 
+  // Showcase Projects (homepage scroll showcase)
+  showcaseProject1Id String?
+  showcaseProject2Id String?
+  showcaseProject3Id String?
+  showcaseProject4Id String?
+  showcaseProject5Id String?
+
   // CEO Banner
   ceoNameEn        String?
   ceoNameAr        String?

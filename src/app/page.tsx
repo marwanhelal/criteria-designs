@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
+import ShowcaseSection from '@/components/ShowcaseSection'
 import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
 import { Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
@@ -29,12 +30,24 @@ interface Service {
   image: string | null
 }
 
+interface ShowcaseProject {
+  id: string
+  slug: string
+  titleEn: string
+  category: string
+  location: string | null
+  yearCompleted: number | null
+  clientName: string | null
+  images: { url: string; alt: string | null }[]
+}
+
 interface Settings {
   companyNameEn: string
   seoDescriptionEn: string | null
   logo: string | null
   heroImage: string | null
   heroVideo: string | null
+  showcaseProjects: ShowcaseProject[]
 }
 
 const iconMap: Record<string, typeof Building> = {
@@ -127,6 +140,7 @@ export default function Home() {
       {/* ===== CEO BANNER ===== */}
       <PhilosophySection />
       <CeoBanner />
+      <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
 
       {/* ===== PROJECTS SECTION ===== */}
       <section className="bg-[#181C23] py-[80px] lg:py-[120px] px-8">

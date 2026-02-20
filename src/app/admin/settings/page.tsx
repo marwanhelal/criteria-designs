@@ -5,12 +5,15 @@ import { Save, Upload } from 'lucide-react'
 
 const CHUNK_SIZE = 512 * 1024 // 512 KB — safely below any reverse-proxy body-size limit
 
+interface ProjectOption { id: string; titleEn: string; category: string }
+
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [unsavedVideo, setUnsavedVideo] = useState(false)
+  const [projects, setProjects] = useState<ProjectOption[]>([])
 
   const [form, setForm] = useState({
     companyNameEn: '',
@@ -64,10 +67,20 @@ export default function SettingsPage() {
     ceoBtnTextEn: '',
     ceoBtnTextAr: '',
     ceoBtnLink: '',
+    // Showcase projects
+    showcaseProject1Id: '',
+    showcaseProject2Id: '',
+    showcaseProject3Id: '',
+    showcaseProject4Id: '',
+    showcaseProject5Id: '',
   })
 
   useEffect(() => {
     fetchSettings()
+    fetch('/api/projects?status=PUBLISHED')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: ProjectOption[]) => setProjects(data))
+      .catch(() => {})
   }, [])
 
   const fetchSettings = async () => {
@@ -127,6 +140,12 @@ export default function SettingsPage() {
           ceoBtnTextEn: settings.ceoBtnTextEn || '',
           ceoBtnTextAr: settings.ceoBtnTextAr || '',
           ceoBtnLink: settings.ceoBtnLink || '',
+          // Showcase projects
+          showcaseProject1Id: settings.showcaseProject1Id || '',
+          showcaseProject2Id: settings.showcaseProject2Id || '',
+          showcaseProject3Id: settings.showcaseProject3Id || '',
+          showcaseProject4Id: settings.showcaseProject4Id || '',
+          showcaseProject5Id: settings.showcaseProject5Id || '',
         })
       }
     } catch (error) {
@@ -837,6 +856,35 @@ export default function SettingsPage() {
               <label className="block text-xs text-gray-500 mb-1">Button Link</label>
               <input type="text" value={form.ceoBtnLink} onChange={(e) => setForm({ ...form, ceoBtnLink: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="/about" />
             </div>
+          </div>
+        </div>
+
+        {/* ── Showcase Projects ── */}
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <h2 className="font-semibold text-lg border-b pb-2">Homepage Showcase Projects</h2>
+          <p className="text-xs text-gray-500">Select up to 5 published projects to display in the full-screen scroll showcase on the homepage. Order matters — slot 1 appears first.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {([
+              ['showcaseProject1Id', 'Slot 1'],
+              ['showcaseProject2Id', 'Slot 2'],
+              ['showcaseProject3Id', 'Slot 3'],
+              ['showcaseProject4Id', 'Slot 4'],
+              ['showcaseProject5Id', 'Slot 5'],
+            ] as [keyof typeof form, string][]).map(([field, label]) => (
+              <div key={field}>
+                <label className="block text-xs text-gray-500 mb-1">{label}</label>
+                <select
+                  value={form[field]}
+                  onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg text-sm bg-white"
+                >
+                  <option value="">— None —</option>
+                  {projects.map(p => (
+                    <option key={p.id} value={p.id}>{p.titleEn} ({p.category})</option>
+                  ))}
+                </select>
+              </div>
+            ))}
           </div>
         </div>
 
