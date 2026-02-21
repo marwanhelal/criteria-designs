@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import HeroLightbox from '@/components/HeroLightbox'
 import GalleryGrid from '@/components/GalleryGrid'
 import TimelineSection from '@/components/TimelineSection'
+import FinalRevealSection from '@/components/FinalRevealSection'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -170,26 +171,10 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Showcase images — 1272×716 per Figma, padded to match content margins */}
+          {/* Showcase images — parallax + curtain reveal */}
           {showcaseImages.length > 0 && (
-            <div className={`space-y-[3px] px-8 lg:px-[84px] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[80px]' : ''} pb-[80px]`}>
-              {showcaseImages.map((image: { id: string; url: string; alt?: string }) => (
-                <div
-                  key={image.id}
-                  className="relative w-full overflow-hidden bg-[#1a1a1a]"
-                  style={{ aspectRatio: '1272/716' }}
-                >
-                  <Image
-                    src={image.url}
-                    alt={image.alt || project.titleEn}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 1272px"
-                    className="object-cover"
-                    unoptimized
-                    quality={100}
-                  />
-                </div>
-              ))}
+            <div className={`px-8 lg:px-[84px] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[80px]' : ''} pb-[80px]`}>
+              <FinalRevealSection images={showcaseImages} projectTitle={project.titleEn} />
             </div>
           )}
 

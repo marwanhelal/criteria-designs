@@ -20,13 +20,13 @@ export default function TimelineSection({ entries }: Props) {
   return (
     <div className="relative">
 
-      {/* Animated center line — draws from top as it enters viewport */}
+      {/* Animated center line — draws from top */}
       <motion.div
         className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[4px] bg-[#d9d9d9] rounded-[1px] -translate-x-1/2 z-0 origin-top"
         initial={{ scaleY: 0 }}
         whileInView={{ scaleY: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       />
 
       <div className="space-y-[80px] lg:space-y-[100px]">
@@ -38,13 +38,13 @@ export default function TimelineSection({ entries }: Props) {
               key={entry.id}
               className={`relative flex flex-col lg:flex-row gap-8 lg:gap-0 ${!isTextLeft ? 'lg:flex-row-reverse' : ''}`}
             >
-              {/* Text side — slides in from left or right */}
+              {/* Text side — slides from the correct direction */}
               <motion.div
                 className={`flex-1 relative z-10 ${isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}
-                initial={{ opacity: 0, x: isTextLeft ? -60 : 60 }}
+                initial={{ opacity: 0, x: isTextLeft ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
                 <h3
                   style={{ fontFamily: ff }}
@@ -60,26 +60,44 @@ export default function TimelineSection({ entries }: Props) {
                 </p>
               </motion.div>
 
-              {/* Image side — slides in from opposite direction */}
+              {/* Image side — curtain reveal from opposite direction */}
               <motion.div
                 className={`flex-1 relative z-10 ${!isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}
-                initial={{ opacity: 0, x: isTextLeft ? 60 : -60 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+                variants={{ visible: { transition: { delay: 0.1 } } }}
               >
                 {entry.image ? (
                   <div
                     className="relative w-full overflow-hidden bg-[#1a1a1a]"
                     style={{ aspectRatio: '415/233' }}
                   >
-                    <Image
-                      src={entry.image}
-                      alt={entry.titleEn}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 602px"
-                      className="object-cover"
-                      unoptimized
+                    {/* Image zooms out */}
+                    <motion.div
+                      className="absolute inset-0"
+                      variants={{
+                        hidden: { scale: 1.12 },
+                        visible: { scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const } },
+                      }}
+                    >
+                      <Image
+                        src={entry.image}
+                        alt={entry.titleEn}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 602px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </motion.div>
+
+                    {/* Curtain wipes off */}
+                    <motion.div
+                      className="absolute inset-0 bg-[#0a0a0a] z-10 origin-right"
+                      variants={{
+                        hidden: { scaleX: 1 },
+                        visible: { scaleX: 0, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] as const } },
+                      }}
                     />
                   </div>
                 ) : (
