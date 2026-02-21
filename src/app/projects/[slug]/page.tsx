@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroLightbox from '@/components/HeroLightbox'
 import GalleryGrid from '@/components/GalleryGrid'
+import TimelineSection from '@/components/TimelineSection'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -131,75 +132,16 @@ export default async function ProjectDetailPage({ params }: Props) {
         </section>
       )}
 
-      {/* ===== PROJECT TIMELINE — dark bg, white text, gray center line ===== */}
+      {/* ===== PROJECT TIMELINE — animated, dark bg ===== */}
       {project.timeline.length > 0 && (
         <section className="py-[80px] px-8 lg:px-[84px] bg-black">
-
           <h2
             style={{ fontFamily: ff }}
             className="text-[42px] lg:text-[64px] text-white font-normal leading-none tracking-[3.2px] mb-[80px]"
           >
             project time-line
           </h2>
-
-          {/* Timeline entries with centered vertical line — Figma: 4px, #d9d9d9 */}
-          <div className="relative">
-            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[4px] bg-[#d9d9d9] rounded-[1px] -translate-x-1/2 z-0" />
-
-            <div className="space-y-[80px] lg:space-y-[100px]">
-              {project.timeline.map((entry: {
-                id: string
-                titleEn: string
-                descriptionEn: string
-                image?: string
-              }, idx: number) => {
-                const isTextLeft = idx % 2 === 0
-                return (
-                  <div
-                    key={entry.id}
-                    className={`relative flex flex-col lg:flex-row gap-8 lg:gap-0 ${!isTextLeft ? 'lg:flex-row-reverse' : ''}`}
-                  >
-                    {/* Text side */}
-                    <div className={`flex-1 relative z-10 ${isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}>
-                      <h3
-                        style={{ fontFamily: ff }}
-                        className="text-[32px] lg:text-[64px] text-white font-normal leading-none tracking-[3.2px] mb-5"
-                      >
-                        {entry.titleEn}
-                      </h3>
-                      <p
-                        style={{ fontFamily: ff }}
-                        className="text-[16px] lg:text-[19px] text-[rgba(255,255,255,0.8)] leading-[1.5] tracking-[0.95px] max-w-[440px]"
-                      >
-                        {entry.descriptionEn}
-                      </p>
-                    </div>
-
-                    {/* Image side */}
-                    <div className={`flex-1 relative z-10 ${!isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}>
-                      {entry.image ? (
-                        <div
-                          className="relative w-full overflow-hidden bg-[#1a1a1a]"
-                          style={{ aspectRatio: '415/233' }}
-                        >
-                          <Image
-                            src={entry.image}
-                            alt={entry.titleEn}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 602px"
-                            className="object-cover"
-                            unoptimized
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full bg-[#1a1a1a]" style={{ aspectRatio: '415/233' }} />
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <TimelineSection entries={project.timeline} />
         </section>
       )}
 
