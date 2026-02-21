@@ -131,6 +131,31 @@ export async function POST() {
       }
     }
 
+    // 10. Add section column to ProjectImage
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "ProjectImage" ADD COLUMN IF NOT EXISTS "section" TEXT DEFAULT 'gallery';
+      `)
+      results.push('✓ section column ensured on ProjectImage table')
+    } catch (e) {
+      results.push(`✗ section: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 11. Migrate existing images: order=0 → 'hero', order>=7 → 'final_reveal'
+    try {
+      await prisma.$executeRawUnsafe(`
+        UPDATE "ProjectImage" SET "section" = 'hero'
+        WHERE "order" = 0 AND "section" = 'gallery';
+      `)
+      await prisma.$executeRawUnsafe(`
+        UPDATE "ProjectImage" SET "section" = 'final_reveal'
+        WHERE "order" >= 7 AND "section" = 'gallery';
+      `)
+      results.push('✓ Migrated existing images to section values')
+    } catch (e) {
+      results.push(`✗ image section migration: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

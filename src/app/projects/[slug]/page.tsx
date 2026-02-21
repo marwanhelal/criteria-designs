@@ -34,9 +34,12 @@ export default async function ProjectDetailPage({ params }: Props) {
     orderBy: { createdAt: 'desc' }
   })
 
-  const heroImage = project.images.length > 0 ? project.images[0].url : null
-  const galleryImages = project.images.slice(1, 7)
-  const showcaseImages = project.images.slice(7)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const heroImage = (project.images.find((img: any) => img.section === 'hero') ?? project.images[0])?.url ?? null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const galleryImages = project.images.filter((img: any) => img.section === 'gallery')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const showcaseImages = project.images.filter((img: any) => img.section === 'final_reveal')
 
   return (
     <>

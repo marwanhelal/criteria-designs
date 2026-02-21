@@ -82,9 +82,10 @@ export async function PUT(
       featured: data.featured || false,
       status: data.status || 'DRAFT',
       images: data.images?.length ? {
-        create: data.images.map((img: { url: string; alt?: string }, index: number) => ({
+        create: data.images.map((img: { url: string; alt?: string; section?: string }, index: number) => ({
           url: img.url,
           alt: img.alt || null,
+          section: img.section || 'gallery',
           order: index
         }))
       } : undefined,

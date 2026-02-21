@@ -57,6 +57,7 @@ model ProjectImage {
   url       String
   alt       String?
   order     Int      @default(0)
+  section   String   @default("gallery")
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
