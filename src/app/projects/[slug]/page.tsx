@@ -29,7 +29,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   const moreProjects = await prisma.project.findMany({
     where: { status: 'PUBLISHED', id: { not: project.id } },
-    include: { images: { orderBy: { order: 'asc' }, take: 1 } },
+    include: { images: { orderBy: { order: 'asc' } } },
     take: 3,
     orderBy: { createdAt: 'desc' }
   })
@@ -46,7 +46,8 @@ export default async function ProjectDetailPage({ params }: Props) {
       <Navbar />
 
       {/* ===== PROJECT HEADER ===== */}
-      <section className="pt-[120px] pb-[40px] px-8 lg:px-[83px] bg-white">
+      {/* data-navbar-dark tells the navbar it's over a light section → use dark text */}
+      <section data-navbar-dark className="pt-[120px] pb-[40px] px-8 lg:px-[83px] bg-white">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
 
@@ -71,7 +72,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
                 <p
                   style={{ fontFamily: ff }}
-                  className="text-[17px] lg:text-[19px] text-[#555555] mt-6 leading-[1.5] tracking-[0.5px]"
+                  className="text-[17px] lg:text-[19px] text-[#555555] mt-6 leading-[1.6] tracking-[0.3px]"
                 >
                   {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
                   {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '...' : ''}
@@ -108,7 +109,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Right — Hero Image */}
+            {/* Right — Hero Image: 844×474 per Figma */}
             <div className="flex-1 relative h-[340px] lg:h-[474px] overflow-hidden bg-gray-100">
               {heroImage ? (
                 <Image
@@ -131,21 +132,22 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ===== GALLERY GRID (images 2–7) ===== */}
+      {/* ===== GALLERY GRID: 414×233 per Figma ===== */}
       {galleryImages.length > 0 && (
-        <section className="px-8 lg:px-[83px] pb-[80px] bg-white">
+        <section data-navbar-dark className="px-8 lg:px-[83px] pb-[80px] bg-white">
           <div className="max-w-[1290px] mx-auto">
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-[5px]">
               {galleryImages.map((image: { id: string; url: string; alt?: string }) => (
                 <div
                   key={image.id}
-                  className="relative h-[170px] lg:h-[233px] overflow-hidden bg-gray-100"
+                  className="relative overflow-hidden bg-gray-100"
+                  style={{ aspectRatio: '199/112' }}
                 >
                   <Image
                     src={image.url}
                     alt={image.alt || project.titleEn}
                     fill
-                    sizes="(max-width: 1024px) 50vw, 33vw"
+                    sizes="(max-width: 1024px) 50vw, 414px"
                     className="object-cover hover:scale-105 transition-transform duration-500"
                     unoptimized
                   />
@@ -158,10 +160,9 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== PROJECT TIMELINE ===== */}
       {project.timeline.length > 0 && (
-        <section className="py-[80px] px-8 lg:px-[83px] bg-white border-t border-[#F0F0F0]">
+        <section data-navbar-dark className="py-[80px] px-8 lg:px-[83px] bg-white border-t border-[#E8E8E8]">
           <div className="max-w-[1290px] mx-auto">
 
-            {/* Section heading */}
             <h2
               style={{ fontFamily: ff }}
               className="text-[42px] lg:text-[64px] text-[#111111] font-normal leading-none tracking-[3.2px] mb-[80px]"
@@ -169,55 +170,65 @@ export default async function ProjectDetailPage({ params }: Props) {
               Project time-line
             </h2>
 
-            <div className="space-y-[80px] lg:space-y-[100px]">
-              {project.timeline.map((entry: {
-                id: string
-                titleEn: string
-                descriptionEn: string
-                image?: string
-              }, idx: number) => {
-                const isTextLeft = idx % 2 === 0
-                return (
-                  <div
-                    key={entry.id}
-                    className={`flex flex-col lg:flex-row gap-8 lg:gap-16 ${!isTextLeft ? 'lg:flex-row-reverse' : ''}`}
-                  >
-                    {/* Text side */}
-                    <div className="flex-1">
-                      <h3
-                        style={{ fontFamily: ff }}
-                        className="text-[32px] lg:text-[52px] text-[#111111] font-normal leading-none tracking-[2px] mb-5"
-                      >
-                        {entry.titleEn}
-                      </h3>
-                      <p
-                        style={{ fontFamily: ff }}
-                        className="text-[16px] lg:text-[19px] text-[#555555] leading-[1.65] tracking-[0.5px] max-w-[382px]"
-                      >
-                        {entry.descriptionEn}
-                      </p>
-                    </div>
+            {/* Timeline entries with centered vertical line on desktop */}
+            <div className="relative">
 
-                    {/* Image side */}
-                    <div className="flex-1">
-                      {entry.image ? (
-                        <div className="relative w-full h-[260px] lg:h-[360px] overflow-hidden bg-gray-100">
-                          <Image
-                            src={entry.image}
-                            alt={entry.titleEn}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 50vw"
-                            className="object-cover"
-                            unoptimized
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full h-[260px] lg:h-[360px] bg-[#F7F7F7]" />
-                      )}
+              {/* Vertical black line running through all entries */}
+              <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#111111] -translate-x-1/2 z-0" />
+
+              <div className="space-y-[80px] lg:space-y-[100px]">
+                {project.timeline.map((entry: {
+                  id: string
+                  titleEn: string
+                  descriptionEn: string
+                  image?: string
+                }, idx: number) => {
+                  const isTextLeft = idx % 2 === 0
+                  return (
+                    <div
+                      key={entry.id}
+                      className={`relative flex flex-col lg:flex-row gap-8 lg:gap-0 ${!isTextLeft ? 'lg:flex-row-reverse' : ''}`}
+                    >
+                      {/* Text side */}
+                      <div className={`flex-1 relative z-10 ${isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}>
+                        <h3
+                          style={{ fontFamily: ff }}
+                          className="text-[28px] lg:text-[48px] text-[#111111] font-normal leading-none tracking-[2px] mb-5"
+                        >
+                          {entry.titleEn}
+                        </h3>
+                        <p
+                          style={{ fontFamily: ff }}
+                          className="text-[15px] lg:text-[18px] text-[#555555] leading-[1.7] tracking-[0.3px] max-w-[440px]"
+                        >
+                          {entry.descriptionEn}
+                        </p>
+                      </div>
+
+                      {/* Image side */}
+                      <div className={`flex-1 relative z-10 ${!isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}>
+                        {entry.image ? (
+                          <div
+                            className="relative w-full overflow-hidden bg-gray-100"
+                            style={{ aspectRatio: '199/112' }}
+                          >
+                            <Image
+                              src={entry.image}
+                              alt={entry.titleEn}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 602px"
+                              className="object-cover"
+                              unoptimized
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full bg-[#F5F5F5]" style={{ aspectRatio: '199/112' }} />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
         </section>
@@ -225,12 +236,12 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== FINAL DESIGN REVEAL ===== */}
       {(project.finalRevealTitleEn || project.finalRevealSubtitleEn || showcaseImages.length > 0) && (
-        <section className="py-[80px] px-8 lg:px-[83px] bg-white border-t border-[#F0F0F0]">
-          <div className="max-w-[1290px] mx-auto">
+        <section data-navbar-dark className="bg-white border-t border-[#E8E8E8]">
 
-            {/* Heading + subtitle */}
-            {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
-              <div className="mb-[60px]">
+          {/* Heading + subtitle — padded */}
+          {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
+            <div className="pt-[80px] pb-[60px] px-8 lg:px-[83px]">
+              <div className="max-w-[1290px] mx-auto">
                 {project.finalRevealTitleEn && (
                   <h2
                     style={{ fontFamily: ff }}
@@ -242,36 +253,38 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.finalRevealSubtitleEn && (
                   <p
                     style={{ fontFamily: ff }}
-                    className="text-[24px] lg:text-[40px] text-[#555555] font-normal leading-[1.1] tracking-[2px] max-w-[1010px]"
+                    className="text-[18px] lg:text-[32px] text-[#555555] font-normal leading-[1.3] tracking-[0.5px] max-w-[900px]"
                   >
                     {project.finalRevealSubtitleEn}
                   </p>
                 )}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Showcase images */}
-            {showcaseImages.length > 0 && (
-              <div className="space-y-[5px]">
-                {showcaseImages.map((image: { id: string; url: string; alt?: string }) => (
-                  <div
-                    key={image.id}
-                    className="relative w-full h-[400px] lg:h-[716px] overflow-hidden bg-gray-100"
-                  >
-                    <Image
-                      src={image.url}
-                      alt={image.alt || project.titleEn}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 1290px"
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Showcase images — full viewport width, 1272×716 per Figma */}
+          {showcaseImages.length > 0 && (
+            <div className={`space-y-[3px] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[80px]' : ''} pb-[80px]`}>
+              {showcaseImages.map((image: { id: string; url: string; alt?: string }) => (
+                <div
+                  key={image.id}
+                  className="relative w-full overflow-hidden bg-gray-100"
+                  style={{ aspectRatio: '151/85' }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.alt || project.titleEn}
+                    fill
+                    sizes="100vw"
+                    className="object-cover"
+                    unoptimized
+                    quality={100}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
-          </div>
         </section>
       )}
 
@@ -289,7 +302,8 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {moreProjects.map((p) => {
-                const thumb = p.images.length > 0 ? p.images[0].url : null
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const thumb = (p.images.find((img: any) => img.section === 'hero') ?? p.images[0])?.url ?? null
                 return (
                   <Link key={p.id} href={`/projects/${p.slug}`} className="group block">
                     <div className="overflow-hidden bg-gray-200">
