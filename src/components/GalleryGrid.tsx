@@ -1,30 +1,23 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
 
-interface LightboxImage {
+interface GalleryImage {
+  id: string
   url: string
   alt?: string
 }
 
 interface Props {
-  images: LightboxImage[]
-  initialIndex?: number
-  trigger: (openAt: (index: number) => void) => React.ReactNode
+  images: GalleryImage[]
+  projectTitle: string
 }
 
-export default function ImageLightbox({ images, initialIndex = 0, trigger }: Props) {
+export default function GalleryGrid({ images, projectTitle }: Props) {
   const [open, setOpen] = useState(false)
-  const [index, setIndex] = useState(initialIndex)
-
-  const openAt = useCallback((i: number) => {
-    setIndex(i)
-    setOpen(true)
-  }, [])
+  const [index, setIndex] = useState(0)
 
   const close = useCallback(() => setOpen(false), [])
-
   const prev = useCallback(() => setIndex(i => (i - 1 + images.length) % images.length), [images.length])
   const next = useCallback(() => setIndex(i => (i + 1) % images.length), [images.length])
 
@@ -45,14 +38,31 @@ export default function ImageLightbox({ images, initialIndex = 0, trigger }: Pro
 
   return (
     <>
-      {trigger(openAt)}
+      {/* Gallery grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]">
+        {images.map((image, i) => (
+          <div
+            key={image.id}
+            className="relative overflow-hidden bg-[#1a1a1a] cursor-zoom-in"
+            style={{ aspectRatio: '415/233' }}
+            onClick={() => { setIndex(i); setOpen(true) }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.url}
+              alt={image.alt || projectTitle}
+              className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        ))}
+      </div>
 
+      {/* Lightbox modal */}
       {open && (
         <div
           className="fixed inset-0 z-[999] bg-black/95 flex items-center justify-center"
           onClick={close}
         >
-          {/* Close button */}
           <button
             className="absolute top-5 right-5 text-white/70 hover:text-white text-4xl leading-none z-10"
             onClick={close}
@@ -61,23 +71,19 @@ export default function ImageLightbox({ images, initialIndex = 0, trigger }: Pro
             ×
           </button>
 
-          {/* Image */}
           <div
-            className="relative max-w-[95vw] max-h-[90vh] w-full h-full flex items-center justify-center"
+            className="relative max-w-[95vw] max-h-[90vh] flex items-center justify-center"
             onClick={e => e.stopPropagation()}
           >
-            <div className="relative" style={{ maxWidth: '95vw', maxHeight: '90vh' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={images[index].url}
-                alt={images[index].alt || ''}
-                className="max-w-[95vw] max-h-[90vh] object-contain"
-                style={{ display: 'block' }}
-              />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={images[index].url}
+              alt={images[index].alt || projectTitle}
+              className="max-w-[95vw] max-h-[90vh] object-contain"
+              style={{ display: 'block' }}
+            />
           </div>
 
-          {/* Navigation — only show if multiple images */}
           {images.length > 1 && (
             <>
               <button

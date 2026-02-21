@@ -4,7 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import ImageLightbox from '@/components/ImageLightbox'
+import HeroLightbox from '@/components/HeroLightbox'
+import GalleryGrid from '@/components/GalleryGrid'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -113,25 +114,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
           {/* Right — Hero Image extends to right viewport edge */}
           {heroImage ? (
-            <ImageLightbox
-              images={[{ url: heroImage, alt: project.titleEn }]}
-              trigger={(openAt) => (
-                <div
-                  className="flex-1 relative h-[280px] lg:h-[474px] overflow-hidden bg-[#1a1a1a] mx-8 lg:mx-0 cursor-zoom-in"
-                  onClick={() => openAt(0)}
-                >
-                  <Image
-                    src={heroImage}
-                    alt={project.titleEn}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 844px"
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                    priority
-                    unoptimized
-                  />
-                </div>
-              )}
-            />
+            <HeroLightbox heroImage={heroImage} title={project.titleEn} />
           ) : (
             <div className="flex-1 relative h-[280px] lg:h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
               <span className="text-[#555] text-sm">No image</span>
@@ -144,30 +127,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       {/* ===== GALLERY GRID — dark bg, 414×233 per Figma, click-to-zoom ===== */}
       {galleryImages.length > 0 && (
         <section className="px-8 lg:px-[84px] pt-[9px] pb-[80px] bg-black">
-          <ImageLightbox
-            images={galleryImages.map((img: { id: string; url: string; alt?: string }) => ({ url: img.url, alt: img.alt || project.titleEn }))}
-            trigger={(openAt) => (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]">
-                {galleryImages.map((image: { id: string; url: string; alt?: string }, i: number) => (
-                  <div
-                    key={image.id}
-                    className="relative overflow-hidden bg-[#1a1a1a] cursor-zoom-in"
-                    style={{ aspectRatio: '415/233' }}
-                    onClick={() => openAt(i)}
-                  >
-                    <Image
-                      src={image.url}
-                      alt={image.alt || project.titleEn}
-                      fill
-                      sizes="(max-width: 1024px) 50vw, 414px"
-                      className="object-cover hover:scale-105 transition-transform duration-500"
-                      unoptimized
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          />
+          <GalleryGrid images={galleryImages} projectTitle={project.titleEn} />
         </section>
       )}
 
