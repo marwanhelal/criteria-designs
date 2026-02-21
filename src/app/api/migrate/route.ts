@@ -115,6 +115,22 @@ export async function POST() {
       }
     }
 
+    // 9. Final Reveal columns on Project
+    const finalRevealColumns = [
+      'finalRevealTitleEn', 'finalRevealTitleAr',
+      'finalRevealSubtitleEn', 'finalRevealSubtitleAr',
+    ]
+    for (const col of finalRevealColumns) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "Project" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on Project`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

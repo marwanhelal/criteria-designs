@@ -42,6 +42,10 @@ model Project {
   location      String?
   clientName    String?
   clientLogo    String?
+  finalRevealTitleEn    String?
+  finalRevealTitleAr    String?
+  finalRevealSubtitleEn String?  @db.Text
+  finalRevealSubtitleAr String?  @db.Text
   featured      Boolean   @default(false)
   status        Status    @default(DRAFT)
   createdAt     DateTime  @default(now())

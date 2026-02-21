@@ -96,6 +96,10 @@ export async function PUT(
       const fullData: any = {
         ...baseData,
         clientLogo: data.clientLogo || null,
+        finalRevealTitleEn: data.finalRevealTitleEn || null,
+        finalRevealTitleAr: data.finalRevealTitleAr || null,
+        finalRevealSubtitleEn: data.finalRevealSubtitleEn || null,
+        finalRevealSubtitleAr: data.finalRevealSubtitleAr || null,
       }
       if (data.timeline?.length) {
         fullData.timeline = {

@@ -51,6 +51,10 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
     location: '',
     clientName: '',
     clientLogo: '',
+    finalRevealTitleEn: '',
+    finalRevealTitleAr: '',
+    finalRevealSubtitleEn: '',
+    finalRevealSubtitleAr: '',
     featured: false,
     status: 'DRAFT'
   })
@@ -75,6 +79,10 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
           location: project.location || '',
           clientName: project.clientName || '',
           clientLogo: project.clientLogo || '',
+          finalRevealTitleEn: project.finalRevealTitleEn || '',
+          finalRevealTitleAr: project.finalRevealTitleAr || '',
+          finalRevealSubtitleEn: project.finalRevealSubtitleEn || '',
+          finalRevealSubtitleAr: project.finalRevealSubtitleAr || '',
           featured: project.featured,
           status: project.status
         })
@@ -531,6 +539,58 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Final Design Reveal Section */}
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <h2 className="font-semibold text-lg border-b pb-2">Final Design Reveal</h2>
+          <p className="text-sm text-gray-500">Heading and subtitle shown above the final showcase images (image 8+).</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title (English)</label>
+              <input
+                type="text"
+                value={form.finalRevealTitleEn}
+                onChange={(e) => setForm({ ...form, finalRevealTitleEn: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g. Final Design Reveal"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title (Arabic)</label>
+              <input
+                type="text"
+                value={form.finalRevealTitleAr}
+                onChange={(e) => setForm({ ...form, finalRevealTitleAr: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                dir="rtl"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle (English)</label>
+              <textarea
+                value={form.finalRevealSubtitleEn}
+                onChange={(e) => setForm({ ...form, finalRevealSubtitleEn: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                rows={4}
+                placeholder="e.g. High-end renderings captured the completed vision..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle (Arabic)</label>
+              <textarea
+                value={form.finalRevealSubtitleAr}
+                onChange={(e) => setForm({ ...form, finalRevealSubtitleAr: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                rows={4}
+                dir="rtl"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
