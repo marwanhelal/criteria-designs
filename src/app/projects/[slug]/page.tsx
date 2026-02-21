@@ -136,12 +136,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       {galleryImages.length > 0 && (
         <section data-navbar-dark className="px-8 lg:px-[83px] pb-[80px] bg-white">
           <div className="max-w-[1290px] mx-auto">
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-[5px]">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]">
               {galleryImages.map((image: { id: string; url: string; alt?: string }) => (
                 <div
                   key={image.id}
                   className="relative overflow-hidden bg-gray-100"
-                  style={{ aspectRatio: '199/112' }}
+                  style={{ aspectRatio: '415/233' }}
                 >
                   <Image
                     src={image.url}
@@ -173,8 +173,8 @@ export default async function ProjectDetailPage({ params }: Props) {
             {/* Timeline entries with centered vertical line on desktop */}
             <div className="relative">
 
-              {/* Vertical black line running through all entries */}
-              <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#111111] -translate-x-1/2 z-0" />
+              {/* Vertical gray line running through all entries — Figma: 4px, #d9d9d9 */}
+              <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-[4px] bg-[#d9d9d9] rounded-[1px] -translate-x-1/2 z-0" />
 
               <div className="space-y-[80px] lg:space-y-[100px]">
                 {project.timeline.map((entry: {
@@ -193,13 +193,13 @@ export default async function ProjectDetailPage({ params }: Props) {
                       <div className={`flex-1 relative z-10 ${isTextLeft ? 'lg:pr-16' : 'lg:pl-16'}`}>
                         <h3
                           style={{ fontFamily: ff }}
-                          className="text-[28px] lg:text-[48px] text-[#111111] font-normal leading-none tracking-[2px] mb-5"
+                          className="text-[32px] lg:text-[64px] text-[#111111] font-normal leading-none tracking-[3.2px] mb-5"
                         >
                           {entry.titleEn}
                         </h3>
                         <p
                           style={{ fontFamily: ff }}
-                          className="text-[15px] lg:text-[18px] text-[#555555] leading-[1.7] tracking-[0.3px] max-w-[440px]"
+                          className="text-[16px] lg:text-[19px] text-[#555555] leading-[1.5] tracking-[0.95px] max-w-[440px]"
                         >
                           {entry.descriptionEn}
                         </p>
