@@ -119,8 +119,17 @@ export default function NewProjectPage() {
     } catch (err) { console.error(err) } finally { setUploadingLogo(false) }
   }
 
+  const defaultTitles = [
+    'Rooted in Our Vision',
+    'Concept Sketching',
+    'Cairo Concept Study',
+    'Natural Integration',
+    'Final Design Reveal',
+  ]
+
   const addTimelineEntry = () => {
-    setTimeline([...timeline, { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', image: '' }])
+    const defaultTitle = defaultTitles[timeline.length] || ''
+    setTimeline([...timeline, { titleEn: defaultTitle, titleAr: '', descriptionEn: '', descriptionAr: '', image: '' }])
   }
 
   const updateTimeline = (index: number, field: keyof TimelineEntry, value: string) => {
