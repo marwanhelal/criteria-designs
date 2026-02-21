@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import ImageLightbox from '@/components/ImageLightbox'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -46,11 +47,11 @@ export default async function ProjectDetailPage({ params }: Props) {
       <Navbar />
 
       {/* ===== PROJECT HEADER — dark bg, white text (Figma exact) ===== */}
-      <section className="pt-[120px] pb-0 px-8 lg:px-[84px] bg-black">
+      <section className="pt-[120px] pb-0 bg-black">
         <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-[49px]">
 
-          {/* Left panel — w-382 h-474 per Figma */}
-          <div className="lg:w-[382px] shrink-0 flex flex-col justify-between lg:h-[474px]">
+          {/* Left panel — w-382 h-474 per Figma, padded only on left */}
+          <div className="px-8 lg:pl-[84px] lg:pr-0 lg:w-[382px] shrink-0 flex flex-col justify-between pb-8 lg:pb-0 lg:h-[474px]">
 
             {/* Top: title + year + description */}
             <div className="flex flex-col gap-[22px]">
@@ -110,49 +111,63 @@ export default async function ProjectDetailPage({ params }: Props) {
             )}
           </div>
 
-          {/* Right — Hero Image: 844×474 per Figma */}
-          <div className="flex-1 relative h-[280px] lg:h-[474px] overflow-hidden bg-[#1a1a1a]">
-            {heroImage ? (
-              <Image
-                src={heroImage}
-                alt={project.titleEn}
-                fill
-                sizes="(max-width: 1024px) 100vw, 844px"
-                className="object-cover"
-                priority
-                unoptimized
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-[#555] text-sm">No image</span>
-              </div>
-            )}
-          </div>
+          {/* Right — Hero Image extends to right viewport edge */}
+          {heroImage ? (
+            <ImageLightbox
+              images={[{ url: heroImage, alt: project.titleEn }]}
+              trigger={(openAt) => (
+                <div
+                  className="flex-1 relative h-[280px] lg:h-[474px] overflow-hidden bg-[#1a1a1a] mx-8 lg:mx-0 cursor-zoom-in"
+                  onClick={() => openAt(0)}
+                >
+                  <Image
+                    src={heroImage}
+                    alt={project.titleEn}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 844px"
+                    className="object-cover hover:scale-105 transition-transform duration-700"
+                    priority
+                    unoptimized
+                  />
+                </div>
+              )}
+            />
+          ) : (
+            <div className="flex-1 relative h-[280px] lg:h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
+              <span className="text-[#555] text-sm">No image</span>
+            </div>
+          )}
 
         </div>
       </section>
 
-      {/* ===== GALLERY GRID — dark bg, 414×233 per Figma ===== */}
+      {/* ===== GALLERY GRID — dark bg, 414×233 per Figma, click-to-zoom ===== */}
       {galleryImages.length > 0 && (
         <section className="px-8 lg:px-[84px] pt-[9px] pb-[80px] bg-black">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]">
-            {galleryImages.map((image: { id: string; url: string; alt?: string }) => (
-              <div
-                key={image.id}
-                className="relative overflow-hidden bg-[#1a1a1a]"
-                style={{ aspectRatio: '415/233' }}
-              >
-                <Image
-                  src={image.url}
-                  alt={image.alt || project.titleEn}
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 414px"
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  unoptimized
-                />
+          <ImageLightbox
+            images={galleryImages.map((img: { id: string; url: string; alt?: string }) => ({ url: img.url, alt: img.alt || project.titleEn }))}
+            trigger={(openAt) => (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]">
+                {galleryImages.map((image: { id: string; url: string; alt?: string }, i: number) => (
+                  <div
+                    key={image.id}
+                    className="relative overflow-hidden bg-[#1a1a1a] cursor-zoom-in"
+                    style={{ aspectRatio: '415/233' }}
+                    onClick={() => openAt(i)}
+                  >
+                    <Image
+                      src={image.url}
+                      alt={image.alt || project.titleEn}
+                      fill
+                      sizes="(max-width: 1024px) 50vw, 414px"
+                      className="object-cover hover:scale-105 transition-transform duration-500"
+                      unoptimized
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          />
         </section>
       )}
 
