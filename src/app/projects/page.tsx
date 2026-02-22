@@ -190,7 +190,7 @@ export default function ProjectsPage() {
 
           {/* Skeleton */}
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-5 gap-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
                   <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
@@ -220,7 +220,7 @@ export default function ProjectsPage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCategory}
-                className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-5 gap-y-8"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
