@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroLightbox from '@/components/HeroLightbox'
@@ -97,25 +96,18 @@ export default async function ProjectDetailPage({ params }: Props) {
                   Developer
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="h-[50px] w-[90px] rounded-[6px] overflow-hidden shrink-0 bg-[#1e1e1e] flex items-center justify-center p-1">
-                    {project.clientLogo ? (
-                      <Image
-                        src={project.clientLogo}
-                        alt={project.clientName}
-                        width={88}
-                        height={48}
-                        className="object-contain w-full h-full"
-                        unoptimized
-                      />
-                    ) : (
-                      <span className="font-[var(--font-open-sans)] text-[9px] text-white/40 text-center px-1">
-                        {project.clientName}
-                      </span>
-                    )}
-                  </div>
-                  <span className="font-[var(--font-open-sans)] text-[12px] text-[rgba(255,255,255,0.5)]">
-                    {project.clientName}
-                  </span>
+                  {project.clientLogo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={project.clientLogo}
+                      alt={project.clientName}
+                      className="max-h-[52px] w-auto object-contain shrink-0"
+                    />
+                  ) : (
+                    <span className="font-[var(--font-open-sans)] text-[12px] text-[rgba(255,255,255,0.5)]">
+                      {project.clientName}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
