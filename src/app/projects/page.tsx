@@ -143,47 +143,53 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
+      {/* ── Fixed header + filter — same level as Navbar, never inside any wrapper ── */}
+      <div
+        style={{
+          position: 'fixed',
+          top: '90px',
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#ffffff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* Header row: "Projects" left + count right */}
+        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+            Projects
+          </h1>
+          {!loading && (
+            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+              {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
+            </p>
+          )}
+        </div>
+
+        {/* Category filter — text links, underline active */}
+        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
+          {categories.map(cat => (
+            <button
+              key={cat.value}
+              onClick={() => setActiveCategory(cat.value)}
+              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                activeCategory === cat.value
+                  ? 'text-[#111] border-b border-[#111]'
+                  : 'text-[#aaa] hover:text-[#333]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* data-navbar-dark wrapper — tells navbar to show dark text on this white page */}
       <div data-navbar-dark className="bg-white">
 
         {/* Spacer — navbar (90px) + fixed header bar (~128px) */}
         <div className="h-[220px]" />
-
-        {/* ── Fixed header + filter — stays at top while cards scroll ── */}
-        <div
-          className="fixed left-0 right-0 z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-          style={{ top: '90px' }}
-        >
-
-          {/* Header row: "Projects" left + count right */}
-          <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-            <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
-              Projects
-            </h1>
-            {!loading && (
-              <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
-                {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
-              </p>
-            )}
-          </div>
-
-          {/* Category filter — text links, underline active */}
-          <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
-            {categories.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => setActiveCategory(cat.value)}
-                className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                  activeCategory === cat.value
-                    ? 'text-[#111] border-b border-[#111]'
-                    : 'text-[#aaa] hover:text-[#333]'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* ── Grid ── */}
         <div className="px-6 lg:px-[52px] pt-10 pb-20 min-h-screen">
