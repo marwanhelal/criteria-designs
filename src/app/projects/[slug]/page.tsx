@@ -11,8 +11,6 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-const ff = '"Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", var(--font-libre-franklin), Arial, sans-serif'
-
 const CATEGORY_LABELS: Record<string, string> = {
   RESIDENTIAL: 'Residential',
   COMMERCIAL: 'Commercial',
@@ -66,10 +64,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
               {/* Title */}
               <div>
-                <h1
-                  style={{ fontFamily: ff }}
-                  className="text-[40px] lg:text-[48px] text-white font-normal leading-none"
-                >
+                <h1 className="font-[var(--font-merriweather)] text-[36px] lg:text-[44px] text-white font-light leading-none tracking-[0.3px]">
                   {project.titleEn}
                 </h1>
                 {(project.yearCompleted || project.location) && (
@@ -157,10 +152,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
               </div>
               {project.finalRevealTitleEn && (
-                <h2
-                  style={{ fontFamily: ff }}
-                  className="text-[36px] lg:text-[52px] text-white font-normal leading-none tracking-[1px] mb-5"
-                >
+                <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[46px] text-white font-light leading-[1.15] tracking-[0.5px] mb-5">
                   {project.finalRevealTitleEn}
                 </h2>
               )}
