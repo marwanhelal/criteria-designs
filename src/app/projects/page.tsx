@@ -150,10 +150,7 @@ export default function ProjectsPage() {
         <div className="h-[90px]" />
 
         {/* ── Sticky header + filter ── */}
-        <div
-          className="bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-          style={{ position: 'sticky', top: '90px' }}
-        >
+        <div className="sticky top-[90px] bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
 
           {/* Header row: "Projects" left + count right */}
           <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
