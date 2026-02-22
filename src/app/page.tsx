@@ -54,6 +54,15 @@ const iconMap: Record<string, typeof Building> = {
   Building, Leaf, Headset, Users, Armchair, Shield
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  RESIDENTIAL: 'Residential',
+  COMMERCIAL: 'Commercial',
+  INTERIOR: 'Interior',
+  URBAN: 'Urban Planning',
+  LANDSCAPE: 'Landscape',
+  RENOVATION: 'Renovation',
+}
+
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [services, setServices] = useState<Service[]>([])
@@ -79,6 +88,10 @@ export default function Home() {
   const displayProjects = projects.length > 0 ? projects : []
   const displayServices = services.length > 0 ? services : []
   const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
+  // CMS-controlled portfolio list: use showcaseProjects if set, else all published
+  const portfolioProjects = (settings?.showcaseProjects && settings.showcaseProjects.length > 0)
+    ? settings.showcaseProjects
+    : displayProjects
   const heroImage = settings?.heroImage || null
   // Always use /api/uploads/ route — guaranteed to work in Docker standalone
   const heroVideo = settings?.heroVideo || null
@@ -142,128 +155,74 @@ export default function Home() {
       <CeoBanner />
       <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
 
-      {/* ===== PROJECTS SECTION ===== */}
-      <section className="bg-[#181C23] py-[80px] lg:py-[120px] px-8">
-        <div className="max-w-[1290px] mx-auto">
+      {/* ===== PORTFOLIO SECTION — YBA style ===== */}
+      <section className="bg-[#181C23]">
+        <div className="flex flex-col lg:flex-row">
 
-          {/* Header row: big text left + featured project right */}
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
-
-            {/* Left: label + large headline + CTA */}
-            <AnimatedSection direction="left" className="lg:w-[400px] shrink-0 lg:pt-6">
-              <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[5px]">
-                Portfolio
-              </span>
-              <h2 className="font-[var(--font-merriweather)] text-[40px] lg:text-[58px] text-white leading-[1.1] mt-5 font-bold">
-                Designing spaces that inspire.
-              </h2>
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-4 font-[var(--font-libre-franklin)] text-[13px] text-white uppercase tracking-[3px] mt-10 group"
-              >
-                <span className="block w-8 h-px bg-[#B1A490] group-hover:w-14 transition-all duration-300" />
+          {/* Sticky left panel */}
+          <div className="lg:w-[38%] shrink-0 px-8 lg:pl-16 lg:pr-12 py-16 lg:py-24 lg:sticky lg:top-[90px] lg:self-start">
+            <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
+              Portfolio
+            </span>
+            <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-white leading-[1.1] mt-5">
+              Designing spaces that inspire.
+            </h2>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-4 mt-10 group"
+            >
+              <span className="block w-8 h-px bg-[#B1A490] group-hover:w-14 transition-all duration-300" />
+              <span className="font-[var(--font-libre-franklin)] text-[12px] text-white uppercase tracking-[3px]">
                 View All Projects
-              </Link>
-            </AnimatedSection>
+              </span>
+            </Link>
+          </div>
 
-            {/* Right: featured project */}
-            {featuredProject ? (
-              <AnimatedSection direction="right" className="flex-1 w-full">
-                <Link href={`/projects/${featuredProject.slug}`} className="group block">
-                  <div className="relative h-[380px] lg:h-[500px] overflow-hidden rounded-lg">
-                    {featuredProject.images?.[0] ? (
+          {/* Scrolling right — projects stacked vertically */}
+          <div className="flex-1 px-8 lg:pr-16 lg:pl-0 py-16 lg:py-24 space-y-14 lg:space-y-20">
+            {portfolioProjects.length === 0 ? (
+              <p className="font-[var(--font-open-sans)] text-[15px] text-white/30 py-20">
+                No projects yet. Add projects from the CMS.
+              </p>
+            ) : (
+              portfolioProjects.map((project) => (
+                <Link key={project.id} href={`/projects/${project.slug}`} className="group block">
+                  {/* Image */}
+                  <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
+                    {project.images?.[0] ? (
                       <Image
-                        src={featuredProject.images[0].url}
-                        alt={featuredProject.titleEn}
+                        src={project.images[0].url}
+                        alt={project.images[0].alt || project.titleEn}
                         fill
-                        sizes="(max-width: 1024px) 100vw, 800px"
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        sizes="(max-width: 1024px) 100vw, 62vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                         unoptimized
                       />
                     ) : (
-                      <div className="w-full h-full bg-[#1E2330]" />
+                      <div className="absolute inset-0 bg-[#1E2330]" />
                     )}
                     {/* Circular View button on hover */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-24 h-24 rounded-full bg-[#B1A490] flex items-center justify-center">
-                        <span className="font-[var(--font-libre-franklin)] text-[12px] text-white uppercase tracking-[2px]">View</span>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+                      <div className="w-[88px] h-[88px] rounded-full bg-[#B1A490] flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
+                        <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
                       </div>
                     </div>
                   </div>
-                  <div className="pt-5">
+
+                  {/* Info below image */}
+                  <div className="pt-5 pb-5 border-b border-white/10">
                     <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
-                      {featuredProject.category}
+                      {CATEGORY_LABELS[project.category] || project.category}
                     </p>
-                    <h3 className="font-[var(--font-merriweather)] text-[22px] text-white mt-2 group-hover:text-[#B1A490] transition-colors duration-300 border-b border-white/10 pb-4">
-                      {featuredProject.titleEn}
+                    <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[26px] text-white mt-2 group-hover:text-[#B1A490] transition-colors duration-300">
+                      {project.titleEn}
                     </h3>
                   </div>
                 </Link>
-              </AnimatedSection>
-            ) : (
-              <div className="flex-1 flex items-center justify-center py-20">
-                <p className="font-[var(--font-open-sans)] text-[16px] text-white/40">
-                  No projects yet. Add projects from the CMS.
-                </p>
-              </div>
+              ))
             )}
           </div>
 
-          {/* 3 more projects below in a grid */}
-          {displayProjects.length > 1 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-14">
-              {displayProjects.slice(1, 4).map((project, idx) => (
-                <AnimatedSection key={project.id} direction="up" delay={idx * 0.12}>
-                  <Link href={`/projects/${project.slug}`} className="group block">
-                    <div className="relative h-[260px] overflow-hidden rounded-lg">
-                      {project.images?.[0] ? (
-                        <Image
-                          src={project.images[0].url}
-                          alt={project.titleEn}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 420px"
-                          className="object-cover group-hover:scale-105 transition-transform duration-700"
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#1E2330]" />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-16 h-16 rounded-full bg-[#B1A490] flex items-center justify-center">
-                          <span className="font-[var(--font-libre-franklin)] text-[10px] text-white uppercase tracking-[1px]">View</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="pt-4">
-                      <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
-                        {project.category}
-                      </p>
-                      <h3 className="font-[var(--font-merriweather)] text-[18px] text-white mt-1 group-hover:text-[#B1A490] transition-colors duration-300 border-b border-white/10 pb-3">
-                        {project.titleEn}
-                      </h3>
-                    </div>
-                  </Link>
-                </AnimatedSection>
-              ))}
-            </div>
-          )}
-
-
-          {/* Large Featured Image - Fixed 1290x800 aspect ratio */}
-          {heroImage && (
-            <AnimatedSection delay={0.2} className="mt-14">
-              <div className="relative h-[350px] lg:h-[560px] rounded-lg overflow-hidden">
-                <Image
-                  src={heroImage}
-                  alt="Featured project"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 1290px"
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-            </AnimatedSection>
-          )}
         </div>
       </section>
 
