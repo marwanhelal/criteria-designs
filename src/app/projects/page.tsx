@@ -143,12 +143,13 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      <div data-navbar-dark className="bg-white min-h-screen">
+      {/* data-navbar-dark wrapper — tells navbar to show dark text on this white page */}
+      <div data-navbar-dark className="bg-white">
 
         {/* Spacer — pushes content below fixed navbar */}
         <div className="h-[90px]" />
 
-        {/* ── Sticky header + filter — stays pinned below navbar while grid scrolls ── */}
+        {/* ── Sticky header + filter ── */}
         <div
           className="bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
           style={{ position: 'sticky', top: '90px' }}
@@ -184,8 +185,8 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* ── Grid ── */}
-        <div className="px-8 lg:px-[84px] pt-10 pb-20">
+        {/* ── Grid — min-h-screen ensures page is always tall enough for sticky to work ── */}
+        <div className="px-8 lg:px-[84px] pt-10 pb-20 min-h-screen">
 
           {/* Skeleton */}
           {loading && (
