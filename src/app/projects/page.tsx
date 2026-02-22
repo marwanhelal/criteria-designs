@@ -146,11 +146,14 @@ export default function ProjectsPage() {
       {/* data-navbar-dark wrapper — tells navbar to show dark text on this white page */}
       <div data-navbar-dark className="bg-white">
 
-        {/* Spacer — pushes content below fixed navbar */}
-        <div className="h-[90px]" />
+        {/* Spacer — navbar (90px) + fixed header bar (~128px) */}
+        <div className="h-[220px]" />
 
-        {/* ── Sticky header + filter ── */}
-        <div className="sticky top-[90px] bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        {/* ── Fixed header + filter — stays at top while cards scroll ── */}
+        <div
+          className="fixed left-0 right-0 z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+          style={{ top: '90px' }}
+        >
 
           {/* Header row: "Projects" left + count right */}
           <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
@@ -182,7 +185,7 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* ── Grid — min-h-screen ensures page is always tall enough for sticky to work ── */}
+        {/* ── Grid ── */}
         <div className="px-6 lg:px-[52px] pt-10 pb-20 min-h-screen">
 
           {/* Skeleton */}
