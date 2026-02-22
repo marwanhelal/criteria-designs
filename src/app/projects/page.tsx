@@ -146,10 +146,13 @@ export default function ProjectsPage() {
       <div data-navbar-dark className="bg-white min-h-screen">
 
         {/* Spacer — pushes content below fixed navbar */}
-        <div className="h-[72px] md:h-[90px]" />
+        <div className="h-[90px]" />
 
-        {/* ── Sticky header + filter — stays at top while grid scrolls ── */}
-        <div className="sticky top-[72px] md:top-[90px] bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        {/* ── Sticky header + filter — stays pinned below navbar while grid scrolls ── */}
+        <div
+          className="bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+          style={{ position: 'sticky', top: '90px' }}
+        >
 
           {/* Header row: "Projects" left + count right */}
           <div className="px-8 lg:px-[84px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
