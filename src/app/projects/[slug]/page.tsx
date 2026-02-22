@@ -120,7 +120,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== GALLERY GRID — dark bg, 414×233 per Figma, click-to-zoom ===== */}
       {galleryImages.length > 0 && (
-        <section className="px-8 lg:px-[84px] pt-[9px] pb-[80px] bg-black">
+        <section className="px-8 lg:px-[84px] pt-6 pb-[80px] bg-black">
           <GalleryGrid images={galleryImages} projectTitle={project.titleEn} />
         </section>
       )}

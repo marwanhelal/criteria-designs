@@ -51,7 +51,7 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
     <>
       {/* Stagger container — each card reveals sequentially */}
       <motion.div
-        className="grid grid-cols-2 lg:grid-cols-3 gap-x-[13px] gap-y-[9px]"
+        className="grid grid-cols-2 lg:grid-cols-3 gap-3"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
@@ -60,10 +60,9 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
         {images.map((image, i) => (
           <motion.div
             key={image.id}
-            // Empty variants: just a stagger-timing anchor for children
             variants={{ hidden: {}, visible: {} }}
-            className="relative overflow-hidden cursor-zoom-in group"
-            style={{ aspectRatio: '415/233' }}
+            className="relative overflow-hidden cursor-zoom-in group rounded-lg"
+            style={{ aspectRatio: '16/9' }}
             onClick={() => { setIndex(i); setOpen(true) }}
           >
             {/* Image zooms out as curtain reveals it */}
