@@ -57,7 +57,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       >
 
         {/* Image — white curtain reveal, fills top of rounded card */}
-        <div className="relative overflow-hidden bg-[#e0e0e0]" style={{ aspectRatio: '16/10' }}>
+        <div className="relative overflow-hidden bg-[#e0e0e0]" style={{ aspectRatio: '4/3' }}>
           <motion.div
             className="absolute inset-0"
             variants={{
@@ -156,7 +156,7 @@ export default function ProjectsPage() {
         >
 
           {/* Header row: "Projects" left + count right */}
-          <div className="px-8 lg:px-[84px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
             <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
               Projects
             </h1>
@@ -168,7 +168,7 @@ export default function ProjectsPage() {
           </div>
 
           {/* Category filter — text links, underline active */}
-          <div className="px-8 lg:px-[84px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
+          <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
             {categories.map(cat => (
               <button
                 key={cat.value}
@@ -186,14 +186,14 @@ export default function ProjectsPage() {
         </div>
 
         {/* ── Grid — min-h-screen ensures page is always tall enough for sticky to work ── */}
-        <div className="px-8 lg:px-[84px] pt-10 pb-20 min-h-screen">
+        <div className="px-6 lg:px-[52px] pt-10 pb-20 min-h-screen">
 
           {/* Skeleton */}
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-5 gap-y-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
-                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '16/10' }} />
+                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
                   <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
                     <div className="flex-1 space-y-2">
                       <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
@@ -220,7 +220,7 @@ export default function ProjectsPage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCategory}
-                className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-6 gap-y-10"
+                className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-5 gap-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
