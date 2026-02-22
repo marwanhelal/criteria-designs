@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -30,13 +29,6 @@ export default async function ProjectDetailPage({ params }: Props) {
   if (!project || project.status !== 'PUBLISHED') {
     notFound()
   }
-
-  const moreProjects = await prisma.project.findMany({
-    where: { status: 'PUBLISHED', id: { not: project.id } },
-    include: { images: { orderBy: { order: 'asc' } } },
-    take: 3,
-    orderBy: { createdAt: 'desc' }
-  })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const heroImage = (project.images.find((img: any) => img.section === 'hero') ?? project.images[0])?.url ?? null
@@ -178,81 +170,6 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
           )}
 
-        </section>
-      )}
-
-      {/* ===== MORE PROJECTS ===== */}
-      {moreProjects.length > 0 && (
-        <section data-navbar-dark className="bg-[#F5F0EB] py-[80px] px-8 lg:px-[83px]">
-          <div className="max-w-[1290px] mx-auto">
-
-            <h2
-              style={{ fontFamily: ff }}
-              className="text-[28px] lg:text-[36px] text-[#111111] font-normal leading-none tracking-[3px] text-center mb-14"
-            >
-              More Projects
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {moreProjects.map((p) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const thumb = (p.images.find((img: any) => img.section === 'hero') ?? p.images[0])?.url ?? null
-                return (
-                  <Link key={p.id} href={`/projects/${p.slug}`} className="group block">
-                    <div className="overflow-hidden bg-gray-200">
-                      <div className="relative h-[280px] overflow-hidden">
-                        {thumb ? (
-                          <Image
-                            src={thumb}
-                            alt={p.titleEn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gray-300" />
-                        )}
-                      </div>
-                      <div className="pt-4 pb-2 px-1">
-                        <p
-                          style={{ fontFamily: ff }}
-                          className="text-[11px] text-[#B1A490] uppercase tracking-[2.5px]"
-                        >
-                          {p.location || p.category}
-                        </p>
-                        <h3
-                          style={{ fontFamily: ff }}
-                          className="text-[22px] text-[#111111] font-normal leading-tight tracking-[1px] mt-1"
-                        >
-                          {p.titleEn}
-                        </h3>
-                        {p.yearCompleted && (
-                          <p
-                            style={{ fontFamily: ff }}
-                            className="text-[15px] text-[#888888] mt-2 tracking-[0.5px]"
-                          >
-                            {p.yearCompleted}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-
-            <div className="text-center mt-14">
-              <Link
-                href="/projects"
-                style={{ fontFamily: ff }}
-                className="inline-flex items-center text-[13px] text-[#111111] uppercase tracking-[3px] border border-[#111111] px-[44px] py-[16px] hover:bg-[#111111] hover:text-white transition-colors duration-300"
-              >
-                All Projects
-              </Link>
-            </div>
-
-          </div>
         </section>
       )}
 
