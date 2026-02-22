@@ -97,22 +97,20 @@ export default async function ProjectDetailPage({ params }: Props) {
                   Developer
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-[50px] h-[50px] rounded-[6px] overflow-hidden shrink-0 bg-[#1e1e1e]">
+                  <div className="h-[50px] w-[90px] rounded-[6px] overflow-hidden shrink-0 bg-[#1e1e1e] flex items-center justify-center p-1">
                     {project.clientLogo ? (
                       <Image
                         src={project.clientLogo}
                         alt={project.clientName}
-                        width={50}
-                        height={50}
-                        className="object-cover w-full h-full"
+                        width={88}
+                        height={48}
+                        className="object-contain w-full h-full"
                         unoptimized
                       />
                     ) : (
-                      <div className="w-full h-full bg-[#2a2a2a] flex items-center justify-center">
-                        <span className="font-[var(--font-open-sans)] text-[9px] text-white/40 text-center px-1">
-                          {project.clientName}
-                        </span>
-                      </div>
+                      <span className="font-[var(--font-open-sans)] text-[9px] text-white/40 text-center px-1">
+                        {project.clientName}
+                      </span>
                     )}
                   </div>
                   <span className="font-[var(--font-open-sans)] text-[12px] text-[rgba(255,255,255,0.5)]">
