@@ -53,7 +53,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         href={`/projects/${project.slug}`}
         className="group block rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.14)] transition-shadow duration-300"
       >
-        {/* Image */}
         <div className="relative overflow-hidden bg-[#e0e0e0]" style={{ aspectRatio: '4/3' }}>
           {thumb ? (
             <Image
@@ -68,8 +67,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="w-full h-full bg-[#d0d0d0]" />
           )}
         </div>
-
-        {/* Info */}
         <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h3 className="font-[var(--font-open-sans)] text-[#1a1a1a] text-[15px] lg:text-[17px] font-medium leading-snug transition-colors duration-300 group-hover:text-[#444]">
@@ -98,15 +95,15 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('ALL')
 
-  // Measure the fixed info bar height so content doesn't hide under it
+  // Measure info bar height dynamically so content is never hidden under it
   const infoBarRef = useRef<HTMLDivElement>(null)
-  const [contentPaddingTop, setContentPaddingTop] = useState(210) // safe default: 90 navbar + ~120 infobar
+  const [paddingTop, setPaddingTop] = useState(220) // safe default
 
   useEffect(() => {
     const update = () => {
-      if (!infoBarRef.current) return
       const navH = window.innerWidth >= 768 ? 90 : 72
-      setContentPaddingTop(navH + infoBarRef.current.offsetHeight)
+      const barH = infoBarRef.current ? infoBarRef.current.offsetHeight : 130
+      setPaddingTop(navH + barH)
     }
     update()
     window.addEventListener('resize', update, { passive: true })
@@ -129,98 +126,107 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/* data-navbar-dark tells Navbar to switch to dark-mode text on this white page */}
-      <div data-navbar-dark className="min-h-screen bg-white">
-
-        {/* ── Fixed info bar — position:fixed so it NEVER scrolls ── */}
-        <div
-          ref={infoBarRef}
-          className="fixed top-[72px] md:top-[90px] left-0 right-0 z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-        >
-          {/* "Projects" left + count right */}
-          <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-            <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
-              Projects
-            </h1>
-            {!loading && (
-              <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
-                {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
-              </p>
-            )}
-          </div>
-
-          {/* Category filter */}
-          <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
-            {categories.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => setActiveCategory(cat.value)}
-                className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                  activeCategory === cat.value
-                    ? 'text-[#111] border-b border-[#111]'
-                    : 'text-[#aaa] hover:text-[#333]'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+      {/*
+        ── FIXED INFO BAR ──────────────────────────────────────────────────────
+        Placed at the React fragment root — same level as <Navbar />.
+        This guarantees no parent element can create a containing block that
+        would break position:fixed (no transforms, overflow, or filter ancestors).
+        Uses Tailwind's responsive top to sit flush under the fixed navbar.
+      */}
+      <div
+        ref={infoBarRef}
+        className="fixed top-[72px] md:top-[90px] left-0 right-0 z-40 bg-white"
+        style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+      >
+        {/* "Projects" left + count right */}
+        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+            Projects
+          </h1>
+          {!loading && (
+            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+              {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
+            </p>
+          )}
         </div>
 
-        {/* ── Content — padded to clear the fixed navbar + fixed info bar ── */}
-        <div style={{ paddingTop: contentPaddingTop }}>
+        {/* Category filters */}
+        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
+          {categories.map(cat => (
+            <button
+              key={cat.value}
+              onClick={() => setActiveCategory(cat.value)}
+              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                activeCategory === cat.value
+                  ? 'text-[#111] border-b border-[#111]'
+                  : 'text-[#aaa] hover:text-[#333]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <div className="px-6 lg:px-[52px] pt-10 pb-20">
+      {/*
+        ── PAGE CONTENT ────────────────────────────────────────────────────────
+        paddingTop pushes content below both fixed bars (navbar + info bar).
+        Measured dynamically; safe default of 220px prevents content hiding on
+        first render.
+      */}
+      <div
+        data-navbar-dark
+        className="min-h-screen bg-white"
+        style={{ paddingTop }}
+      >
+        <div className="px-6 lg:px-[52px] pt-10 pb-20">
 
-            {/* Skeleton */}
-            {loading && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
-                {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
-                    <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
-                    <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
-                      <div className="flex-1 space-y-2">
-                        <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
-                        <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
+          {/* Skeleton */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
+                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
+                  <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
+                    <div className="flex-1 space-y-2">
+                      <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
+                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
                     </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty */}
+          {!loading && filteredProjects.length === 0 && (
+            <div className="text-center py-24">
+              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No projects found.</p>
+            </div>
+          )}
+
+          {/* Cards */}
+          {!loading && filteredProjects.length > 0 && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {filteredProjects.map((project, i) => (
+                  <ProjectCard key={project.id} project={project} index={i} />
                 ))}
-              </div>
-            )}
+              </motion.div>
+            </AnimatePresence>
+          )}
 
-            {/* Empty */}
-            {!loading && filteredProjects.length === 0 && (
-              <div className="text-center py-24">
-                <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
-                  No projects found.
-                </p>
-              </div>
-            )}
-
-            {/* Cards */}
-            {!loading && filteredProjects.length > 0 && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCategory}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {filteredProjects.map((project, i) => (
-                    <ProjectCard key={project.id} project={project} index={i} />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-          </div>
-
-          <Footer />
         </div>
+
+        <Footer />
       </div>
     </>
   )
