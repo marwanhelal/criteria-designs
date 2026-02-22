@@ -97,7 +97,7 @@ export default function Navbar() {
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
-              <div className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0 overflow-hidden max-w-[80px] md:max-w-[100px]">
                 <div className="absolute inset-[-8px] bg-[#B1A490]/15 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <Image
                   src={settings.logo}
