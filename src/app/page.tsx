@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
@@ -61,6 +61,75 @@ const CATEGORY_LABELS: Record<string, string> = {
   URBAN: 'Urban Planning',
   LANDSCAPE: 'Landscape',
   RENOVATION: 'Renovation',
+}
+
+interface PortfolioItem {
+  id: string
+  slug: string
+  titleEn: string
+  category: string
+  images: { url: string; alt: string | null }[]
+}
+
+function PortfolioCard({ project }: { project: PortfolioItem }) {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [hovered, setHovered] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (rect) {
+      setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    }
+  }
+
+  return (
+    <Link href={`/projects/${project.slug}`} className="group block">
+      <div
+        ref={containerRef}
+        className="relative overflow-hidden"
+        style={{ aspectRatio: '16/9' }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {project.images?.[0] ? (
+          <Image
+            src={project.images[0].url}
+            alt={project.images[0].alt || project.titleEn}
+            fill
+            sizes="(max-width: 1024px) 100vw, 62vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            unoptimized
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[#f0ede8]" />
+        )}
+        {/* Mouse-following circular View button */}
+        <div
+          className={`absolute pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          style={{
+            left: mousePos.x,
+            top: mousePos.y,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <div className={`w-[88px] h-[88px] rounded-full bg-[#B1A490] flex items-center justify-center transition-transform duration-300 ${hovered ? 'scale-100' : 'scale-75'}`}>
+            <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
+          </div>
+        </div>
+      </div>
+      {/* Info below image */}
+      <div className="pt-5 pb-5 border-b border-[#181C23]/10">
+        <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
+          {CATEGORY_LABELS[project.category] || project.category}
+        </p>
+        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[26px] text-[#181C23] mt-2 group-hover:text-[#B1A490] transition-colors duration-300">
+          {project.titleEn}
+        </h3>
+      </div>
+    </Link>
+  )
 }
 
 export default function Home() {
@@ -156,7 +225,7 @@ export default function Home() {
       <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
-      <section className="bg-[#181C23]">
+      <section className="bg-white">
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
@@ -164,15 +233,15 @@ export default function Home() {
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-white leading-[1.1] mt-5">
-              Designing spaces that inspire.
+            <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-[#181C23] leading-[1.1] mt-5">
+              Design that adds value
             </h2>
             <Link
               href="/projects"
               className="inline-flex items-center gap-4 mt-10 group"
             >
               <span className="block w-8 h-px bg-[#B1A490] group-hover:w-14 transition-all duration-300" />
-              <span className="font-[var(--font-libre-franklin)] text-[12px] text-white uppercase tracking-[3px]">
+              <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px]">
                 View All Projects
               </span>
             </Link>
@@ -181,44 +250,12 @@ export default function Home() {
           {/* Scrolling right — projects stacked vertically */}
           <div className="flex-1 px-8 lg:pr-16 lg:pl-0 py-16 lg:py-24 space-y-14 lg:space-y-20">
             {portfolioProjects.length === 0 ? (
-              <p className="font-[var(--font-open-sans)] text-[15px] text-white/30 py-20">
+              <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20">
                 No projects yet. Add projects from the CMS.
               </p>
             ) : (
               portfolioProjects.map((project) => (
-                <Link key={project.id} href={`/projects/${project.slug}`} className="group block">
-                  {/* Image */}
-                  <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
-                    {project.images?.[0] ? (
-                      <Image
-                        src={project.images[0].url}
-                        alt={project.images[0].alt || project.titleEn}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 62vw"
-                        className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-[#1E2330]" />
-                    )}
-                    {/* Circular View button on hover */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                      <div className="w-[88px] h-[88px] rounded-full bg-[#B1A490] flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
-                        <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Info below image */}
-                  <div className="pt-5 pb-5 border-b border-white/10">
-                    <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
-                      {CATEGORY_LABELS[project.category] || project.category}
-                    </p>
-                    <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[26px] text-white mt-2 group-hover:text-[#B1A490] transition-colors duration-300">
-                      {project.titleEn}
-                    </h3>
-                  </div>
-                </Link>
+                <PortfolioCard key={project.id} project={project} />
               ))
             )}
           </div>
