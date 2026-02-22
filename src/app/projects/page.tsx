@@ -7,8 +7,6 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const ff = '"Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", var(--font-libre-franklin), Arial, sans-serif'
-
 const CATEGORY_LABELS: Record<string, string> = {
   RESIDENTIAL: 'Residential',
   COMMERCIAL: 'Commercial',
@@ -37,11 +35,10 @@ const categories = [
   { value: 'LANDSCAPE', label: 'Landscape' },
 ]
 
-// ── Card — matches Foster+Partners exactly ───────────────────────────────────
+// ── Card ─────────────────────────────────────────────────────────────────────
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const thumb = project.images?.[0]?.url ?? null
   const catLabel = CATEGORY_LABELS[project.category] || project.category
-  // "2040 - Southern Kuwait, Kuwait"
   const meta = [project.yearCompleted, project.location || catLabel]
     .filter(Boolean)
     .join(' - ')
@@ -78,7 +75,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             )}
           </motion.div>
 
-          {/* White curtain wipes off to the right (matches white page) */}
+          {/* White curtain wipes off to the right */}
           <motion.div
             className="absolute inset-0 bg-white z-10 origin-right"
             variants={{
@@ -88,28 +85,22 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           />
         </div>
 
-        {/* Info box — light gray background, Foster+Partners style */}
-        <div className="bg-[#f4f4f4] px-5 pt-5 pb-5 flex items-start justify-between gap-4">
+        {/* Info — white background, Open Sans, F+P proportions */}
+        <div className="bg-white pt-4 pb-5 flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h3
-              style={{ fontFamily: ff }}
-              className="text-[#111] text-[17px] lg:text-[19px] font-normal leading-snug transition-colors duration-300 group-hover:text-[#444]"
-            >
+            <h3 className="font-[var(--font-open-sans)] text-[#111] text-[16px] lg:text-[18px] font-semibold leading-snug transition-colors duration-300 group-hover:text-[#444]">
               {project.titleEn}
             </h3>
             {meta && (
-              <p
-                style={{ fontFamily: ff }}
-                className="text-[#888] text-[12px] lg:text-[13px] mt-[5px] tracking-[0.2px]"
-              >
+              <p className="font-[var(--font-open-sans)] text-[#747779] text-[13px] mt-[5px]">
                 {meta}
               </p>
             )}
           </div>
 
-          {/* → right arrow circle — fills black on hover */}
-          <div className="shrink-0 mt-1 w-9 h-9 rounded-full border border-[#bbb] flex items-center justify-center transition-all duration-300 group-hover:bg-black group-hover:border-black text-[#555] group-hover:text-white">
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          {/* → right arrow circle */}
+          <div className="shrink-0 mt-[2px] w-8 h-8 rounded-full border border-[#ccc] flex items-center justify-center transition-all duration-300 group-hover:bg-black group-hover:border-black text-[#666] group-hover:text-white">
+            <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
               <path
                 d="M1 5H13M13 5L9 1M13 5L9 9"
                 stroke="currentColor"
@@ -148,43 +139,42 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/* Pure white page — Foster+Partners aesthetic */}
       <div data-navbar-dark className="bg-white min-h-screen">
 
-        {/* ── Header row: "Projects" left + count right ── */}
-        <div className="px-8 lg:px-[84px] pt-[100px] pb-5 flex items-baseline justify-between border-b border-[#ddd]">
-          <h1
-            style={{ fontFamily: ff }}
-            className="text-[#111] text-[17px] lg:text-[19px] font-normal tracking-[0.3px]"
-          >
-            Projects
-          </h1>
-          {!loading && (
-            <p
-              style={{ fontFamily: ff }}
-              className="text-[#aaa] text-[14px] tracking-[0.3px]"
-            >
-              {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
-            </p>
-          )}
-        </div>
+        {/* Spacer — pushes content below fixed navbar */}
+        <div className="h-[72px] md:h-[90px]" />
 
-        {/* ── Category filter — text links, underline active ── */}
-        <div className="px-8 lg:px-[84px] py-5 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#ddd]">
-          {categories.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
-              style={{ fontFamily: ff }}
-              className={`text-[13px] tracking-[0.3px] transition-all duration-200 pb-px ${
-                activeCategory === cat.value
-                  ? 'text-[#111] border-b border-[#111]'
-                  : 'text-[#aaa] hover:text-[#333]'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* ── Sticky header + filter — stays at top while grid scrolls ── */}
+        <div className="sticky top-[72px] md:top-[90px] bg-white z-40">
+
+          {/* Header row: "Projects" left + count right */}
+          <div className="px-8 lg:px-[84px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+            <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+              Projects
+            </h1>
+            {!loading && (
+              <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+                {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
+              </p>
+            )}
+          </div>
+
+          {/* Category filter — text links, underline active */}
+          <div className="px-8 lg:px-[84px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
+            {categories.map(cat => (
+              <button
+                key={cat.value}
+                onClick={() => setActiveCategory(cat.value)}
+                className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                  activeCategory === cat.value
+                    ? 'text-[#111] border-b border-[#111]'
+                    : 'text-[#aaa] hover:text-[#333]'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Grid ── */}
@@ -196,12 +186,12 @@ export default function ProjectsPage() {
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i}>
                   <div className="w-full bg-gray-100 animate-pulse" style={{ aspectRatio: '16/10' }} />
-                  <div className="bg-[#f4f4f4] px-5 py-5 flex justify-between items-start gap-4">
+                  <div className="pt-4 pb-5 flex justify-between items-start gap-4">
                     <div className="flex-1 space-y-2">
-                      <div className="h-[18px] bg-gray-200 animate-pulse rounded w-3/4" />
-                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
+                      <div className="h-[17px] bg-gray-100 animate-pulse rounded w-3/4" />
+                      <div className="h-3 bg-gray-100 animate-pulse rounded w-1/2" />
                     </div>
-                    <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse shrink-0" />
+                    <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse shrink-0" />
                   </div>
                 </div>
               ))}
@@ -211,7 +201,7 @@ export default function ProjectsPage() {
           {/* Empty */}
           {!loading && filteredProjects.length === 0 && (
             <div className="text-center py-24">
-              <p style={{ fontFamily: ff }} className="text-[#bbb] text-[14px]">
+              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
                 No projects found.
               </p>
             </div>
