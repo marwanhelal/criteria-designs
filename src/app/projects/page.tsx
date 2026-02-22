@@ -143,106 +143,114 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/* ── Fixed header + filter — same level as Navbar, never inside any wrapper ── */}
+      {/*
+        App-shell layout: the whole page is a fixed viewport-height container.
+        - data-navbar-dark covers top-0 so the navbar correctly shows dark text.
+        - Header + filter sit in a flex-shrink-0 row — they NEVER scroll.
+        - Only the cards div (flex-1 overflow-y-auto) scrolls.
+      */}
       <div
+        data-navbar-dark
         style={{
           position: 'fixed',
-          top: '90px',
+          top: 0,
           left: 0,
           right: 0,
-          zIndex: 40,
+          bottom: 0,
+          display: 'flex',
+          flexDirection: 'column',
           backgroundColor: '#ffffff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
         }}
       >
-        {/* Header row: "Projects" left + count right */}
-        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
-            Projects
-          </h1>
-          {!loading && (
-            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
-              {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
-            </p>
-          )}
-        </div>
+        {/* Navbar space — pushes content below the fixed navbar */}
+        <div style={{ height: '90px', flexShrink: 0 }} />
 
-        {/* Category filter — text links, underline active */}
-        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
-          {categories.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
-              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                activeCategory === cat.value
-                  ? 'text-[#111] border-b border-[#111]'
-                  : 'text-[#aaa] hover:text-[#333]'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* ── Header + filter — never scrolls ── */}
+        <div style={{ flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', backgroundColor: '#ffffff' }}>
 
-      {/* data-navbar-dark wrapper — tells navbar to show dark text on this white page */}
-      <div data-navbar-dark className="bg-white">
-
-        {/* Spacer — navbar (90px) + fixed header bar (~128px) */}
-        <div className="h-[220px]" />
-
-        {/* ── Grid ── */}
-        <div className="px-6 lg:px-[52px] pt-10 pb-20 min-h-screen">
-
-          {/* Skeleton */}
-          {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
-                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
-                  <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
-                    <div className="flex-1 space-y-2">
-                      <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
-                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Empty */}
-          {!loading && filteredProjects.length === 0 && (
-            <div className="text-center py-24">
-              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
-                No projects found.
+          {/* "Projects" left + count right */}
+          <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+            <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+              Projects
+            </h1>
+            {!loading && (
+              <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+                {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
               </p>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Cards with filter transition */}
-          {!loading && filteredProjects.length > 0 && (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeCategory}
-                className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+          {/* Category filter */}
+          <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
+            {categories.map(cat => (
+              <button
+                key={cat.value}
+                onClick={() => setActiveCategory(cat.value)}
+                className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                  activeCategory === cat.value
+                    ? 'text-[#111] border-b border-[#111]'
+                    : 'text-[#aaa] hover:text-[#333]'
+                }`}
               >
-                {filteredProjects.map((project, i) => (
-                  <ProjectCard key={project.id} project={project} index={i} />
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          )}
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
+        {/* ── Scrollable cards area ── */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          <div className="px-6 lg:px-[52px] pt-10 pb-20">
+
+            {/* Skeleton */}
+            {loading && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
+                    <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
+                    <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
+                      <div className="flex-1 space-y-2">
+                        <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
+                        <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty */}
+            {!loading && filteredProjects.length === 0 && (
+              <div className="text-center py-24">
+                <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
+                  No projects found.
+                </p>
+              </div>
+            )}
+
+            {/* Cards */}
+            {!loading && filteredProjects.length > 0 && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCategory}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {filteredProjects.map((project, i) => (
+                    <ProjectCard key={project.id} project={project} index={i} />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
+
+          </div>
+          <Footer />
         </div>
       </div>
-
-      <Footer />
     </>
   )
 }
