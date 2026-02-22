@@ -50,10 +50,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: (index % 3) * 0.07 }}
     >
-      <Link href={`/projects/${project.slug}`} className="group block">
+      {/* Rounded card — overflow-hidden clips image + info box into one shape */}
+      <Link
+        href={`/projects/${project.slug}`}
+        className="group block rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.14)] transition-shadow duration-300"
+      >
 
-        {/* Image — white curtain reveal */}
-        <div className="relative overflow-hidden bg-[#e5e5e5]" style={{ aspectRatio: '16/10' }}>
+        {/* Image — white curtain reveal, fills top of rounded card */}
+        <div className="relative overflow-hidden bg-[#e0e0e0]" style={{ aspectRatio: '16/10' }}>
           <motion.div
             className="absolute inset-0"
             variants={{
@@ -66,12 +70,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 src={thumb}
                 alt={project.titleEn}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full bg-[#d8d8d8]" />
+              <div className="w-full h-full bg-[#d0d0d0]" />
             )}
           </motion.div>
 
@@ -85,21 +89,21 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           />
         </div>
 
-        {/* Info — light gray background, Open Sans, F+P proportions */}
-        <div className="bg-[#f5f5f5] px-4 pt-4 pb-5 flex items-start justify-between gap-4">
+        {/* Info — fills bottom of rounded card */}
+        <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="font-[var(--font-open-sans)] text-[#111] text-[16px] lg:text-[18px] font-semibold leading-snug transition-colors duration-300 group-hover:text-[#444]">
+            <h3 className="font-[var(--font-open-sans)] text-[#1a1a1a] text-[15px] lg:text-[17px] font-medium leading-snug transition-colors duration-300 group-hover:text-[#444]">
               {project.titleEn}
             </h3>
             {meta && (
-              <p className="font-[var(--font-open-sans)] text-[#747779] text-[13px] mt-[5px]">
+              <p className="font-[var(--font-open-sans)] text-[#747779] text-[12px] lg:text-[13px] mt-[5px]">
                 {meta}
               </p>
             )}
           </div>
 
-          {/* → right arrow circle */}
-          <div className="shrink-0 mt-[2px] w-8 h-8 rounded-full border border-[#ccc] flex items-center justify-center transition-all duration-300 group-hover:bg-black group-hover:border-black text-[#666] group-hover:text-white">
+          {/* → arrow circle */}
+          <div className="shrink-0 mt-[2px] w-8 h-8 rounded-full border border-[#c8c8c8] flex items-center justify-center transition-all duration-300 group-hover:bg-[#1a1a1a] group-hover:border-[#1a1a1a] text-[#666] group-hover:text-white">
             <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
               <path
                 d="M1 5H13M13 5L9 1M13 5L9 9"
@@ -184,14 +188,14 @@ export default function ProjectsPage() {
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-6 gap-y-10">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i}>
-                  <div className="w-full bg-gray-100 animate-pulse" style={{ aspectRatio: '16/10' }} />
-                  <div className="bg-[#f5f5f5] px-4 pt-4 pb-5 flex justify-between items-start gap-4">
+                <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
+                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '16/10' }} />
+                  <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
                     <div className="flex-1 space-y-2">
-                      <div className="h-[17px] bg-gray-100 animate-pulse rounded w-3/4" />
-                      <div className="h-3 bg-gray-100 animate-pulse rounded w-1/2" />
+                      <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
+                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse shrink-0" />
+                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
                   </div>
                 </div>
               ))}
