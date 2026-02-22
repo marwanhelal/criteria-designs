@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
@@ -98,6 +98,21 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('ALL')
 
+  // Measure the fixed info bar height so content doesn't hide under it
+  const infoBarRef = useRef<HTMLDivElement>(null)
+  const [contentPaddingTop, setContentPaddingTop] = useState(210) // safe default: 90 navbar + ~120 infobar
+
+  useEffect(() => {
+    const update = () => {
+      if (!infoBarRef.current) return
+      const navH = window.innerWidth >= 768 ? 90 : 72
+      setContentPaddingTop(navH + infoBarRef.current.offsetHeight)
+    }
+    update()
+    window.addEventListener('resize', update, { passive: true })
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
   useEffect(() => {
     fetch('/api/projects?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
@@ -114,14 +129,14 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/* Page wrapper — normal document flow, navbar pushes content down */}
+      {/* data-navbar-dark tells Navbar to switch to dark-mode text on this white page */}
       <div data-navbar-dark className="min-h-screen bg-white">
 
-        {/* Spacer for fixed navbar */}
-        <div className="h-[72px] md:h-[90px]" />
-
-        {/* ── Sticky info bar ── */}
-        <div className="sticky top-[72px] md:top-[90px] z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        {/* ── Fixed info bar — position:fixed so it NEVER scrolls ── */}
+        <div
+          ref={infoBarRef}
+          className="fixed top-[72px] md:top-[90px] left-0 right-0 z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+        >
           {/* "Projects" left + count right */}
           <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
             <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
@@ -152,56 +167,60 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* ── Cards — normal page scroll ── */}
-        <div className="px-6 lg:px-[52px] pt-10 pb-20">
+        {/* ── Content — padded to clear the fixed navbar + fixed info bar ── */}
+        <div style={{ paddingTop: contentPaddingTop }}>
 
-          {/* Skeleton */}
-          {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
-                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
-                  <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
-                    <div className="flex-1 space-y-2">
-                      <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
-                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
+          <div className="px-6 lg:px-[52px] pt-10 pb-20">
+
+            {/* Skeleton */}
+            {loading && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
+                    <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
+                    <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
+                      <div className="flex-1 space-y-2">
+                        <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
+                        <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Empty */}
-          {!loading && filteredProjects.length === 0 && (
-            <div className="text-center py-24">
-              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
-                No projects found.
-              </p>
-            </div>
-          )}
-
-          {/* Cards */}
-          {!loading && filteredProjects.length > 0 && (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeCategory}
-                className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {filteredProjects.map((project, i) => (
-                  <ProjectCard key={project.id} project={project} index={i} />
                 ))}
-              </motion.div>
-            </AnimatePresence>
-          )}
+              </div>
+            )}
 
+            {/* Empty */}
+            {!loading && filteredProjects.length === 0 && (
+              <div className="text-center py-24">
+                <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
+                  No projects found.
+                </p>
+              </div>
+            )}
+
+            {/* Cards */}
+            {!loading && filteredProjects.length > 0 && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCategory}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {filteredProjects.map((project, i) => (
+                    <ProjectCard key={project.id} project={project} index={i} />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
+
+          </div>
+
+          <Footer />
         </div>
-        <Footer />
       </div>
     </>
   )
