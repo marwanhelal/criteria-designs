@@ -34,12 +34,12 @@ export default function TimelineSection({ entries }: Props) {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Step number */}
-              <p className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490] mb-4">
+              <p className="font-[var(--font-open-sans)] text-[12px] tracking-[3px] uppercase text-[#B1A490] mb-4">
                 {String(idx + 1).padStart(2, '0')}
               </p>
 
               {/* Title */}
-              <h3 className="font-[var(--font-open-sans)] text-[22px] lg:text-[28px] text-white font-light leading-snug mb-4">
+              <h3 className="font-[var(--font-open-sans)] text-[26px] lg:text-[34px] text-white font-light leading-snug mb-4">
                 {entry.titleEn}
               </h3>
 
@@ -47,7 +47,7 @@ export default function TimelineSection({ entries }: Props) {
               <div className="w-6 h-px bg-[#B1A490]/50 mb-5" />
 
               {/* Description */}
-              <p className="font-[var(--font-open-sans)] text-[13px] lg:text-[14px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="font-[var(--font-open-sans)] text-[15px] lg:text-[16px] text-[rgba(255,255,255,0.65)] leading-[1.85]">
                 {entry.descriptionEn}
               </p>
             </motion.div>

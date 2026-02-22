@@ -84,7 +84,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               <div className="w-6 h-px bg-[#B1A490]/40" />
 
               {/* Description */}
-              <p className="font-[var(--font-open-sans)] text-[13px] text-[rgba(255,255,255,0.58)] leading-[1.9]">
+              <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[15px] text-[rgba(255,255,255,0.62)] leading-[1.85]">
                 {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
                 {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '…' : ''}
               </p>
@@ -139,7 +139,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       {galleryImages.length > 0 && (
         <section className="px-8 lg:px-[84px] pt-14 pb-[80px] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-10">
-            <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Gallery</span>
+            <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Gallery</span>
             <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
           </div>
           <GalleryGrid images={galleryImages} projectTitle={project.titleEn} />
@@ -150,7 +150,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       {project.timeline.length > 0 && (
         <section className="py-[80px] px-8 lg:px-[84px] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-16">
-            <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Design Process</span>
+            <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Design Process</span>
             <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
           </div>
           <TimelineSection entries={project.timeline} />
@@ -164,7 +164,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
             <div className="pt-[80px] pb-[60px] px-8 lg:px-[84px]">
               <div className="flex items-center gap-5 mb-10">
-                <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Final Design</span>
+                <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Final Design</span>
                 <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
               </div>
               {project.finalRevealTitleEn && (
