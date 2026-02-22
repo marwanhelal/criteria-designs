@@ -145,7 +145,7 @@ export default function ProjectsPage() {
         <div className="h-[72px] md:h-[90px]" />
 
         {/* ── Sticky header + filter — stays at top while grid scrolls ── */}
-        <div className="sticky top-[72px] md:top-[90px] bg-white z-40">
+        <div className="sticky top-[72px] md:top-[90px] bg-white z-40 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
 
           {/* Header row: "Projects" left + count right */}
           <div className="px-8 lg:px-[84px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
@@ -182,7 +182,7 @@ export default function ProjectsPage() {
 
           {/* Skeleton */}
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-6 gap-y-10">
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i}>
                   <div className="w-full bg-gray-100 animate-pulse" style={{ aspectRatio: '16/10' }} />
@@ -212,7 +212,7 @@ export default function ProjectsPage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCategory}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10"
+                className="grid grid-cols-1 sm:grid-cols-2 min-[960px]:grid-cols-3 gap-x-6 gap-y-10"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
