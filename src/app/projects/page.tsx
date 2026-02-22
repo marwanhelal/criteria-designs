@@ -114,31 +114,14 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/*
-        App-shell layout: the whole page is a fixed viewport-height container.
-        - data-navbar-dark covers top-0 so the navbar correctly shows dark text.
-        - Header + filter sit in a flex-shrink-0 row — they NEVER scroll.
-        - Only the cards div (flex-1 overflow-y-auto) scrolls.
-      */}
-      <div
-        data-navbar-dark
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {/* Navbar space — pushes content below the fixed navbar */}
-        <div style={{ height: '90px', flexShrink: 0 }} />
+      {/* Page wrapper — normal document flow, navbar pushes content down */}
+      <div data-navbar-dark className="min-h-screen bg-white">
 
-        {/* ── Header + filter — never scrolls ── */}
-        <div style={{ flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', backgroundColor: '#ffffff' }}>
+        {/* Spacer for fixed navbar */}
+        <div className="h-[72px] md:h-[90px]" />
 
+        {/* ── Sticky info bar ── */}
+        <div className="sticky top-[72px] md:top-[90px] z-40 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
           {/* "Projects" left + count right */}
           <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
             <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
@@ -169,58 +152,56 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* ── Scrollable cards area ── */}
-        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-          <div className="px-6 lg:px-[52px] pt-10 pb-20">
+        {/* ── Cards — normal page scroll ── */}
+        <div className="px-6 lg:px-[52px] pt-10 pb-20">
 
-            {/* Skeleton */}
-            {loading && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
-                {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
-                    <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
-                    <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
-                      <div className="flex-1 space-y-2">
-                        <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
-                        <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
+          {/* Skeleton */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)]">
+                  <div className="w-full bg-gray-200 animate-pulse" style={{ aspectRatio: '4/3' }} />
+                  <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex justify-between items-start gap-4">
+                    <div className="flex-1 space-y-2">
+                      <div className="h-[15px] bg-gray-200 animate-pulse rounded w-3/4" />
+                      <div className="h-3 bg-gray-200 animate-pulse rounded w-1/2" />
                     </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse shrink-0" />
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty */}
+          {!loading && filteredProjects.length === 0 && (
+            <div className="text-center py-24">
+              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
+                No projects found.
+              </p>
+            </div>
+          )}
+
+          {/* Cards */}
+          {!loading && filteredProjects.length > 0 && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {filteredProjects.map((project, i) => (
+                  <ProjectCard key={project.id} project={project} index={i} />
                 ))}
-              </div>
-            )}
+              </motion.div>
+            </AnimatePresence>
+          )}
 
-            {/* Empty */}
-            {!loading && filteredProjects.length === 0 && (
-              <div className="text-center py-24">
-                <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">
-                  No projects found.
-                </p>
-              </div>
-            )}
-
-            {/* Cards */}
-            {!loading && filteredProjects.length > 0 && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCategory}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {filteredProjects.map((project, i) => (
-                    <ProjectCard key={project.id} project={project} index={i} />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-          </div>
-          <Footer />
         </div>
+        <Footer />
       </div>
     </>
   )
