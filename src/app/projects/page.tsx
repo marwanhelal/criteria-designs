@@ -170,7 +170,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* ── Scrollable cards area ── */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
           <div className="px-6 lg:px-[52px] pt-10 pb-20">
 
             {/* Skeleton */}
