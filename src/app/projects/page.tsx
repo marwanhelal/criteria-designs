@@ -5,14 +5,23 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
+import { motion, AnimatePresence } from 'framer-motion'
+
+const ff = '"Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", var(--font-libre-franklin), Arial, sans-serif'
+
+const CATEGORY_LABELS: Record<string, string> = {
+  RESIDENTIAL: 'Residential',
+  COMMERCIAL: 'Commercial',
+  INTERIOR: 'Interior Design',
+  URBAN: 'Urban Planning',
+  LANDSCAPE: 'Landscape',
+  RENOVATION: 'Renovation',
+}
 
 interface Project {
   id: string
   slug: string
   titleEn: string
-  titleAr: string
-  descriptionEn: string
   category: string
   yearCompleted: number | null
   location: string | null
@@ -28,6 +37,102 @@ const categories = [
   { value: 'LANDSCAPE', label: 'Landscape' },
 ]
 
+// ── Project card ────────────────────────────────────────────────────────────
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const thumb = project.images?.[0]?.url ?? null
+  const subtitle = project.location || CATEGORY_LABELS[project.category] || project.category
+
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-40px' }}
+      // Slight column-aware stagger: col 0=0ms, col 1=80ms, col 2=160ms
+      transition={{ delay: (index % 3) * 0.08 }}
+    >
+      <Link href={`/projects/${project.slug}`} className="group block">
+        {/* Card — dark bg so it works before image loads */}
+        <div className="relative overflow-hidden bg-[#111]">
+
+          {/* Image area */}
+          <div className="relative h-[340px] lg:h-[380px] overflow-hidden">
+
+            {/* Image zooms out during curtain reveal */}
+            <motion.div
+              className="absolute inset-0"
+              variants={{
+                hidden: { scale: 1.12 },
+                visible: { scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const } },
+              }}
+            >
+              {thumb ? (
+                <Image
+                  src={thumb}
+                  alt={project.titleEn}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                  unoptimized
+                />
+              ) : (
+                <div className="w-full h-full bg-[#1a1a1a]" />
+              )}
+            </motion.div>
+
+            {/* Gradient — info always readable, deepens on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent transition-opacity duration-500 group-hover:from-black/95 group-hover:via-black/40" />
+
+            {/* Card info — always visible at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-7">
+              <p
+                style={{ fontFamily: ff }}
+                className="text-[#B1A490] text-[11px] uppercase tracking-[3px] mb-2"
+              >
+                {subtitle}
+              </p>
+              <h3
+                style={{ fontFamily: ff }}
+                className="text-white text-[21px] lg:text-[23px] font-normal leading-snug"
+              >
+                {project.titleEn}
+              </h3>
+              {project.yearCompleted && (
+                <p
+                  style={{ fontFamily: ff }}
+                  className="text-white/40 text-[13px] mt-1 tracking-[1px]"
+                >
+                  {project.yearCompleted}
+                </p>
+              )}
+
+              {/* "View Project" — slides up on hover */}
+              <div className="mt-4 flex items-center gap-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                <span className="block w-8 h-px bg-[#B1A490] shrink-0" />
+                <span
+                  style={{ fontFamily: ff }}
+                  className="text-white/60 text-[11px] uppercase tracking-[3px]"
+                >
+                  View Project
+                </span>
+              </div>
+            </div>
+
+            {/* Curtain that wipes off to the right */}
+            <motion.div
+              className="absolute inset-0 bg-[#0a0a0a] z-10 origin-right"
+              variants={{
+                hidden: { scaleX: 1 },
+                visible: { scaleX: 0, transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] as const } },
+              }}
+            />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
+// ── Page ────────────────────────────────────────────────────────────────────
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -49,98 +154,101 @@ export default function ProjectsPage() {
     <>
       <Navbar />
 
-      {/* ===== HERO BANNER ===== */}
-      <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(24, 28, 35, 0.7) 0%, rgba(24, 28, 35, 0.5) 100%)',
-            }}
-          />
-        </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
-          <AnimatedSection>
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              What we create
-            </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+      {/* ── Hero — black, matches project detail page ── */}
+      <section className="bg-black pt-[130px] pb-16 px-8 lg:px-[84px]">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p
+            style={{ fontFamily: ff }}
+            className="text-[#B1A490] text-[12px] uppercase tracking-[4px] mb-5"
+          >
+            What We Create
+          </p>
+          <div className="flex items-end justify-between gap-4">
+            <h1
+              style={{ fontFamily: ff }}
+              className="text-[48px] lg:text-[80px] text-white font-normal leading-none tracking-[2px]"
+            >
               Our Projects
             </h1>
-          </AnimatedSection>
-        </div>
+            {!loading && (
+              <p
+                style={{ fontFamily: ff }}
+                className="hidden lg:block text-[#444] text-[13px] tracking-[2px] shrink-0 mb-2"
+              >
+                {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
+              </p>
+            )}
+          </div>
+        </motion.div>
       </section>
 
-      {/* ===== FILTER & PROJECTS ===== */}
-      <section data-navbar-dark className="py-[100px] px-8">
-        <div className="max-w-[1290px] mx-auto">
-          <AnimatedSection className="flex flex-wrap gap-4 mb-16 justify-center">
-            {categories.map((cat) => (
+      {/* ── Filters + Grid ── */}
+      <section data-navbar-dark className="bg-white pt-[56px] pb-[100px] px-8 lg:px-[84px]">
+        <div className="max-w-[1440px] mx-auto">
+
+          {/* Category filter pills */}
+          <motion.div
+            className="flex flex-wrap gap-3 mb-14"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {categories.map(cat => (
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
-                className={`font-[var(--font-libre-franklin)] text-[14px] uppercase tracking-[0.56px] leading-[24px] px-[30px] py-[12px] rounded-[30px] border-2 transition-colors ${
+                style={{ fontFamily: ff }}
+                className={`text-[12px] uppercase tracking-[3px] px-6 py-[10px] border transition-all duration-300 ${
                   activeCategory === cat.value
-                    ? 'border-[#B1A490] bg-[#B1A490] text-white'
-                    : 'border-[#B1A490] text-[#181C23] hover:bg-[#B1A490]/10'
+                    ? 'bg-black border-black text-white'
+                    : 'bg-transparent border-[#ccc] text-[#888] hover:border-[#111] hover:text-[#111]'
                 }`}
               >
                 {cat.label}
               </button>
             ))}
-          </AnimatedSection>
+          </motion.div>
 
-          {loading ? (
-            <div className="text-center py-20">
-              <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">Loading projects...</p>
-            </div>
-          ) : filteredProjects.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">No projects found.</p>
-            </div>
-          ) : (
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" staggerDelay={0.1}>
-              {filteredProjects.map((project) => (
-                <StaggerItem key={project.id}>
-                  <Link href={`/projects/${project.slug}`} className="group block">
-                    <div className="rounded-lg overflow-hidden bg-gray-200">
-                      {/* Fixed 380px image height */}
-                      <div className="relative h-[380px] overflow-hidden">
-                        {project.images?.length > 0 ? (
-                          <Image
-                            src={project.images[0].url}
-                            alt={project.titleEn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover group-hover:scale-110 transition-transform duration-500"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                            <span className="text-gray-500">No image</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="bg-[#181C23] p-8">
-                        <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px]">
-                          {project.location || project.category}
-                        </p>
-                        <h3 className="font-[var(--font-merriweather)] text-[24px] text-white leading-[34px] mt-2">
-                          {project.titleEn}
-                        </h3>
-                        {project.yearCompleted && (
-                          <p className="font-[var(--font-libre-franklin)] text-[16px] text-white/60 mt-4">
-                            {project.yearCompleted}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                </StaggerItem>
+          {/* Skeleton */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="h-[380px] bg-gray-100 animate-pulse" />
               ))}
-            </StaggerContainer>
+            </div>
           )}
+
+          {/* Empty state */}
+          {!loading && filteredProjects.length === 0 && (
+            <div className="text-center py-24">
+              <p style={{ fontFamily: ff }} className="text-[#999] tracking-[2px] text-[14px]">
+                No projects found.
+              </p>
+            </div>
+          )}
+
+          {/* Project grid — AnimatePresence for filter switch */}
+          {!loading && filteredProjects.length > 0 && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                {filteredProjects.map((project, i) => (
+                  <ProjectCard key={project.id} project={project} index={i} />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          )}
+
         </div>
       </section>
 
