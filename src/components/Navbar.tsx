@@ -92,7 +92,9 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${
+        isDark ? 'bg-white border-b border-[#e8e8e8]' : 'bg-transparent'
+      }`}>
         <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between">
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">

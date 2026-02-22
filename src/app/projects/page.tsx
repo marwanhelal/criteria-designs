@@ -85,8 +85,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           />
         </div>
 
-        {/* Info — white background, Open Sans, F+P proportions */}
-        <div className="bg-white pt-4 pb-5 flex items-start justify-between gap-4">
+        {/* Info — light gray background, Open Sans, F+P proportions */}
+        <div className="bg-[#f5f5f5] px-4 pt-4 pb-5 flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h3 className="font-[var(--font-open-sans)] text-[#111] text-[16px] lg:text-[18px] font-semibold leading-snug transition-colors duration-300 group-hover:text-[#444]">
               {project.titleEn}
@@ -186,7 +186,7 @@ export default function ProjectsPage() {
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i}>
                   <div className="w-full bg-gray-100 animate-pulse" style={{ aspectRatio: '16/10' }} />
-                  <div className="pt-4 pb-5 flex justify-between items-start gap-4">
+                  <div className="bg-[#f5f5f5] px-4 pt-4 pb-5 flex justify-between items-start gap-4">
                     <div className="flex-1 space-y-2">
                       <div className="h-[17px] bg-gray-100 animate-pulse rounded w-3/4" />
                       <div className="h-3 bg-gray-100 animate-pulse rounded w-1/2" />
