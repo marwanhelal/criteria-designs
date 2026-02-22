@@ -14,6 +14,15 @@ interface Props {
 
 const ff = '"Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", var(--font-libre-franklin), Arial, sans-serif'
 
+const CATEGORY_LABELS: Record<string, string> = {
+  RESIDENTIAL: 'Residential',
+  COMMERCIAL: 'Commercial',
+  INTERIOR: 'Interior',
+  URBAN: 'Urban Planning',
+  LANDSCAPE: 'Landscape',
+  RENOVATION: 'Renovation',
+}
+
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params
 
@@ -41,76 +50,84 @@ export default async function ProjectDetailPage({ params }: Props) {
     <>
       <Navbar />
 
-      {/* ===== PROJECT HEADER — dark bg, white text (Figma exact) ===== */}
-      <section className="pt-[120px] pb-0 bg-black">
-        <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-[49px]">
+      {/* ===== PROJECT HEADER ===== */}
+      <section className="pt-[90px] bg-black">
+        <div className="flex flex-col lg:flex-row">
 
-          {/* Left panel — w-382 h-474 per Figma, padded only on left */}
-          <div className="px-8 lg:pl-[84px] lg:pr-0 lg:w-[382px] shrink-0 flex flex-col justify-between pb-8 lg:pb-0 lg:h-[474px]">
+          {/* Left info panel */}
+          <div className="px-8 lg:pl-[84px] lg:pr-10 lg:w-[400px] shrink-0 flex flex-col justify-between py-10 lg:py-14 lg:h-[474px]">
 
-            {/* Top: title + year + description */}
-            <div className="flex flex-col gap-[22px]">
+            <div className="flex flex-col gap-6">
+              {/* Category badge */}
+              {project.category && (
+                <span className="font-[var(--font-open-sans)] self-start text-[10px] tracking-[2px] uppercase text-[#B1A490] border border-[#B1A490]/40 px-3 py-[5px] rounded-full">
+                  {CATEGORY_LABELS[project.category] || project.category}
+                </span>
+              )}
+
+              {/* Title */}
               <div>
                 <h1
                   style={{ fontFamily: ff }}
-                  className="text-[36px] lg:text-[40px] text-white font-normal leading-none"
+                  className="text-[40px] lg:text-[48px] text-white font-normal leading-none"
                 >
                   {project.titleEn}
                 </h1>
-                {project.yearCompleted && (
-                  <p
-                    style={{ fontFamily: ff }}
-                    className="text-[19px] text-white mt-[6px] tracking-[0.95px]"
-                  >
-                    {project.yearCompleted}
+                {(project.yearCompleted || project.location) && (
+                  <p className="font-[var(--font-open-sans)] text-[11px] text-[rgba(255,255,255,0.38)] tracking-[1.5px] uppercase mt-3">
+                    {[project.yearCompleted, project.location].filter(Boolean).join(' · ')}
                   </p>
                 )}
               </div>
-              <p
-                style={{ fontFamily: ff }}
-                className="text-[17px] lg:text-[19px] text-white tracking-[0.95px] leading-[1.15]"
-              >
+
+              {/* Accent line */}
+              <div className="w-6 h-px bg-[#B1A490]/40" />
+
+              {/* Description */}
+              <p className="font-[var(--font-open-sans)] text-[13px] text-[rgba(255,255,255,0.58)] leading-[1.9]">
                 {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
-                {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '...' : ''}
+                {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '…' : ''}
               </p>
             </div>
 
-            {/* Bottom: developer — Figma: gap-12, size-91 rounded-8 */}
+            {/* Developer */}
             {project.clientName && (
-              <div className="flex flex-col gap-[12px] mt-8 lg:mt-0">
-                <span
-                  style={{ fontFamily: ff }}
-                  className="text-[19px] text-white tracking-[0.95px] uppercase"
-                >
+              <div className="pt-6 mt-8 border-t border-[rgba(255,255,255,0.07)]">
+                <p className="font-[var(--font-open-sans)] text-[10px] tracking-[2.5px] uppercase text-[rgba(255,255,255,0.3)] mb-4">
                   Developer
-                </span>
-                <div className="w-[91px] h-[91px] rounded-[8px] overflow-hidden shrink-0">
-                  {project.clientLogo ? (
-                    <Image
-                      src={project.clientLogo}
-                      alt={project.clientName}
-                      width={91}
-                      height={91}
-                      className="object-cover w-full h-full"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-[#333] flex items-center justify-center">
-                      <span style={{ fontFamily: ff }} className="text-[12px] text-white text-center px-2">
-                        {project.clientName}
-                      </span>
-                    </div>
-                  )}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-[50px] h-[50px] rounded-[6px] overflow-hidden shrink-0 bg-[#1e1e1e]">
+                    {project.clientLogo ? (
+                      <Image
+                        src={project.clientLogo}
+                        alt={project.clientName}
+                        width={50}
+                        height={50}
+                        className="object-cover w-full h-full"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#2a2a2a] flex items-center justify-center">
+                        <span className="font-[var(--font-open-sans)] text-[9px] text-white/40 text-center px-1">
+                          {project.clientName}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <span className="font-[var(--font-open-sans)] text-[12px] text-[rgba(255,255,255,0.5)]">
+                    {project.clientName}
+                  </span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Right — Hero Image extends to right viewport edge */}
+          {/* Hero image — fills remaining width */}
           {heroImage ? (
             <HeroLightbox heroImage={heroImage} title={project.titleEn} />
           ) : (
-            <div className="flex-1 relative h-[280px] lg:h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
+            <div className="flex-1 h-[280px] lg:h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
               <span className="text-[#555] text-sm">No image</span>
             </div>
           )}
@@ -118,45 +135,48 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ===== GALLERY GRID — dark bg, 414×233 per Figma, click-to-zoom ===== */}
+      {/* ===== GALLERY ===== */}
       {galleryImages.length > 0 && (
-        <section className="px-8 lg:px-[84px] pt-6 pb-[80px] bg-black">
+        <section className="px-8 lg:px-[84px] pt-14 pb-[80px] bg-black border-t border-[rgba(255,255,255,0.06)]">
+          <div className="flex items-center gap-5 mb-10">
+            <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Gallery</span>
+            <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+          </div>
           <GalleryGrid images={galleryImages} projectTitle={project.titleEn} />
         </section>
       )}
 
-      {/* ===== PROJECT TIMELINE — animated, dark bg ===== */}
+      {/* ===== TIMELINE ===== */}
       {project.timeline.length > 0 && (
-        <section className="py-[80px] px-8 lg:px-[84px] bg-black">
-          <h2
-            style={{ fontFamily: ff }}
-            className="text-[42px] lg:text-[64px] text-white font-normal leading-none tracking-[3.2px] mb-[80px]"
-          >
-            project time-line
-          </h2>
+        <section className="py-[80px] px-8 lg:px-[84px] bg-black border-t border-[rgba(255,255,255,0.06)]">
+          <div className="flex items-center gap-5 mb-16">
+            <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Design Process</span>
+            <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+          </div>
           <TimelineSection entries={project.timeline} />
         </section>
       )}
 
-      {/* ===== FINAL DESIGN REVEAL — dark bg, full-width images ===== */}
+      {/* ===== FINAL REVEAL ===== */}
       {(project.finalRevealTitleEn || project.finalRevealSubtitleEn || showcaseImages.length > 0) && (
-        <section className="bg-black border-t border-[rgba(255,255,255,0.1)]">
+        <section className="bg-black border-t border-[rgba(255,255,255,0.06)]">
 
           {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
             <div className="pt-[80px] pb-[60px] px-8 lg:px-[84px]">
+              <div className="flex items-center gap-5 mb-10">
+                <span className="font-[var(--font-open-sans)] text-[10px] tracking-[3px] uppercase text-[#B1A490]">Final Design</span>
+                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+              </div>
               {project.finalRevealTitleEn && (
                 <h2
                   style={{ fontFamily: ff }}
-                  className="text-[42px] lg:text-[64px] text-white font-normal leading-none tracking-[3.2px] mb-6"
+                  className="text-[36px] lg:text-[52px] text-white font-normal leading-none tracking-[1px] mb-5"
                 >
                   {project.finalRevealTitleEn}
                 </h2>
               )}
               {project.finalRevealSubtitleEn && (
-                <p
-                  style={{ fontFamily: ff }}
-                  className="text-[18px] lg:text-[32px] text-[rgba(255,255,255,0.75)] font-normal leading-[1.3] tracking-[0.5px] max-w-[900px]"
-                >
+                <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[16px] text-[rgba(255,255,255,0.55)] leading-[1.9] max-w-[640px]">
                   {project.finalRevealSubtitleEn}
                 </p>
               )}
