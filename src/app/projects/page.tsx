@@ -45,51 +45,31 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: (index % 3) * 0.07 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: (index % 3) * 0.07, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Rounded card — overflow-hidden clips image + info box into one shape */}
       <Link
         href={`/projects/${project.slug}`}
         className="group block rounded-2xl overflow-hidden shadow-[0_1px_6px_rgba(0,0,0,0.09)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.14)] transition-shadow duration-300"
       >
-
-        {/* Image — white curtain reveal, fills top of rounded card */}
+        {/* Image */}
         <div className="relative overflow-hidden bg-[#e0e0e0]" style={{ aspectRatio: '4/3' }}>
-          <motion.div
-            className="absolute inset-0"
-            variants={{
-              hidden: { scale: 1.1 },
-              visible: { scale: 1, transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] as const } },
-            }}
-          >
-            {thumb ? (
-              <Image
-                src={thumb}
-                alt={project.titleEn}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                unoptimized
-              />
-            ) : (
-              <div className="w-full h-full bg-[#d0d0d0]" />
-            )}
-          </motion.div>
-
-          {/* White curtain wipes off to the right */}
-          <motion.div
-            className="absolute inset-0 bg-white z-10 origin-right"
-            variants={{
-              hidden: { scaleX: 1 },
-              visible: { scaleX: 0, transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] as const } },
-            }}
-          />
+          {thumb ? (
+            <Image
+              src={thumb}
+              alt={project.titleEn}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              unoptimized
+            />
+          ) : (
+            <div className="w-full h-full bg-[#d0d0d0]" />
+          )}
         </div>
 
-        {/* Info — fills bottom of rounded card */}
+        {/* Info */}
         <div className="bg-[#f5f5f5] px-5 pt-[14px] pb-[18px] flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h3 className="font-[var(--font-open-sans)] text-[#1a1a1a] text-[15px] lg:text-[17px] font-medium leading-snug transition-colors duration-300 group-hover:text-[#444]">
@@ -101,21 +81,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               </p>
             )}
           </div>
-
-          {/* → arrow circle */}
           <div className="shrink-0 mt-[2px] w-8 h-8 rounded-full border border-[#c8c8c8] flex items-center justify-center transition-all duration-300 group-hover:bg-[#1a1a1a] group-hover:border-[#1a1a1a] text-[#666] group-hover:text-white">
             <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
-              <path
-                d="M1 5H13M13 5L9 1M13 5L9 9"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
-
       </Link>
     </motion.div>
   )
