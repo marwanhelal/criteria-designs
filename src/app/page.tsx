@@ -83,11 +83,11 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
 
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
-      {/* Image */}
+      {/* Image — edge-to-edge right, taller 3:2 ratio */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '16/9' }}
+        style={{ aspectRatio: '3/2' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -115,8 +115,8 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
         </div>
       </div>
 
-      {/* Info below image — YBA style */}
-      <div className="pt-5 pb-5 border-b border-[#181C23]/10">
+      {/* Info below image — YBA style, with right padding on text only */}
+      <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10">
         <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
@@ -244,10 +244,10 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Scrolling right — projects stacked vertically */}
-          <div className="flex-1 px-8 lg:pr-16 lg:pl-0 py-16 lg:py-24 space-y-14 lg:space-y-20">
+          {/* Scrolling right — projects stacked vertically, no horizontal padding (images go edge-to-edge) */}
+          <div className="flex-1 py-16 lg:py-24 space-y-14 lg:space-y-20">
             {portfolioProjects.length === 0 ? (
-              <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20">
+              <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20 px-8">
                 No projects yet. Add projects from the CMS.
               </p>
             ) : (
