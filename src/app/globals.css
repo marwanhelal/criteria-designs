@@ -6,6 +6,13 @@
   --text: #666666;
   --background: #ffffff;
   --foreground: #181C23;
+  --nav-h: 72px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 90px;
+  }
 }
 
 @theme inline {

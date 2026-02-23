@@ -117,8 +117,15 @@ export default function ProjectsPage() {
         Navbar is 72px tall on mobile, 90px on desktop.
       */}
       <div
-        className="fixed top-[72px] md:top-[90px] left-0 right-0 z-40 bg-white"
-        style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+        style={{
+          position: 'fixed',
+          top: 'var(--nav-h)',
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#ffffff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        }}
       >
         {/* Row 1: title + count */}
         <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
