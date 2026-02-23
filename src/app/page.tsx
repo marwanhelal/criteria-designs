@@ -174,6 +174,8 @@ export default function Home() {
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative w-full h-screen min-h-[500px]">
+        {/* Dark gradient at top — ensures white navbar text is always readable */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10" />
         <div className="absolute inset-0">
           {heroVideo ? (
             <>
