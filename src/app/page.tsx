@@ -78,13 +78,12 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = containerRef.current?.getBoundingClientRect()
-    if (rect) {
-      setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-    }
+    if (rect) setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }
 
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
+      {/* Image */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
@@ -105,26 +104,23 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
         ) : (
           <div className="absolute inset-0 bg-[#f0ede8]" />
         )}
-        {/* Mouse-following circular View button */}
+        {/* Mouse-following circular View button — YBA style */}
         <div
-          className={`absolute pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-          style={{
-            left: mousePos.x,
-            top: mousePos.y,
-            transform: 'translate(-50%, -50%)',
-          }}
+          className={`absolute pointer-events-none transition-all duration-300 ${hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+          style={{ left: mousePos.x, top: mousePos.y, transform: 'translate(-50%, -50%) scale(1)' }}
         >
-          <div className={`w-[88px] h-[88px] rounded-full bg-[#B1A490] flex items-center justify-center transition-transform duration-300 ${hovered ? 'scale-100' : 'scale-75'}`}>
+          <div className="w-[96px] h-[96px] rounded-full bg-[#181C23] flex items-center justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
           </div>
         </div>
       </div>
-      {/* Info below image */}
+
+      {/* Info below image — YBA style */}
       <div className="pt-5 pb-5 border-b border-[#181C23]/10">
-        <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[4px]">
+        <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
-        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[26px] text-[#181C23] mt-2 group-hover:text-[#B1A490] transition-colors duration-300">
+        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-[#181C23] group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
           {project.titleEn}
         </h3>
       </div>
@@ -156,7 +152,6 @@ export default function Home() {
 
   const displayProjects = projects.length > 0 ? projects : []
   const displayServices = services.length > 0 ? services : []
-  const featuredProject = displayProjects.length > 0 ? displayProjects[0] : null
   // CMS-controlled portfolio list: use showcaseProjects if set, else all published
   const portfolioProjects = (settings?.showcaseProjects && settings.showcaseProjects.length > 0)
     ? settings.showcaseProjects
@@ -240,10 +235,10 @@ export default function Home() {
             </h2>
             <Link
               href="/projects"
-              className="inline-flex items-center gap-4 mt-10 group"
+              className="inline-flex items-center gap-3 mt-10 bg-[#181C23] hover:bg-[#B1A490] text-white px-7 py-4 rounded-full transition-colors duration-300"
             >
-              <span className="block w-8 h-px bg-[#B1A490] group-hover:w-14 transition-all duration-300" />
-              <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#181C23] uppercase tracking-[3px]">
+              <span className="block w-5 h-px bg-white/60" />
+              <span className="font-[var(--font-libre-franklin)] text-[12px] uppercase tracking-[3px]">
                 View All Projects
               </span>
             </Link>
