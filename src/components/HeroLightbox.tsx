@@ -29,7 +29,7 @@ export default function HeroLightbox({ heroImage, title }: Props) {
     <>
       {/* Cinematic curtain reveal — hero fills right edge on desktop */}
       <motion.div
-        className="flex-1 relative h-[280px] lg:h-[474px] overflow-hidden bg-[#0a0a0a] mx-8 lg:mx-0 cursor-zoom-in group"
+        className="flex-1 relative h-[280px] lg:min-h-[474px] overflow-hidden bg-[#0a0a0a] mx-8 lg:mx-0 cursor-zoom-in group"
         initial="hidden"
         animate="visible"
         onClick={() => setOpen(true)}

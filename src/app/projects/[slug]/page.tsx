@@ -52,51 +52,49 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div className="flex flex-col lg:flex-row">
 
           {/* Left info panel */}
-          <div className="px-8 lg:pl-[84px] lg:pr-10 lg:w-[400px] shrink-0 flex flex-col justify-between py-10 lg:py-14 lg:h-[474px]">
+          <div className="px-8 lg:pl-[84px] lg:pr-10 lg:w-[400px] shrink-0 flex flex-col gap-6 py-10 lg:py-14">
 
-            <div className="flex flex-col gap-6">
-              {/* Category badge */}
-              {project.category && (
-                <span className="font-[var(--font-open-sans)] self-start text-[10px] tracking-[2px] uppercase text-[#B1A490] border border-[#B1A490]/40 px-3 py-[5px] rounded-full">
-                  {CATEGORY_LABELS[project.category] || project.category}
-                </span>
+            {/* Category badge */}
+            {project.category && (
+              <span className="font-[var(--font-open-sans)] self-start text-[10px] tracking-[2px] uppercase text-[#B1A490] border border-[#B1A490]/40 px-3 py-[5px] rounded-full">
+                {CATEGORY_LABELS[project.category] || project.category}
+              </span>
+            )}
+
+            {/* Title */}
+            <div>
+              <h1 className="font-[var(--font-merriweather)] text-[36px] lg:text-[44px] text-white font-light leading-none tracking-[0.3px]">
+                {project.titleEn}
+              </h1>
+              {(project.yearCompleted || project.location) && (
+                <p className="font-[var(--font-open-sans)] text-[11px] text-[rgba(255,255,255,0.38)] tracking-[1.5px] uppercase mt-3">
+                  {[project.yearCompleted, project.location].filter(Boolean).join(' · ')}
+                </p>
               )}
-
-              {/* Title */}
-              <div>
-                <h1 className="font-[var(--font-merriweather)] text-[36px] lg:text-[44px] text-white font-light leading-none tracking-[0.3px]">
-                  {project.titleEn}
-                </h1>
-                {(project.yearCompleted || project.location) && (
-                  <p className="font-[var(--font-open-sans)] text-[11px] text-[rgba(255,255,255,0.38)] tracking-[1.5px] uppercase mt-3">
-                    {[project.yearCompleted, project.location].filter(Boolean).join(' · ')}
-                  </p>
-                )}
-              </div>
-
-              {/* Accent line */}
-              <div className="w-6 h-px bg-[#B1A490]/40" />
-
-              {/* Description */}
-              <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[15px] text-[rgba(255,255,255,0.62)] leading-[1.85]">
-                {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
-                {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '…' : ''}
-              </p>
             </div>
+
+            {/* Accent line */}
+            <div className="w-6 h-px bg-[#B1A490]/40" />
+
+            {/* Description */}
+            <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[15px] text-[rgba(255,255,255,0.62)] leading-[1.85]">
+              {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
+              {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '…' : ''}
+            </p>
 
             {/* Developer */}
             {project.clientName && (
-              <div className="pt-6 mt-8 border-t border-[rgba(255,255,255,0.07)]">
+              <div className="pt-5 mt-2 border-t border-[rgba(255,255,255,0.07)]">
                 <p className="font-[var(--font-open-sans)] text-[10px] tracking-[2.5px] uppercase text-[rgba(255,255,255,0.3)] mb-4">
                   Developer
                 </p>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-3">
                   {project.clientLogo && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={project.clientLogo}
                       alt={project.clientName}
-                      className="max-h-[52px] w-auto object-contain shrink-0"
+                      className="h-[38px] w-auto max-w-[140px] object-contain object-left"
                     />
                   )}
                   <span className="font-[var(--font-open-sans)] text-[13px] text-[rgba(255,255,255,0.55)]">
@@ -111,7 +109,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           {heroImage ? (
             <HeroLightbox heroImage={heroImage} title={project.titleEn} />
           ) : (
-            <div className="flex-1 h-[280px] lg:h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
+            <div className="flex-1 h-[280px] lg:min-h-[474px] bg-[#1a1a1a] mx-8 lg:mx-0 flex items-center justify-center">
               <span className="text-[#555] text-sm">No image</span>
             </div>
           )}
