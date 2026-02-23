@@ -86,7 +86,7 @@ function ImageBlock({
   return (
     <motion.div
       className={align === 'right' ? 'ml-auto' : ''}
-      style={{ maxWidth: 380, width: '100%' }}
+      style={{ maxWidth: 460, width: '100%' }}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.75, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
@@ -113,7 +113,7 @@ function ImageBlock({
           src={entry.image}
           alt={entry.titleEn}
           fill
-          sizes="380px"
+          sizes="460px"
           className="object-cover"
           unoptimized
         />
