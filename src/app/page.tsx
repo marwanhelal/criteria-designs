@@ -227,7 +227,7 @@ export default function Home() {
       <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
-      <section className="bg-white">
+      <section data-navbar-dark className="bg-white">
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
