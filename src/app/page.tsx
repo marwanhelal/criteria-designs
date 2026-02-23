@@ -83,11 +83,11 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
 
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
-      {/* Image — edge-to-edge right, taller 3:2 ratio */}
+      {/* Image — edge-to-edge right, square 4:3 ratio */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '3/2' }}
+        style={{ aspectRatio: '4/3' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
