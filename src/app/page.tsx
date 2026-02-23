@@ -244,8 +244,8 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Scrolling right — no top padding, image starts flush at section top */}
-          <div className="flex-1 pb-16 lg:pb-24 space-y-14 lg:space-y-20">
+          {/* Scrolling right */}
+          <div className="flex-1 pt-16 lg:pt-20 pb-16 lg:pb-24 space-y-14 lg:space-y-20">
             {portfolioProjects.length === 0 ? (
               <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20 px-8">
                 No projects yet. Add projects from the CMS.
