@@ -88,18 +88,23 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <p className="font-[var(--font-open-sans)] text-[10px] tracking-[2.5px] uppercase text-[rgba(255,255,255,0.3)] mb-4">
                   Developer
                 </p>
-                <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-4 px-4 py-4 rounded-xl border border-white/[0.08] bg-white/[0.04]">
                   {project.clientLogo && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={project.clientLogo}
                       alt={project.clientName}
-                      className="h-[38px] w-auto max-w-[140px] object-contain object-left"
+                      className="h-[52px] w-auto max-w-[80px] object-contain shrink-0"
                     />
                   )}
-                  <span className="font-[var(--font-open-sans)] text-[13px] text-[rgba(255,255,255,0.55)]">
-                    {project.clientName}
-                  </span>
+                  <div className="min-w-0">
+                    <p className="font-[var(--font-libre-franklin)] text-[9px] tracking-[2.5px] uppercase text-[#B1A490] mb-[5px]">
+                      Client
+                    </p>
+                    <p className="font-[var(--font-open-sans)] text-[14px] text-white/85 font-medium leading-snug truncate">
+                      {project.clientName}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
