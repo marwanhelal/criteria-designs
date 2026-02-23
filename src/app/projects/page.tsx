@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import Navbar from '@/components/Navbar'
+import { usePathname } from 'next/navigation'
 import Footer from '@/components/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -26,6 +26,11 @@ interface Project {
   images: { id: string; url: string; alt: string | null }[]
 }
 
+interface Settings {
+  logo: string | null
+  companyNameEn: string
+}
+
 const categories = [
   { value: 'ALL', label: 'All' },
   { value: 'RESIDENTIAL', label: 'Residential' },
@@ -34,6 +39,179 @@ const categories = [
   { value: 'URBAN', label: 'Urban Planning' },
   { value: 'LANDSCAPE', label: 'Landscape' },
 ]
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/services', label: 'Services' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+]
+
+// ── Self-contained fixed header (replaces Navbar + info bar) ─────────────────
+function ProjectsHeader({
+  filteredCount,
+  loading,
+  activeCategory,
+  onCategoryChange,
+}: {
+  filteredCount: number
+  loading: boolean
+  activeCategory: string
+  onCategoryChange: (cat: string) => void
+}) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [settings, setSettings] = useState<Settings | null>(null)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setSettings(data))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => { setMenuOpen(false) }, [pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  return (
+    <>
+      {/* ONE fixed element at top:0 — inline style cannot be overridden by any CSS */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          backgroundColor: '#ffffff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* Row 1: Logo + Hamburger */}
+        <div className="px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between border-b border-[#e8e8e8]">
+          <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
+            {settings?.logo && (
+              <Image
+                src={settings.logo}
+                alt={settings.companyNameEn || 'Criteria Design Group'}
+                width={100}
+                height={100}
+                className="h-[52px] md:h-[72px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                unoptimized
+              />
+            )}
+            <div className="flex flex-col gap-[2px]">
+              <span className="font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+                Criteria
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="block w-[22px] md:w-[30px] h-[1px] bg-[#B1A490]/80" />
+                <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+                  Designs
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full bg-white hover:bg-gray-100 transition-colors duration-300"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
+          </button>
+        </div>
+
+        {/* Row 2: Title + Count */}
+        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+            Projects
+          </h1>
+          {!loading && (
+            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+              {filteredCount} {filteredCount === 1 ? 'Project' : 'Projects'}
+            </p>
+          )}
+        </div>
+
+        {/* Row 3: Category Filters */}
+        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3">
+          {categories.map(cat => (
+            <button
+              key={cat.value}
+              onClick={() => onCategoryChange(cat.value)}
+              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                activeCategory === cat.value
+                  ? 'text-[#111] border-b border-[#111]'
+                  : 'text-[#aaa] hover:text-[#333]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Full-screen Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-[55] transition-all duration-500 ${
+          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="absolute inset-0 bg-[#181C23]" />
+        <div className="relative z-10 h-full flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center gap-1 md:gap-2">
+            {navLinks.map((link, index) => {
+              const isActive = pathname === link.href
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`group relative overflow-hidden transition-all duration-500 ${
+                    menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  }`}
+                  style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
+                >
+                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
+                    isActive ? 'text-[#B1A490]' : 'text-white/80 group-hover:text-white'
+                  }`}>
+                    {link.label}
+                  </span>
+                  <span className={`block h-[2px] bg-[#B1A490] transition-all duration-300 ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`} />
+                </Link>
+              )
+            })}
+          </div>
+          <div className={`absolute bottom-12 left-0 right-0 px-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
+            menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
+            <p className="font-[var(--font-open-sans)] text-[14px] text-white/40">
+              &copy; {new Date().getFullYear()} Criteria Design Group
+            </p>
+            <Link
+              href="/contact"
+              onClick={() => setMenuOpen(false)}
+              className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[1px] hover:text-white transition-colors"
+            >
+              Get in touch &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
 // ── Card ─────────────────────────────────────────────────────────────────────
 function ProjectCard({ project, index }: { project: Project; index: number }) {
@@ -109,63 +287,15 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <Navbar />
+      <ProjectsHeader
+        filteredCount={filteredProjects.length}
+        loading={loading}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
 
-      {/*
-        FIXED INFO BAR — at React fragment root (same level as Navbar).
-        No parent elements = no containing block that can break position:fixed.
-        Navbar is 72px tall on mobile, 90px on desktop.
-      */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 'var(--nav-h)',
-          left: 0,
-          right: 0,
-          zIndex: 40,
-          backgroundColor: '#ffffff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-        }}
-      >
-        {/* Row 1: title + count */}
-        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
-            Projects
-          </h1>
-          {!loading && (
-            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
-              {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
-            </p>
-          )}
-        </div>
-        {/* Row 2: category filters */}
-        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
-          {categories.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
-              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                activeCategory === cat.value
-                  ? 'text-[#111] border-b border-[#111]'
-                  : 'text-[#aaa] hover:text-[#333]'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/*
-        PAGE CONTENT
-        The spacer pushes cards below BOTH fixed bars:
-          mobile  = 72px  (nav) + 113px (info bar) = 185px → 190px spacer
-          desktop = 90px  (nav) + 113px (info bar) = 203px → 210px spacer
-        These are hardcoded — no JavaScript needed — so they apply on first paint.
-      */}
-      <div data-navbar-dark className="min-h-screen bg-white">
-
-        {/* Spacer: exactly replaces the space taken by both fixed bars */}
+      <div className="min-h-screen bg-white">
+        {/* Spacer: nav row (72/90) + title row + filter row */}
         <div className="h-[190px] md:h-[210px]" />
 
         <div className="px-6 lg:px-[52px] pt-10 pb-20">
