@@ -14,15 +14,6 @@ interface Props {
   projectTitle: string
 }
 
-const curtainV = {
-  hidden: { scaleX: 1 },
-  visible: { scaleX: 0, transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] as const } },
-}
-const imageV = {
-  hidden: { scale: 1.12 },
-  visible: { scale: 1, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const } },
-}
-
 function ExpandIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -32,34 +23,38 @@ function ExpandIcon() {
   )
 }
 
-function GalleryItem({
+function Tile({
   image,
   projectTitle,
-  ratio,
+  index,
   onClick,
+  style,
 }: {
   image: GalleryImage
   projectTitle: string
-  ratio: string
+  index: number
   onClick: () => void
+  style?: React.CSSProperties
 }) {
   return (
     <motion.div
-      variants={{ hidden: {}, visible: {} }}
-      className="relative overflow-hidden cursor-zoom-in group"
-      style={{ aspectRatio: ratio }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.65, delay: (index % 5) * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="relative overflow-hidden rounded-2xl cursor-zoom-in group"
+      style={style}
       onClick={onClick}
     >
-      <motion.div className="absolute inset-0" variants={imageV}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image.url}
-          alt={image.alt || projectTitle}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-        />
-      </motion.div>
-      <motion.div className="absolute inset-0 bg-[#0a0a0a] z-10 origin-right" variants={curtainV} />
-      <div className="absolute inset-0 z-20 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image.url}
+        alt={image.alt || projectTitle}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+      />
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="w-11 h-11 border border-white/70 rounded-full flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-300">
           <ExpandIcon />
         </div>
@@ -93,65 +88,89 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
 
   if (images.length === 0) return null
 
-  const featured = images[0]
-  const rest = images.slice(1)
+  const openImg = (i: number) => { setIndex(i); setOpen(true) }
 
-  // Grid columns based on remaining count
-  const gridCols =
-    rest.length === 1 ? 'grid-cols-1'
-    : rest.length === 2 ? 'grid-cols-2'
-    : 'grid-cols-2 lg:grid-cols-3'
+  // Build rows: alternate between left-wide and right-wide bento groups of 3
+  // Leftover 1 or 2 images get their own simple row
+  const rows: React.ReactNode[] = []
+  let i = 0
+  let groupIdx = 0
+
+  while (i < images.length) {
+    const remaining = images.length - i
+
+    if (remaining >= 3) {
+      const g = images.slice(i, i + 3)
+      const base = i
+      const leftWide = groupIdx % 2 === 0
+
+      rows.push(
+        <div
+          key={`bento-${i}`}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: leftWide ? '2fr 1fr' : '1fr 2fr',
+            gridTemplateRows: 'repeat(2, 1fr)',
+            gap: '12px',
+            aspectRatio: '2 / 1',
+          }}
+        >
+          {leftWide ? (
+            <>
+              {/* Wide left */}
+              <Tile
+                image={g[0]} projectTitle={projectTitle} index={base}
+                onClick={() => openImg(base)}
+                style={{ gridColumn: '1', gridRow: '1 / 3' }}
+              />
+              {/* Stacked right */}
+              <Tile image={g[1]} projectTitle={projectTitle} index={base + 1} onClick={() => openImg(base + 1)} style={{ gridColumn: '2', gridRow: '1' }} />
+              <Tile image={g[2]} projectTitle={projectTitle} index={base + 2} onClick={() => openImg(base + 2)} style={{ gridColumn: '2', gridRow: '2' }} />
+            </>
+          ) : (
+            <>
+              {/* Stacked left */}
+              <Tile image={g[0]} projectTitle={projectTitle} index={base} onClick={() => openImg(base)} style={{ gridColumn: '1', gridRow: '1' }} />
+              <Tile image={g[1]} projectTitle={projectTitle} index={base + 1} onClick={() => openImg(base + 1)} style={{ gridColumn: '1', gridRow: '2' }} />
+              {/* Wide right */}
+              <Tile
+                image={g[2]} projectTitle={projectTitle} index={base + 2}
+                onClick={() => openImg(base + 2)}
+                style={{ gridColumn: '2', gridRow: '1 / 3' }}
+              />
+            </>
+          )}
+        </div>
+      )
+      i += 3
+      groupIdx++
+    } else if (remaining === 2) {
+      const g = images.slice(i, i + 2)
+      const base = i
+      rows.push(
+        <div key={`pair-${i}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <Tile image={g[0]} projectTitle={projectTitle} index={base} onClick={() => openImg(base)} style={{ aspectRatio: '4/3' }} />
+          <Tile image={g[1]} projectTitle={projectTitle} index={base + 1} onClick={() => openImg(base + 1)} style={{ aspectRatio: '4/3' }} />
+        </div>
+      )
+      i += 2
+    } else {
+      const base = i
+      rows.push(
+        <Tile
+          key={`solo-${i}`} image={images[i]} projectTitle={projectTitle} index={base}
+          onClick={() => openImg(base)}
+          style={{ aspectRatio: '21/9' }}
+        />
+      )
+      i += 1
+    }
+  }
 
   return (
     <>
-      <div className="space-y-[6px]">
-
-        {/* ── Featured first image — full width, 16:9 ── */}
-        <motion.div
-          className="relative overflow-hidden cursor-zoom-in group"
-          style={{ aspectRatio: '16/9' }}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-          variants={{ visible: { transition: { staggerChildren: 0 } } }}
-          onClick={() => { setIndex(0); setOpen(true) }}
-        >
-          <motion.div className="absolute inset-0" variants={imageV}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={featured.url}
-              alt={featured.alt || projectTitle}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-          </motion.div>
-          <motion.div className="absolute inset-0 bg-[#0a0a0a] z-10 origin-right" variants={curtainV} />
-          <div className="absolute inset-0 z-20 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-end p-5">
-            <div className="w-10 h-10 border border-white/60 rounded-full flex items-center justify-center">
-              <ExpandIcon />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── Remaining images — grid, 4:3 ── */}
-        {rest.length > 0 && (
-          <motion.div
-            className={`grid ${gridCols} gap-[6px]`}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            {rest.map((image, i) => (
-              <GalleryItem
-                key={image.id}
-                image={image}
-                projectTitle={projectTitle}
-                ratio="4/3"
-                onClick={() => { setIndex(i + 1); setOpen(true) }}
-              />
-            ))}
-          </motion.div>
-        )}
+      <div className="space-y-3">
+        {rows}
       </div>
 
       {/* Lightbox */}
