@@ -72,24 +72,28 @@ interface PortfolioItem {
 }
 
 function PortfolioCard({ project }: { project: PortfolioItem }) {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [hovered, setHovered] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const cursorRef = useRef<HTMLDivElement>(null)
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // Update cursor position directly on DOM — no React re-render, no lag
+  const updateCursor = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = containerRef.current?.getBoundingClientRect()
-    if (rect) setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    if (rect && cursorRef.current) {
+      cursorRef.current.style.left = `${e.clientX - rect.left}px`
+      cursorRef.current.style.top = `${e.clientY - rect.top}px`
+    }
   }
 
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
-      {/* Image — edge-to-edge right, wide 16:9 ratio */}
+      {/* Image — wide 21:9 cinematic ratio */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '16/9' }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setHovered(true)}
+        style={{ aspectRatio: '21/9' }}
+        onMouseMove={updateCursor}
+        onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
         onMouseLeave={() => setHovered(false)}
       >
         {project.images?.[0] ? (
@@ -97,17 +101,18 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
             src={project.images[0].url}
             alt={project.images[0].alt || project.titleEn}
             fill
-            sizes="(max-width: 1024px) 100vw, 62vw"
+            sizes="(max-width: 1024px) 100vw, 66vw"
             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
             unoptimized
           />
         ) : (
           <div className="absolute inset-0 bg-[#f0ede8]" />
         )}
-        {/* Mouse-following circular View button — YBA style */}
+        {/* Cursor circle — position updated via ref (no re-renders) */}
         <div
-          className={`absolute pointer-events-none transition-all duration-300 ${hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
-          style={{ left: mousePos.x, top: mousePos.y, transform: 'translate(-50%, -50%) scale(1)' }}
+          ref={cursorRef}
+          className={`absolute pointer-events-none transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transform: 'translate(-50%, -50%)' }}
         >
           <div className="w-[96px] h-[96px] rounded-full bg-[#181C23] flex items-center justify-center">
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
@@ -115,12 +120,12 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
         </div>
       </div>
 
-      {/* Info below image — YBA style, with right padding on text only */}
+      {/* Info below image */}
       <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10">
         <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
-        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-[#181C23] group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
+        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
           {project.titleEn}
         </h3>
       </div>
