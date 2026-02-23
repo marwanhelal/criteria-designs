@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
@@ -95,21 +95,6 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('ALL')
 
-  // Measure info bar height dynamically so content is never hidden under it
-  const infoBarRef = useRef<HTMLDivElement>(null)
-  const [paddingTop, setPaddingTop] = useState(220) // safe default
-
-  useEffect(() => {
-    const update = () => {
-      const navH = window.innerWidth >= 768 ? 90 : 72
-      const barH = infoBarRef.current ? infoBarRef.current.offsetHeight : 130
-      setPaddingTop(navH + barH)
-    }
-    update()
-    window.addEventListener('resize', update, { passive: true })
-    return () => window.removeEventListener('resize', update)
-  }, [])
-
   useEffect(() => {
     fetch('/api/projects?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
@@ -127,18 +112,15 @@ export default function ProjectsPage() {
       <Navbar />
 
       {/*
-        ── FIXED INFO BAR ──────────────────────────────────────────────────────
-        Placed at the React fragment root — same level as <Navbar />.
-        This guarantees no parent element can create a containing block that
-        would break position:fixed (no transforms, overflow, or filter ancestors).
-        Uses Tailwind's responsive top to sit flush under the fixed navbar.
+        FIXED INFO BAR — at React fragment root (same level as Navbar).
+        No parent elements = no containing block that can break position:fixed.
+        Navbar is 72px tall on mobile, 90px on desktop.
       */}
       <div
-        ref={infoBarRef}
         className="fixed top-[72px] md:top-[90px] left-0 right-0 z-40 bg-white"
         style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
       >
-        {/* "Projects" left + count right */}
+        {/* Row 1: title + count */}
         <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
           <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
             Projects
@@ -149,8 +131,7 @@ export default function ProjectsPage() {
             </p>
           )}
         </div>
-
-        {/* Category filters */}
+        {/* Row 2: category filters */}
         <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 border-b border-[#e8e8e8]">
           {categories.map(cat => (
             <button
@@ -169,16 +150,17 @@ export default function ProjectsPage() {
       </div>
 
       {/*
-        ── PAGE CONTENT ────────────────────────────────────────────────────────
-        paddingTop pushes content below both fixed bars (navbar + info bar).
-        Measured dynamically; safe default of 220px prevents content hiding on
-        first render.
+        PAGE CONTENT
+        The spacer pushes cards below BOTH fixed bars:
+          mobile  = 72px  (nav) + 113px (info bar) = 185px → 190px spacer
+          desktop = 90px  (nav) + 113px (info bar) = 203px → 210px spacer
+        These are hardcoded — no JavaScript needed — so they apply on first paint.
       */}
-      <div
-        data-navbar-dark
-        className="min-h-screen bg-white"
-        style={{ paddingTop }}
-      >
+      <div data-navbar-dark className="min-h-screen bg-white">
+
+        {/* Spacer: exactly replaces the space taken by both fixed bars */}
+        <div className="h-[190px] md:h-[210px]" />
+
         <div className="px-6 lg:px-[52px] pt-10 pb-20">
 
           {/* Skeleton */}
