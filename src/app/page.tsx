@@ -83,11 +83,11 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
 
   return (
     <Link href={`/projects/${project.slug}`} className="group block">
-      {/* Image — edge-to-edge right, square 4:3 ratio */}
+      {/* Image — edge-to-edge right, wide 16:9 ratio */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '4/3' }}
+        style={{ aspectRatio: '16/9' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -226,7 +226,7 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
-          <div className="lg:w-[38%] shrink-0 px-8 lg:pl-16 lg:pr-12 py-16 lg:py-24 lg:sticky lg:top-[90px] lg:self-start">
+          <div className="lg:w-[34%] shrink-0 px-8 lg:pl-16 lg:pr-10 py-16 lg:py-20 lg:sticky lg:top-[90px] lg:self-start">
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
@@ -244,8 +244,8 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Scrolling right — projects stacked vertically, no horizontal padding (images go edge-to-edge) */}
-          <div className="flex-1 py-16 lg:py-24 space-y-14 lg:space-y-20">
+          {/* Scrolling right — no top padding, image starts flush at section top */}
+          <div className="flex-1 pb-16 lg:pb-24 space-y-14 lg:space-y-20">
             {portfolioProjects.length === 0 ? (
               <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20 px-8">
                 No projects yet. Add projects from the CMS.
