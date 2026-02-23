@@ -111,8 +111,8 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
             display: 'grid',
             gridTemplateColumns: leftWide ? '2fr 1fr' : '1fr 2fr',
             gridTemplateRows: 'repeat(2, 1fr)',
-            gap: '12px',
-            aspectRatio: '2 / 1',
+            gap: '10px',
+            aspectRatio: '3 / 1',
           }}
         >
           {leftWide ? (
@@ -148,9 +148,9 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
       const g = images.slice(i, i + 2)
       const base = i
       rows.push(
-        <div key={`pair-${i}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <Tile image={g[0]} projectTitle={projectTitle} index={base} onClick={() => openImg(base)} style={{ aspectRatio: '4/3' }} />
-          <Tile image={g[1]} projectTitle={projectTitle} index={base + 1} onClick={() => openImg(base + 1)} style={{ aspectRatio: '4/3' }} />
+        <div key={`pair-${i}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <Tile image={g[0]} projectTitle={projectTitle} index={base} onClick={() => openImg(base)} style={{ aspectRatio: '16/9' }} />
+          <Tile image={g[1]} projectTitle={projectTitle} index={base + 1} onClick={() => openImg(base + 1)} style={{ aspectRatio: '16/9' }} />
         </div>
       )
       i += 2
@@ -169,7 +169,7 @@ export default function GalleryGrid({ images, projectTitle }: Props) {
 
   return (
     <>
-      <div className="space-y-3">
+      <div className="space-y-[10px]">
         {rows}
       </div>
 
