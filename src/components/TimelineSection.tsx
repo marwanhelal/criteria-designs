@@ -60,7 +60,7 @@ function TextBlock({
           fontSize: 13,
           color: 'rgba(255,255,255,0.48)',
           maxWidth: 320,
-          marginLeft: align === 'right' ? 'auto' : undefined,
+          textAlign: 'left',
         }}
       >
         {entry.descriptionEn}
