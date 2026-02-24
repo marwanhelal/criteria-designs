@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       data: {
         nameEn: body.nameEn || '',
         logo: body.logo || null,
+        bgColor: body.bgColor || '#FFFFFF',
         order: body.order ?? 0,
       },
     })

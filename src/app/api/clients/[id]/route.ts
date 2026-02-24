@@ -11,6 +11,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       data: {
         nameEn: body.nameEn,
         logo: body.logo ?? null,
+        bgColor: body.bgColor ?? '#FFFFFF',
         order: body.order ?? 0,
       },
     })

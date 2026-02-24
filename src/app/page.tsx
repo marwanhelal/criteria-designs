@@ -232,7 +232,6 @@ export default function Home() {
       <PhilosophySection />
       <CeoBanner />
       <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
-      <ClientsMarquee clients={clients} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
       <section data-navbar-dark className="bg-white">
@@ -272,6 +271,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <ClientsMarquee clients={clients} />
 
       {/* ===== SERVICES SECTION ===== */}
       <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">

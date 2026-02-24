@@ -4,17 +4,18 @@ interface Client {
   id: string
   nameEn: string
   logo?: string | null
+  bgColor?: string | null
 }
 
 function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rtl' }) {
   // Triple the array for a perfectly seamless loop
   const items = [...clients, ...clients, ...clients]
-  const duration = Math.max(20, clients.length * 4)
+  const duration = Math.max(25, clients.length * 5)
 
   return (
     <div className="overflow-hidden">
       <div
-        className="flex gap-3 w-max"
+        className="flex gap-2 w-max"
         style={{
           animation: `marquee-${direction} ${duration}s linear infinite`,
         }}
@@ -22,17 +23,20 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[130px] h-[70px] shrink-0 flex items-center justify-center px-4 py-3 rounded-lg border border-[#181C23]/[0.08] bg-white"
+            className="w-[180px] h-[100px] shrink-0 flex items-center justify-center px-5 py-4 rounded-xl overflow-hidden"
+            style={{ backgroundColor: client.bgColor || '#FFFFFF' }}
           >
             {client.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={client.logo}
                 alt={client.nameEn}
-                className="max-h-[46px] max-w-full object-contain"
+                className="max-h-[62px] max-w-full object-contain"
               />
             ) : (
-              <span className="font-[var(--font-open-sans)] text-[11px] text-[#181C23]/40 text-center leading-tight">
+              <span className="font-[var(--font-open-sans)] text-[12px] font-semibold text-center leading-tight"
+                style={{ color: client.bgColor && client.bgColor !== '#FFFFFF' ? 'rgba(255,255,255,0.7)' : 'rgba(24,28,35,0.4)' }}
+              >
                 {client.nameEn}
               </span>
             )}
@@ -67,14 +71,14 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
         }
       `}</style>
 
-      <section className="bg-white py-14 overflow-hidden">
+      <section className="bg-[#F5F0EB] py-16 overflow-hidden">
         <div className="px-8 lg:px-16 mb-10">
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
             Our Clients
           </span>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {/* Row 1 — left to right */}
           <Row clients={r1} direction="ltr" />
           {/* Row 2 — right to left */}

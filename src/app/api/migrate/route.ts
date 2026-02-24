@@ -163,6 +163,7 @@ export async function POST() {
           "id" TEXT NOT NULL,
           "nameEn" TEXT NOT NULL,
           "logo" TEXT,
+          "bgColor" TEXT NOT NULL DEFAULT '#FFFFFF',
           "order" INTEGER NOT NULL DEFAULT 0,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -172,6 +173,16 @@ export async function POST() {
       results.push('✓ Client table ensured')
     } catch (e) {
       results.push(`✗ Client table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 13. Add bgColor column to Client table (for existing tables)
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "Client" ADD COLUMN IF NOT EXISTS "bgColor" TEXT NOT NULL DEFAULT '#FFFFFF';
+      `)
+      results.push('✓ bgColor column ensured on Client table')
+    } catch (e) {
+      results.push(`✗ bgColor: ${e instanceof Error ? e.message : String(e)}`)
     }
 
     return NextResponse.json({ success: true, results })
