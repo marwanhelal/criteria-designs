@@ -213,6 +213,17 @@ model SiteSettings {
   updatedAt       DateTime @updatedAt
 }
 
+// ==================== CLIENTS ====================
+
+model Client {
+  id        String   @id @default(cuid())
+  nameEn    String
+  logo      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ==================== MEDIA ====================
 
 model Media {

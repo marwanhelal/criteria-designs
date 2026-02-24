@@ -156,6 +156,24 @@ export async function POST() {
       results.push(`✗ image section migration: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 12. Create Client table
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "Client" (
+          "id" TEXT NOT NULL,
+          "nameEn" TEXT NOT NULL,
+          "logo" TEXT,
+          "order" INTEGER NOT NULL DEFAULT 0,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Client_pkey" PRIMARY KEY ("id")
+        );
+      `)
+      results.push('✓ Client table ensured')
+    } catch (e) {
+      results.push(`✗ Client table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

@@ -8,6 +8,7 @@ import Footer from '@/components/Footer'
 import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
+import ClientsMarquee from '@/components/ClientsMarquee'
 import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
 import { Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
 
@@ -137,8 +138,14 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [services, setServices] = useState<Service[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
+  const [clients, setClients] = useState<{ id: string; nameEn: string; logo?: string | null }[]>([])
 
   useEffect(() => {
+    fetch('/api/clients')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setClients(data))
+      .catch(() => {})
+
     fetch('/api/projects?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
       .then(data => setProjects(data.slice(0, 6)))
@@ -225,6 +232,7 @@ export default function Home() {
       <PhilosophySection />
       <CeoBanner />
       <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
+      <ClientsMarquee clients={clients} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
       <section data-navbar-dark className="bg-white">

@@ -12,7 +12,8 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  Building2,
 } from 'lucide-react'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -22,6 +23,7 @@ const sidebarItems = [
   { name: 'Projects', href: '/admin/projects', icon: FolderKanban },
   { name: 'Team', href: '/admin/team', icon: Users },
   { name: 'Services', href: '/admin/services', icon: Briefcase },
+  { name: 'Clients', href: '/admin/clients', icon: Building2 },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Media', href: '/admin/media', icon: Image },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
