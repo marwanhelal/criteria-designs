@@ -70,7 +70,7 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
 
   return (
     <section className="bg-[#181C23] py-16 overflow-hidden border-t border-white/[0.06]">
-      <div className="px-6 lg:px-14 mb-12">
+      <div className="px-6 lg:px-20 mb-12">
         <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
           Our Clients
         </span>

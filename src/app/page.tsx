@@ -110,7 +110,7 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
       </div>
 
       {/* Info below image */}
-      <div className="px-6 lg:px-14 pt-5 pb-6 border-b border-[#181C23]/10">
+      <div className="px-6 lg:px-20 pt-5 pb-6 border-b border-[#181C23]/10">
         <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
@@ -219,7 +219,7 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
-          <div className="lg:w-[34%] shrink-0 px-6 lg:pl-14 lg:pr-10 py-[60px] lg:py-[80px] lg:sticky lg:top-[90px] lg:self-start">
+          <div className="lg:w-[34%] shrink-0 px-6 lg:pl-20 lg:pr-12 py-[60px] lg:py-[80px] lg:sticky lg:top-[90px] lg:self-start">
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
@@ -256,7 +256,7 @@ export default function Home() {
       <ClientsMarquee clients={clients} />
 
       {/* ===== TESTIMONIALS SECTION ===== */}
-      <section className="bg-[#1E2330] py-[60px] lg:py-[80px] px-6 lg:px-14">
+      <section className="bg-[#1E2330] py-[60px] lg:py-[80px] px-6 lg:px-20">
         <AnimatedSection>
           <div className="max-w-[860px] mx-auto">
             <Quote size={36} className="text-[#B1A490]/40 mb-8" />
@@ -274,7 +274,7 @@ export default function Home() {
       </section>
 
       {/* ===== CAREER / JOIN US SECTION ===== */}
-      <section className="bg-[#181C23] py-[60px] lg:py-[80px] px-6 lg:px-14">
+      <section className="bg-[#181C23] py-[60px] lg:py-[80px] px-6 lg:px-20">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
           <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
             <div className="relative w-full h-[280px] lg:h-[360px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-white/5 flex items-center justify-center">

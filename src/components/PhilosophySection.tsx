@@ -232,7 +232,7 @@ export default function PhilosophySection() {
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
-        className="text-center pt-[60px] md:pt-[80px] pb-10 px-6 lg:px-14"
+        className="text-center pt-[60px] md:pt-[80px] pb-10 px-6 lg:px-20"
       >
         <div className="flex items-center justify-center gap-4 mb-5">
           <motion.div
@@ -433,7 +433,7 @@ export default function PhilosophySection() {
         initial={{ opacity: 0, y: 20 }}
         animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="pb-[60px] md:pb-[80px] pt-3 px-6 lg:px-14 max-w-[900px] mx-auto"
+        className="pb-[60px] md:pb-[80px] pt-3 px-6 lg:px-20 max-w-[900px] mx-auto"
       >
         <AnimatePresence mode="wait">
 

@@ -191,7 +191,7 @@ export default function ShowcaseSection({ projects }: { projects: ShowcaseProjec
   return (
     <section className="w-full bg-[#0e1117]">
       {/* Section label */}
-      <div className="px-6 lg:px-14 py-10 flex items-center gap-6">
+      <div className="px-6 lg:px-20 py-10 flex items-center gap-6">
         <div className="w-12 h-px bg-[#B1A490]/40" />
         <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490]/60 uppercase tracking-[6px]">
           Selected Works

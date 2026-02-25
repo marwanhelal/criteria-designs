@@ -207,7 +207,7 @@ export default function CeoBanner() {
       {/* Floating accent shapes */}
       <FloatingAccents inView={isInView} />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-14 py-[60px] lg:py-[80px]">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-20 py-[60px] lg:py-[80px]">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
           {/* Portrait — LEFT side with 3D tilt + gentle float */}
