@@ -7,19 +7,15 @@ interface Client {
   bgColor?: string | null
 }
 
-// Each card is 180px wide + 8px gap = 188px per item
-const CARD_W = 188
+// Each slot is 220px wide + 48px gap = 268px per item
+const CARD_W = 268
 
 function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rtl' }) {
-  // Repeat enough times so total width >> viewport (guarantee seamless at any count)
-  // We repeat by N copies where N * clients.length * CARD_W > 3 * 1920 = 5760px
   const minItems = Math.ceil(5760 / (clients.length * CARD_W)) + 1
   const repeats = Math.max(10, minItems)
   const items = Array(repeats).fill(clients).flat() as Client[]
-
-  // One "set" = (1 / repeats) of total, so translate = -(1/repeats * 100)%
   const pct = (1 / repeats) * 100
-  const duration = Math.max(20, clients.length * 6)
+  const duration = Math.max(30, clients.length * 7)
 
   return (
     <div className="overflow-hidden">
@@ -34,30 +30,27 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
         }
       `}</style>
       <div
-        className="flex w-max"
+        className="flex items-center w-max"
         style={{
-          gap: '8px',
+          gap: '48px',
           animation: `scroll-${direction === 'rtl' ? 'rtl' : 'ltr'}-${clients.length} ${duration}s linear infinite`,
         }}
       >
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[180px] h-[100px] shrink-0 flex items-center justify-center px-5 py-4 rounded-xl overflow-hidden"
-            style={{ backgroundColor: client.bgColor || '#FFFFFF' }}
+            className="w-[220px] h-[72px] shrink-0 flex items-center justify-center"
           >
             {client.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={client.logo}
                 alt={client.nameEn}
-                className="max-h-[62px] max-w-full object-contain"
+                className="max-h-[52px] max-w-[200px] w-auto object-contain opacity-50 hover:opacity-90 transition-opacity duration-300"
+                style={{ filter: 'brightness(0) invert(1)' }}
               />
             ) : (
-              <span
-                className="font-[var(--font-open-sans)] text-[12px] font-semibold text-center leading-tight"
-                style={{ color: client.bgColor && client.bgColor !== '#FFFFFF' ? 'rgba(255,255,255,0.7)' : 'rgba(24,28,35,0.4)' }}
-              >
+              <span className="font-[var(--font-open-sans)] text-[13px] font-semibold text-white/40 text-center leading-tight uppercase tracking-wider">
                 {client.nameEn}
               </span>
             )}
@@ -71,22 +64,20 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
 export default function ClientsMarquee({ clients }: { clients: Client[] }) {
   if (clients.length === 0) return null
 
-  // Split into two rows
   const row1 = clients.filter((_, i) => i % 2 === 0)
   const row2 = clients.filter((_, i) => i % 2 === 1)
-
   const r1 = row1.length > 0 ? row1 : clients
   const r2 = row2.length > 0 ? row2 : clients
 
   return (
-    <section className="bg-[#F5F0EB] py-16 overflow-hidden">
-      <div className="px-8 lg:px-16 mb-10">
+    <section className="bg-[#181C23] py-16 overflow-hidden border-t border-white/[0.06]">
+      <div className="px-8 lg:px-16 mb-12">
         <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
           Our Clients
         </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-8">
         <Row clients={r1} direction="ltr" />
         <Row clients={r2} direction="rtl" />
       </div>
