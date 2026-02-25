@@ -80,7 +80,7 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '16/7' }}
+        style={{ aspectRatio: '3/2' }}
         onMouseMove={updateCursor}
         onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
         onMouseLeave={() => setHovered(false)}
@@ -114,7 +114,7 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
         <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
-        <h3 className="font-[var(--font-merriweather)] text-[18px] lg:text-[22px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
+        <h3 className="font-[var(--font-merriweather)] text-[20px] lg:text-[26px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
           {project.titleEn}
         </h3>
       </div>
@@ -258,28 +258,16 @@ export default function Home() {
       {/* ===== TESTIMONIALS SECTION ===== */}
       <section className="bg-[#1E2330] py-[60px] lg:py-[80px] px-6 lg:px-14">
         <AnimatedSection>
-          <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
-            <div className="relative shrink-0">
-              <div className="relative w-[140px] h-[140px] lg:w-[170px] lg:h-[170px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-white/10 overflow-hidden flex items-center justify-center">
-                <Users size={48} className="text-[#B1A490]/40" />
-              </div>
-              <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
-                <Quote size={20} className="text-white" />
-              </div>
-            </div>
-
-            <div>
-              <p className="font-[var(--font-merriweather)] text-[16px] lg:text-[20px] text-white leading-[30px] lg:leading-[38px] italic">
-                &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
+          <div className="max-w-[860px] mx-auto">
+            <Quote size={36} className="text-[#B1A490]/40 mb-8" />
+            <p className="font-[var(--font-merriweather)] text-[17px] lg:text-[22px] text-white leading-[32px] lg:leading-[40px] italic">
+              &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.&rdquo;
+            </p>
+            <div className="flex items-center gap-4 mt-8">
+              <div className="w-10 h-px bg-[#B1A490]/50" />
+              <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[2px]">
+                Hesham Helal / CEO &amp; Founder
               </p>
-              <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-8">
-                Hesham helal / Ceo &amp; founder
-              </p>
-              <div className="flex gap-2 mt-8">
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-              </div>
             </div>
           </div>
         </AnimatedSection>

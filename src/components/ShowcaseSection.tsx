@@ -90,7 +90,7 @@ function ShowcaseItem({
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
         {/* Left content */}
-        <div className="absolute inset-0 flex items-center px-8 md:px-16 lg:px-24">
+        <div className="absolute inset-0 flex items-center px-6 md:px-12 lg:px-20">
           <div className="max-w-[520px]">
 
             {/* Slogan — always visible */}
@@ -167,7 +167,7 @@ function ShowcaseItem({
         </div>
 
         {/* Bottom right: counter line */}
-        <div className="absolute bottom-8 right-8 md:right-16">
+        <div className="absolute bottom-6 right-6 md:right-12 lg:right-20">
           <div className="flex items-center gap-3">
             <div className="w-16 h-px bg-white/20 relative">
               <motion.div
@@ -191,7 +191,7 @@ export default function ShowcaseSection({ projects }: { projects: ShowcaseProjec
   return (
     <section className="w-full bg-[#0e1117]">
       {/* Section label */}
-      <div className="px-8 md:px-16 lg:px-24 py-16 flex items-center gap-6">
+      <div className="px-6 lg:px-14 py-10 flex items-center gap-6">
         <div className="w-12 h-px bg-[#B1A490]/40" />
         <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490]/60 uppercase tracking-[6px]">
           Selected Works
