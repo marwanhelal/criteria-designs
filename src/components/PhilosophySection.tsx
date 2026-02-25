@@ -107,8 +107,8 @@ function ThreeCardCarousel({
             transition={{ duration: 0.42, ease: EASE }}
             className="relative rounded-2xl overflow-hidden flex-shrink-0"
             style={{
-              width: isActive ? 210 : 158,
-              height: isActive ? 310 : 235,
+              width: isActive ? 280 : 210,
+              height: isActive ? 400 : 310,
               cursor: isActive ? 'default' : 'pointer',
             }}
             onClick={() => { if (!isActive) goCard(idx) }}
@@ -232,7 +232,7 @@ export default function PhilosophySection() {
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
-        className="text-center pt-[60px] md:pt-[80px] pb-10 px-6 lg:px-20"
+        className="text-center pt-20 md:pt-28 pb-12 px-8"
       >
         <div className="flex items-center justify-center gap-4 mb-5">
           <motion.div
@@ -249,7 +249,7 @@ export default function PhilosophySection() {
             className="w-10 h-px bg-[#B1A490] origin-left"
           />
         </div>
-        <h2 className="font-[var(--font-playfair)] text-[28px] md:text-[38px] lg:text-[48px] text-white italic leading-[1.1]">
+        <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white italic leading-[1.1]">
           Our Philosophy
         </h2>
         <p className="font-[var(--font-open-sans)] text-[15px] md:text-[16px] text-white/40 mt-4 max-w-[460px] mx-auto leading-[1.8] font-light">
@@ -261,9 +261,9 @@ export default function PhilosophySection() {
       <motion.div
         ref={canvasRef}
         className="relative w-full overflow-hidden"
-        animate={{ height: showFinale ? 260 : 380 }}
+        animate={{ height: showFinale ? 330 : 460 }}
         transition={{ duration: 0.9, ease: EASE, delay: showFinale ? 0.15 : 0 }}
-        style={{ height: 380 }}
+        style={{ height: 460 }}
       >
 
         {/* Orbit rings (phases 1–3) */}
@@ -433,7 +433,7 @@ export default function PhilosophySection() {
         initial={{ opacity: 0, y: 20 }}
         animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="pb-[60px] md:pb-[80px] pt-3 px-6 lg:px-20 max-w-[900px] mx-auto"
+        className="pb-20 md:pb-24 pt-3 px-8 max-w-[860px] mx-auto"
       >
         <AnimatePresence mode="wait">
 
@@ -491,7 +491,7 @@ export default function PhilosophySection() {
                       >
                         {pillars[activeCard].num}
                       </p>
-                      <p className="font-[var(--font-playfair)] text-[26px] md:text-[34px] text-white italic leading-none">
+                      <p className="font-[var(--font-playfair)] text-[36px] md:text-[46px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
                     </motion.div>
@@ -560,7 +560,7 @@ export default function PhilosophySection() {
               key={i}
               className="font-[var(--font-playfair)] italic inline-flex items-center gap-0 select-none"
               style={{
-                fontSize: 'clamp(32px, 4vw, 60px)',
+                fontSize: 'clamp(44px, 5.5vw, 82px)',
                 WebkitTextStroke: i % 2 === 0 ? '1.8px rgba(177,164,144,0.85)' : '0px',
                 color: i % 2 === 0 ? 'transparent' : 'rgba(177,164,144,0.16)',
                 paddingRight: '4rem',

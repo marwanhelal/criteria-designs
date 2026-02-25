@@ -80,7 +80,7 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ aspectRatio: '3/2' }}
+        style={{ aspectRatio: '21/9' }}
         onMouseMove={updateCursor}
         onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
         onMouseLeave={() => setHovered(false)}
@@ -110,11 +110,11 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
       </div>
 
       {/* Info below image */}
-      <div className="px-6 lg:px-20 pt-5 pb-6 border-b border-[#181C23]/10">
+      <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10">
         <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
           {CATEGORY_LABELS[project.category] || project.category}
         </p>
-        <h3 className="font-[var(--font-merriweather)] text-[20px] lg:text-[26px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
+        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
           {project.titleEn}
         </h3>
       </div>
@@ -219,11 +219,11 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
-          <div className="lg:w-[34%] shrink-0 px-6 lg:pl-20 lg:pr-12 py-[60px] lg:py-[80px] lg:sticky lg:top-[90px] lg:self-start">
+          <div className="lg:w-[34%] shrink-0 px-8 lg:pl-16 lg:pr-10 py-16 lg:py-20 lg:sticky lg:top-[90px] lg:self-start">
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[40px] text-[#181C23] leading-[1.1] mt-5">
+            <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-[#181C23] leading-[1.1] mt-5">
               Design that adds value
             </h2>
             <Link
@@ -238,7 +238,7 @@ export default function Home() {
           </div>
 
           {/* Scrolling right */}
-          <div className="flex-1 pt-[60px] lg:pt-[80px] pb-[60px] lg:pb-[80px] space-y-12 lg:space-y-16">
+          <div className="flex-1 pt-16 lg:pt-20 pb-16 lg:pb-24 space-y-14 lg:space-y-20">
             {portfolioProjects.length === 0 ? (
               <p className="font-[var(--font-open-sans)] text-[15px] text-[#181C23]/30 py-20 px-8">
                 No projects yet. Add projects from the CMS.
@@ -256,28 +256,40 @@ export default function Home() {
       <ClientsMarquee clients={clients} />
 
       {/* ===== TESTIMONIALS SECTION ===== */}
-      <section className="bg-[#1E2330] py-[60px] lg:py-[80px] px-6 lg:px-20">
+      <section className="bg-[#1E2330] py-[70px] lg:py-[80px] px-8">
         <AnimatedSection>
-          <div className="max-w-[860px] mx-auto">
-            <Quote size={36} className="text-[#B1A490]/40 mb-8" />
-            <p className="font-[var(--font-merriweather)] text-[17px] lg:text-[22px] text-white leading-[32px] lg:leading-[40px] italic">
-              &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.&rdquo;
-            </p>
-            <div className="flex items-center gap-4 mt-8">
-              <div className="w-10 h-px bg-[#B1A490]/50" />
-              <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[2px]">
-                Hesham Helal / CEO &amp; Founder
+          <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
+            <div className="relative shrink-0">
+              <div className="relative w-[140px] h-[140px] lg:w-[170px] lg:h-[170px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-white/10 overflow-hidden flex items-center justify-center">
+                <Users size={48} className="text-[#B1A490]/40" />
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
+                <Quote size={20} className="text-white" />
+              </div>
+            </div>
+
+            <div>
+              <p className="font-[var(--font-merriweather)] text-[20px] lg:text-[24px] text-white leading-[36px] lg:leading-[46px] italic">
+                &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
               </p>
+              <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-8">
+                Hesham helal / Ceo &amp; founder
+              </p>
+              <div className="flex gap-2 mt-8">
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
+                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
+              </div>
             </div>
           </div>
         </AnimatedSection>
       </section>
 
       {/* ===== CAREER / JOIN US SECTION ===== */}
-      <section className="bg-[#181C23] py-[60px] lg:py-[80px] px-6 lg:px-20">
+      <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
           <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
-            <div className="relative w-full h-[280px] lg:h-[360px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-white/5 flex items-center justify-center">
+            <div className="relative w-full h-[350px] lg:h-[460px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-white/5 flex items-center justify-center">
               <Users size={80} className="text-[#B1A490]/30" />
             </div>
           </AnimatedSection>
@@ -286,7 +298,7 @@ export default function Home() {
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Join with Us
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] text-white leading-[32px] lg:leading-[40px] mt-4 max-w-[547px]">
+            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-[40px] lg:leading-[48px] mt-4 max-w-[547px]">
               Expand career and make your move to housale
             </h2>
             <p className="font-[var(--font-open-sans)] text-[16px] text-white/60 leading-[30px] mt-8 max-w-[526px]">
