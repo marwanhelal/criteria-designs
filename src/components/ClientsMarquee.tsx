@@ -7,8 +7,8 @@ interface Client {
   bgColor?: string | null
 }
 
-// Each card is 200px wide + 24px gap = 224px per item
-const CARD_W = 224
+// Each square card is 160px + 4px gap = 164px per item
+const CARD_W = 164
 
 function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rtl' }) {
   const minItems = Math.ceil(5760 / (clients.length * CARD_W)) + 1
@@ -32,24 +32,25 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
       <div
         className="flex items-center w-max"
         style={{
-          gap: '24px',
+          gap: '4px',
           animation: `scroll-${direction === 'rtl' ? 'rtl' : 'ltr'}-${clients.length} ${duration}s linear infinite`,
         }}
       >
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[200px] h-[90px] shrink-0 flex items-center justify-center px-6 rounded-lg bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.08] transition-colors duration-300"
+            className="w-[160px] h-[160px] shrink-0 flex items-center justify-center p-5"
+            style={{ backgroundColor: client.bgColor || '#1E2330' }}
           >
             {client.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={client.logo}
                 alt={client.nameEn}
-                className="max-h-[54px] max-w-[160px] w-auto object-contain opacity-75 hover:opacity-100 transition-opacity duration-300"
+                className="max-h-[110px] max-w-[120px] w-auto h-auto object-contain"
               />
             ) : (
-              <span className="font-[var(--font-open-sans)] text-[12px] font-semibold text-white/40 text-center leading-tight uppercase tracking-wider">
+              <span className="font-[var(--font-open-sans)] text-[11px] font-semibold text-white/60 text-center leading-tight uppercase tracking-wider">
                 {client.nameEn}
               </span>
             )}
@@ -76,7 +77,7 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
         </span>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-1">
         <Row clients={r1} direction="ltr" />
         <Row clients={r2} direction="rtl" />
       </div>
