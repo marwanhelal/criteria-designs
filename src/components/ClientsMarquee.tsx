@@ -39,21 +39,19 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[160px] h-[160px] shrink-0 overflow-hidden"
+            className="w-[160px] h-[160px] shrink-0 flex items-center justify-center p-4 bg-white/[0.05]"
           >
             {client.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={client.logo}
                 alt={client.nameEn}
-                className="w-full h-full object-cover"
+                className="max-w-[130px] max-h-[130px] w-auto h-auto object-contain"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#1E2330]">
-                <span className="font-[var(--font-open-sans)] text-[11px] font-semibold text-white/50 text-center leading-tight uppercase tracking-wider px-3">
-                  {client.nameEn}
-                </span>
-              </div>
+              <span className="font-[var(--font-open-sans)] text-[11px] font-semibold text-white/50 text-center leading-tight uppercase tracking-wider px-2">
+                {client.nameEn}
+              </span>
             )}
           </div>
         ))}
