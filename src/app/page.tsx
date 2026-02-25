@@ -9,8 +9,8 @@ import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
-import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
-import { Building, Leaf, Headset, Users, Armchair, Shield, Quote } from 'lucide-react'
+import AnimatedSection from '@/components/AnimatedSection'
+import { Users, Quote } from 'lucide-react'
 
 interface Project {
   id: string
@@ -21,14 +21,6 @@ interface Project {
   location: string | null
   yearCompleted: number | null
   images: { id: string; url: string; alt: string | null }[]
-}
-
-interface Service {
-  id: string
-  titleEn: string
-  descriptionEn: string
-  icon: string | null
-  image: string | null
 }
 
 interface ShowcaseProject {
@@ -49,10 +41,6 @@ interface Settings {
   heroImage: string | null
   heroVideo: string | null
   showcaseProjects: ShowcaseProject[]
-}
-
-const iconMap: Record<string, typeof Building> = {
-  Building, Leaf, Headset, Users, Armchair, Shield
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -136,7 +124,6 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [services, setServices] = useState<Service[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
   const [clients, setClients] = useState<{ id: string; nameEn: string; logo?: string | null }[]>([])
 
@@ -151,11 +138,6 @@ export default function Home() {
       .then(data => setProjects(data.slice(0, 6)))
       .catch(() => {})
 
-    fetch('/api/services')
-      .then(res => res.ok ? res.json() : [])
-      .then(data => setServices(data.slice(0, 6)))
-      .catch(() => {})
-
     fetch('/api/settings')
       .then(res => res.ok ? res.json() : null)
       .then(data => setSettings(data))
@@ -163,7 +145,6 @@ export default function Home() {
   }, [])
 
   const displayProjects = projects.length > 0 ? projects : []
-  const displayServices = services.length > 0 ? services : []
   // CMS-controlled portfolio list: use showcaseProjects if set, else all published
   const portfolioProjects = (settings?.showcaseProjects && settings.showcaseProjects.length > 0)
     ? settings.showcaseProjects
@@ -273,68 +254,6 @@ export default function Home() {
       </section>
 
       <ClientsMarquee clients={clients} />
-
-      {/* ===== SERVICES SECTION ===== */}
-      <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">
-        <div className="max-w-[1290px] mx-auto">
-          <AnimatedSection>
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              why choose us
-            </span>
-            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-[40px] lg:leading-[48px] mt-4 max-w-[524px]">
-              Making living spaces affordable
-            </h2>
-          </AnimatedSection>
-
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 mt-14" staggerDelay={0.15}>
-            {displayServices.length > 0 ? (
-              displayServices.map((service) => {
-                const IconComponent = service.icon && iconMap[service.icon]
-                  ? iconMap[service.icon]
-                  : Building
-                return (
-                  <StaggerItem key={service.id}>
-                    <div className="flex flex-col">
-                      <div className="w-[90px] h-[90px] rounded-full bg-white/10 flex items-center justify-center">
-                        <IconComponent size={36} className="text-[#B1A490]" />
-                      </div>
-                      <h3 className="font-[var(--font-merriweather)] text-[20px] text-white leading-[28px] mt-8">
-                        {service.titleEn}
-                      </h3>
-                      <p className="font-[var(--font-open-sans)] text-[16px] text-white/60 leading-[30px] mt-4 max-w-[366px]">
-                        {service.descriptionEn}
-                      </p>
-                    </div>
-                  </StaggerItem>
-                )
-              })
-            ) : (
-              [
-                { icon: Building, title: 'High Quality Products', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-                { icon: Leaf, title: 'Natural Environment', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-                { icon: Headset, title: 'Professional Services', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-                { icon: Users, title: 'Humanitarian Community', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-                { icon: Armchair, title: 'Comprehensive Amenities', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-                { icon: Shield, title: 'Absolute Security', desc: 'Veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam' },
-              ].map((service, idx) => (
-                <StaggerItem key={idx}>
-                  <div className="flex flex-col">
-                    <div className="w-[90px] h-[90px] rounded-full bg-white/10 flex items-center justify-center">
-                      <service.icon size={36} className="text-[#B1A490]" />
-                    </div>
-                    <h3 className="font-[var(--font-merriweather)] text-[20px] text-white leading-[28px] mt-8">
-                      {service.title}
-                    </h3>
-                    <p className="font-[var(--font-open-sans)] text-[16px] text-white/60 leading-[30px] mt-4 max-w-[366px]">
-                      {service.desc}
-                    </p>
-                  </div>
-                </StaggerItem>
-              ))
-            )}
-          </StaggerContainer>
-        </div>
-      </section>
 
       {/* ===== TESTIMONIALS SECTION ===== */}
       <section className="bg-[#1E2330] py-[70px] lg:py-[80px] px-8">
