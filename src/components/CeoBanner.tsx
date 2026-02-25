@@ -207,7 +207,7 @@ export default function CeoBanner() {
       {/* Floating accent shapes */}
       <FloatingAccents inView={isInView} />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-14 py-[80px] lg:py-[100px]">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-14 py-[60px] lg:py-[80px]">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
           {/* Portrait — LEFT side with 3D tilt + gentle float */}
@@ -235,7 +235,7 @@ export default function CeoBanner() {
                 <AnimatedRing inView={isInView} />
                 {/* Portrait image */}
                 <motion.div
-                  className="relative w-[260px] h-[260px] lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden"
+                  className="relative w-[220px] h-[220px] lg:w-[300px] lg:h-[300px] rounded-full overflow-hidden"
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.4 }}
                 >
@@ -262,7 +262,7 @@ export default function CeoBanner() {
           {/* Content — RIGHT side */}
           <div className="flex-1 text-center lg:text-left">
             {/* Name — word-by-word reveal */}
-            <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[58px] text-[#181C23] leading-[1.05] font-bold uppercase tracking-[2px] overflow-hidden">
+            <h2 className="font-[var(--font-merriweather)] text-[28px] md:text-[36px] lg:text-[44px] text-[#181C23] leading-[1.05] font-bold uppercase tracking-[2px] overflow-hidden">
               {nameWords.map((word, i) => (
                 <motion.span
                   key={i}
@@ -298,7 +298,7 @@ export default function CeoBanner() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  className="font-[var(--font-libre-franklin)] text-[18px] md:text-[22px] lg:text-[28px] text-[#444] uppercase tracking-[3px] font-medium"
+                  className="font-[var(--font-libre-franklin)] text-[14px] md:text-[17px] lg:text-[21px] text-[#444] uppercase tracking-[3px] font-medium"
                 >
                   {data.ceoTitleEn}
                 </motion.p>
@@ -339,7 +339,7 @@ export default function CeoBanner() {
                       i > 0 ? 'border-l-2 border-[#181C23]/15' : ''
                     }`}
                   >
-                    <span className="font-[var(--font-merriweather)] text-[32px] lg:text-[44px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
+                    <span className="font-[var(--font-merriweather)] text-[26px] lg:text-[36px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
                       <CountUpStat raw={stat.number!} inView={isInView} />
                     </span>
                     <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[13px] text-[#666] uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-[#444]">

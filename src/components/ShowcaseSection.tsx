@@ -46,7 +46,7 @@ function ShowcaseItem({
     <div
       ref={ref}
       className="relative w-full"
-      style={{ height: '100vh', minHeight: 600 }}
+      style={{ height: '65vh', minHeight: 480 }}
     >
       <Link
         href={`/projects/${project.slug}`}
@@ -118,7 +118,7 @@ function ShowcaseItem({
               initial={{ opacity: 0, x: -40 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className="font-[var(--font-merriweather)] text-[36px] md:text-[52px] lg:text-[64px] text-white leading-[1.05] font-bold mb-6"
+              className="font-[var(--font-merriweather)] text-[26px] md:text-[36px] lg:text-[46px] text-white leading-[1.05] font-bold mb-6"
             >
               {project.titleEn}
             </motion.h2>
