@@ -207,8 +207,8 @@ export default function CeoBanner() {
       {/* Floating accent shapes */}
       <FloatingAccents inView={isInView} />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[60px] lg:py-[80px]">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[40px] lg:py-[52px]">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14">
 
           {/* Portrait — LEFT side with 3D tilt + gentle float */}
           {data.ceoImage && (
@@ -230,12 +230,12 @@ export default function CeoBanner() {
             >
               <div ref={portraitRef} className="relative">
                 {/* Gray circle background */}
-                <div className="absolute inset-[-25px] lg:inset-[-35px] rounded-full bg-[#D5D5D5]/25" />
+                <div className="absolute inset-[-14px] lg:inset-[-18px] rounded-full bg-[#D5D5D5]/25" />
                 {/* Animated SVG rings */}
                 <AnimatedRing inView={isInView} />
                 {/* Portrait image */}
                 <motion.div
-                  className="relative w-[260px] h-[260px] lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden"
+                  className="relative w-[200px] h-[200px] lg:w-[280px] lg:h-[280px] rounded-full overflow-hidden"
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.4 }}
                 >
@@ -262,7 +262,7 @@ export default function CeoBanner() {
           {/* Content — RIGHT side */}
           <div className="flex-1 text-center lg:text-left">
             {/* Name — word-by-word reveal */}
-            <h2 className="font-[var(--font-merriweather)] text-[36px] md:text-[48px] lg:text-[58px] text-[#181C23] leading-[1.05] font-bold uppercase tracking-[2px] overflow-hidden">
+            <h2 className="font-[var(--font-merriweather)] text-[26px] md:text-[32px] lg:text-[40px] text-[#181C23] leading-[1.05] font-bold uppercase tracking-[2px] overflow-hidden">
               {nameWords.map((word, i) => (
                 <motion.span
                   key={i}
@@ -298,7 +298,7 @@ export default function CeoBanner() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  className="font-[var(--font-libre-franklin)] text-[18px] md:text-[22px] lg:text-[28px] text-[#444] uppercase tracking-[3px] font-medium"
+                  className="font-[var(--font-libre-franklin)] text-[12px] md:text-[14px] lg:text-[16px] text-[#444] uppercase tracking-[3px] font-medium"
                 >
                   {data.ceoTitleEn}
                 </motion.p>
@@ -306,7 +306,7 @@ export default function CeoBanner() {
             )}
 
             {/* Separator line — animated draw with shimmer */}
-            <div className="relative mt-8 mb-8 max-w-[600px] mx-auto lg:mx-0">
+            <div className="relative mt-5 mb-5 max-w-[600px] mx-auto lg:mx-0">
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={isInView ? { scaleX: 1 } : {}}
@@ -339,7 +339,7 @@ export default function CeoBanner() {
                       i > 0 ? 'border-l-2 border-[#181C23]/15' : ''
                     }`}
                   >
-                    <span className="font-[var(--font-merriweather)] text-[32px] lg:text-[44px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
+                    <span className="font-[var(--font-merriweather)] text-[24px] lg:text-[32px] text-[#181C23] leading-none font-bold transition-colors duration-300 group-hover/stat:text-[#B1A490]">
                       <CountUpStat raw={stat.number!} inView={isInView} />
                     </span>
                     <span className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[13px] text-[#666] uppercase tracking-[2px] mt-2 transition-colors duration-300 group-hover/stat:text-[#444]">
@@ -362,7 +362,7 @@ export default function CeoBanner() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.3 }}
-              className="mt-10 flex justify-center lg:justify-end"
+              className="mt-6 flex justify-center lg:justify-end"
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                 <Link
@@ -386,7 +386,7 @@ export default function CeoBanner() {
 
             {/* Logos — staggered fade with pop hover */}
             {logos.length > 0 && (
-              <div className="mt-10 flex items-center justify-center lg:justify-end gap-8 lg:gap-10">
+              <div className="mt-6 flex items-center justify-center lg:justify-end gap-6 lg:gap-8">
                 {logos.map((logo, i) => (
                   <motion.div
                     key={i}
