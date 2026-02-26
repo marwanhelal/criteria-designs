@@ -9,8 +9,6 @@ import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
-import AnimatedSection from '@/components/AnimatedSection'
-import { Users, Quote } from 'lucide-react'
 
 interface Project {
   id: string
@@ -254,65 +252,6 @@ export default function Home() {
       </section>
 
       <ClientsMarquee clients={clients} />
-
-      {/* ===== TESTIMONIALS SECTION ===== */}
-      <section className="bg-[#1E2330] py-[70px] lg:py-[80px] px-8">
-        <AnimatedSection>
-          <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row items-center gap-16">
-            <div className="relative shrink-0">
-              <div className="relative w-[140px] h-[140px] lg:w-[170px] lg:h-[170px] rounded-full bg-gradient-to-br from-[#B1A490]/30 to-white/10 overflow-hidden flex items-center justify-center">
-                <Users size={48} className="text-[#B1A490]/40" />
-              </div>
-              <div className="absolute -bottom-2 -right-2 w-[48px] h-[48px] rounded-full bg-[#B1A490] flex items-center justify-center">
-                <Quote size={20} className="text-white" />
-              </div>
-            </div>
-
-            <div>
-              <p className="font-[var(--font-merriweather)] text-[20px] lg:text-[24px] text-white leading-[36px] lg:leading-[46px] italic">
-                &ldquo;Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut&rdquo;
-              </p>
-              <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-8">
-                Hesham helal / Ceo &amp; founder
-              </p>
-              <div className="flex gap-2 mt-8">
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]" />
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-                <div className="w-[16px] h-[4px] rounded-full bg-[#B1A490]/30" />
-              </div>
-            </div>
-          </div>
-        </AnimatedSection>
-      </section>
-
-      {/* ===== CAREER / JOIN US SECTION ===== */}
-      <section className="bg-[#181C23] py-[80px] lg:py-[100px] px-8">
-        <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-12">
-          <AnimatedSection direction="left" className="w-full lg:w-[520px] shrink-0">
-            <div className="relative w-full h-[350px] lg:h-[460px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-white/5 flex items-center justify-center">
-              <Users size={80} className="text-[#B1A490]/30" />
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection direction="right" delay={0.2} className="flex flex-col justify-center">
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              Join with Us
-            </span>
-            <h2 className="font-[var(--font-merriweather)] text-[28px] lg:text-[36px] text-white leading-[40px] lg:leading-[48px] mt-4 max-w-[547px]">
-              Expand career and make your move to housale
-            </h2>
-            <p className="font-[var(--font-open-sans)] text-[16px] text-white/60 leading-[30px] mt-8 max-w-[526px]">
-              Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/20 transition-colors w-fit mt-10"
-            >
-              Get Started
-            </Link>
-          </AnimatedSection>
-        </div>
-      </section>
 
       <Footer />
     </>
