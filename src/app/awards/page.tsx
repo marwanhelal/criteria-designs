@@ -102,11 +102,11 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
 
         {/* Row 2: Title + Count */}
         <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+          <h1 className="font-[var(--font-playfair)] text-[#111] text-[26px] lg:text-[30px] font-normal tracking-[-0.01em]">
             Awards
           </h1>
           {!loading && (
-            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+            <p className="font-[var(--font-open-sans)] text-[#747779] text-[14px] lg:text-[15px]">
               {count} {count === 1 ? 'Award' : 'Awards'}
             </p>
           )}
@@ -177,7 +177,7 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
       <div className="h-px bg-[#E0E0DC]" />
       <div className="py-8 md:py-10 flex items-start gap-6 md:gap-14">
         {/* Year */}
-        <span className="font-[var(--font-playfair)] text-[64px] md:text-[88px] leading-none text-[#1A1A1A] shrink-0 select-none">
+        <span className="font-[var(--font-playfair)] text-[36px] md:text-[48px] leading-none text-[#1A1A1A] shrink-0 select-none">
           {award.year}
         </span>
         {/* Info */}
