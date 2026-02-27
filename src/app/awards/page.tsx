@@ -1,21 +1,216 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
-import Navbar from '@/components/Navbar'
+import { usePathname } from 'next/navigation'
 import Footer from '@/components/Footer'
 import { motion } from 'framer-motion'
 
 interface Award {
   id: string
   titleEn: string
-  titleAr: string
   year: number
   subtitleEn: string | null
-  subtitleAr: string | null
   image: string | null
 }
 
+interface Settings {
+  logo: string | null
+  companyNameEn: string
+}
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/services', label: 'Services' },
+  { href: '/awards', label: 'Awards' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+]
+
+// ── Self-contained fixed header ───────────────────────────────────────────────
+function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [settings, setSettings] = useState<Settings | null>(null)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setSettings(data))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => { setMenuOpen(false) }, [pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  return (
+    <>
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          backgroundColor: '#ffffff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* Row 1: Logo + Hamburger */}
+        <div className="px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between border-b border-[#e8e8e8]">
+          <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
+            {settings?.logo && (
+              <Image
+                src={settings.logo}
+                alt={settings.companyNameEn || 'Criteria Design Group'}
+                width={100}
+                height={100}
+                className="h-[52px] md:h-[72px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                unoptimized
+              />
+            )}
+            <div className="flex flex-col gap-[2px]">
+              <span className="font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+                Criteria
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="block w-[22px] md:w-[30px] h-[1px] bg-[#B1A490]/80" />
+                <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+                  Designs
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full bg-white hover:bg-gray-100 transition-colors duration-300"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
+          </button>
+        </div>
+
+        {/* Row 2: Title + Count */}
+        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+            Awards
+          </h1>
+          {!loading && (
+            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+              {count} {count === 1 ? 'Award' : 'Awards'}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Full-screen Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-[55] transition-all duration-500 ${
+          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="absolute inset-0 bg-[#181C23]" />
+        <div className="relative z-10 h-full flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center gap-1 md:gap-2">
+            {navLinks.map((link, index) => {
+              const isActive = pathname === link.href
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`group relative overflow-hidden transition-all duration-500 ${
+                    menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  }`}
+                  style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
+                >
+                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
+                    isActive ? 'text-[#B1A490]' : 'text-white/80 group-hover:text-white'
+                  }`}>
+                    {link.label}
+                  </span>
+                  <span className={`block h-[2px] bg-[#B1A490] transition-all duration-300 ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`} />
+                </Link>
+              )
+            })}
+          </div>
+          <div className={`absolute bottom-12 left-0 right-0 px-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
+            menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
+            <p className="font-[var(--font-open-sans)] text-[14px] text-white/40">
+              &copy; {new Date().getFullYear()} Criteria Design Group
+            </p>
+            <Link
+              href="/contact"
+              onClick={() => setMenuOpen(false)}
+              className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[1px] hover:text-white transition-colors"
+            >
+              Get in touch &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ── Award Row ─────────────────────────────────────────────────────────────────
+function AwardRow({ award, index }: { award: Award; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="h-px bg-[#E0E0DC]" />
+      <div className="py-8 md:py-10 flex items-start gap-6 md:gap-14">
+        {/* Year */}
+        <span className="font-[var(--font-playfair)] text-[64px] md:text-[88px] leading-none text-[#1A1A1A] shrink-0 select-none">
+          {award.year}
+        </span>
+        {/* Info */}
+        <div className="flex-1 pt-3 md:pt-5">
+          <h3 className="font-[var(--font-libre-franklin)] text-[17px] md:text-[21px] font-semibold text-[#1A1A1A] leading-[1.3]">
+            {award.titleEn}
+          </h3>
+          {award.subtitleEn && (
+            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[14px] text-[#B1A490] tracking-[0.04em] mt-1.5">
+              {award.subtitleEn}
+            </p>
+          )}
+        </div>
+        {/* Image (desktop only) */}
+        {award.image && (
+          <div className="shrink-0 hidden md:block self-center">
+            <div className="relative w-[110px] h-[82px] rounded-[3px] overflow-hidden">
+              <Image
+                src={award.image}
+                alt={award.titleEn}
+                fill
+                className="object-cover grayscale"
+                unoptimized
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
 export default function AwardsPage() {
   const [awards, setAwards] = useState<Award[]>([])
   const [loading, setLoading] = useState(true)
@@ -27,108 +222,56 @@ export default function AwardsPage() {
       .catch(() => setLoading(false))
   }, [])
 
-  // Group awards by year
-  const grouped = awards.reduce<Record<number, Award[]>>((acc, award) => {
-    if (!acc[award.year]) acc[award.year] = []
-    acc[award.year].push(award)
-    return acc
-  }, {})
-  const years = Object.keys(grouped).map(Number).sort((a, b) => b - a)
-
   return (
     <>
-      <Navbar />
+      <AwardsHeader count={awards.length} loading={loading} />
 
-      {/* Hero Banner */}
-      <section className="bg-[#181C23] pt-[140px] pb-20 px-8 lg:px-16">
-        <div className="max-w-[1290px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
-          >
-            <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px] mb-4">
-              Our Recognition
-            </p>
-            <h1 className="font-[var(--font-merriweather)] text-[42px] md:text-[56px] lg:text-[72px] text-white leading-[1.05] tracking-[-0.02em]">
-              Awards
-            </h1>
-            <div className="w-16 h-px bg-[#B1A490] mt-6" />
-          </motion.div>
-        </div>
-      </section>
+      <div className="min-h-screen bg-white">
+        {/* Spacer: logo row + title row */}
+        <div className="h-[140px] md:h-[158px]" />
 
-      {/* Awards List */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-20 lg:py-28 px-8 lg:px-16">
-        <div className="max-w-[1290px] mx-auto">
-          {loading ? (
-            <div className="text-center py-20 text-[#181C23]/40">Loading awards...</div>
-          ) : awards.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-[#181C23]/40 font-[var(--font-open-sans)]">No awards to display yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-16">
-              {years.map((year, yi) => (
-                <motion.div
-                  key={year}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.6, delay: yi * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
-                >
-                  {/* Year header */}
-                  <div className="flex items-center gap-6 mb-8">
-                    <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-none">
-                      {year}
-                    </h2>
-                    <div className="flex-1 h-px bg-[#181C23]/10" />
+        <div className="px-6 lg:px-[52px] pt-10 pb-20">
+
+          {/* Skeleton */}
+          {loading && (
+            <div>
+              {[1, 2, 3, 4].map(i => (
+                <div key={i}>
+                  <div className="h-px bg-[#E0E0DC]" />
+                  <div className="py-8 md:py-10 flex items-start gap-6 md:gap-14">
+                    <div className="w-[64px] md:w-[88px] h-[52px] md:h-[72px] bg-gray-100 animate-pulse rounded shrink-0" />
+                    <div className="flex-1 pt-3 space-y-2">
+                      <div className="h-5 bg-gray-100 animate-pulse rounded w-1/2" />
+                      <div className="h-3 bg-gray-100 animate-pulse rounded w-1/4" />
+                    </div>
                   </div>
-
-                  {/* Awards grid for this year */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {grouped[year].map((award, ai) => (
-                      <motion.div
-                        key={award.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: ai * 0.08 }}
-                        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
-                      >
-                        {award.image && (
-                          <div className="relative w-full h-[200px]">
-                            <Image
-                              src={award.image}
-                              alt={award.titleEn}
-                              fill
-                              className="object-cover"
-                              unoptimized
-                            />
-                          </div>
-                        )}
-                        <div className="p-6">
-                          <h3 className="font-[var(--font-merriweather)] text-[18px] text-[#181C23] font-bold leading-[1.3]">
-                            {award.titleEn}
-                          </h3>
-                          {award.subtitleEn && (
-                            <p className="font-[var(--font-open-sans)] text-[14px] text-[#181C23]/50 mt-1">
-                              {award.subtitleEn}
-                            </p>
-                          )}
-                          <div className="w-8 h-px bg-[#B1A490] mt-4" />
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
+                </div>
               ))}
+              <div className="h-px bg-[#E0E0DC]" />
             </div>
           )}
-        </div>
-      </section>
 
-      <Footer />
+          {/* Empty */}
+          {!loading && awards.length === 0 && (
+            <div className="text-center py-24">
+              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No awards to display yet.</p>
+            </div>
+          )}
+
+          {/* List */}
+          {!loading && awards.length > 0 && (
+            <div>
+              {awards.map((award, i) => (
+                <AwardRow key={award.id} award={award} index={i} />
+              ))}
+              <div className="h-px bg-[#E0E0DC]" />
+            </div>
+          )}
+
+        </div>
+
+        <Footer />
+      </div>
     </>
   )
 }
