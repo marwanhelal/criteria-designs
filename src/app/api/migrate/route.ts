@@ -210,9 +210,9 @@ export async function POST() {
 
     // 15. Fix Award status column to use Status enum (if created as TEXT)
     try {
-      await prisma.$executeRawUnsafe(`
-        ALTER TABLE "Award" ALTER COLUMN "status" TYPE "Status" USING "status"::"Status";
-      `)
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Award" ALTER COLUMN "status" DROP DEFAULT;`)
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Award" ALTER COLUMN "status" TYPE "Status" USING "status"::"Status";`)
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Award" ALTER COLUMN "status" SET DEFAULT 'DRAFT'::"Status";`)
       results.push('✓ Award status column converted to Status enum')
     } catch (e) {
       results.push(`✗ Award status enum: ${e instanceof Error ? e.message : String(e)}`)
