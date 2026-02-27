@@ -129,9 +129,11 @@ function PortfolioCard({ project, index }: { project: PortfolioItem; index: numb
         <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10 flex items-start justify-between gap-6">
           <div className="min-w-0">
             {/* Category pill */}
-            <span className="inline-block font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[3px] text-[#B1A490] border border-[#B1A490]/50 rounded-full px-3 py-[3px]">
-              {catLabel}
-            </span>
+            <div>
+              <span className="inline-block font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[3px] text-[#B1A490] border border-[#B1A490]/50 rounded-full px-3 py-[3px]">
+                {catLabel}
+              </span>
+            </div>
             <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-3 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
               {project.titleEn}
             </h3>
