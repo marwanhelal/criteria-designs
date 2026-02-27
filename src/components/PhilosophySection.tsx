@@ -687,55 +687,82 @@ export default function PhilosophySection() {
         </AnimatePresence>
       </motion.div>
 
-      {/* ── Scrolling marquee — bridges dark philosophy → light founder ── */}
+      {/* ── Dual scrolling marquee ── */}
       <div
         className="relative overflow-hidden"
-        style={{ borderTop: '1px solid rgba(177,164,144,0.12)' }}
+        style={{ borderTop: '1px solid rgba(177,164,144,0.10)' }}
       >
-        {/* Gradient fade: dark top → near-transparent bottom (eases into light section) */}
+        {/* Left + right edge fade */}
         <div
           className="absolute inset-0 pointer-events-none z-10"
           style={{
-            background: 'linear-gradient(to right, #181C23 0%, transparent 6%, transparent 94%, #181C23 100%)',
+            background: 'linear-gradient(to right, #181C23 0%, transparent 8%, transparent 92%, #181C23 100%)',
           }}
         />
 
+        {/* Row 1 — moves LEFT, outlined brand phrases */}
         <div
-          className="flex whitespace-nowrap py-6 md:py-9"
-          style={{ animation: 'criteria-marquee 44s linear infinite', width: 'max-content' }}
+          className="flex whitespace-nowrap pt-7 pb-3"
+          style={{ animation: 'marquee-left 52s linear infinite', width: 'max-content' }}
         >
-          {Array(8).fill(null).map((_, i) => (
+          {Array(6).fill(null).map((_, i) => (
             <span
               key={i}
-              className="font-[var(--font-playfair)] italic inline-flex items-center gap-0 select-none"
+              className="font-[var(--font-playfair)] italic inline-flex items-center select-none"
               style={{
-                fontSize: 'clamp(44px, 5.5vw, 82px)',
-                WebkitTextStroke: i % 2 === 0 ? '1.8px rgba(177,164,144,0.85)' : '0px',
-                color: i % 2 === 0 ? 'transparent' : 'rgba(177,164,144,0.16)',
-                paddingRight: '4rem',
-                letterSpacing: '0.03em',
+                fontSize: 'clamp(40px, 5vw, 76px)',
+                WebkitTextStroke: i % 2 === 0 ? '1.5px rgba(177,164,144,0.9)' : '0px',
+                color: i % 2 === 0 ? 'transparent' : 'rgba(177,164,144,0.13)',
+                paddingRight: '5rem',
+                letterSpacing: '0.02em',
               }}
             >
-              Criteria Designs — Design That Adds Value
-              <span
-                style={{
-                  WebkitTextStroke: '0px',
-                  color: 'rgba(177,164,144,0.50)',
-                  fontSize: '0.32em',
-                  marginLeft: '3rem',
-                  verticalAlign: 'middle',
-                }}
-              >
-                ✦
-              </span>
+              Criteria Designs
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.45)', fontSize: '0.28em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              Design That Adds Value
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.45)', fontSize: '0.28em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              Culture · Nature · Art
+            </span>
+          ))}
+        </div>
+
+        {/* Thin separator line */}
+        <div className="mx-auto w-full h-px" style={{ background: 'rgba(177,164,144,0.06)' }} />
+
+        {/* Row 2 — moves RIGHT, story phrases, smaller + ghost */}
+        <div
+          className="flex whitespace-nowrap pt-3 pb-7"
+          style={{ animation: 'marquee-right 68s linear infinite', width: 'max-content' }}
+        >
+          {Array(6).fill(null).map((_, i) => (
+            <span
+              key={i}
+              className="font-[var(--font-playfair)] italic inline-flex items-center select-none"
+              style={{
+                fontSize: 'clamp(28px, 3.2vw, 52px)',
+                WebkitTextStroke: i % 2 === 0 ? '0px' : '1px rgba(177,164,144,0.55)',
+                color: i % 2 === 0 ? 'rgba(177,164,144,0.18)' : 'transparent',
+                paddingRight: '5rem',
+                letterSpacing: '0.04em',
+              }}
+            >
+              Every Space Tells A Story
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.35)', fontSize: '0.35em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              Architecture That Endures
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.35)', fontSize: '0.35em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              Beautifully, Unmistakably Human
             </span>
           ))}
         </div>
 
         <style>{`
-          @keyframes criteria-marquee {
+          @keyframes marquee-left {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-50%); }
+          }
+          @keyframes marquee-right {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
           }
           @keyframes chapter-progress {
             0%   { width: 0%; }
