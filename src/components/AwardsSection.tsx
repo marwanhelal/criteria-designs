@@ -34,12 +34,16 @@ function ArchDivider() {
 }
 
 /* ── Large award card ──────────────────────────────────────────────── */
-function LargeCard({ award }: { award: Award }) {
+function LargeCard({ award, index }: { award: Award; index: number }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div
-      className="relative cursor-default"
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.55, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
+      className="relative cursor-default group"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -51,7 +55,7 @@ function LargeCard({ award }: { award: Award }) {
       </p>
 
       {/* Award name */}
-      <h3 className="font-[var(--font-libre-franklin)] text-[17px] lg:text-[19px] font-semibold text-[#1A1A1A] leading-[1.35] pl-3 pr-36">
+      <h3 className="font-[var(--font-libre-franklin)] text-[17px] lg:text-[19px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.35] pl-3 pr-36">
         {award.titleEn}
       </h3>
 
@@ -63,7 +67,7 @@ function LargeCard({ award }: { award: Award }) {
       )}
 
       {/* Bottom divider */}
-      <div className="h-px bg-[#E0E0DC] mt-5 ml-3" />
+      <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/40 transition-colors duration-300 mt-5 ml-3" />
 
       {/* Hover image */}
       <AnimatePresence>
@@ -76,31 +80,35 @@ function LargeCard({ award }: { award: Award }) {
             className="absolute right-0 top-2 z-20 pointer-events-none"
           >
             <div
-              className="relative rounded-[5px] overflow-hidden shadow-[0_6px_24px_rgba(0,0,0,0.11)] border border-[#ececec]"
+              className="relative rounded-[5px] overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.12)] border border-[#ececec] bg-white"
               style={{ width: 130, height: 98 }}
             >
               <Image
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-cover grayscale"
+                className="object-contain p-2"
                 unoptimized
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }
 
 /* ── Small award card ──────────────────────────────────────────────── */
-function SmallCard({ award }: { award: Award }) {
+function SmallCard({ award, index }: { award: Award; index: number }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div
-      className="relative cursor-default text-center"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="relative cursor-default text-center group"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -112,7 +120,7 @@ function SmallCard({ award }: { award: Award }) {
       </p>
 
       {/* Award name */}
-      <h3 className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] font-semibold text-[#1A1A1A] leading-[1.4] px-2">
+      <h3 className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.4] px-2">
         {award.titleEn}
       </h3>
 
@@ -124,7 +132,7 @@ function SmallCard({ award }: { award: Award }) {
       )}
 
       {/* Bottom divider */}
-      <div className="h-px bg-[#E0E0DC] mt-4 mx-2" />
+      <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/40 transition-colors duration-300 mt-4 mx-2" />
 
       {/* Hover image */}
       <AnimatePresence>
@@ -137,21 +145,21 @@ function SmallCard({ award }: { award: Award }) {
             className="absolute right-0 top-0 z-20 pointer-events-none"
           >
             <div
-              className="relative rounded-[4px] overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.10)] border border-[#ececec]"
+              className="relative rounded-[4px] overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.10)] border border-[#ececec] bg-white"
               style={{ width: 88, height: 66 }}
             >
               <Image
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-cover grayscale"
+                className="object-contain p-1.5"
                 unoptimized
               />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }
 
@@ -169,13 +177,26 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
     <section data-navbar-dark className="bg-white pt-16 pb-24 lg:pt-20 lg:pb-32 px-8 lg:px-16">
       <div className="max-w-[1290px] mx-auto">
 
-        {/* Header row: heading + index label */}
-        <div className="flex items-end justify-between mb-16 lg:mb-20">
-          <h2 className="font-[var(--font-playfair)] text-[60px] md:text-[80px] lg:text-[96px] text-[#1A1A1A] leading-[1] tracking-[-0.03em] font-normal">
+        {/* Header row */}
+        <div className="flex items-end justify-between mb-5 lg:mb-6">
+          <motion.h2
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="font-[var(--font-playfair)] text-[60px] md:text-[80px] lg:text-[96px] text-[#1A1A1A] leading-[1] tracking-[-0.03em] font-normal"
+          >
             Awards
-          </h2>
+          </motion.h2>
+
           {/* Architectural index — top right */}
-          <div className="hidden lg:flex flex-col items-end gap-1.5 pb-3">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="hidden lg:flex flex-col items-end gap-1.5 pb-3"
+          >
             <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#9A9A94] uppercase tracking-[0.2em]">
               Recognition
             </span>
@@ -185,14 +206,25 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
                 {String(items.length).padStart(2, '0')}
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.18 }}
+          className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[420px] mb-16 lg:mb-20"
+        >
+          A growing record of international recognition across architecture and interior design.
+        </motion.p>
 
         {/* Row A1: 2 large */}
         {rowA1.length > 0 && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
-              {rowA1.map((a) => <LargeCard key={a.id} award={a} />)}
+              {rowA1.map((a, i) => <LargeCard key={a.id} award={a} index={i} />)}
               {rowA1.length === 1 && <div />}
             </div>
             {(rowB1.length > 0 || rowA2.length > 0) && <ArchDivider />}
@@ -203,7 +235,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         {rowB1.length > 0 && (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
-              {rowB1.map((a) => <SmallCard key={a.id} award={a} />)}
+              {rowB1.map((a, i) => <SmallCard key={a.id} award={a} index={i} />)}
             </div>
             {rowA2.length > 0 && <ArchDivider />}
           </>
@@ -213,7 +245,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         {rowA2.length > 0 && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
-              {rowA2.map((a) => <LargeCard key={a.id} award={a} />)}
+              {rowA2.map((a, i) => <LargeCard key={a.id} award={a} index={i} />)}
               {rowA2.length === 1 && <div />}
             </div>
             {rowB2.length > 0 && <ArchDivider />}
@@ -223,12 +255,18 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         {/* Row B2: 4 small */}
         {rowB2.length > 0 && (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
-            {rowB2.map((a) => <SmallCard key={a.id} award={a} />)}
+            {rowB2.map((a, i) => <SmallCard key={a.id} award={a} index={i} />)}
           </div>
         )}
 
         {/* Bottom: tick marks + button */}
-        <div className="mt-14 flex flex-col items-center gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-14 flex flex-col items-center gap-8"
+        >
           <div className="flex items-center gap-3 w-full max-w-[360px]">
             <div className="flex-1 h-px bg-[#E8E8E4]" />
             <div className="flex gap-2">
@@ -241,11 +279,11 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
 
           <Link
             href="/awards"
-            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[4px] border border-[#1A1A1A]/15 px-10 py-4 hover:border-[#1A1A1A]/35 hover:bg-[#1A1A1A]/[0.02] transition-all duration-300"
+            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[4px] border border-[#1A1A1A]/15 px-10 py-4 hover:border-[#B1A490] hover:text-[#B1A490] transition-all duration-300"
           >
             View All Awards
           </Link>
-        </div>
+        </motion.div>
 
       </div>
     </section>
