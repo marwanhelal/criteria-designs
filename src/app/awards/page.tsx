@@ -175,31 +175,39 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
       transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="h-px bg-[#E0E0DC]" />
-      <div className="py-8 md:py-10 flex items-start gap-6 md:gap-14">
+      <div className="group -mx-6 lg:-mx-[52px] px-6 lg:px-[52px] py-7 md:py-9 flex items-center gap-6 md:gap-12 hover:bg-[#faf9f7] transition-colors duration-200">
+
+        {/* Index */}
+        <span className="hidden lg:block font-[var(--font-libre-franklin)] text-[11px] text-[#C8C8C2] tracking-[0.15em] shrink-0 w-6 text-right select-none">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
         {/* Year */}
-        <span className="font-[var(--font-playfair)] text-[36px] md:text-[48px] leading-none text-[#1A1A1A] shrink-0 select-none">
+        <span className="font-[var(--font-playfair)] text-[32px] md:text-[42px] leading-none text-[#C0BDB8] shrink-0 select-none w-[80px] md:w-[110px]">
           {award.year}
         </span>
+
         {/* Info */}
-        <div className="flex-1 pt-3 md:pt-5">
-          <h3 className="font-[var(--font-libre-franklin)] text-[17px] md:text-[21px] font-semibold text-[#1A1A1A] leading-[1.3]">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-[var(--font-libre-franklin)] text-[16px] md:text-[20px] font-semibold text-[#1A1A1A] leading-[1.3] group-hover:text-[#3a3a3a] transition-colors duration-200">
             {award.titleEn}
           </h3>
           {award.subtitleEn && (
-            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[14px] text-[#B1A490] tracking-[0.04em] mt-1.5">
+            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#B1A490] tracking-[0.04em] mt-1">
               {award.subtitleEn}
             </p>
           )}
         </div>
+
         {/* Image (desktop only) */}
         {award.image && (
-          <div className="shrink-0 hidden md:block self-center">
-            <div className="relative w-[110px] h-[82px] rounded-[3px] overflow-hidden">
+          <div className="shrink-0 hidden md:block">
+            <div className="relative w-[130px] h-[96px] rounded-[4px] overflow-hidden bg-[#f4f3f1] border border-[#eceae6]">
               <Image
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-cover"
+                className="object-contain p-2"
                 unoptimized
               />
             </div>
