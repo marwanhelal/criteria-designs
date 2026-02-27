@@ -17,14 +17,20 @@ const pillars = [
   { key: 'art',     num: '03', label: 'Art',      accent: '#D4A82C' },
 ]
 
+const PILLAR_HOOKS = [
+  'Every great space begins with a question: whose story does this place carry?',
+  'Then we step outside — and listen to the land.',
+  'Finally, we reach for something beyond function.',
+]
+
 const PILLAR_TEXTS = [
-  'Architecture as cultural memory — each space we design carries the weight of heritage, the richness of tradition, and the identity of the people who inhabit it. We honor the past while building boldly for the future.',
-  'Informed by organic form and ecological wisdom — we weave natural light, living materials, and landscape into every structure we create, crafting spaces that breathe, evolve, and belong to their environment.',
-  'Every line is intentional, every surface a composition — we elevate the built environment into art, designing spaces that inspire the eye, challenge perception, and endure long beyond their time.',
+  'Before a single line is drawn, we walk through history. We ask: what heritage lives here? What identity shaped these streets? For us, architecture is cultural memory made visible — each space we design carries the weight of tradition, the richness of a people, and the courage to honor the past while building boldly for the future.',
+  'We feel the wind. We trace the arc of sunlight across a wall. We follow the natural path of water through a site. Nature is not decoration — it is the skeleton beneath everything we create. We weave organic light, living materials, and the wisdom of landscape into every structure, crafting spaces that breathe, evolve, and truly belong to their place on earth.',
+  'Every line we draw is a decision. Every surface, a composition. Every shadow, intentional. Architecture, at its highest form, transcends utility and becomes art — spaces that stop you in your tracks, that make you feel something you cannot name, and that endure in memory long after you have left them.',
 ]
 
 const PHILOSOPHY_TEXT =
-  'Our trilogy — Culture, Nature, and Art — forms a unified philosophy that shapes every project we create. Together, these three pillars define an architecture that is meaningful, sustainable, and beautifully human.'
+  'Three chapters. One story. Culture gave us our roots. Nature gave us our framework. Art gave us our voice. Together — these three forces converge into a philosophy that shapes every project Criteria Designs creates: architecture that is meaningful, alive, and beautifully, unmistakably human.'
 
 const EASE = [0.25, 0.4, 0.25, 1] as [number, number, number, number]
 const EL   = 175
@@ -271,7 +277,7 @@ export default function PhilosophySection() {
             className="w-10 h-px bg-[#B1A490] origin-right"
           />
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[6px]">
-            What Drives Us
+            Our Story
           </span>
           <motion.div
             initial={{ scaleX: 0 }} animate={isInView ? { scaleX: 1 } : {}}
@@ -282,8 +288,8 @@ export default function PhilosophySection() {
         <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white italic leading-[1.1]">
           Our Philosophy
         </h2>
-        <p className="font-[var(--font-open-sans)] text-[15px] md:text-[16px] text-white/40 mt-4 max-w-[460px] mx-auto leading-[1.8] font-light">
-          Three pillars converge into one unified vision.
+        <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] text-white/35 mt-4 max-w-[500px] mx-auto leading-[1.8] italic">
+          Three chapters. One vision. The story of how Criteria Designs was built.
         </p>
       </motion.div>
 
@@ -504,7 +510,7 @@ export default function PhilosophySection() {
               {/* Navigation + pillar text — right side */}
               <div className="flex-1 min-w-0 flex flex-col items-center md:items-start">
 
-                {/* Navigation row: ← [num · label] → */}
+                {/* Chapter label + title */}
                 <div className="flex items-center gap-6 mb-4">
                   <ArrowBtn dir="left" onClick={prev} />
                   <AnimatePresence mode="wait">
@@ -515,18 +521,12 @@ export default function PhilosophySection() {
                       exit={{ opacity: 0, y: -7 }}
                       transition={{ duration: 0.22 }}
                     >
-                      {/* Counter: 01 / 03 */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <p
-                          className="font-[var(--font-libre-franklin)] text-[11px] tracking-[6px] uppercase"
-                          style={{ color: pillars[activeCard].accent }}
-                        >
-                          {pillars[activeCard].num}
-                        </p>
-                        <span className="font-[var(--font-libre-franklin)] text-[11px] text-white/20 tracking-[2px]">
-                          / 03
-                        </span>
-                      </div>
+                      <p
+                        className="font-[var(--font-libre-franklin)] text-[10px] tracking-[5px] uppercase mb-2"
+                        style={{ color: pillars[activeCard].accent }}
+                      >
+                        Chapter {pillars[activeCard].num}
+                      </p>
                       <p className="font-[var(--font-playfair)] text-[36px] md:text-[46px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
@@ -535,25 +535,14 @@ export default function PhilosophySection() {
                   <ArrowBtn dir="right" onClick={next} />
                 </div>
 
-                {/* Progress dots — show viewed / active / unviewed */}
-                <div className="flex items-center gap-3 mb-5">
+                {/* Progress dots */}
+                <div className="flex items-center gap-3 mb-6">
                   {pillars.map((p, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleGoCard(i)}
-                      className="group flex flex-col items-center gap-1"
-                      aria-label={`Go to ${p.label}`}
-                    >
+                    <button key={i} onClick={() => handleGoCard(i)} aria-label={`Go to ${p.label}`}>
                       <motion.div
                         animate={{
-                          backgroundColor:
-                            i === activeCard ? p.accent
-                            : viewedSet.has(i) ? `${p.accent}55`
-                            : 'transparent',
-                          borderColor:
-                            i === activeCard ? p.accent
-                            : viewedSet.has(i) ? `${p.accent}70`
-                            : 'rgba(255,255,255,0.18)',
+                          backgroundColor: i === activeCard ? p.accent : viewedSet.has(i) ? `${p.accent}55` : 'transparent',
+                          borderColor: i === activeCard ? p.accent : viewedSet.has(i) ? `${p.accent}70` : 'rgba(255,255,255,0.18)',
                           scale: i === activeCard ? 1.4 : 1,
                         }}
                         transition={{ duration: 0.3 }}
@@ -563,30 +552,44 @@ export default function PhilosophySection() {
                   ))}
                   {viewedSet.size < 3 && (
                     <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/20 uppercase tracking-[2px] ml-1">
-                      explore all
+                      read all chapters
                     </span>
                   )}
                   {viewedSet.size === 3 && !showFinale && (
                     <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                       className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-1"
                       style={{ color: '#B1A490' }}
                     >
-                      ✦ complete
+                      ✦ story complete
                     </motion.span>
                   )}
                 </div>
 
-                {/* Pillar description */}
+                {/* Story hook line */}
                 <AnimatePresence mode="wait">
                   <motion.p
-                    key={activeCard}
+                    key={`hook-${activeCard}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className="font-[var(--font-playfair)] text-[15px] md:text-[17px] italic mb-3 text-center md:text-left"
+                    style={{ color: pillars[activeCard].accent }}
+                  >
+                    {PILLAR_HOOKS[activeCard]}
+                  </motion.p>
+                </AnimatePresence>
+
+                {/* Chapter body */}
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={`body-${activeCard}`}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.38, ease: EASE }}
-                    className="font-[var(--font-open-sans)] text-white/80 text-[16px] md:text-[18px] leading-[1.9] text-center md:text-left font-light"
+                    transition={{ duration: 0.38, delay: 0.06, ease: EASE }}
+                    className="font-[var(--font-open-sans)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] text-center md:text-left font-light"
                   >
                     {PILLAR_TEXTS[activeCard]}
                   </motion.p>
@@ -596,7 +599,7 @@ export default function PhilosophySection() {
             </motion.div>
           )}
 
-          {/* Finale: philosophy text (logo is now in canvas above) */}
+          {/* Epilogue */}
           {showFinale && (
             <motion.div
               key="finale"
@@ -605,10 +608,14 @@ export default function PhilosophySection() {
               transition={{ duration: 1.0, ease: EASE, delay: 0.6 }}
               className="text-center max-w-[640px] mx-auto pt-2"
             >
-              <p className="font-[var(--font-playfair)] text-[15px] text-[#B1A490] italic tracking-wide mb-6">
-                Culture · Nature · Art
+              <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[6px] mb-3">
+                Epilogue
               </p>
-              <p className="font-[var(--font-open-sans)] text-white/80 text-[16px] md:text-[18px] leading-[1.9] font-light">
+              <p className="font-[var(--font-playfair)] text-[18px] md:text-[22px] text-white italic leading-[1.5] mb-5">
+                Three chapters. One story.
+              </p>
+              <div className="w-8 h-px bg-[#B1A490]/40 mx-auto mb-5" />
+              <p className="font-[var(--font-open-sans)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] font-light">
                 {PHILOSOPHY_TEXT}
               </p>
             </motion.div>
