@@ -77,20 +77,21 @@ function PortfolioCard({ project, index }: { project: PortfolioItem; index: numb
 
   const catLabel = CATEGORY_LABELS[project.category] || project.category
   const meta = [project.yearCompleted, project.location].filter(Boolean).join(' — ')
+  const isFeatured = index === 0
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div>
       <Link href={`/projects/${project.slug}`} className="group block">
-        {/* Image — wide 21:9 cinematic ratio */}
-        <div
+
+        {/* Image — curtain reveal (clip-path left→right) */}
+        <motion.div
           ref={containerRef}
+          initial={{ clipPath: 'inset(0 100% 0 0)' }}
+          whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 1.15, ease: [0.76, 0, 0.24, 1] }}
           className="relative overflow-hidden"
-          style={{ aspectRatio: '21/9' }}
+          style={{ aspectRatio: isFeatured ? '16/9' : '21/9' }}
           onMouseMove={updateCursor}
           onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
           onMouseLeave={() => setHovered(false)}
@@ -108,6 +109,20 @@ function PortfolioCard({ project, index }: { project: PortfolioItem; index: numb
             <div className="absolute inset-0 bg-[#f0ede8]" />
           )}
 
+          {/* Featured badge */}
+          {isFeatured && (
+            <span className="absolute top-5 left-8 font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[3px] text-white bg-[#B1A490] px-3 py-1 rounded-full">
+              Featured
+            </span>
+          )}
+
+          {/* Bottom "Explore →" overlay — slides up on hover */}
+          <div className="absolute bottom-0 left-0 right-0 py-5 px-8 bg-gradient-to-t from-black/70 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-[380ms] ease-out">
+            <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[3px]">
+              Explore Project &rarr;
+            </span>
+          </div>
+
           {/* Large faint editorial index number */}
           <span className="absolute bottom-3 right-5 font-[var(--font-playfair)] text-[72px] lg:text-[108px] leading-none text-white/12 select-none pointer-events-none group-hover:text-white/22 transition-opacity duration-500">
             {String(index + 1).padStart(2, '0')}
@@ -123,18 +138,23 @@ function PortfolioCard({ project, index }: { project: PortfolioItem; index: numb
               <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Info below image */}
-        <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10 flex items-start justify-between gap-6">
+        {/* Info — fade up after image reveals */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.5, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10 flex items-start justify-between gap-6"
+        >
           <div className="min-w-0">
-            {/* Category pill */}
             <div>
               <span className="inline-block font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[3px] text-[#B1A490] border border-[#B1A490]/50 rounded-full px-3 py-[3px]">
                 {catLabel}
               </span>
             </div>
-            <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-3 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
+            <h3 className={`font-[var(--font-merriweather)] font-bold text-[#181C23] mt-3 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300 ${isFeatured ? 'text-[26px] lg:text-[34px]' : 'text-[22px] lg:text-[28px]'}`}>
               {project.titleEn}
             </h3>
             {meta && (
@@ -144,13 +164,13 @@ function PortfolioCard({ project, index }: { project: PortfolioItem; index: numb
             )}
           </div>
 
-          {/* Index tag */}
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#C8C8C2] tracking-[0.15em] shrink-0 mt-1 select-none">
             {String(index + 1).padStart(2, '0')}
           </span>
-        </div>
+        </motion.div>
+
       </Link>
-    </motion.div>
+    </div>
   )
 }
 
@@ -273,6 +293,19 @@ export default function Home() {
             <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#747779] leading-relaxed mt-5 max-w-[280px]">
               Each project is a collaboration between vision and craft — built to endure, designed to inspire.
             </p>
+
+            {/* Project count */}
+            {portfolioProjects.length > 0 && (
+              <div className="mt-8 flex items-baseline gap-3 border-t border-[#E8E8E4] pt-6">
+                <span className="font-[var(--font-playfair)] text-[42px] leading-none text-[#181C23]">
+                  {String(portfolioProjects.length).padStart(2, '0')}
+                </span>
+                <span className="font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[3px] text-[#9A9A94]">
+                  Projects
+                </span>
+              </div>
+            )}
+
             <Link
               href="/projects"
               className="inline-flex items-center gap-3 mt-10 bg-[#181C23] hover:bg-[#B1A490] text-white px-7 py-4 rounded-full transition-colors duration-300"
