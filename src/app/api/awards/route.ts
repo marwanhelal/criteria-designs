@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching awards:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch awards' },
+      { error: 'Failed to fetch awards', detail: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
