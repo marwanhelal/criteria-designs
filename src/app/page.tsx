@@ -258,6 +258,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Minimal section divider */}
+      <div className="bg-white px-8 lg:px-16">
+        <div className="max-w-[1290px] mx-auto">
+          <div className="h-px bg-[#E8E8E4]" />
+        </div>
+      </div>
+
       <AwardsSection awards={awards} />
 
       <ClientsMarquee clients={clients} />
