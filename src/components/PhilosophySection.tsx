@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface PhilosophyData {
   philosophyImage: string | null
@@ -226,7 +227,7 @@ export default function PhilosophySection() {
     return () => t.forEach(clearTimeout)
   }, [isCanvasInView])
 
-  const handleGoCard = (idx: number) => {
+  const handleGoCard = useCallback((idx: number) => {
     if (showFinale) return
     setActiveCard(idx)
     setViewedSet(prev => {
@@ -237,10 +238,28 @@ export default function PhilosophySection() {
       }
       return next
     })
-  }
+  }, [showFinale])
 
-  const prev = () => handleGoCard((activeCard - 1 + 3) % 3)
-  const next = () => handleGoCard((activeCard + 1) % 3)
+  const prev = useCallback(() => handleGoCard((activeCard - 1 + 3) % 3), [activeCard, handleGoCard])
+  const next = useCallback(() => handleGoCard((activeCard + 1) % 3), [activeCard, handleGoCard])
+
+  // Keyboard navigation ← →
+  useEffect(() => {
+    if (phase < 5 || showFinale) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft')  prev()
+      if (e.key === 'ArrowRight') next()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [phase, showFinale, prev, next])
+
+  // Auto-advance every 8 seconds
+  useEffect(() => {
+    if (phase < 5 || showFinale) return
+    const id = setTimeout(() => next(), 8000)
+    return () => clearTimeout(id)
+  }, [phase, showFinale, activeCard, next])
 
   const cardImages = [data?.philosophyCultureImage, data?.philosophyNatureImage, data?.philosophyArtImage]
 
@@ -260,8 +279,18 @@ export default function PhilosophySection() {
       </div>
     )
 
+  const glowColors = ['rgba(196,168,122,0.07)', 'rgba(61,139,90,0.07)', 'rgba(212,168,44,0.07)']
+
   return (
     <section ref={sectionRef} className="relative bg-[#181C23] w-full overflow-hidden">
+
+      {/* Ambient chapter glow — shifts color with active pillar */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0 transition-all duration-1000"
+        style={{
+          background: `radial-gradient(ellipse 80% 50% at 50% 100%, ${glowColors[activeCard]} 0%, transparent 70%)`,
+        }}
+      />
 
       {/* ── Section Header ──────────────────────────────────── */}
       <motion.div
@@ -538,7 +567,7 @@ export default function PhilosophySection() {
                 {/* Progress dots */}
                 <div className="flex items-center gap-3 mb-6">
                   {pillars.map((p, i) => (
-                    <button key={i} onClick={() => handleGoCard(i)} aria-label={`Go to ${p.label}`}>
+                    <button key={i} onClick={() => handleGoCard(i)} aria-label={`Go to ${p.label}`} className="relative flex flex-col items-center gap-1">
                       <motion.div
                         animate={{
                           backgroundColor: i === activeCard ? p.accent : viewedSet.has(i) ? `${p.accent}55` : 'transparent',
@@ -548,23 +577,41 @@ export default function PhilosophySection() {
                         transition={{ duration: 0.3 }}
                         className="w-[7px] h-[7px] rounded-full border"
                       />
+                      {/* Auto-advance progress bar under active dot */}
+                      {i === activeCard && (
+                        <div className="absolute top-full mt-[3px] w-6 h-px overflow-hidden rounded-full bg-white/10">
+                          <div
+                            key={`bar-${activeCard}`}
+                            className="h-full rounded-full"
+                            style={{
+                              background: p.accent,
+                              animation: 'chapter-progress 8s linear forwards',
+                            }}
+                          />
+                        </div>
+                      )}
                     </button>
                   ))}
                   {viewedSet.size < 3 && (
-                    <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/20 uppercase tracking-[2px] ml-1">
+                    <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/20 uppercase tracking-[2px] ml-2">
                       read all chapters
                     </span>
                   )}
                   {viewedSet.size === 3 && !showFinale && (
                     <motion.span
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-1"
+                      className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-2"
                       style={{ color: '#B1A490' }}
                     >
                       ✦ story complete
                     </motion.span>
                   )}
                 </div>
+
+                {/* Keyboard hint — desktop only */}
+                <p className="hidden md:block font-[var(--font-libre-franklin)] text-[9px] text-white/15 tracking-[1px] mb-4 text-left">
+                  use ← → keys to navigate
+                </p>
 
                 {/* Story hook line */}
                 <AnimatePresence mode="wait">
@@ -618,6 +665,22 @@ export default function PhilosophySection() {
               <p className="font-[var(--font-open-sans)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] font-light">
                 {PHILOSOPHY_TEXT}
               </p>
+
+              {/* Epilogue CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 1.6, ease: EASE }}
+                className="mt-10 flex justify-center"
+              >
+                <Link
+                  href="/projects"
+                  className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#B1A490] border border-[#B1A490]/30 px-8 py-4 hover:border-[#B1A490] hover:bg-[#B1A490]/08 transition-all duration-300"
+                >
+                  <span className="transition-transform duration-300 group-hover:-translate-x-1">Discover Our Projects</span>
+                  <span className="opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">→</span>
+                </Link>
+              </motion.div>
             </motion.div>
           )}
 
@@ -673,6 +736,10 @@ export default function PhilosophySection() {
           @keyframes criteria-marquee {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-50%); }
+          }
+          @keyframes chapter-progress {
+            0%   { width: 0%; }
+            100% { width: 100%; }
           }
         `}</style>
       </div>
