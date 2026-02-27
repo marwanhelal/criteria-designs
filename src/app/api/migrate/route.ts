@@ -197,7 +197,7 @@ export async function POST() {
           "subtitleAr" TEXT,
           "image" TEXT,
           "order" INTEGER NOT NULL DEFAULT 0,
-          "status" TEXT NOT NULL DEFAULT 'DRAFT',
+          "status" "Status" NOT NULL DEFAULT 'DRAFT',
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT "Award_pkey" PRIMARY KEY ("id")
@@ -206,6 +206,16 @@ export async function POST() {
       results.push('✓ Award table ensured')
     } catch (e) {
       results.push(`✗ Award table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 15. Fix Award status column to use Status enum (if created as TEXT)
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "Award" ALTER COLUMN "status" TYPE "Status" USING "status"::"Status";
+      `)
+      results.push('✓ Award status column converted to Status enum')
+    } catch (e) {
+      results.push(`✗ Award status enum: ${e instanceof Error ? e.message : String(e)}`)
     }
 
     return NextResponse.json({ success: true, results })
