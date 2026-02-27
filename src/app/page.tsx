@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import CeoBanner from '@/components/CeoBanner'
@@ -56,15 +57,16 @@ interface PortfolioItem {
   slug: string
   titleEn: string
   category: string
+  location: string | null
+  yearCompleted: number | null
   images: { url: string; alt: string | null }[]
 }
 
-function PortfolioCard({ project }: { project: PortfolioItem }) {
+function PortfolioCard({ project, index }: { project: PortfolioItem; index: number }) {
   const [hovered, setHovered] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
 
-  // Update cursor position directly on DOM — no React re-render, no lag
   const updateCursor = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = containerRef.current?.getBoundingClientRect()
     if (rect && cursorRef.current) {
@@ -73,51 +75,80 @@ function PortfolioCard({ project }: { project: PortfolioItem }) {
     }
   }
 
+  const catLabel = CATEGORY_LABELS[project.category] || project.category
+  const meta = [project.yearCompleted, project.location].filter(Boolean).join(' — ')
+
   return (
-    <Link href={`/projects/${project.slug}`} className="group block">
-      {/* Image — wide 21:9 cinematic ratio */}
-      <div
-        ref={containerRef}
-        className="relative overflow-hidden"
-        style={{ aspectRatio: '21/9' }}
-        onMouseMove={updateCursor}
-        onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {project.images?.[0] ? (
-          <Image
-            src={project.images[0].url}
-            alt={project.images[0].alt || project.titleEn}
-            fill
-            sizes="(max-width: 1024px) 100vw, 66vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            unoptimized
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[#f0ede8]" />
-        )}
-        {/* Cursor circle — position updated via ref (no re-renders) */}
+    <motion.div
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Link href={`/projects/${project.slug}`} className="group block">
+        {/* Image — wide 21:9 cinematic ratio */}
         <div
-          ref={cursorRef}
-          className={`absolute pointer-events-none transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-          style={{ transform: 'translate(-50%, -50%)' }}
+          ref={containerRef}
+          className="relative overflow-hidden"
+          style={{ aspectRatio: '21/9' }}
+          onMouseMove={updateCursor}
+          onMouseEnter={(e) => { updateCursor(e); setHovered(true) }}
+          onMouseLeave={() => setHovered(false)}
         >
-          <div className="w-[96px] h-[96px] rounded-full bg-[#181C23] flex items-center justify-center">
-            <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
+          {project.images?.[0] ? (
+            <Image
+              src={project.images[0].url}
+              alt={project.images[0].alt || project.titleEn}
+              fill
+              sizes="(max-width: 1024px) 100vw, 66vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              unoptimized
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[#f0ede8]" />
+          )}
+
+          {/* Large faint editorial index number */}
+          <span className="absolute bottom-3 right-5 font-[var(--font-playfair)] text-[72px] lg:text-[108px] leading-none text-white/12 select-none pointer-events-none group-hover:text-white/22 transition-opacity duration-500">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+
+          {/* Cursor circle */}
+          <div
+            ref={cursorRef}
+            className={`absolute pointer-events-none transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+            style={{ transform: 'translate(-50%, -50%)' }}
+          >
+            <div className="w-[96px] h-[96px] rounded-full bg-[#181C23] flex items-center justify-center">
+              <span className="font-[var(--font-libre-franklin)] text-[11px] text-white uppercase tracking-[2px]">View</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Info below image */}
-      <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10">
-        <p className="font-[var(--font-open-sans)] text-[13px] text-[#666]">
-          {CATEGORY_LABELS[project.category] || project.category}
-        </p>
-        <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-2 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
-          {project.titleEn}
-        </h3>
-      </div>
-    </Link>
+        {/* Info below image */}
+        <div className="px-8 lg:pr-16 pt-5 pb-5 border-b border-[#181C23]/10 flex items-start justify-between gap-6">
+          <div className="min-w-0">
+            {/* Category pill */}
+            <span className="inline-block font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[3px] text-[#B1A490] border border-[#B1A490]/50 rounded-full px-3 py-[3px]">
+              {catLabel}
+            </span>
+            <h3 className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] mt-3 inline-block border-b-2 border-transparent group-hover:border-[#B1A490] group-hover:text-[#B1A490] transition-colors duration-300">
+              {project.titleEn}
+            </h3>
+            {meta && (
+              <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] tracking-[0.03em] mt-1">
+                {meta}
+              </p>
+            )}
+          </div>
+
+          {/* Index tag */}
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#C8C8C2] tracking-[0.15em] shrink-0 mt-1 select-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+      </Link>
+    </motion.div>
   )
 }
 
@@ -224,13 +255,22 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row">
 
           {/* Sticky left panel */}
-          <div className="lg:w-[34%] shrink-0 px-8 lg:pl-16 lg:pr-10 py-16 lg:py-20 lg:sticky lg:top-[90px] lg:self-start">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:w-[34%] shrink-0 px-8 lg:pl-16 lg:pr-10 py-16 lg:py-20 lg:sticky lg:top-[90px] lg:self-start"
+          >
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
             <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-[#181C23] leading-[1.1] mt-5">
               Design that adds value
             </h2>
+            <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#747779] leading-relaxed mt-5 max-w-[280px]">
+              Each project is a collaboration between vision and craft — built to endure, designed to inspire.
+            </p>
             <Link
               href="/projects"
               className="inline-flex items-center gap-3 mt-10 bg-[#181C23] hover:bg-[#B1A490] text-white px-7 py-4 rounded-full transition-colors duration-300"
@@ -240,7 +280,7 @@ export default function Home() {
                 View All Projects
               </span>
             </Link>
-          </div>
+          </motion.div>
 
           {/* Scrolling right */}
           <div className="flex-1 pt-16 lg:pt-20 pb-16 lg:pb-24 space-y-14 lg:space-y-20">
@@ -249,8 +289,8 @@ export default function Home() {
                 No projects yet. Add projects from the CMS.
               </p>
             ) : (
-              portfolioProjects.map((project) => (
-                <PortfolioCard key={project.id} project={project} />
+              portfolioProjects.map((project, i) => (
+                <PortfolioCard key={project.id} project={project} index={i} />
               ))
             )}
           </div>
