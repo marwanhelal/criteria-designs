@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Building2,
+  Award,
 } from 'lucide-react'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -24,6 +25,7 @@ const sidebarItems = [
   { name: 'Team', href: '/admin/team', icon: Users },
   { name: 'Services', href: '/admin/services', icon: Briefcase },
   { name: 'Clients', href: '/admin/clients', icon: Building2 },
+  { name: 'Awards', href: '/admin/awards', icon: Award },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Media', href: '/admin/media', icon: Image },
   { name: 'Settings', href: '/admin/settings', icon: Settings },

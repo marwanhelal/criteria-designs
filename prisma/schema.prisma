@@ -225,6 +225,22 @@ model Client {
   updatedAt DateTime @updatedAt
 }
 
+// ==================== AWARDS ====================
+
+model Award {
+  id         String   @id @default(cuid())
+  titleEn    String
+  titleAr    String
+  year       Int
+  subtitleEn String?
+  subtitleAr String?
+  image      String?
+  order      Int      @default(0)
+  status     Status   @default(DRAFT)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 // ==================== MEDIA ====================
 
 model Media {

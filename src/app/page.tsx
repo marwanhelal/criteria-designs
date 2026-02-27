@@ -9,6 +9,7 @@ import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
+import AwardsSection from '@/components/AwardsSection'
 
 interface Project {
   id: string
@@ -124,6 +125,7 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
   const [clients, setClients] = useState<{ id: string; nameEn: string; logo?: string | null }[]>([])
+  const [awards, setAwards] = useState<{ id: string; titleEn: string; year: number; subtitleEn: string | null; image: string | null }[]>([])
 
   useEffect(() => {
     fetch('/api/clients')
@@ -134,6 +136,11 @@ export default function Home() {
     fetch('/api/projects?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
       .then(data => setProjects(data.slice(0, 6)))
+      .catch(() => {})
+
+    fetch('/api/awards?status=PUBLISHED')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setAwards(data))
       .catch(() => {})
 
     fetch('/api/settings')
@@ -250,6 +257,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <AwardsSection awards={awards} />
 
       <ClientsMarquee clients={clients} />
 

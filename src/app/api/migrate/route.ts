@@ -185,6 +185,29 @@ export async function POST() {
       results.push(`✗ bgColor: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 14. Create Award table
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "Award" (
+          "id" TEXT NOT NULL,
+          "titleEn" TEXT NOT NULL,
+          "titleAr" TEXT NOT NULL,
+          "year" INTEGER NOT NULL,
+          "subtitleEn" TEXT,
+          "subtitleAr" TEXT,
+          "image" TEXT,
+          "order" INTEGER NOT NULL DEFAULT 0,
+          "status" TEXT NOT NULL DEFAULT 'DRAFT',
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Award_pkey" PRIMARY KEY ("id")
+        );
+      `)
+      results.push('✓ Award table ensured')
+    } catch (e) {
+      results.push(`✗ Award table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)
