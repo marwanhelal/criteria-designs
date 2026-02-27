@@ -13,69 +13,111 @@ interface Award {
   image: string | null
 }
 
-/* ── Single award card ─────────────────────────────────────────────── */
-function AwardCard({
-  award,
-  size,
-}: {
-  award: Award
-  size: 'large' | 'small'
-}) {
+/* ── Large award card (2-col row) — left-aligned ───────────────────── */
+function LargeCard({ award }: { award: Award }) {
   const [hovered, setHovered] = useState(false)
-
-  const isLarge = size === 'large'
 
   return (
     <div
-      className="relative group cursor-default"
+      className="relative cursor-default"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       {/* Year */}
-      <p className="font-[var(--font-open-sans)] text-[13px] text-[#5C6B5C] mb-2">
+      <p
+        className="font-[var(--font-libre-franklin)] text-[14px] text-[#1A1A1A] tracking-[0.12em] mb-2"
+      >
         {award.year}
       </p>
 
-      {/* Award name — olive/sage serif like the reference */}
-      <h3
-        className={`font-[var(--font-playfair)] text-[#4A5C4A] leading-[1.25] font-normal ${
-          isLarge
-            ? 'text-[22px] md:text-[26px] lg:text-[30px]'
-            : 'text-[15px] md:text-[17px]'
-        }`}
-      >
+      {/* Award name — sans-serif semi-bold, large */}
+      <h3 className="font-[var(--font-libre-franklin)] text-[18px] md:text-[20px] font-semibold text-[#1A1A1A] leading-[1.3]">
         {award.titleEn}
       </h3>
 
       {/* Subtitle */}
       {award.subtitleEn && (
-        <p
-          className={`font-[var(--font-open-sans)] text-[#6B7F6B] mt-1 ${
-            isLarge ? 'text-[14px]' : 'text-[12px]'
-          }`}
-        >
+        <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#1A1A1A]/50 tracking-[0.06em] mt-1">
           {award.subtitleEn}
         </p>
       )}
 
-      {/* Separator line */}
-      <div className={`w-full h-px bg-[#C8C8C0] ${isLarge ? 'mt-5' : 'mt-4'}`} />
+      {/* Divider */}
+      <div className="w-full h-px bg-[#E0E0E0] mt-5" />
 
-      {/* Hover image — grayscale, slight rotation, positioned top-right */}
+      {/* Hover image — grayscale, rotated, positioned top-right */}
+      <AnimatePresence>
+        {hovered && award.image && (
+          <motion.div
+            initial={{ opacity: 0, y: 12, rotate: 0 }}
+            animate={{ opacity: 1, y: 0, rotate: 5 }}
+            exit={{ opacity: 0, y: 12, rotate: 0 }}
+            transition={{ duration: 0.28, ease: [0.25, 0.4, 0.25, 1] }}
+            className="absolute right-0 top-[-8px] z-20 pointer-events-none"
+          >
+            <div
+              className="relative rounded-[6px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.14)] border border-[#f0f0f0]"
+              style={{ width: 140, height: 105 }}
+            >
+              <Image
+                src={award.image}
+                alt={award.titleEn}
+                fill
+                className="object-cover grayscale"
+                unoptimized
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/* ── Small award card (4-col row) — centered ───────────────────────── */
+function SmallCard({ award }: { award: Award }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div
+      className="relative cursor-default text-center"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Year */}
+      <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#1A1A1A] tracking-[0.12em] mb-2">
+        {award.year}
+      </p>
+
+      {/* Award name */}
+      <h3 className="font-[var(--font-libre-franklin)] text-[15px] md:text-[16px] font-semibold text-[#1A1A1A] leading-[1.35]">
+        {award.titleEn}
+      </h3>
+
+      {/* Subtitle */}
+      {award.subtitleEn && (
+        <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#1A1A1A]/50 tracking-[0.06em] mt-1">
+          {award.subtitleEn}
+        </p>
+      )}
+
+      {/* Divider */}
+      <div className="w-full h-px bg-[#E0E0E0] mt-4" />
+
+      {/* Hover image */}
       <AnimatePresence>
         {hovered && award.image && (
           <motion.div
             initial={{ opacity: 0, y: 10, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: 4 }}
             exit={{ opacity: 0, y: 10, rotate: 0 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
-            className="absolute right-0 top-[-10px] z-20 pointer-events-none"
-            style={{
-              width: isLarge ? 140 : 100,
-              height: isLarge ? 110 : 80,
-            }}
+            transition={{ duration: 0.28, ease: [0.25, 0.4, 0.25, 1] }}
+            className="absolute right-0 top-[-6px] z-20 pointer-events-none"
           >
-            <div className="relative w-full h-full rounded-[6px] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#e8e8e4]">
+            <div
+              className="relative rounded-[6px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.14)] border border-[#f0f0f0]"
+              style={{ width: 100, height: 75 }}
+            >
               <Image
                 src={award.image}
                 alt={award.titleEn}
@@ -97,61 +139,59 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
 
   const items = awards.slice(0, 12)
 
-  // Split into rows matching the reference layout:
-  // Row 1: 2 large cards
-  // Row 2: 4 small cards
-  // Row 3: 1 large + 3 small
-  const row1 = items.slice(0, 2)
-  const row2 = items.slice(2, 6)
-  const row3Large = items.slice(6, 7)
-  const row3Small = items.slice(7, 10)
-  const remaining = items.slice(10)
+  // Staggered layout pattern matching reference:
+  // Row A (2 large, left-aligned, col 1 & 3 of 4)
+  // Row B (4 small, centered, all 4 cols)
+  // Row A repeat, Row B repeat...
+  const rowA1 = items.slice(0, 2)
+  const rowB1 = items.slice(2, 6)
+  const rowA2 = items.slice(6, 8)
+  const rowB2 = items.slice(8, 12)
 
   return (
     <section data-navbar-dark className="bg-white py-20 lg:py-28 px-8 lg:px-16">
       <div className="max-w-[1290px] mx-auto">
-        {/* Heading — elegant italic serif */}
-        <h2 className="font-[var(--font-playfair)] italic text-[48px] md:text-[64px] lg:text-[80px] text-[#181C23] leading-[1] tracking-[-0.02em] mb-14 lg:mb-20">
+
+        {/* Heading — large serif, regular weight, editorial */}
+        <h2 className="font-[var(--font-playfair)] text-[64px] md:text-[80px] lg:text-[96px] text-[#1A1A1A] leading-[1] tracking-[-0.03em] font-normal mb-16 lg:mb-20">
           Awards
         </h2>
 
-        {/* Row 1: 2 large featured awards */}
-        {row1.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 mb-10">
-            {row1.map((award) => (
-              <AwardCard key={award.id} award={award} size="large" />
+        {/* Row A1: 2 large awards — spans half width each */}
+        {rowA1.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 mb-10">
+            {rowA1.map((award) => (
+              <LargeCard key={award.id} award={award} />
+            ))}
+            {/* Fill empty cols if only 1 item */}
+            {rowA1.length === 1 && <div />}
+          </div>
+        )}
+
+        {/* Row B1: 4 small awards — all 4 cols, centered */}
+        {rowB1.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8 mb-10 pl-0 lg:pl-0">
+            {rowB1.map((award) => (
+              <SmallCard key={award.id} award={award} />
             ))}
           </div>
         )}
 
-        {/* Row 2: 4 smaller awards */}
-        {row2.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8 mb-10">
-            {row2.map((award) => (
-              <AwardCard key={award.id} award={award} size="small" />
+        {/* Row A2: 2 large awards */}
+        {rowA2.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 mb-10">
+            {rowA2.map((award) => (
+              <LargeCard key={award.id} award={award} />
             ))}
+            {rowA2.length === 1 && <div />}
           </div>
         )}
 
-        {/* Row 3: 1 large + 3 small */}
-        {row3Large.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-10 gap-y-8 mb-10">
-            <div className="lg:col-span-1">
-              {row3Large.map((award) => (
-                <AwardCard key={award.id} award={award} size="large" />
-              ))}
-            </div>
-            {row3Small.length > 0 && row3Small.map((award) => (
-              <AwardCard key={award.id} award={award} size="small" />
-            ))}
-          </div>
-        )}
-
-        {/* Remaining awards */}
-        {remaining.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8 mb-10">
-            {remaining.map((award) => (
-              <AwardCard key={award.id} award={award} size="small" />
+        {/* Row B2: 4 small awards */}
+        {rowB2.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8 mb-10">
+            {rowB2.map((award) => (
+              <SmallCard key={award.id} award={award} />
             ))}
           </div>
         )}
@@ -160,7 +200,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         <div className="flex justify-center mt-14">
           <Link
             href="/awards"
-            className="inline-flex items-center font-[var(--font-open-sans)] text-[12px] text-[#181C23] uppercase tracking-[4px] border border-[#181C23]/20 px-10 py-4 hover:bg-[#181C23]/[0.03] transition-colors duration-300"
+            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[4px] border border-[#1A1A1A]/20 px-10 py-4 hover:bg-[#1A1A1A]/[0.03] transition-colors duration-300"
           >
             View All Awards
           </Link>
