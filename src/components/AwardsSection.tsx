@@ -32,16 +32,16 @@ function AwardCard({
       onMouseLeave={() => setHovered(false)}
     >
       {/* Year */}
-      <p className="font-[var(--font-open-sans)] text-[13px] text-[#181C23]/40 mb-2">
+      <p className="font-[var(--font-open-sans)] text-[13px] text-[#5C6B5C] mb-2">
         {award.year}
       </p>
 
-      {/* Award name — large serif for featured, smaller for regular */}
+      {/* Award name — olive/sage serif like the reference */}
       <h3
-        className={`font-[var(--font-playfair)] text-[#181C23] leading-[1.2] ${
+        className={`font-[var(--font-playfair)] text-[#4A5C4A] leading-[1.25] font-normal ${
           isLarge
-            ? 'text-[22px] md:text-[26px] lg:text-[30px] font-normal'
-            : 'text-[15px] md:text-[16px] font-semibold'
+            ? 'text-[22px] md:text-[26px] lg:text-[30px]'
+            : 'text-[15px] md:text-[17px]'
         }`}
       >
         {award.titleEn}
@@ -50,7 +50,7 @@ function AwardCard({
       {/* Subtitle */}
       {award.subtitleEn && (
         <p
-          className={`font-[var(--font-open-sans)] text-[#181C23]/45 mt-1 ${
+          className={`font-[var(--font-open-sans)] text-[#6B7F6B] mt-1 ${
             isLarge ? 'text-[14px]' : 'text-[12px]'
           }`}
         >
@@ -59,28 +59,28 @@ function AwardCard({
       )}
 
       {/* Separator line */}
-      <div className={`w-full h-px bg-[#181C23]/12 ${isLarge ? 'mt-5' : 'mt-4'}`} />
+      <div className={`w-full h-px bg-[#C8C8C0] ${isLarge ? 'mt-5' : 'mt-4'}`} />
 
-      {/* Hover image — positioned inside the card, top-right area */}
+      {/* Hover image — grayscale, slight rotation, positioned top-right */}
       <AnimatePresence>
         {hovered && award.image && (
           <motion.div
-            initial={{ opacity: 0, y: 8, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: 3 }}
-            exit={{ opacity: 0, y: 8, rotate: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
-            className="absolute right-0 top-0 z-20 pointer-events-none"
+            initial={{ opacity: 0, y: 10, rotate: 0 }}
+            animate={{ opacity: 1, y: 0, rotate: 4 }}
+            exit={{ opacity: 0, y: 10, rotate: 0 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+            className="absolute right-0 top-[-10px] z-20 pointer-events-none"
             style={{
-              width: isLarge ? 160 : 120,
-              height: isLarge ? 120 : 90,
+              width: isLarge ? 140 : 100,
+              height: isLarge ? 110 : 80,
             }}
           >
-            <div className="w-full h-full rounded-md overflow-hidden shadow-lg border border-white/60">
+            <div className="relative w-full h-full rounded-[6px] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#e8e8e4]">
               <Image
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-cover"
+                className="object-cover grayscale"
                 unoptimized
               />
             </div>
@@ -100,7 +100,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
   // Split into rows matching the reference layout:
   // Row 1: 2 large cards
   // Row 2: 4 small cards
-  // Row 3: 1 large + 3 small (or just fill remaining)
+  // Row 3: 1 large + 3 small
   const row1 = items.slice(0, 2)
   const row2 = items.slice(2, 6)
   const row3Large = items.slice(6, 7)
