@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 
 interface Award {
   id: string
@@ -11,6 +11,26 @@ interface Award {
   year: number
   subtitleEn: string | null
   image: string | null
+}
+
+/* ── Animated count-up number ──────────────────────────────────────── */
+function CountUp({ target, inView }: { target: number; inView: boolean }) {
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    if (!inView) return
+    let frame: number
+    const start = performance.now()
+    const duration = 1100
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - p, 3)
+      setCount(Math.round(eased * target))
+      if (p < 1) frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [inView, target])
+  return <>{String(count).padStart(2, '0')}</>
 }
 
 /* ── Architectural corner mark ─────────────────────────────────────── */
@@ -33,6 +53,56 @@ function ArchDivider() {
   )
 }
 
+/* ── Featured hero award ───────────────────────────────────────────── */
+function HeroCard({ award }: { award: Award }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+      className="group relative cursor-default mb-10"
+    >
+      {/* Top border with gold fill on hover */}
+      <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/50 transition-colors duration-500" />
+
+      <div className="flex items-center gap-6 md:gap-14 py-8 md:py-10">
+        {/* Large faint year — decorative */}
+        <span className="font-[var(--font-playfair)] text-[52px] md:text-[80px] leading-none text-[#EBEBEA] shrink-0 select-none w-[90px] md:w-[140px] group-hover:text-[#B1A490]/25 transition-colors duration-500">
+          {award.year}
+        </span>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[5px] text-[#B1A490] mb-2 block">
+            Featured Recognition
+          </span>
+          <h3 className="font-[var(--font-libre-franklin)] text-[20px] md:text-[28px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.25]">
+            {award.titleEn}
+          </h3>
+          {award.subtitleEn && (
+            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.04em] mt-2">
+              {award.subtitleEn}
+            </p>
+          )}
+        </div>
+
+        {/* Image */}
+        {award.image && (
+          <div className="shrink-0 hidden md:block">
+            <div className="relative w-[150px] h-[110px] rounded-[5px] overflow-hidden bg-white border border-[#eceae6] shadow-[0_2px_12px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_20px_rgba(0,0,0,0.10)] transition-shadow duration-300">
+              <Image src={award.image} alt={award.titleEn} fill className="object-contain p-3" unoptimized />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom border */}
+      <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/50 transition-colors duration-500" />
+    </motion.div>
+  )
+}
+
 /* ── Large award card ──────────────────────────────────────────────── */
 function LargeCard({ award, index }: { award: Award; index: number }) {
   const [hovered, setHovered] = useState(false)
@@ -47,32 +117,22 @@ function LargeCard({ award, index }: { award: Award; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Left accent bar */}
       <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#B1A490] origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
-
       <CornerMark className="absolute -top-[1px] -left-[1px] opacity-70" />
 
-      {/* Year */}
       <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] uppercase tracking-[0.18em] mb-3 pt-3 pl-3">
         {award.year}
       </p>
-
-      {/* Award name */}
       <h3 className="font-[var(--font-libre-franklin)] text-[17px] lg:text-[19px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.35] pl-3 pr-36">
         {award.titleEn}
       </h3>
-
-      {/* Subtitle */}
       {award.subtitleEn && (
         <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] tracking-[0.06em] mt-1.5 pl-3">
           {award.subtitleEn}
         </p>
       )}
-
-      {/* Bottom divider */}
       <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/40 transition-colors duration-300 mt-5 ml-3" />
 
-      {/* Hover image */}
       <AnimatePresence>
         {hovered && award.image && (
           <motion.div
@@ -82,17 +142,8 @@ function LargeCard({ award, index }: { award: Award; index: number }) {
             transition={{ duration: 0.26, ease: [0.25, 0.4, 0.25, 1] }}
             className="absolute right-0 top-2 z-20 pointer-events-none"
           >
-            <div
-              className="relative rounded-[5px] overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.12)] border border-[#ececec] bg-white"
-              style={{ width: 130, height: 98 }}
-            >
-              <Image
-                src={award.image}
-                alt={award.titleEn}
-                fill
-                className="object-contain p-2"
-                unoptimized
-              />
+            <div className="relative rounded-[5px] overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.12)] border border-[#ececec] bg-white" style={{ width: 130, height: 98 }}>
+              <Image src={award.image} alt={award.titleEn} fill className="object-contain p-2" unoptimized />
             </div>
           </motion.div>
         )}
@@ -115,32 +166,22 @@ function SmallCard({ award, index }: { award: Award; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Left accent bar */}
       <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#B1A490] origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
-
       <CornerMark className="absolute -top-[1px] -left-[1px] opacity-40" />
 
-      {/* Year */}
       <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] uppercase tracking-[0.18em] mb-2.5 pt-3">
         {award.year}
       </p>
-
-      {/* Award name */}
       <h3 className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.4] px-2">
         {award.titleEn}
       </h3>
-
-      {/* Subtitle */}
       {award.subtitleEn && (
         <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] tracking-[0.06em] mt-1 px-2">
           {award.subtitleEn}
         </p>
       )}
-
-      {/* Bottom divider */}
       <div className="h-px bg-[#E0E0DC] group-hover:bg-[#B1A490]/40 transition-colors duration-300 mt-4 mx-2" />
 
-      {/* Hover image */}
       <AnimatePresence>
         {hovered && award.image && (
           <motion.div
@@ -150,17 +191,8 @@ function SmallCard({ award, index }: { award: Award; index: number }) {
             transition={{ duration: 0.26, ease: [0.25, 0.4, 0.25, 1] }}
             className="absolute right-0 top-0 z-20 pointer-events-none"
           >
-            <div
-              className="relative rounded-[4px] overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.10)] border border-[#ececec] bg-white"
-              style={{ width: 88, height: 66 }}
-            >
-              <Image
-                src={award.image}
-                alt={award.titleEn}
-                fill
-                className="object-contain p-1.5"
-                unoptimized
-              />
+            <div className="relative rounded-[4px] overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.10)] border border-[#ececec] bg-white" style={{ width: 88, height: 66 }}>
+              <Image src={award.image} alt={award.titleEn} fill className="object-contain p-1.5" unoptimized />
             </div>
           </motion.div>
         )}
@@ -173,25 +205,35 @@ function SmallCard({ award, index }: { award: Award; index: number }) {
 export default function AwardsSection({ awards }: { awards: Award[] }) {
   if (awards.length === 0) return null
 
-  const items = awards.slice(0, 12)
-  const rowA1 = items.slice(0, 2)
-  const rowB1 = items.slice(2, 6)
-  const rowA2 = items.slice(6, 8)
-  const rowB2 = items.slice(8, 12)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const headerInView = useInView(headerRef, { once: true, margin: '-100px' })
+
+  const items = awards.slice(0, 13)
+  const hero = items[0]
+  const rest = items.slice(1)
+  const rowA1 = rest.slice(0, 2)
+  const rowB1 = rest.slice(2, 6)
+  const rowA2 = rest.slice(6, 8)
+  const rowB2 = rest.slice(8, 12)
 
   const minYear = Math.min(...items.map(a => a.year))
   const maxYear = Math.max(...items.map(a => a.year))
+
+  const stats = [
+    `${items.length} Recognitions`,
+    minYear !== maxYear ? `${minYear} – ${maxYear}` : `${minYear}`,
+    'International',
+  ]
 
   return (
     <section data-navbar-dark className="bg-white pt-16 pb-24 lg:pt-20 lg:pb-32 px-8 lg:px-16">
       <div className="max-w-[1290px] mx-auto">
 
         {/* Header row */}
-        <div className="flex items-end justify-between mb-4 lg:mb-5">
+        <div ref={headerRef} className="flex items-end justify-between mb-4 lg:mb-5">
           <motion.h2
             initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="font-[var(--font-playfair)] text-[60px] md:text-[80px] lg:text-[96px] text-[#1A1A1A] leading-[1] tracking-[-0.03em] font-normal"
           >
@@ -201,8 +243,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
           {/* Architectural index — top right */}
           <motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            animate={headerInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.35 }}
             className="hidden lg:flex flex-col items-end gap-1.5 pb-3"
           >
@@ -212,7 +253,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
             <div className="flex items-center gap-2">
               <div className="w-8 h-px bg-[#C8C8C2]" />
               <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#C8C8C2] tracking-[0.1em]">
-                {String(items.length).padStart(2, '0')}
+                <CountUp target={items.length} inView={headerInView} />
               </span>
             </div>
             {minYear !== maxYear && (
@@ -226,8 +267,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         {/* Animated gold underline */}
         <motion.div
           initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
+          animate={headerInView ? { scaleX: 1 } : {}}
           transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           style={{ originX: 0 }}
           className="h-[2px] w-20 bg-[#B1A490] mb-5"
@@ -236,13 +276,32 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
         {/* Tagline */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.18 }}
-          className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[420px] mb-16 lg:mb-20"
+          className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[420px] mb-6"
         >
           A growing record of international recognition across architecture and interior design.
         </motion.p>
+
+        {/* Stat pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.28 }}
+          className="flex flex-wrap gap-2 mb-14 lg:mb-16"
+        >
+          {stats.map((stat, i) => (
+            <span
+              key={i}
+              className="font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[0.12em] text-[#9A9A94] border border-[#E8E8E4] px-3 py-1.5 rounded-full"
+            >
+              {stat}
+            </span>
+          ))}
+        </motion.div>
+
+        {/* Featured hero award */}
+        {hero && <HeroCard award={hero} />}
 
         {/* Row A1: 2 large */}
         {rowA1.length > 0 && (
