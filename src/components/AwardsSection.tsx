@@ -47,6 +47,9 @@ function LargeCard({ award, index }: { award: Award; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Left accent bar */}
+      <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#B1A490] origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
+
       <CornerMark className="absolute -top-[1px] -left-[1px] opacity-70" />
 
       {/* Year */}
@@ -112,6 +115,9 @@ function SmallCard({ award, index }: { award: Award; index: number }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Left accent bar */}
+      <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#B1A490] origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
+
       <CornerMark className="absolute -top-[1px] -left-[1px] opacity-40" />
 
       {/* Year */}
@@ -173,12 +179,15 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
   const rowA2 = items.slice(6, 8)
   const rowB2 = items.slice(8, 12)
 
+  const minYear = Math.min(...items.map(a => a.year))
+  const maxYear = Math.max(...items.map(a => a.year))
+
   return (
     <section data-navbar-dark className="bg-white pt-16 pb-24 lg:pt-20 lg:pb-32 px-8 lg:px-16">
       <div className="max-w-[1290px] mx-auto">
 
         {/* Header row */}
-        <div className="flex items-end justify-between mb-5 lg:mb-6">
+        <div className="flex items-end justify-between mb-4 lg:mb-5">
           <motion.h2
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -206,8 +215,23 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
                 {String(items.length).padStart(2, '0')}
               </span>
             </div>
+            {minYear !== maxYear && (
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#C8C8C2]/60 tracking-[0.06em]">
+                {minYear} – {maxYear}
+              </span>
+            )}
           </motion.div>
         </div>
+
+        {/* Animated gold underline */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={{ originX: 0 }}
+          className="h-[2px] w-20 bg-[#B1A490] mb-5"
+        />
 
         {/* Tagline */}
         <motion.p
@@ -279,9 +303,14 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
 
           <Link
             href="/awards"
-            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[4px] border border-[#1A1A1A]/15 px-10 py-4 hover:border-[#B1A490] hover:text-[#B1A490] transition-all duration-300"
+            className="group/btn inline-flex items-center gap-0 font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[4px] border border-[#1A1A1A]/15 px-10 py-4 hover:border-[#B1A490] hover:text-[#B1A490] transition-all duration-300 overflow-hidden"
           >
-            View All Awards
+            <span className="transition-transform duration-300 group-hover/btn:-translate-x-1">
+              View All Awards
+            </span>
+            <span className="opacity-0 max-w-0 group-hover/btn:opacity-100 group-hover/btn:max-w-[20px] group-hover/btn:ml-2 transition-all duration-300 text-[13px]">
+              →
+            </span>
           </Link>
         </motion.div>
 
