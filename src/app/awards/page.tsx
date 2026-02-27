@@ -199,7 +199,7 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-cover grayscale"
+                className="object-cover"
                 unoptimized
               />
             </div>
