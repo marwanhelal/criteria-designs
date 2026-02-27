@@ -95,13 +95,14 @@ function ThreeCardCarousel({
       {([-1, 0, 1] as const).map((offset) => {
         const idx = (activeCard + offset + 3) % 3
         const isActive = offset === 0
+        const pillar = pillars[idx]
 
         return (
           <motion.div
             key={offset}
             animate={{
               scale: isActive ? 1 : 0.82,
-              opacity: isActive ? 1 : 0.4,
+              opacity: isActive ? 1 : 0.45,
               zIndex: isActive ? 10 : 5,
             }}
             transition={{ duration: 0.42, ease: EASE }}
@@ -125,7 +126,7 @@ function ThreeCardCarousel({
                 {cardImages[idx] ? (
                   <Image
                     src={cardImages[idx]!}
-                    alt={pillars[idx].label}
+                    alt={pillar.label}
                     fill
                     className="object-cover"
                     unoptimized
@@ -133,23 +134,52 @@ function ThreeCardCarousel({
                 ) : (
                   <div
                     className="w-full h-full flex items-center justify-center"
-                    style={{ background: `${pillars[idx].accent}18`, border: `1px solid ${pillars[idx].accent}30` }}
+                    style={{ background: `${pillar.accent}18`, border: `1px solid ${pillar.accent}30` }}
                   >
                     <span
                       className="font-[var(--font-playfair)] text-[70px] font-black"
-                      style={{ color: `${pillars[idx].accent}30` }}
+                      style={{ color: `${pillar.accent}30` }}
                     >
-                      {pillars[idx].num}
+                      {pillar.num}
                     </span>
                   </div>
                 )}
               </motion.div>
             </AnimatePresence>
 
-            {/* Subtle vignette on active card only */}
-            {isActive && (
-              <div className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ boxShadow: 'inset 0 -60px 60px -20px rgba(24,28,35,0.5)' }} />
+            {/* Bottom vignette — always present so label is readable */}
+            <div className="absolute inset-0 rounded-2xl pointer-events-none"
+              style={{ boxShadow: 'inset 0 -90px 60px -10px rgba(24,28,35,0.85)' }} />
+
+            {/* Pillar label — always visible at bottom of every card */}
+            <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 flex flex-col gap-0.5">
+              <span
+                className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px]"
+                style={{ color: `${pillar.accent}bb` }}
+              >
+                {pillar.num}
+              </span>
+              <span
+                className="font-[var(--font-playfair)] italic leading-none transition-all duration-400"
+                style={{
+                  fontSize: isActive ? 22 : 15,
+                  color: isActive ? '#ffffff' : `${pillar.accent}88`,
+                }}
+              >
+                {pillar.label}
+              </span>
+            </div>
+
+            {/* "explore" hint on inactive cards */}
+            {!isActive && (
+              <div className="absolute top-3 right-3">
+                <span
+                  className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2px]"
+                  style={{ color: `${pillar.accent}55` }}
+                >
+                  explore
+                </span>
+              </div>
             )}
           </motion.div>
         )
@@ -475,7 +505,7 @@ export default function PhilosophySection() {
               <div className="flex-1 min-w-0 flex flex-col items-center md:items-start">
 
                 {/* Navigation row: ← [num · label] → */}
-                <div className="flex items-center gap-6 mb-5">
+                <div className="flex items-center gap-6 mb-4">
                   <ArrowBtn dir="left" onClick={prev} />
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -485,18 +515,67 @@ export default function PhilosophySection() {
                       exit={{ opacity: 0, y: -7 }}
                       transition={{ duration: 0.22 }}
                     >
-                      <p
-                        className="font-[var(--font-libre-franklin)] text-[11px] tracking-[6px] uppercase mb-2"
-                        style={{ color: pillars[activeCard].accent }}
-                      >
-                        {pillars[activeCard].num}
-                      </p>
+                      {/* Counter: 01 / 03 */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <p
+                          className="font-[var(--font-libre-franklin)] text-[11px] tracking-[6px] uppercase"
+                          style={{ color: pillars[activeCard].accent }}
+                        >
+                          {pillars[activeCard].num}
+                        </p>
+                        <span className="font-[var(--font-libre-franklin)] text-[11px] text-white/20 tracking-[2px]">
+                          / 03
+                        </span>
+                      </div>
                       <p className="font-[var(--font-playfair)] text-[36px] md:text-[46px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
                     </motion.div>
                   </AnimatePresence>
                   <ArrowBtn dir="right" onClick={next} />
+                </div>
+
+                {/* Progress dots — show viewed / active / unviewed */}
+                <div className="flex items-center gap-3 mb-5">
+                  {pillars.map((p, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleGoCard(i)}
+                      className="group flex flex-col items-center gap-1"
+                      aria-label={`Go to ${p.label}`}
+                    >
+                      <motion.div
+                        animate={{
+                          backgroundColor:
+                            i === activeCard ? p.accent
+                            : viewedSet.has(i) ? `${p.accent}55`
+                            : 'transparent',
+                          borderColor:
+                            i === activeCard ? p.accent
+                            : viewedSet.has(i) ? `${p.accent}70`
+                            : 'rgba(255,255,255,0.18)',
+                          scale: i === activeCard ? 1.4 : 1,
+                        }}
+                        transition={{ duration: 0.3 }}
+                        className="w-[7px] h-[7px] rounded-full border"
+                      />
+                    </button>
+                  ))}
+                  {viewedSet.size < 3 && (
+                    <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/20 uppercase tracking-[2px] ml-1">
+                      explore all
+                    </span>
+                  )}
+                  {viewedSet.size === 3 && !showFinale && (
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-1"
+                      style={{ color: '#B1A490' }}
+                    >
+                      ✦ complete
+                    </motion.span>
+                  )}
                 </div>
 
                 {/* Pillar description */}
