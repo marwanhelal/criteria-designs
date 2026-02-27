@@ -202,7 +202,7 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
         {/* Image (desktop only) */}
         {award.image && (
           <div className="shrink-0 hidden md:block">
-            <div className="relative w-[130px] h-[96px] rounded-[4px] overflow-hidden bg-[#f4f3f1] border border-[#eceae6]">
+            <div className="relative w-[130px] h-[96px] rounded-[4px] overflow-hidden bg-white border border-[#eceae6]">
               <Image
                 src={award.image}
                 alt={award.titleEn}
