@@ -170,12 +170,16 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
 function AwardRow({ award, index }: { award: Award; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="h-px bg-[#E0E0DC]" />
-      <div className="group -mx-6 lg:-mx-[52px] px-6 lg:px-[52px] py-7 md:py-9 flex items-center gap-6 md:gap-12 hover:bg-[#faf9f7] transition-colors duration-200">
+      <div className="group relative -mx-6 lg:-mx-[52px] px-6 lg:px-[52px] py-7 md:py-9 flex items-center gap-6 md:gap-12 hover:bg-[#faf9f7] transition-colors duration-250">
+
+        {/* Left accent bar */}
+        <span className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#B1A490] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
 
         {/* Index */}
         <span className="hidden lg:block font-[var(--font-libre-franklin)] text-[11px] text-[#C8C8C2] tracking-[0.15em] shrink-0 w-6 text-right select-none">
@@ -183,31 +187,31 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
         </span>
 
         {/* Year */}
-        <span className="font-[var(--font-playfair)] text-[32px] md:text-[42px] leading-none text-[#C0BDB8] shrink-0 select-none w-[80px] md:w-[110px]">
+        <span className="font-[var(--font-playfair)] text-[28px] md:text-[38px] leading-none text-[#C0BDB8] shrink-0 select-none w-[72px] md:w-[100px]">
           {award.year}
         </span>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-[var(--font-libre-franklin)] text-[16px] md:text-[20px] font-semibold text-[#1A1A1A] leading-[1.3] group-hover:text-[#3a3a3a] transition-colors duration-200">
+          <h3 className="font-[var(--font-libre-franklin)] text-[15px] md:text-[19px] font-semibold text-[#1A1A1A] leading-[1.3] group-hover:text-[#B1A490] transition-colors duration-300">
             {award.titleEn}
           </h3>
           {award.subtitleEn && (
-            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#B1A490] tracking-[0.04em] mt-1">
+            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.04em] mt-1">
               {award.subtitleEn}
             </p>
           )}
         </div>
 
-        {/* Image (desktop only) */}
+        {/* Image */}
         {award.image && (
-          <div className="shrink-0 hidden md:block">
-            <div className="relative w-[130px] h-[96px] rounded-[4px] overflow-hidden bg-white border border-[#eceae6]">
+          <div className="shrink-0">
+            <div className="relative w-[72px] h-[54px] md:w-[130px] md:h-[96px] rounded-[4px] overflow-hidden bg-white border border-[#eceae6]">
               <Image
                 src={award.image}
                 alt={award.titleEn}
                 fill
-                className="object-contain p-2"
+                className="object-contain p-1 md:p-2"
                 unoptimized
               />
             </div>
@@ -239,6 +243,16 @@ export default function AwardsPage() {
         <div className="h-[140px] md:h-[158px]" />
 
         <div className="px-6 lg:px-[52px] pt-10 pb-20">
+
+          {/* Intro */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[520px] mb-10"
+          >
+            A growing record of design excellence, international recognition, and creative achievement across architecture and interior design.
+          </motion.p>
 
           {/* Skeleton */}
           {loading && (
