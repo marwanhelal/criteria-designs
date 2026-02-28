@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface Client {
   id: string
@@ -50,15 +51,21 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[150px] h-[130px] shrink-0 flex items-center justify-center p-5 bg-[#FAFAF8] hover:bg-white border-r border-[#181C23]/[0.06] transition-colors duration-300 cursor-default group"
+            className="relative w-[150px] h-[130px] shrink-0 flex items-center justify-center p-5 bg-[#FAFAF8] hover:bg-white border-r border-[#181C23]/[0.06] transition-colors duration-300 cursor-default group overflow-hidden"
           >
             {client.logo ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={client.logo}
-                alt={client.nameEn}
-                className="max-w-[110px] max-h-[72px] w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-300"
-              />
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={client.logo}
+                  alt={client.nameEn}
+                  className="max-w-[110px] max-h-[64px] w-auto h-auto object-contain group-hover:scale-105 group-hover:-translate-y-2 transition-all duration-300"
+                />
+                {/* Name fades in at bottom on hover */}
+                <span className="absolute bottom-[10px] left-0 right-0 text-center font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] text-[#9A9A94] opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-2 truncate">
+                  {client.nameEn}
+                </span>
+              </>
             ) : (
               <span className="font-[var(--font-open-sans)] text-[11px] font-semibold text-[#181C23]/40 group-hover:text-[#181C23]/70 text-center leading-tight uppercase tracking-wider px-1 transition-colors duration-300">
                 {client.nameEn}
@@ -82,30 +89,42 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
   return (
     <section className="bg-[#FAFAF8] overflow-hidden border-t border-b border-[#181C23]/[0.07]">
 
-      {/* Header row */}
-      <div className="px-8 lg:px-16 py-7 flex items-center justify-between gap-6 border-b border-[#181C23]/[0.07]">
-        <div className="flex items-center gap-5">
+      {/* Editorial header */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="px-8 lg:px-16 pt-12 pb-10 border-b border-[#181C23]/[0.07]"
+      >
+        {/* Label */}
+        <div className="flex items-center gap-5 mb-6">
           <div className="w-8 h-px bg-[#B1A490]" />
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#181C23]/40 uppercase tracking-[5px]">
             Our Clients
           </span>
         </div>
-        <div className="hidden md:flex items-baseline gap-2">
-          <span className="font-[var(--font-playfair)] text-[24px] text-[#181C23]">
-            {clients.length}
-          </span>
-          <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#9A9A94] uppercase tracking-[3px]">
-            Trusted Partners
-          </span>
-        </div>
-      </div>
 
-      {/* Intro line */}
-      <div className="px-8 lg:px-16 py-4 border-b border-[#181C23]/[0.07]">
-        <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.03em]">
-          Trusted by industry leaders across architecture, interior design, and urban development.
-        </p>
-      </div>
+        {/* Statement + stat chips */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+          <h2 className="font-[var(--font-playfair)] text-[28px] md:text-[36px] lg:text-[42px] text-[#181C23] leading-[1.15] max-w-[440px]">
+            The names that<br />trusted our vision.
+          </h2>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-baseline gap-[6px] font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[2px] text-[#9A9A94] border border-[#E0E0DC] rounded-full px-4 py-[7px]">
+              <span className="font-[var(--font-playfair)] text-[20px] text-[#181C23] leading-none">{clients.length}</span>
+              Partners
+            </span>
+            <span className="font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[2px] text-[#9A9A94] border border-[#E0E0DC] rounded-full px-4 py-[7px]">
+              International
+            </span>
+            <span className="font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[2px] text-[#9A9A94] border border-[#E0E0DC] rounded-full px-4 py-[7px]">
+              Since 2018
+            </span>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Two scrolling rows */}
       <Row clients={r1} direction="ltr" />
