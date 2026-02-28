@@ -103,7 +103,7 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
       {/* Intro line */}
       <div className="px-8 lg:px-16 py-4 border-b border-[#181C23]/[0.07]">
         <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.03em]">
-          Trusted by industry leaders across architecture, real estate, and urban development.
+          Trusted by industry leaders across architecture, interior design, and urban development.
         </p>
       </div>
 
