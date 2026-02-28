@@ -154,7 +154,7 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
             initial={{ opacity: 0, y: 40 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-            className="font-[var(--font-playfair)] text-[80px] md:text-[120px] lg:text-[150px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em] mb-12 md:mb-16 lg:mb-20"
+            className="font-[var(--font-playfair)] text-[52px] md:text-[72px] lg:text-[96px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em] mb-10 md:mb-14 lg:mb-16"
           >
             Awards
           </motion.h2>
