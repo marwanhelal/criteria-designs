@@ -245,6 +245,14 @@ export default function CeoBanner() {
               <div ref={portraitRef} className="relative">
                 {/* Gray circle background */}
                 <div className="absolute inset-[-14px] lg:inset-[-18px] rounded-full bg-[#D5D5D5]/25" />
+                {/* Warm radial glow — golden spotlight behind portrait */}
+                <motion.div
+                  className="absolute inset-[-50px] rounded-full pointer-events-none"
+                  style={{ background: 'radial-gradient(ellipse at center, rgba(177,164,144,0.22) 0%, transparent 65%)' }}
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: 1 } : {}}
+                  transition={{ duration: 2.5, delay: 0.8 }}
+                />
                 {/* Animated SVG rings */}
                 <AnimatedRing inView={isInView} />
                 {/* Portrait image */}
@@ -268,6 +276,16 @@ export default function CeoBanner() {
                     whileHover={{ x: '100%' }}
                     transition={{ duration: 0.8 }}
                   />
+                </motion.div>
+
+                {/* CEO & Founder badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 1.3, ease: [0.25, 0.4, 0.25, 1] }}
+                  className="absolute bottom-[-12px] left-1/2 -translate-x-1/2 bg-[#181C23] font-[var(--font-libre-franklin)] text-[9px] text-white uppercase tracking-[2.5px] px-5 py-[6px] rounded-full whitespace-nowrap border border-[#B1A490]/40 shadow-lg"
+                >
+                  CEO & Founder
                 </motion.div>
               </div>
             </motion.div>
@@ -464,6 +482,35 @@ export default function CeoBanner() {
             )}
           </div>
         </div>
+
+        {/* Dark quote strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 2.0, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-14 lg:mt-16 bg-[#181C23] rounded-lg px-8 md:px-14 py-9 md:py-11 relative overflow-hidden"
+        >
+          {/* Faint architectural line accent */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+            style={{ backgroundImage: 'repeating-linear-gradient(90deg, #B1A490 0px, #B1A490 1px, transparent 1px, transparent 60px)' }}
+          />
+          {/* Large decorative quote mark */}
+          <span className="absolute top-2 left-6 font-[var(--font-playfair)] text-[110px] leading-none text-[#B1A490]/12 select-none pointer-events-none">
+            ❝
+          </span>
+          <div className="relative lg:ml-8 max-w-[780px]">
+            <blockquote className="font-[var(--font-playfair)] text-[17px] md:text-[22px] text-white/80 italic leading-[1.6]">
+              Great design is not about buildings. It is about the people who will live, work, and breathe within them.
+            </blockquote>
+            <div className="mt-5 flex items-center gap-3">
+              <div className="w-6 h-px bg-[#B1A490]" />
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[4px]">
+                {data.ceoNameEn}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   )
