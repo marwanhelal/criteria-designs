@@ -208,6 +208,20 @@ export default function CeoBanner() {
       <FloatingAccents inView={isInView} />
 
       <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[40px] lg:py-[52px]">
+
+        {/* Section label */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-center gap-5 mb-10"
+        >
+          <div className="w-8 h-px bg-[#B1A490]" />
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#181C23]/40 uppercase tracking-[5px]">
+            Meet the Founder
+          </span>
+        </motion.div>
+
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14">
 
           {/* Portrait — LEFT side with 3D tilt + gentle float */}
@@ -321,6 +335,16 @@ export default function CeoBanner() {
               />
             </div>
 
+            {/* Tagline */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#888] italic leading-relaxed max-w-[480px] mb-6 text-center lg:text-left"
+            >
+              A career built on vision, precision, and the pursuit of design excellence.
+            </motion.p>
+
             {/* Stats row — staggered slide-up */}
             {stats.length > 0 && (
               <div className="flex flex-wrap justify-center lg:justify-start">
@@ -350,8 +374,15 @@ export default function CeoBanner() {
                         {stat.desc}
                       </span>
                     )}
-                    {/* Gold underline that slides in on hover */}
-                    <span className="absolute bottom-0 left-[20px] right-[20px] h-[2px] bg-[#B1A490] origin-left scale-x-0 group-hover/stat:scale-x-100 transition-transform duration-400" />
+                    {/* Progress bar — sweeps in on inView */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#B1A490]/35 origin-left"
+                      initial={{ scaleX: 0 }}
+                      animate={isInView ? { scaleX: 1 } : {}}
+                      transition={{ duration: 1.1, delay: 1.0 + i * 0.18, ease: [0.25, 0.4, 0.25, 1] }}
+                    />
+                    {/* Gold full-fill on hover */}
+                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#B1A490] origin-left scale-x-0 group-hover/stat:scale-x-100 transition-transform duration-300" />
                   </motion.div>
                 ))}
               </div>
@@ -386,7 +417,20 @@ export default function CeoBanner() {
 
             {/* Logos — staggered fade with pop hover */}
             {logos.length > 0 && (
-              <div className="mt-6 flex items-center justify-center lg:justify-end gap-6 lg:gap-8">
+              <div className="mt-6">
+                {/* "As Featured In" label */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.6, delay: 1.4 }}
+                  className="flex items-center justify-center lg:justify-end gap-3 mb-4"
+                >
+                  <div className="w-4 h-px bg-[#B1A490]/50" />
+                  <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#181C23]/30 uppercase tracking-[4px]">
+                    As Featured In
+                  </span>
+                </motion.div>
+              <div className="flex items-center justify-center lg:justify-end gap-6 lg:gap-8">
                 {logos.map((logo, i) => (
                   <motion.div
                     key={i}
@@ -415,6 +459,7 @@ export default function CeoBanner() {
                     />
                   </motion.div>
                 ))}
+              </div>
               </div>
             )}
           </div>
