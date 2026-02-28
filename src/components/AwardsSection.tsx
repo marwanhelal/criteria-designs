@@ -42,6 +42,31 @@ function CornerMark({ className = '' }: { className?: string }) {
   )
 }
 
+/* ── Word-by-word title reveal ─────────────────────────────────────── */
+function RevealTitle({ text, delay = 0, className = '' }: {
+  text: string; delay?: number; className?: string
+}) {
+  const words = text.split(' ')
+  return (
+    <span className={className} aria-label={text}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden leading-[inherit]">
+          <motion.span
+            className="inline-block"
+            initial={{ y: '110%' }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, margin: '-30px' }}
+            transition={{ duration: 0.52, delay: delay + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {word}
+          </motion.span>
+          {i < words.length - 1 && <span>&nbsp;</span>}
+        </span>
+      ))}
+    </span>
+  )
+}
+
 /* ── Architectural section divider ─────────────────────────────────── */
 function ArchDivider() {
   return (
@@ -77,8 +102,9 @@ function HeroCard({ award }: { award: Award }) {
           <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[5px] text-[#B1A490] mb-2 block">
             Featured Recognition
           </span>
-          <h3 className="font-[var(--font-libre-franklin)] text-[20px] md:text-[28px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.25]">
-            {award.titleEn}
+          <h3 className="font-[var(--font-playfair)] text-[20px] md:text-[28px] italic text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.25] relative pb-1">
+            <RevealTitle text={award.titleEn} delay={0.1} />
+            <span className="absolute bottom-0 left-0 h-[1.5px] bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-out" />
           </h3>
           {award.subtitleEn && (
             <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.04em] mt-2">
@@ -123,8 +149,9 @@ function LargeCard({ award, index }: { award: Award; index: number }) {
       <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] uppercase tracking-[0.18em] mb-3 pt-3 pl-3">
         {award.year}
       </p>
-      <h3 className="font-[var(--font-libre-franklin)] text-[17px] lg:text-[19px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.35] pl-3 pr-36">
-        {award.titleEn}
+      <h3 className="font-[var(--font-libre-franklin)] text-[17px] lg:text-[19px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.35] pl-3 pr-36 relative pb-1">
+        <RevealTitle text={award.titleEn} />
+        <span className="absolute bottom-0 left-3 right-0 h-[1.5px] bg-[#B1A490] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
       </h3>
       {award.subtitleEn && (
         <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] tracking-[0.06em] mt-1.5 pl-3">
@@ -172,8 +199,9 @@ function SmallCard({ award, index }: { award: Award; index: number }) {
       <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] uppercase tracking-[0.18em] mb-2.5 pt-3">
         {award.year}
       </p>
-      <h3 className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.4] px-2">
-        {award.titleEn}
+      <h3 className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.4] px-2 relative pb-1">
+        <RevealTitle text={award.titleEn} />
+        <span className="absolute bottom-0 left-2 right-2 h-[1.5px] bg-[#B1A490] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
       </h3>
       {award.subtitleEn && (
         <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] tracking-[0.06em] mt-1 px-2">
