@@ -57,7 +57,7 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
               <img
                 src={client.logo}
                 alt={client.nameEn}
-                className="max-w-[110px] max-h-[72px] w-auto h-auto object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                className="max-w-[110px] max-h-[72px] w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
             ) : (
               <span className="font-[var(--font-open-sans)] text-[11px] font-semibold text-[#181C23]/40 group-hover:text-[#181C23]/70 text-center leading-tight uppercase tracking-wider px-1 transition-colors duration-300">
