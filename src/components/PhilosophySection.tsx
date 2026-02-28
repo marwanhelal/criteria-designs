@@ -702,7 +702,7 @@ export default function PhilosophySection() {
 
         {/* Row 1 — moves LEFT, outlined brand phrases */}
         <div
-          className="flex whitespace-nowrap pt-7 pb-3"
+          className="flex whitespace-nowrap py-7"
           style={{ animation: 'marquee-left 52s linear infinite', width: 'max-content' }}
         >
           {Array(6).fill(null).map((_, i) => (
@@ -726,43 +726,10 @@ export default function PhilosophySection() {
           ))}
         </div>
 
-        {/* Thin separator line */}
-        <div className="mx-auto w-full h-px" style={{ background: 'rgba(177,164,144,0.06)' }} />
-
-        {/* Row 2 — moves RIGHT, story phrases, smaller + ghost */}
-        <div
-          className="flex whitespace-nowrap pt-3 pb-7"
-          style={{ animation: 'marquee-right 68s linear infinite', width: 'max-content' }}
-        >
-          {Array(6).fill(null).map((_, i) => (
-            <span
-              key={i}
-              className="font-[var(--font-playfair)] italic inline-flex items-center select-none"
-              style={{
-                fontSize: 'clamp(28px, 3.2vw, 52px)',
-                WebkitTextStroke: i % 2 === 0 ? '0px' : '1px rgba(177,164,144,0.55)',
-                color: i % 2 === 0 ? 'rgba(177,164,144,0.18)' : 'transparent',
-                paddingRight: '5rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              Every Space Tells A Story
-              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.35)', fontSize: '0.35em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
-              Architecture That Endures
-              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.35)', fontSize: '0.35em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
-              Beautifully, Unmistakably Human
-            </span>
-          ))}
-        </div>
-
         <style>{`
           @keyframes marquee-left {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-50%); }
-          }
-          @keyframes marquee-right {
-            0%   { transform: translateX(-50%); }
-            100% { transform: translateX(0); }
           }
           @keyframes chapter-progress {
             0%   { width: 0%; }
