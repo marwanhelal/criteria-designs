@@ -219,7 +219,7 @@ export default function Home() {
       <Navbar />
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative w-full h-screen min-h-[500px]">
+      <section className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
         {/* Dark gradient at top — ensures white navbar text is always readable */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10" />
         <div className="absolute inset-0">
@@ -233,7 +233,7 @@ export default function Home() {
                 preload="auto"
                 disablePictureInPicture
                 poster={heroImage || undefined}
-                className="absolute inset-0 w-full h-full object-cover object-top"
+                className="absolute inset-0 w-full h-full object-contain"
               >
                 <source src={heroVideo} type={heroVideoMime} />
               </video>

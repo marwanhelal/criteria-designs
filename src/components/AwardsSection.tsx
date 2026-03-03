@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
@@ -13,121 +13,109 @@ interface Award {
   image: string | null
 }
 
-/* ── Large card (2-col rows) ───────────────────────────────────────── */
-function LargeCard({ award, index }: { award: Award; index: number }) {
-  const [hovered, setHovered] = useState(false)
+/* ── Animated number counter ───────────────────────────────────────── */
+function AnimatedCounter({ target, trigger }: { target: number; trigger: boolean }) {
+  const [count, setCount] = useState(0)
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="relative group cursor-default py-10 md:py-14"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Year */}
-      <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] uppercase tracking-[0.18em] mb-3">
-        {award.year}
-      </p>
+  useEffect(() => {
+    if (!trigger) return
+    let raf: number
+    const duration = 1400
+    const startTime = performance.now()
+    const animate = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.round(eased * target))
+      if (progress < 1) raf = requestAnimationFrame(animate)
+    }
+    raf = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(raf)
+  }, [trigger, target])
 
-      {/* Title */}
-      <h3 className="font-[var(--font-playfair)] text-[22px] md:text-[28px] text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-400 leading-[1.25] relative pb-0 pr-40">
-        {award.titleEn}
-      </h3>
-
-      {/* Subtitle */}
-      {award.subtitleEn && (
-        <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] tracking-[0.04em] mt-2">
-          {award.subtitleEn}
-        </p>
-      )}
-
-      {/* Divider — gold fill on hover */}
-      <div className="relative mt-6 h-px bg-[#E0E0DC] overflow-hidden">
-        <span className="absolute inset-0 bg-[#B1A490] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-      </div>
-
-      {/* Hover image */}
-      <AnimatePresence>
-        {hovered && award.image && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: 2 }}
-            exit={{ opacity: 0, y: 10, rotate: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
-          >
-            <div
-              className="relative rounded-[4px] overflow-hidden shadow-[0_8px_28px_rgba(0,0,0,0.12)] border border-[#eceae6] bg-white"
-              style={{ width: 140, height: 105 }}
-            >
-              <Image src={award.image} alt={award.titleEn} fill className="object-contain p-2" unoptimized />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
+  return <>{String(count).padStart(2, '0')}</>
 }
 
-/* ── Small card (4-col rows) ───────────────────────────────────────── */
-function SmallCard({ award, index }: { award: Award; index: number }) {
+/* ── Single award row ──────────────────────────────────────────────── */
+function AwardRow({ award, index }: { award: Award; index: number }) {
   const [hovered, setHovered] = useState(false)
+  const rowRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(rowRef, { once: true, margin: '-40px' })
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-      className="relative group cursor-default py-7 md:py-9"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Year */}
-      <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#9A9A94] uppercase tracking-[0.15em] mb-2">
-        {award.year}
-      </p>
+    <div ref={rowRef}>
+      {/* Divider — scales in from left on scroll entry */}
+      <motion.div
+        className="h-px bg-[#E5E2DC] origin-left"
+        initial={{ scaleX: 0 }}
+        animate={inView ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.7, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      />
 
-      {/* Title */}
-      <h3 className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.45] pr-20">
-        {award.titleEn}
-      </h3>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.55, delay: index * 0.06 + 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="relative group cursor-default flex items-center gap-5 md:gap-8 py-6 md:py-8"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {/* Index number */}
+        <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#C8C4BC] tracking-[0.12em] w-7 shrink-0 select-none tabular-nums">
+          {String(index + 1).padStart(2, '0')}
+        </span>
 
-      {/* Subtitle */}
-      {award.subtitleEn && (
-        <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] tracking-[0.04em] mt-1.5">
-          {award.subtitleEn}
-        </p>
-      )}
+        {/* Year badge */}
+        <span className="hidden sm:flex font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[0.2em] border border-[#B1A490]/30 px-2.5 py-1 rounded-full shrink-0 group-hover:border-[#B1A490]/70 transition-colors duration-300">
+          {award.year}
+        </span>
 
-      {/* Divider */}
-      <div className="relative mt-5 h-px bg-[#E0E0DC] overflow-hidden">
-        <span className="absolute inset-0 bg-[#B1A490] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-      </div>
+        {/* Title + subtitle */}
+        <div className="flex-1 min-w-0 pr-4">
+          {/* Mobile year */}
+          <span className="sm:hidden font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[0.18em] mb-1 block">
+            {award.year}
+          </span>
+          <h3 className="font-[var(--font-playfair)] text-[17px] md:text-[20px] lg:text-[22px] text-[#1A1A1A] group-hover:text-[#B1A490] transition-colors duration-300 leading-[1.3]">
+            {award.titleEn}
+          </h3>
+          {award.subtitleEn && (
+            <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#9A9A94] tracking-[0.04em] mt-1">
+              {award.subtitleEn}
+            </p>
+          )}
+        </div>
 
-      {/* Hover image */}
-      <AnimatePresence>
-        {hovered && award.image && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: 2 }}
-            exit={{ opacity: 0, y: 6, rotate: 0 }}
-            transition={{ duration: 0.22, ease: [0.25, 0.4, 0.25, 1] }}
-            className="absolute right-0 top-6 z-20 pointer-events-none"
-          >
-            <div
-              className="relative rounded-[3px] overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.10)] border border-[#eceae6] bg-white"
-              style={{ width: 88, height: 66 }}
+        {/* Gold dash — slides in on hover */}
+        <motion.span
+          animate={hovered ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
+          transition={{ duration: 0.18 }}
+          className="text-[#B1A490] text-[13px] shrink-0 select-none hidden md:block"
+        >
+          &#8212;
+        </motion.span>
+
+        {/* Hover image preview */}
+        <AnimatePresence>
+          {hovered && award.image && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.94, rotate: 0 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotate: 2 }}
+              exit={{ opacity: 0, y: 8, scale: 0.94, rotate: 0 }}
+              transition={{ duration: 0.22, ease: [0.25, 0.4, 0.25, 1] }}
+              className="absolute right-10 md:right-16 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
             >
-              <Image src={award.image} alt={award.titleEn} fill className="object-contain p-1.5" unoptimized />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+              <div
+                className="relative rounded-[4px] overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.14)] border border-[#eceae6] bg-white"
+                style={{ width: 120, height: 90 }}
+              >
+                <Image src={award.image} alt={award.titleEn} fill className="object-contain p-2" unoptimized />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   )
 }
 
@@ -137,72 +125,89 @@ export default function AwardsSection({ awards }: { awards: Award[] }) {
 
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, margin: '-80px' })
-
   const items = awards.slice(0, 12)
-  const rowA1 = items.slice(0, 2)
-  const rowB1 = items.slice(2, 6)
-  const rowA2 = items.slice(6, 8)
-  const rowB2 = items.slice(8, 12)
 
   return (
-    <section className="bg-white pt-14 pb-24 lg:pt-16 lg:pb-32 px-8 lg:px-16">
+    <section className="bg-[#FAFAF8] py-20 md:py-28 lg:py-36 px-8 lg:px-16">
       <div className="max-w-[1290px] mx-auto">
 
-        {/* Heading */}
-        <div ref={headerRef}>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-            className="font-[var(--font-playfair)] text-[52px] md:text-[72px] lg:text-[96px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em] mb-10 md:mb-14 lg:mb-16"
+        {/* ── Header ── */}
+        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16 md:mb-20 lg:mb-24">
+
+          {/* Left: label + title */}
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={headerInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[5px] mb-5"
+            >
+              Recognition &amp; Excellence
+            </motion.p>
+
+            {/* Title with clip-path wipe-up reveal */}
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ y: '105%' }}
+                animate={headerInView ? { y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="font-[var(--font-playfair)] text-[52px] md:text-[68px] lg:text-[88px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em]"
+              >
+                Awards
+              </motion.h2>
+            </div>
+          </div>
+
+          {/* Right: animated count stat */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={headerInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.65, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-end gap-4 pb-1"
           >
-            Awards
-          </motion.h2>
+            <span className="font-[var(--font-playfair)] text-[60px] md:text-[72px] leading-none text-[#B1A490] tabular-nums">
+              <AnimatedCounter target={awards.length} trigger={headerInView} />
+            </span>
+            <div className="flex flex-col gap-[6px] mb-2">
+              <span className="block w-7 h-px bg-[#B1A490]/50" />
+              <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#9A9A94] leading-[1.6]">
+                Awards &amp;<br />Recognitions
+              </span>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Row A1 — 2 large */}
-        {rowA1.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 lg:gap-x-20">
-            {rowA1.map((a, i) => <LargeCard key={a.id} award={a} index={i} />)}
-            {rowA1.length === 1 && <div />}
-          </div>
-        )}
+        {/* ── Award rows ── */}
+        <div>
+          {items.map((award, i) => (
+            <AwardRow key={award.id} award={award} index={i} />
+          ))}
 
-        {/* Row B1 — 4 small */}
-        {rowB1.length > 0 && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-10">
-            {rowB1.map((a, i) => <SmallCard key={a.id} award={a} index={i} />)}
-          </div>
-        )}
+          {/* Closing line */}
+          <motion.div
+            className="h-px bg-[#E5E2DC] origin-left"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
 
-        {/* Row A2 — 2 large */}
-        {rowA2.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 lg:gap-x-20">
-            {rowA2.map((a, i) => <LargeCard key={a.id} award={a} index={i} />)}
-            {rowA2.length === 1 && <div />}
-          </div>
-        )}
-
-        {/* Row B2 — 4 small */}
-        {rowB2.length > 0 && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-10">
-            {rowB2.map((a, i) => <SmallCard key={a.id} award={a} index={i} />)}
-          </div>
-        )}
-
-        {/* CTA button */}
+        {/* ── CTA ── */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mt-14 md:mt-16 flex justify-center"
         >
           <Link
             href="/awards"
-            className="font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#1A1A1A] border border-[#1A1A1A]/20 px-12 py-4 hover:border-[#B1A490] hover:text-[#B1A490] transition-all duration-300"
+            className="group inline-flex items-center gap-5 font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#1A1A1A] hover:text-[#B1A490] transition-colors duration-300"
           >
+            <span className="block h-px bg-[#B1A490]/50 w-8 group-hover:w-14 transition-all duration-400" />
             View All Awards
+            <span className="block h-px bg-[#B1A490]/50 w-8 group-hover:w-14 transition-all duration-400" />
           </Link>
         </motion.div>
 
