@@ -233,7 +233,7 @@ export default function Home() {
                 preload="auto"
                 disablePictureInPicture
                 poster={heroImage || undefined}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover object-top"
               >
                 <source src={heroVideo} type={heroVideoMime} />
               </video>
