@@ -14,11 +14,11 @@ interface Award {
 }
 
 const FALLBACK_GRADIENTS = [
-  'linear-gradient(160deg,#1c1a16 0%,#0e0e0e 100%)',
-  'linear-gradient(160deg,#141c1f 0%,#0e0e0e 100%)',
-  'linear-gradient(160deg,#1a1616 0%,#0e0e0e 100%)',
-  'linear-gradient(160deg,#141420 0%,#0e0e0e 100%)',
-  'linear-gradient(160deg,#1a1c14 0%,#0e0e0e 100%)',
+  'linear-gradient(160deg,#2e2820 0%,#1a1510 100%)',
+  'linear-gradient(160deg,#1e2830 0%,#101820 100%)',
+  'linear-gradient(160deg,#2c2018 0%,#1c1008 100%)',
+  'linear-gradient(160deg,#1e2030 0%,#0e1020 100%)',
+  'linear-gradient(160deg,#28241c 0%,#181410 100%)',
 ]
 
 export default function AwardsAccordion({ awards }: { awards: Award[] }) {
@@ -89,7 +89,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
               }}
               onMouseEnter={() => setActive(i)}
             >
-              {/* Background image */}
+              {/* Background image or fallback */}
               {award.image ? (
                 <Image
                   src={award.image}
@@ -106,9 +106,15 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
                 />
               ) : (
                 <div
-                  className="absolute inset-0"
+                  className="absolute inset-0 flex items-center justify-center"
                   style={{ background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length] }}
-                />
+                >
+                  {/* Decorative gold circle when no image */}
+                  <div
+                    className="rounded-full border border-[#B1A490]/20"
+                    style={{ width: 120, height: 120, opacity: i === active ? 0.5 : 0.2 }}
+                  />
+                </div>
               )}
 
               {/* Gradient overlay — heavier at bottom */}
