@@ -31,7 +31,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
     <section className="relative w-full bg-black" style={{ height: 'clamp(560px, 80vh, 900px)' }}>
 
       {/* Accordion panels — fully fills the section */}
-      <div className="flex w-full h-full gap-[1px]">
+      <div className="flex w-full h-full">
         {items.map((award, i) => (
           <div
             key={award.id}
@@ -40,6 +40,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
               flex: i === active ? 6 : 1,
               transition: 'flex 0.8s cubic-bezier(0.76, 0, 0.24, 1)',
               minWidth: 0,
+              borderRight: i < items.length - 1 ? '1px solid rgba(177,164,144,0.25)' : 'none',
             }}
             onMouseEnter={() => setActive(i)}
           >
@@ -156,18 +157,22 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
       </div>
 
       {/* Header overlay — top-left corner over the panels */}
-      <div className="absolute top-0 left-0 right-0 px-8 lg:px-14 pt-10 flex items-start justify-between pointer-events-none z-10">
+      <div className="absolute top-0 left-0 right-0 px-8 lg:px-14 pt-8 flex items-start justify-between pointer-events-none z-10">
         <div>
           <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[5px] mb-3">
             Recognition &amp; Excellence
           </p>
-          <h2 className="font-[var(--font-playfair)] text-[44px] md:text-[60px] lg:text-[80px] font-normal text-white leading-[1] tracking-[-0.02em]">
-            Awards
-          </h2>
+          {/* Awards title with left border accent */}
+          <div className="flex items-center gap-4">
+            <span className="block w-[3px] h-12 md:h-16 lg:h-20 bg-[#B1A490]" />
+            <h2 className="font-[var(--font-playfair)] text-[44px] md:text-[60px] lg:text-[80px] font-normal text-white leading-[1] tracking-[-0.02em] drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+              Awards
+            </h2>
+          </div>
         </div>
         <Link
           href="/awards"
-          className="font-[var(--font-libre-franklin)] text-[11px] text-white/50 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300 pointer-events-auto mt-4"
+          className="font-[var(--font-libre-franklin)] text-[11px] text-white/60 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300 pointer-events-auto mt-4 border border-white/20 hover:border-[#B1A490]/60 px-4 py-2"
         >
           View All →
         </Link>
