@@ -862,7 +862,10 @@ export default function SettingsPage() {
         {/* ── Showcase Projects ── */}
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-lg border-b pb-2">Homepage Showcase Projects</h2>
-          <p className="text-xs text-gray-500">Select up to 5 published projects to display in the full-screen scroll showcase on the homepage. Order matters — slot 1 appears first.</p>
+          <p className="text-xs text-gray-500">
+            <strong>Slot 1</strong> — full-screen featured project (shown above the portfolio section). Leave as None to skip it.<br />
+            <strong>Slots 2–5</strong> — displayed as portfolio cards in the scroll section below.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {([
               ['showcaseProject1Id', 'Slot 1'],

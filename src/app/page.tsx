@@ -40,6 +40,7 @@ interface Settings {
   logo: string | null
   heroImage: string | null
   heroVideo: string | null
+  showcaseProject1Id: string | null
   showcaseProjects: ShowcaseProject[]
 }
 
@@ -204,10 +205,14 @@ export default function Home() {
 
   const displayProjects = projects.length > 0 ? projects : []
   const showcaseAll = settings?.showcaseProjects ?? []
-  // Slot 1 → full-screen showcase; Slots 2-5 → portfolio cards
-  const showcaseHero = showcaseAll.slice(0, 1)
-  const portfolioProjects = showcaseAll.length > 1
+  // Slot 1 → full-screen hero only if actually set (not "None")
+  const hasHeroSlot = !!settings?.showcaseProject1Id
+  const showcaseHero = hasHeroSlot ? showcaseAll.slice(0, 1) : []
+  // Slots 2-5 → portfolio cards (if slot 1 is set); all slots if slot 1 is None
+  const portfolioProjects = hasHeroSlot && showcaseAll.length > 1
     ? showcaseAll.slice(1)
+    : !hasHeroSlot && showcaseAll.length > 0
+    ? showcaseAll
     : displayProjects
   const heroImage = settings?.heroImage || null
   // Always use /api/uploads/ route — guaranteed to work in Docker standalone
