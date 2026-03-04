@@ -14,27 +14,27 @@ interface Award {
 }
 
 const FALLBACK_GRADIENTS = [
-  'linear-gradient(160deg,#2e2820 0%,#1a1510 100%)',
-  'linear-gradient(160deg,#1e2830 0%,#101820 100%)',
-  'linear-gradient(160deg,#2c2018 0%,#1c1008 100%)',
-  'linear-gradient(160deg,#1e2030 0%,#0e1020 100%)',
-  'linear-gradient(160deg,#28241c 0%,#181410 100%)',
+  'linear-gradient(160deg,#1a1208 0%,#0d0a05 100%)',
+  'linear-gradient(160deg,#0a1020 0%,#060810 100%)',
+  'linear-gradient(160deg,#1a100a 0%,#0d0806 100%)',
+  'linear-gradient(160deg,#0a1018 0%,#060810 100%)',
+  'linear-gradient(160deg,#141008 0%,#0a0804 100%)',
 ]
 
 export default function AwardsAccordion({ awards }: { awards: Award[] }) {
   const [active, setActive] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
   const items = awards.slice(0, 5)
 
   if (items.length === 0) return null
 
   return (
-    <section className="bg-[#0d0d0d] py-20 md:py-28 lg:py-32 px-8 lg:px-16">
-      <div className="max-w-[1290px] mx-auto">
+    <section className="bg-[#0a0a0a]">
 
-        {/* Header */}
-        <div ref={ref} className="flex items-end justify-between mb-12 md:mb-16">
+      {/* Header — padded */}
+      <div ref={ref} className="px-8 lg:px-16 pt-20 md:pt-28 lg:pt-32 pb-10 md:pb-12">
+        <div className="max-w-[1290px] mx-auto flex items-end justify-between">
           <div>
             <motion.p
               initial={{ opacity: 0, y: 8 }}
@@ -49,7 +49,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
                 initial={{ y: '105%' }}
                 animate={inView ? { y: 0 } : {}}
                 transition={{ duration: 0.75, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="font-[var(--font-playfair)] text-[44px] md:text-[60px] lg:text-[72px] font-normal text-white leading-[1] tracking-[-0.02em]"
+                className="font-[var(--font-playfair)] text-[44px] md:text-[60px] lg:text-[80px] font-normal text-white leading-[1] tracking-[-0.02em]"
               >
                 Awards
               </motion.h2>
@@ -69,167 +69,174 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
             </Link>
           </motion.div>
         </div>
+      </div>
 
-        {/* Accordion panels */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="flex gap-[2px] rounded-[2px] overflow-hidden"
-          style={{ height: 'clamp(420px, 60vh, 680px)' }}
-        >
-          {items.map((award, i) => (
-            <div
-              key={award.id}
-              className="relative overflow-hidden cursor-pointer"
-              style={{
-                flex: i === active ? 5 : 1,
-                transition: 'flex 0.75s cubic-bezier(0.76, 0, 0.24, 1)',
-                minWidth: 0,
-              }}
-              onMouseEnter={() => setActive(i)}
-            >
-              {/* Background image or fallback */}
-              {award.image ? (
-                <Image
-                  src={award.image}
-                  alt={award.titleEn}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 60vw"
-                  className="object-cover"
+      {/* Accordion panels — full bleed */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="flex gap-[1px] w-full"
+        style={{ height: 'clamp(520px, 75vh, 860px)' }}
+      >
+        {items.map((award, i) => (
+          <div
+            key={award.id}
+            className="relative overflow-hidden cursor-pointer"
+            style={{
+              flex: i === active ? 6 : 1,
+              transition: 'flex 0.8s cubic-bezier(0.76, 0, 0.24, 1)',
+              minWidth: 0,
+            }}
+            onMouseEnter={() => setActive(i)}
+          >
+            {/* Background */}
+            {award.image ? (
+              <Image
+                src={award.image}
+                alt={award.titleEn}
+                fill
+                sizes="(max-width: 768px) 100vw, 70vw"
+                className="object-cover"
+                style={{
+                  transform: i === active ? 'scale(1.02)' : 'scale(1.12)',
+                  transition: 'transform 0.8s cubic-bezier(0.76, 0, 0.24, 1)',
+                  filter: i === active ? 'brightness(0.75)' : 'brightness(0.45)',
+                }}
+                unoptimized
+                priority={i === 0}
+              />
+            ) : (
+              <div
+                className="absolute inset-0"
+                style={{ background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length] }}
+              >
+                {/* Subtle gold grid lines decoration */}
+                <div className="absolute inset-0 opacity-[0.04]"
                   style={{
-                    transform: i === active ? 'scale(1)' : 'scale(1.1)',
-                    transition: 'transform 0.75s cubic-bezier(0.76, 0, 0.24, 1)',
+                    backgroundImage: 'linear-gradient(#B1A490 1px, transparent 1px), linear-gradient(90deg, #B1A490 1px, transparent 1px)',
+                    backgroundSize: '40px 40px'
                   }}
-                  unoptimized
-                  priority={i === 0}
                 />
-              ) : (
-                <div
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{ background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length] }}
-                >
-                  {/* Decorative gold circle when no image */}
+                <div className="absolute inset-0 flex items-center justify-center">
                   <div
-                    className="rounded-full border border-[#B1A490]/20"
-                    style={{ width: 120, height: 120, opacity: i === active ? 0.5 : 0.2 }}
+                    className="rounded-full border border-[#B1A490]"
+                    style={{
+                      width: 96, height: 96,
+                      opacity: i === active ? 0.25 : 0.08,
+                      transition: 'opacity 0.6s ease'
+                    }}
                   />
                 </div>
-              )}
-
-              {/* Gradient overlay — heavier at bottom */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/20 transition-opacity duration-500" />
-              {/* Extra left-side vignette for active */}
-              {i === active && (
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
-              )}
-
-              {/* ── COLLAPSED: vertical label ── */}
-              <div
-                className="absolute inset-0 flex items-center justify-center"
-                style={{
-                  opacity: i === active ? 0 : 1,
-                  transition: 'opacity 0.35s ease',
-                  pointerEvents: 'none',
-                }}
-              >
-                <div className="flex flex-col items-center gap-3">
-                  <span
-                    className="font-[var(--font-libre-franklin)] text-[9px] text-white/40 uppercase tracking-[0.3em] whitespace-nowrap"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                  >
-                    {award.titleEn}
-                  </span>
-                  <span className="block w-px h-6 bg-[#B1A490]/30" />
-                  <span
-                    className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490]/50 uppercase tracking-[0.3em]"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                  >
-                    {award.year}
-                  </span>
-                </div>
               </div>
+            )}
 
-              {/* ── Index badge ── */}
-              <div className="absolute top-5 left-5">
-                <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 tracking-[0.1em]">
-                  {String(i + 1).padStart(2, '0')}
+            {/* Bottom gradient — only bottom third, lighter */}
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* ── COLLAPSED: vertical label ── */}
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                opacity: i === active ? 0 : 1,
+                transition: 'opacity 0.4s ease',
+                pointerEvents: 'none',
+              }}
+            >
+              <div className="flex flex-col items-center gap-4">
+                <span
+                  className="font-[var(--font-libre-franklin)] text-[9px] text-white/50 uppercase tracking-[0.35em] whitespace-nowrap"
+                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                >
+                  {award.titleEn}
+                </span>
+                <span className="block w-px h-8 bg-[#B1A490]/25" />
+                <span
+                  className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490]/60 uppercase tracking-[0.35em]"
+                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                >
+                  {award.year}
                 </span>
               </div>
-
-              {/* ── EXPANDED: bottom content ── */}
-              <AnimatePresence>
-                {i === active && (
-                  <motion.div
-                    key={`content-${award.id}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 12 }}
-                    transition={{ duration: 0.4, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10"
-                  >
-                    {/* Year · Award */}
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[0.22em]">
-                        {award.year}
-                      </span>
-                      <span className="w-[3px] h-[3px] rounded-full bg-[#B1A490]/50" />
-                      <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/35 uppercase tracking-[0.22em]">
-                        Award
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-[var(--font-playfair)] text-[20px] md:text-[26px] lg:text-[30px] text-white leading-[1.2] mb-2 max-w-[480px]">
-                      {award.titleEn}
-                    </h3>
-
-                    {/* Subtitle */}
-                    {award.subtitleEn && (
-                      <p className="font-[var(--font-libre-franklin)] text-[12px] text-white/50 leading-relaxed max-w-[380px] mt-2">
-                        {award.subtitleEn}
-                      </p>
-                    )}
-
-                    {/* Gold accent line */}
-                    <div className="mt-5 flex items-center gap-3">
-                      <motion.span
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 0.5, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                        className="block h-px bg-[#B1A490]/60 w-10 origin-left"
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
-          ))}
-        </motion.div>
 
-        {/* Panel count dots */}
-        <div className="flex items-center justify-center gap-2 mt-6">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className="transition-all duration-300"
-              aria-label={`Award ${i + 1}`}
-            >
-              <span
-                className="block rounded-full transition-all duration-300"
-                style={{
-                  width: i === active ? 20 : 6,
-                  height: 4,
-                  background: i === active ? '#B1A490' : 'rgba(255,255,255,0.15)',
-                }}
-              />
-            </button>
-          ))}
-        </div>
+            {/* ── Index badge ── */}
+            <div className="absolute top-6 left-6">
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/25 tracking-[0.15em]">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+            </div>
 
+            {/* ── EXPANDED: bottom content ── */}
+            <AnimatePresence>
+              {i === active && (
+                <motion.div
+                  key={`content-${award.id}`}
+                  initial={{ opacity: 0, y: 28 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 16 }}
+                  transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-14"
+                >
+                  {/* Gold accent line — animates in */}
+                  <motion.span
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    className="block h-[1px] bg-[#B1A490] w-12 origin-left mb-5"
+                  />
+
+                  {/* Year · Award */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[0.3em]">
+                      {award.year}
+                    </span>
+                    <span className="w-[3px] h-[3px] rounded-full bg-[#B1A490]/40" />
+                    <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[0.3em]">
+                      Award
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="font-[var(--font-playfair)] text-[22px] md:text-[30px] lg:text-[38px] text-white leading-[1.15] max-w-[560px]">
+                    {award.titleEn}
+                  </h3>
+
+                  {/* Subtitle */}
+                  {award.subtitleEn && (
+                    <p className="font-[var(--font-libre-franklin)] text-[12px] text-white/45 leading-relaxed max-w-[420px] mt-3">
+                      {award.subtitleEn}
+                    </p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Navigation dots */}
+      <div className="flex items-center justify-center gap-2 py-6">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            className="transition-all duration-300"
+            aria-label={`Award ${i + 1}`}
+          >
+            <span
+              className="block rounded-full transition-all duration-300"
+              style={{
+                width: i === active ? 24 : 6,
+                height: 3,
+                background: i === active ? '#B1A490' : 'rgba(255,255,255,0.12)',
+              }}
+            />
+          </button>
+        ))}
       </div>
+
     </section>
   )
 }
