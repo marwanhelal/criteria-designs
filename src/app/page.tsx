@@ -11,6 +11,7 @@ import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
 import AwardsSection from '@/components/AwardsSection'
+import AwardsAccordion from '@/components/AwardsAccordion'
 
 interface Project {
   id: string
@@ -347,6 +348,7 @@ export default function Home() {
         </div>
       </div>
 
+      <AwardsAccordion awards={awards} />
       <AwardsSection awards={awards} />
 
       <ClientsMarquee clients={clients} />
