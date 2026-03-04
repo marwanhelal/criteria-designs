@@ -190,20 +190,22 @@ export default function ShowcaseSection({ projects }: { projects: ShowcaseProjec
 
   return (
     <section className="w-full bg-[#0e1117]">
-      {/* Section label */}
-      <div className="px-8 md:px-16 lg:px-24 py-16 flex items-center gap-6">
-        <div className="w-12 h-px bg-[#B1A490]/40" />
-        <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490]/60 uppercase tracking-[6px]">
-          Selected Works
-        </span>
-        <div className="flex-1 h-px bg-white/5" />
-        <Link
-          href="/projects"
-          className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300"
-        >
-          All Projects →
-        </Link>
-      </div>
+      {/* Section label — only shown when multiple projects */}
+      {projects.length > 1 && (
+        <div className="px-8 md:px-16 lg:px-24 py-16 flex items-center gap-6">
+          <div className="w-12 h-px bg-[#B1A490]/40" />
+          <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490]/60 uppercase tracking-[6px]">
+            Selected Works
+          </span>
+          <div className="flex-1 h-px bg-white/5" />
+          <Link
+            href="/projects"
+            className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300"
+          >
+            All Projects →
+          </Link>
+        </div>
+      )}
 
       {projects.map((project, i) => (
         <ShowcaseItem

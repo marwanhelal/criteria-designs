@@ -203,9 +203,11 @@ export default function Home() {
   }, [])
 
   const displayProjects = projects.length > 0 ? projects : []
-  // CMS-controlled portfolio list: use showcaseProjects if set, else all published
-  const portfolioProjects = (settings?.showcaseProjects && settings.showcaseProjects.length > 0)
-    ? settings.showcaseProjects
+  const showcaseAll = settings?.showcaseProjects ?? []
+  // Slot 1 → full-screen showcase; Slots 2-5 → portfolio cards
+  const showcaseHero = showcaseAll.slice(0, 1)
+  const portfolioProjects = showcaseAll.length > 1
+    ? showcaseAll.slice(1)
     : displayProjects
   const heroImage = settings?.heroImage || null
   // Always use /api/uploads/ route — guaranteed to work in Docker standalone
@@ -270,7 +272,7 @@ export default function Home() {
       {/* ===== CEO BANNER ===== */}
       <PhilosophySection />
       <CeoBanner />
-      <ShowcaseSection projects={settings?.showcaseProjects ?? []} />
+      <ShowcaseSection projects={showcaseHero} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
       <section data-navbar-dark className="bg-white">
