@@ -73,8 +73,9 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
         {/* Accordion panels */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="flex gap-[2px] rounded-[2px] overflow-hidden"
           style={{ height: 'clamp(420px, 60vh, 680px)' }}
         >
