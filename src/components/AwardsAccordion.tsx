@@ -28,9 +28,9 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
   if (items.length === 0) return null
 
   return (
-    <section className="w-full bg-[#0a0a0a]">
+    <section className="w-full bg-white">
 
-      {/* ── Header — clean dark space above the panels ── */}
+      {/* ── Header — white space above the panels ── */}
       <div className="px-8 lg:px-16 pt-16 pb-8 flex items-end justify-between">
         <div>
           <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[5px] mb-4">
@@ -38,14 +38,14 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
           </p>
           <div className="flex items-center gap-4">
             <span className="block w-[3px] self-stretch bg-[#B1A490]" />
-            <h2 className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-normal text-white leading-[1] tracking-[-0.02em]">
+            <h2 className="font-[var(--font-playfair)] text-[48px] md:text-[64px] lg:text-[80px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em]">
               Awards
             </h2>
           </div>
         </div>
         <Link
           href="/awards"
-          className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300 mb-2"
+          className="font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A]/40 uppercase tracking-[3px] hover:text-[#B1A490] transition-colors duration-300 mb-2"
         >
           View All →
         </Link>
@@ -170,7 +170,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
       </div>
 
       {/* Navigation dots */}
-      <div className="flex items-center justify-center gap-2 py-5 bg-[#0a0a0a]">
+      <div className="flex items-center justify-center gap-2 py-5 bg-white">
         {items.map((_, i) => (
           <button
             key={i}
@@ -183,7 +183,7 @@ export default function AwardsAccordion({ awards }: { awards: Award[] }) {
               style={{
                 width: i === active ? 24 : 6,
                 height: 3,
-                background: i === active ? '#B1A490' : 'rgba(255,255,255,0.2)',
+                background: i === active ? '#B1A490' : 'rgba(0,0,0,0.15)',
               }}
             />
           </button>
