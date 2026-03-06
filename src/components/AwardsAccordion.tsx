@@ -75,23 +75,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
             </div>
           </div>
 
-          {/* Right: counter + view all */}
-          <div className="text-right flex flex-col items-end gap-3 pb-1">
-            <div>
-              <div className="font-[var(--font-playfair)] text-[28px] md:text-[34px] text-[#1A1A1A] leading-none">
-                <Counter target={totalCount} />+
-              </div>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#888] uppercase tracking-[4px] mt-1">
-                International Awards
-              </p>
-            </div>
-            <Link
-              href="/awards"
-              className="inline-flex items-center gap-2 font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A] uppercase tracking-[3px] border border-[#1A1A1A]/25 hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 px-5 py-2.5"
-            >
-              View All Awards →
-            </Link>
-          </div>
+
         </div>
 
         {/* Stats strip */}
@@ -277,6 +261,23 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               />
             </button>
           ))}
+        </div>
+
+        {/* View All Awards — below panels */}
+        <div className="flex items-center justify-between pt-8 border-t border-[#E8E8E4] mt-6">
+          <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#888] uppercase tracking-[4px]">
+            {totalCount}+ International Awards
+          </p>
+          <Link
+            href="/awards"
+            className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[12px] text-[#1A1A1A] uppercase tracking-[3px]"
+          >
+            <span className="relative">
+              View All Awards
+              <span className="absolute -bottom-0.5 left-0 w-0 group-hover:w-full h-px bg-[#B1A490] transition-all duration-400 ease-out" />
+            </span>
+            <span className="w-6 h-px bg-[#1A1A1A] group-hover:w-10 transition-all duration-300" />
+          </Link>
         </div>
       </div>
 
