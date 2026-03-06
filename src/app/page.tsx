@@ -43,6 +43,8 @@ interface Settings {
   heroVideo: string | null
   showcaseProject1Id: string | null
   showcaseProjects: ShowcaseProject[]
+  awardsCountries: string | null
+  awardsSince: string | null
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -348,7 +350,12 @@ export default function Home() {
         </div>
       </div>
 
-      <AwardsAccordion awards={awards} />
+      <AwardsAccordion
+        awards={awards}
+        totalCount={awards.length}
+        countries={settings?.awardsCountries || '12+'}
+        since={settings?.awardsSince || '2001'}
+      />
       <AwardsSection awards={awards} />
 
       <ClientsMarquee clients={clients} />

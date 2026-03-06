@@ -218,6 +218,18 @@ export async function POST() {
       results.push(`✗ Award status enum: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 16. Awards stats columns on SiteSettings
+    for (const col of ['awardsCountries', 'awardsSince']) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

@@ -210,6 +210,10 @@ model SiteSettings {
   ceoBtnTextAr     String?
   ceoBtnLink       String?
 
+  // Awards section stats
+  awardsCountries  String?  @default("12+")
+  awardsSince      String?  @default("2001")
+
   updatedAt       DateTime @updatedAt
 }
 

@@ -69,6 +69,8 @@ export default function SettingsPage() {
     ceoBtnLink: '',
     // Showcase projects
     showcaseProject1Id: '',
+    awardsCountries: '',
+    awardsSince: '',
     showcaseProject2Id: '',
     showcaseProject3Id: '',
     showcaseProject4Id: '',
@@ -146,6 +148,8 @@ export default function SettingsPage() {
           showcaseProject3Id: settings.showcaseProject3Id || '',
           showcaseProject4Id: settings.showcaseProject4Id || '',
           showcaseProject5Id: settings.showcaseProject5Id || '',
+          awardsCountries: settings.awardsCountries || '',
+          awardsSince: settings.awardsSince || '',
         })
       }
     } catch (error) {
@@ -888,6 +892,22 @@ export default function SettingsPage() {
                 </select>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* ── Awards Section Stats ── */}
+        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+          <h2 className="font-semibold text-lg border-b pb-2">Awards Section Stats</h2>
+          <p className="text-xs text-gray-500">Shown in the stats strip above the accordion panels on the homepage.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Countries (e.g. 12+)</label>
+              <input type="text" value={form.awardsCountries} onChange={(e) => setForm({ ...form, awardsCountries: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="12+" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Founded / Since Year (e.g. 2001)</label>
+              <input type="text" value={form.awardsSince} onChange={(e) => setForm({ ...form, awardsSince: e.target.value })} className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="2001" />
+            </div>
           </div>
         </div>
 
