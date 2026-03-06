@@ -124,6 +124,15 @@ export async function PUT(request: NextRequest) {
         showcaseProject3Id: data.showcaseProject3Id || null,
         showcaseProject4Id: data.showcaseProject4Id || null,
         showcaseProject5Id: data.showcaseProject5Id || null,
+        // Awards stats
+        awardsCountries: data.awardsCountries || null,
+        awardsSince: data.awardsSince || null,
+        // Homepage accordion award slots
+        homepageAward1Id: data.homepageAward1Id || null,
+        homepageAward2Id: data.homepageAward2Id || null,
+        homepageAward3Id: data.homepageAward3Id || null,
+        homepageAward4Id: data.homepageAward4Id || null,
+        homepageAward5Id: data.homepageAward5Id || null,
       },
       create: {
         id: 'main',
@@ -184,6 +193,15 @@ export async function PUT(request: NextRequest) {
         showcaseProject3Id: data.showcaseProject3Id || null,
         showcaseProject4Id: data.showcaseProject4Id || null,
         showcaseProject5Id: data.showcaseProject5Id || null,
+        // Awards stats
+        awardsCountries: data.awardsCountries || null,
+        awardsSince: data.awardsSince || null,
+        // Homepage accordion award slots
+        homepageAward1Id: data.homepageAward1Id || null,
+        homepageAward2Id: data.homepageAward2Id || null,
+        homepageAward3Id: data.homepageAward3Id || null,
+        homepageAward4Id: data.homepageAward4Id || null,
+        homepageAward5Id: data.homepageAward5Id || null,
       }
     })
 

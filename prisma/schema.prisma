@@ -214,6 +214,13 @@ model SiteSettings {
   awardsCountries  String?  @default("12+")
   awardsSince      String?  @default("2001")
 
+  // Homepage accordion award slots
+  homepageAward1Id String?
+  homepageAward2Id String?
+  homepageAward3Id String?
+  homepageAward4Id String?
+  homepageAward5Id String?
+
   updatedAt       DateTime @updatedAt
 }
 

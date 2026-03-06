@@ -230,6 +230,18 @@ export async function POST() {
       }
     }
 
+    // 17. Homepage award slot columns on SiteSettings
+    for (const col of ['homepageAward1Id','homepageAward2Id','homepageAward3Id','homepageAward4Id','homepageAward5Id']) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

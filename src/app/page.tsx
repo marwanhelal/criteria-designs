@@ -44,6 +44,11 @@ interface Settings {
   showcaseProjects: ShowcaseProject[]
   awardsCountries: string | null
   awardsSince: string | null
+  homepageAward1Id: string | null
+  homepageAward2Id: string | null
+  homepageAward3Id: string | null
+  homepageAward4Id: string | null
+  homepageAward5Id: string | null
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -350,7 +355,21 @@ export default function Home() {
       </div>
 
       <AwardsAccordion
-        awards={awards}
+        awards={(() => {
+          const slotIds = [
+            settings?.homepageAward1Id,
+            settings?.homepageAward2Id,
+            settings?.homepageAward3Id,
+            settings?.homepageAward4Id,
+            settings?.homepageAward5Id,
+          ].filter(Boolean) as string[]
+          if (slotIds.length > 0) {
+            return slotIds
+              .map(id => awards.find(a => a.id === id))
+              .filter(Boolean) as typeof awards
+          }
+          return awards.slice(0, 5)
+        })()}
         totalCount={awards.length}
         countries={settings?.awardsCountries || '12+'}
         since={settings?.awardsSince || '2001'}
