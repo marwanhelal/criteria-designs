@@ -10,7 +10,6 @@ import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
-import AwardsSection from '@/components/AwardsSection'
 import AwardsAccordion from '@/components/AwardsAccordion'
 
 interface Project {
@@ -356,7 +355,6 @@ export default function Home() {
         countries={settings?.awardsCountries || '12+'}
         since={settings?.awardsSince || '2001'}
       />
-      <AwardsSection awards={awards} />
 
       <ClientsMarquee clients={clients} />
 

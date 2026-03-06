@@ -124,9 +124,6 @@ export async function PUT(request: NextRequest) {
         showcaseProject3Id: data.showcaseProject3Id || null,
         showcaseProject4Id: data.showcaseProject4Id || null,
         showcaseProject5Id: data.showcaseProject5Id || null,
-        // Awards stats
-        awardsCountries: data.awardsCountries || null,
-        awardsSince: data.awardsSince || null,
       },
       create: {
         id: 'main',
@@ -187,9 +184,6 @@ export async function PUT(request: NextRequest) {
         showcaseProject3Id: data.showcaseProject3Id || null,
         showcaseProject4Id: data.showcaseProject4Id || null,
         showcaseProject5Id: data.showcaseProject5Id || null,
-        // Awards stats
-        awardsCountries: data.awardsCountries || null,
-        awardsSince: data.awardsSince || null,
       }
     })
 
