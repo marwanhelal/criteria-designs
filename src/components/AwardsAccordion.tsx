@@ -59,7 +59,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
     <section className="w-full bg-white">
 
       {/* ── Header ── */}
-      <div className="px-8 md:px-16 lg:px-24 pt-20 pb-8">
+      <div className="px-8 md:px-16 lg:px-24 pt-16 pb-6">
         <div className="flex items-end justify-between">
 
           {/* Left: label + title */}
@@ -101,7 +101,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
       </div>
 
       {/* ── Accordion panels — with side padding like Nawy ── */}
-      <div className="px-8 md:px-16 lg:px-24 pb-8">
+      <div className="px-8 md:px-16 lg:px-24 pb-6">
         <div
           className="flex w-full rounded-sm overflow-hidden"
           style={{ height: 'clamp(460px, 65vh, 780px)' }}
