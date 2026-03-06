@@ -67,18 +67,18 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
             <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px] mb-4">
               Recognition &amp; Excellence
             </p>
-            <div className="flex items-center gap-4">
-              <span className="block w-[3px] bg-[#1A1A1A]" style={{ height: 76 }} />
-              <h2 className="font-[var(--font-playfair)] text-[54px] md:text-[72px] lg:text-[88px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em]">
+            <div className="flex items-center gap-3">
+              <span className="block w-[3px] bg-[#1A1A1A]" style={{ height: 48 }} />
+              <h2 className="font-[var(--font-playfair)] text-[34px] md:text-[42px] lg:text-[50px] font-normal text-[#1A1A1A] leading-[1] tracking-[-0.02em]">
                 Awards
               </h2>
             </div>
           </div>
 
           {/* Right: counter + view all */}
-          <div className="text-right flex flex-col items-end gap-4 pb-1">
+          <div className="text-right flex flex-col items-end gap-3 pb-1">
             <div>
-              <div className="font-[var(--font-playfair)] text-[48px] md:text-[62px] text-[#1A1A1A] leading-none">
+              <div className="font-[var(--font-playfair)] text-[28px] md:text-[34px] text-[#1A1A1A] leading-none">
                 <Counter target={totalCount} />+
               </div>
               <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#888] uppercase tracking-[4px] mt-1">
