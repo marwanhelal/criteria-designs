@@ -61,7 +61,7 @@ export default function AwardsPage() {
     setSaving(true)
     try {
       await fetch('/api/settings', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           awardsCountries: countries,
