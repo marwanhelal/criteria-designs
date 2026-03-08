@@ -309,14 +309,15 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-center pt-5 mt-1 border-t border-white/[0.07]">
-          <Link
-            href="/awards"
-            className="group inline-flex items-center gap-4 font-[var(--font-libre-franklin)] text-[11px] text-white/35 hover:text-[#B1A490] uppercase tracking-[4px] transition-colors duration-400"
-          >
-            <span className="w-8 h-px bg-white/15 group-hover:w-12 group-hover:bg-[#B1A490]/50 transition-all duration-500" />
-            View All Awards
-            <span className="w-8 h-px bg-white/15 group-hover:w-12 group-hover:bg-[#B1A490]/50 transition-all duration-500" />
+        <div className="flex items-center justify-center pt-6 mt-1 border-t border-white/[0.07]">
+          <Link href="/awards" className="group relative inline-block">
+            <span
+              className="font-[var(--font-playfair)] italic font-normal text-white/25 group-hover:text-[#B1A490] transition-colors duration-500"
+              style={{ fontSize: 'clamp(36px, 4vw, 56px)', letterSpacing: '-0.02em' }}
+            >
+              Awards
+            </span>
+            <span className="absolute bottom-0 left-0 h-[1.5px] bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
           </Link>
         </div>
       </div>
