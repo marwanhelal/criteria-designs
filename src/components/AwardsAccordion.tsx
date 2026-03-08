@@ -309,36 +309,14 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-between pt-5 mt-1 border-t border-white/[0.07]">
-
-          {/* Dots */}
-          <div className="flex items-center gap-2">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                aria-label={`Award ${i + 1}`}
-                className="py-2 px-0.5"
-              >
-                <span
-                  className="block rounded-full transition-all duration-400"
-                  style={{
-                    width: i === active ? 30 : 5,
-                    height: 2,
-                    background: i === active ? '#B1A490' : 'rgba(255,255,255,0.18)',
-                  }}
-                />
-              </button>
-            ))}
-          </div>
-
-          {/* View All */}
+        <div className="flex items-center justify-center pt-5 mt-1 border-t border-white/[0.07]">
           <Link
             href="/awards"
-            className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] text-white/40 hover:text-white uppercase tracking-[3px] transition-colors duration-300"
+            className="group inline-flex items-center gap-4 font-[var(--font-libre-franklin)] text-[11px] text-white/35 hover:text-[#B1A490] uppercase tracking-[4px] transition-colors duration-400"
           >
+            <span className="w-8 h-px bg-white/15 group-hover:w-12 group-hover:bg-[#B1A490]/50 transition-all duration-500" />
             View All Awards
-            <span className="w-6 h-px bg-white/20 group-hover:w-10 group-hover:bg-[#B1A490] transition-all duration-350" />
+            <span className="w-8 h-px bg-white/15 group-hover:w-12 group-hover:bg-[#B1A490]/50 transition-all duration-500" />
           </Link>
         </div>
       </div>
