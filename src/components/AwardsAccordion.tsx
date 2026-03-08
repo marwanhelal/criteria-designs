@@ -40,15 +40,15 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
     <section className="w-full bg-white relative overflow-hidden">
 
       {/* Header */}
-      <div className="px-8 md:px-16 lg:px-24 pt-20 pb-0">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-10 border-b border-black/[0.08]">
+      <div className="px-8 md:px-16 lg:px-24 pt-12 pb-0">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b border-black/[0.08]">
           <div>
             <motion.p
               initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[6px] mb-5"
+              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[5px] mb-3"
             >
               Recognition &amp; Excellence
             </motion.p>
@@ -57,8 +57,8 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, delay: 0.08 }}
-              className="font-[var(--font-playfair)] italic font-normal text-[#1A1A1A] leading-[0.9] tracking-[-0.02em]"
-              style={{ fontSize: 'clamp(48px, 6vw, 80px)' }}
+              className="font-[var(--font-playfair)] italic font-normal text-[#1A1A1A] leading-[1] tracking-[-0.01em]"
+              style={{ fontSize: 'clamp(28px, 3vw, 42px)' }}
             >
               Award Winning
             </motion.h2>
