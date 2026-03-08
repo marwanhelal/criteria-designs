@@ -217,7 +217,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               className="font-[var(--font-playfair)] italic font-normal text-white/25 group-hover:text-[#B1A490] transition-colors duration-500"
               style={{ fontSize: 'clamp(36px, 4vw, 56px)', letterSpacing: '-0.02em' }}
             >
-              Awards
+              View All Awards
             </span>
             <span className="absolute bottom-0 left-0 h-[1.5px] bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
           </Link>
