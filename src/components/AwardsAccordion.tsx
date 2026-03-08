@@ -70,7 +70,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
             transition={{ duration: 0.6, delay: 0.2 }}
             className="font-[var(--font-open-sans)] text-[13px] text-[#888] leading-relaxed max-w-[320px] md:text-right pb-1"
           >
-            A legacy of international recognition in architecture and interior design.
+            A legacy of international recognition in architecture.
           </motion.p>
         </div>
       </div>
