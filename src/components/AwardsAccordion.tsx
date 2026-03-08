@@ -59,11 +59,11 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
   const sinceStr = since || '2001'
 
   return (
-    <section className="w-full bg-white relative overflow-hidden">
+    <section className="w-full bg-[#0C0C0C] relative overflow-hidden">
 
       {/* Header */}
       <div className="px-8 md:px-16 lg:px-24 pt-20 pb-0">
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-10 border-b border-[#1A1A1A]/[0.08]">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-10 border-b border-white/[0.07]">
 
           {/* Left: title block */}
           <div>
@@ -84,12 +84,12 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               className="flex items-baseline gap-5"
             >
               <h2
-                className="font-[var(--font-playfair)] font-normal text-[#1A1A1A] leading-[0.88] tracking-[-0.03em]"
+                className="font-[var(--font-playfair)] font-normal text-white leading-[0.88] tracking-[-0.03em]"
                 style={{ fontSize: 'clamp(64px, 8vw, 108px)' }}
               >
                 Awards
               </h2>
-              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#1A1A1A]/25 uppercase tracking-[3px] mb-1">
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px] mb-1">
                 {sinceStr} — Present
               </span>
             </motion.div>
@@ -104,31 +104,31 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
             className="flex items-end gap-10 lg:gap-16 pb-1"
           >
             <div>
-              <p className="font-[var(--font-playfair)] text-[#1A1A1A] leading-none tabular-nums"
+              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none tabular-nums"
                 style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
                 <AnimatedNumber target={totalCount} suffix="+" />
               </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#1A1A1A]/35 uppercase tracking-[3px] mt-2">
+              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
                 Awards Won
               </p>
             </div>
-            <div className="w-px h-10 bg-[#1A1A1A]/10 self-center" />
+            <div className="w-px h-10 bg-white/[0.08] self-center" />
             <div>
-              <p className="font-[var(--font-playfair)] text-[#1A1A1A] leading-none tabular-nums"
+              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none tabular-nums"
                 style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
                 <AnimatedNumber target={countriesNum} suffix="+" />
               </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#1A1A1A]/35 uppercase tracking-[3px] mt-2">
+              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
                 Countries
               </p>
             </div>
-            <div className="w-px h-10 bg-[#1A1A1A]/10 self-center" />
+            <div className="w-px h-10 bg-white/[0.08] self-center" />
             <div>
-              <p className="font-[var(--font-playfair)] text-[#1A1A1A] leading-none"
+              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none"
                 style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
                 {sinceStr}
               </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-[#1A1A1A]/35 uppercase tracking-[3px] mt-2">
+              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
                 Est. Year
               </p>
             </div>
@@ -197,11 +197,11 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                 }}
               />
 
-              {/* Light veil on inactive */}
+              {/* Dark veil on inactive */}
               <div
-                className="absolute inset-0 bg-white pointer-events-none"
+                className="absolute inset-0 bg-[#0C0C0C] pointer-events-none"
                 style={{
-                  opacity: i === active ? 0 : 0.35,
+                  opacity: i === active ? 0 : 0.55,
                   transition: 'opacity 0.85s ease',
                 }}
               />
@@ -306,7 +306,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-between pt-5 mt-1 border-t border-[#1A1A1A]/[0.08]">
+        <div className="flex items-center justify-between pt-5 mt-1 border-t border-white/[0.07]">
 
           {/* Dots */}
           <div className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   style={{
                     width: i === active ? 30 : 5,
                     height: 2,
-                    background: i === active ? '#1A1A1A' : 'rgba(0,0,0,0.15)',
+                    background: i === active ? '#B1A490' : 'rgba(255,255,255,0.18)',
                   }}
                 />
               </button>
@@ -332,10 +332,10 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
           {/* View All */}
           <Link
             href="/awards"
-            className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] text-[#1A1A1A]/45 hover:text-[#1A1A1A] uppercase tracking-[3px] transition-colors duration-300"
+            className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] text-white/40 hover:text-white uppercase tracking-[3px] transition-colors duration-300"
           >
             View All Awards
-            <span className="w-6 h-px bg-[#1A1A1A]/20 group-hover:w-10 group-hover:bg-[#B1A490] transition-all duration-350" />
+            <span className="w-6 h-px bg-white/20 group-hover:w-10 group-hover:bg-[#B1A490] transition-all duration-350" />
           </Link>
         </div>
       </div>
