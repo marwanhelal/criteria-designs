@@ -21,13 +21,12 @@ interface Props {
 }
 
 const FALLBACK_GRADIENTS = [
-  'linear-gradient(160deg,#1c1408 0%,#0d0a04 100%)',
-  'linear-gradient(160deg,#081018 0%,#050a12 100%)',
-  'linear-gradient(160deg,#1a0e08 0%,#100806 100%)',
-  'linear-gradient(160deg,#0a1018 0%,#060c14 100%)',
-  'linear-gradient(160deg,#141008 0%,#0c0a04 100%)',
+  'linear-gradient(160deg,#2a2420 0%,#1a1410 100%)',
+  'linear-gradient(160deg,#1e2228 0%,#141820 100%)',
+  'linear-gradient(160deg,#261c14 0%,#1a1410 100%)',
+  'linear-gradient(160deg,#1a2028 0%,#121820 100%)',
+  'linear-gradient(160deg,#221e14 0%,#18160c 100%)',
 ]
-
 
 export default function AwardsAccordion({ awards, totalCount, countries, since }: Props) {
   const [active, setActive] = useState(0)
@@ -35,17 +34,52 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
 
   if (items.length === 0) return null
 
-  const countriesNum = parseInt(countries?.replace(/\D/g, '') || '12')
   const sinceStr = since || '2001'
 
   return (
-    <section className="w-full bg-[#0C0C0C] relative overflow-hidden">
+    <section className="w-full bg-[#F7F5F1] relative overflow-hidden">
+
+      {/* Header */}
+      <div className="px-8 md:px-16 lg:px-24 pt-20 pb-0">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-10 border-b border-black/[0.08]">
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[6px] mb-5"
+            >
+              Recognition &amp; Excellence
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: 0.08 }}
+              className="font-[var(--font-playfair)] italic font-normal text-[#1A1A1A] leading-[0.9] tracking-[-0.02em]"
+              style={{ fontSize: 'clamp(48px, 6vw, 80px)' }}
+            >
+              Award Winning
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="font-[var(--font-open-sans)] text-[13px] text-[#888] leading-relaxed max-w-[320px] md:text-right pb-1"
+          >
+            A legacy of international recognition in architecture and interior design.
+          </motion.p>
+        </div>
+      </div>
 
       {/* Accordion panels */}
-      <div className="px-8 md:px-16 lg:px-24 pt-12 pb-8">
+      <div className="px-8 md:px-16 lg:px-24 pt-8 pb-8">
         <div
           className="flex w-full overflow-hidden"
-          style={{ height: 'clamp(480px, 68vh, 820px)' }}
+          style={{ height: 'clamp(440px, 62vh, 760px)' }}
         >
           {items.map((award, i) => (
             <motion.div
@@ -59,7 +93,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                 flex: i === active ? 8 : 1,
                 transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
                 minWidth: 0,
-                marginRight: i < items.length - 1 ? '2px' : 0,
+                marginRight: i < items.length - 1 ? '3px' : 0,
               }}
               onMouseEnter={() => setActive(i)}
             >
@@ -74,8 +108,8 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   style={{
                     transform: i === active ? 'scale(1.03)' : 'scale(1.1)',
                     filter: i === active
-                      ? 'grayscale(0%) brightness(0.82)'
-                      : 'grayscale(100%) brightness(0.25)',
+                      ? 'grayscale(0%) brightness(0.78)'
+                      : 'grayscale(100%) brightness(0.3)',
                     transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
                   }}
                   unoptimized
@@ -86,7 +120,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   className="absolute inset-0"
                   style={{
                     background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length],
-                    filter: i === active ? 'brightness(1.6)' : 'brightness(1)',
+                    filter: i === active ? 'brightness(1.4)' : 'brightness(1)',
                     transition: 'filter 0.85s ease',
                   }}
                 />
@@ -96,17 +130,18 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               <div
                 className="absolute inset-x-0 bottom-0 h-3/4 pointer-events-none"
                 style={{
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 45%, transparent 100%)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
                   opacity: i === active ? 1 : 0,
                   transition: 'opacity 0.5s ease',
                 }}
               />
 
-              {/* Dark veil on inactive */}
+              {/* Veil on inactive */}
               <div
-                className="absolute inset-0 bg-[#0C0C0C] pointer-events-none"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  opacity: i === active ? 0 : 0.55,
+                  background: 'rgba(247,245,241,0.15)',
+                  opacity: i === active ? 0 : 1,
                   transition: 'opacity 0.85s ease',
                 }}
               />
@@ -140,9 +175,9 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   >
                     {award.year}
                   </span>
-                  <span className="block w-px h-8 bg-white/15" />
+                  <span className="block w-px h-8 bg-white/20" />
                   <span
-                    className="font-[var(--font-libre-franklin)] text-white/35 uppercase whitespace-nowrap"
+                    className="font-[var(--font-libre-franklin)] text-white/40 uppercase whitespace-nowrap"
                     style={{
                       fontSize: 'clamp(7px, 0.75vw, 9px)',
                       writingMode: 'vertical-rl',
@@ -168,7 +203,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   >
                     {/* Index line */}
                     <div className="flex items-center gap-3 mb-5">
-                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/25 tracking-[0.3em]">
+                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/30 tracking-[0.3em]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="block w-12 h-px bg-white/15" />
@@ -211,10 +246,10 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-center pt-6 mt-1 border-t border-white/[0.07]">
+        <div className="flex items-center justify-center pt-8 mt-1 border-t border-black/[0.08]">
           <Link href="/awards" className="group relative inline-block">
             <span
-              className="font-[var(--font-playfair)] italic font-normal text-white/25 group-hover:text-[#B1A490] transition-colors duration-500"
+              className="font-[var(--font-playfair)] italic font-normal text-[#1A1A1A]/20 group-hover:text-[#B1A490] transition-colors duration-500"
               style={{ fontSize: 'clamp(36px, 4vw, 56px)', letterSpacing: '-0.02em' }}
             >
               View All Awards
