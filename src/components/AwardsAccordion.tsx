@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 interface Award {
@@ -305,7 +306,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center pt-5 mt-1 border-t border-white/[0.07]">
+        <div className="flex items-center justify-between pt-5 mt-1 border-t border-white/[0.07]">
 
           {/* Dots */}
           <div className="flex items-center gap-2">
@@ -327,6 +328,15 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               </button>
             ))}
           </div>
+
+          {/* View All */}
+          <Link
+            href="/awards"
+            className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] text-white/40 hover:text-white uppercase tracking-[3px] transition-colors duration-300"
+          >
+            View All Awards
+            <span className="w-6 h-px bg-white/20 group-hover:w-10 group-hover:bg-[#B1A490] transition-all duration-350" />
+          </Link>
         </div>
       </div>
 

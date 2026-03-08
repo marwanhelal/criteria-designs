@@ -10,7 +10,7 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
   { href: '/services', label: 'Services' },
-  { href: '/awards', label: 'Award Winning', decorative: true },
+  { href: '/awards', label: 'Awards' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ]
@@ -171,16 +171,10 @@ export default function Navbar() {
                   }`}
                   style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
                 >
-                  <span className={`leading-[1.3] transition-colors duration-300 ${
-                    link.decorative
-                      ? 'font-[var(--font-playfair)] italic text-[28px] md:text-[48px] lg:text-[56px]'
-                      : 'font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px]'
-                  } ${
+                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
                     isActive
                       ? 'text-[#B1A490]'
-                      : link.decorative
-                        ? 'text-[#B1A490]/70 group-hover:text-[#B1A490]'
-                        : 'text-white/80 group-hover:text-white'
+                      : 'text-white/80 group-hover:text-white'
                   }`}>
                     {link.label}
                   </span>
