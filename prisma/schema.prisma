@@ -261,6 +261,7 @@ model Media {
   mimeType  String
   size      Int
   alt       String?
+  folder    String   @default("other")
   createdAt DateTime @default(now())
 }
 

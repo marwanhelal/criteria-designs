@@ -242,6 +242,16 @@ export async function POST() {
       }
     }
 
+    // 18. folder column on Media table
+    try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "Media" ADD COLUMN IF NOT EXISTS "folder" TEXT NOT NULL DEFAULT 'other';`
+      )
+      results.push('✓ folder column ensured on Media table')
+    } catch (e) {
+      results.push(`✗ folder: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

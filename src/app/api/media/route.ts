@@ -1,10 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-// GET all media
-export async function GET() {
+// GET all media (optionally filtered by folder)
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const folder = searchParams.get('folder')
+
     const media = await prisma.media.findMany({
+      where: folder ? { folder } : undefined,
       orderBy: { createdAt: 'desc' }
     })
 

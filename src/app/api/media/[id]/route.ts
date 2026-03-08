@@ -142,11 +142,17 @@ export async function PUT(
     const { id } = await params
     const data = await request.json()
 
+    const validFolders = ['homepage', 'projects', 'awards', 'team', 'clients', 'other']
+    const updateData: { alt?: string | null; folder?: string } = {
+      alt: data.alt || null
+    }
+    if (data.folder && validFolders.includes(data.folder)) {
+      updateData.folder = data.folder
+    }
+
     const media = await prisma.media.update({
       where: { id },
-      data: {
-        alt: data.alt || null
-      }
+      data: updateData
     })
 
     return NextResponse.json(media)

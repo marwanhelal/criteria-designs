@@ -56,13 +56,18 @@ export async function POST(request: NextRequest) {
     await writeFile(filepath, buffer)
 
     // Save to database
+    const validFolders = ['homepage', 'projects', 'awards', 'team', 'clients', 'other']
+    const requestedFolder = formData.get('folder') as string || 'other'
+    const folder = validFolders.includes(requestedFolder) ? requestedFolder : 'other'
+
     const media = await prisma.media.create({
       data: {
         filename: file.name,
         url: `/api/uploads/${filename}`,
         mimeType: file.type,
         size: file.size,
-        alt: formData.get('alt') as string || null
+        alt: formData.get('alt') as string || null,
+        folder,
       }
     })
 
