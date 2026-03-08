@@ -32,6 +32,7 @@ export default function MediaPage() {
   const [copied, setCopied] = useState<string | null>(null)
   const [movingId, setMovingId] = useState<string | null>(null)
   const [counts, setCounts] = useState<Record<string, number>>({})
+  const [brokenIds, setBrokenIds] = useState<Set<string>>(new Set())
 
   const fetchMedia = useCallback(async (folder: string) => {
     setLoading(true)
@@ -245,18 +246,19 @@ export default function MediaPage() {
               <div key={item.id} className="bg-white rounded-lg shadow overflow-hidden group relative">
                 <div className="aspect-square relative">
                   {item.mimeType.startsWith('image/') ? (
-                    <img
-                      src={item.url}
-                      alt={item.alt || item.filename}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none'
-                        const parent = (e.target as HTMLImageElement).parentElement
-                        if (parent) {
-                          parent.innerHTML = '<div class="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-400 text-xs p-2 text-center"><span>⚠</span><span>File missing</span></div>'
-                        }
-                      }}
-                    />
+                    brokenIds.has(item.id) ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-400 text-xs p-2 text-center">
+                        <span className="text-lg mb-1">⚠</span>
+                        <span>File missing</span>
+                      </div>
+                    ) : (
+                      <img
+                        src={item.url}
+                        alt={item.alt || item.filename}
+                        className="w-full h-full object-cover"
+                        onError={() => setBrokenIds(prev => new Set(prev).add(item.id))}
+                      />
+                    )
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
                       <span className="text-xs uppercase">{item.mimeType.split('/')[1]}</span>
