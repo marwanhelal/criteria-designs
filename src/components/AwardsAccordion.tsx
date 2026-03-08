@@ -83,12 +83,15 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               transition={{ duration: 0.75, delay: 0.08 }}
               className="flex items-baseline gap-5"
             >
-              <h2
-                className="font-[var(--font-playfair)] font-normal text-white leading-[0.88] tracking-[-0.03em]"
-                style={{ fontSize: 'clamp(64px, 8vw, 108px)' }}
-              >
-                Awards
-              </h2>
+              <Link href="/awards" className="group relative inline-block">
+                <h2
+                  className="font-[var(--font-playfair)] italic font-normal text-white group-hover:text-[#B1A490] leading-[0.88] tracking-[-0.03em] transition-colors duration-500 cursor-pointer"
+                  style={{ fontSize: 'clamp(64px, 8vw, 108px)' }}
+                >
+                  Awards
+                </h2>
+                <span className="absolute bottom-0 left-0 h-[2px] bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+              </Link>
               <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px] mb-1">
                 {sinceStr} — Present
               </span>
