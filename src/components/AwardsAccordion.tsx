@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Award {
   id: string
@@ -28,26 +28,6 @@ const FALLBACK_GRADIENTS = [
   'linear-gradient(160deg,#141008 0%,#0c0a04 100%)',
 ]
 
-function AnimatedNumber({ target, suffix = '' }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
-
-  useEffect(() => {
-    if (!inView) return
-    const start = performance.now()
-    const duration = 1600
-    const raf = (now: number) => {
-      const t = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - t, 3)
-      setCount(Math.round(eased * target))
-      if (t < 1) requestAnimationFrame(raf)
-    }
-    requestAnimationFrame(raf)
-  }, [inView, target])
-
-  return <span ref={ref}>{count}{suffix}</span>
-}
 
 export default function AwardsAccordion({ awards, totalCount, countries, since }: Props) {
   const [active, setActive] = useState(0)
@@ -61,86 +41,8 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
   return (
     <section className="w-full bg-[#0C0C0C] relative overflow-hidden">
 
-      {/* Header */}
-      <div className="px-8 md:px-16 lg:px-24 pt-20 pb-0">
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-10 border-b border-white/[0.07]">
-
-          {/* Left: title block */}
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[6px] mb-6"
-            >
-              Recognition &amp; Excellence
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.08 }}
-              className="flex items-baseline gap-5"
-            >
-              <Link href="/awards" className="group relative inline-block">
-                <h2
-                  className="font-[var(--font-playfair)] italic font-normal text-white group-hover:text-[#B1A490] leading-[0.88] tracking-[-0.03em] transition-colors duration-500 cursor-pointer"
-                  style={{ fontSize: 'clamp(64px, 8vw, 108px)' }}
-                >
-                  Awards
-                </h2>
-                <span className="absolute bottom-0 left-0 h-[2px] bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
-              </Link>
-              <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px] mb-1">
-                {sinceStr} — Present
-              </span>
-            </motion.div>
-          </div>
-
-          {/* Right: stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.18 }}
-            className="flex items-end gap-10 lg:gap-16 pb-1"
-          >
-            <div>
-              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none tabular-nums"
-                style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
-                <AnimatedNumber target={totalCount} suffix="+" />
-              </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
-                Awards Won
-              </p>
-            </div>
-            <div className="w-px h-10 bg-white/[0.08] self-center" />
-            <div>
-              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none tabular-nums"
-                style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
-                <AnimatedNumber target={countriesNum} suffix="+" />
-              </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
-                Countries
-              </p>
-            </div>
-            <div className="w-px h-10 bg-white/[0.08] self-center" />
-            <div>
-              <p className="font-[var(--font-playfair)] text-[#B1A490] leading-none"
-                style={{ fontSize: 'clamp(36px, 4vw, 52px)' }}>
-                {sinceStr}
-              </p>
-              <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 uppercase tracking-[3px] mt-2">
-                Est. Year
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
       {/* Accordion panels */}
-      <div className="px-8 md:px-16 lg:px-24 pt-6 pb-8">
+      <div className="px-8 md:px-16 lg:px-24 pt-12 pb-8">
         <div
           className="flex w-full overflow-hidden"
           style={{ height: 'clamp(480px, 68vh, 820px)' }}
