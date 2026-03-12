@@ -53,7 +53,7 @@ export default function Footer() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-[var(--font-playfair)] text-[24px] font-700 tracking-[0.02em]"
+            className="font-[family-name:var(--font-playfair)] text-[24px] font-bold tracking-[0.02em]"
           >
             Criteria Designs
           </Link>
