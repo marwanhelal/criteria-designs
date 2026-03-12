@@ -76,16 +76,13 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
                 unoptimized
               />
             )}
-            <div className="flex flex-col gap-[2px]">
-              <span className="font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+            <div className="flex flex-col gap-0">
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[22px] md:text-[28px] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
                 Criteria
               </span>
-              <div className="flex items-center gap-2">
-                <span className="block w-[22px] md:w-[30px] h-[1px] bg-[#B1A490]/80" />
-                <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
-                  Designs
-                </span>
-              </div>
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[9px] md:text-[11px] font-light uppercase tracking-[6px] md:tracking-[7px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+                Designs
+              </span>
             </div>
           </Link>
 

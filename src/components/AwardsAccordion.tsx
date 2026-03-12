@@ -37,7 +37,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
   const sinceStr = since || '2001'
 
   return (
-    <section className="w-full bg-white relative overflow-hidden">
+    <section data-navbar-dark className="w-full bg-white relative overflow-hidden">
 
       {/* Header */}
       <div className="px-8 md:px-16 lg:px-24 pt-12 pb-0">
