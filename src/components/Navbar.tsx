@@ -85,7 +85,6 @@ export default function Navbar() {
   const logoHoverColor = isDark ? 'group-hover:text-[#8a7a66]' : 'group-hover:text-[#B1A490]'
   const subtitleColor = isDark ? 'text-[#666]' : 'text-white/50'
   const subtitleHover = isDark ? 'group-hover:text-[#444]' : 'group-hover:text-white/70'
-  const lineColor = isDark ? 'bg-[#B1A490]/80' : 'bg-[#B1A490]/60'
   const hamburgerBg = isDark ? 'bg-white hover:bg-gray-100' : 'bg-[#181C23] hover:bg-[#2a2f3a]'
   const hamburgerLine = isDark ? 'bg-[#181C23]' : 'bg-white'
   const logoFilter = '' // logo image stays unchanged
@@ -110,16 +109,13 @@ export default function Navbar() {
                 />
               </div>
             )}
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-0">
               <span className={`font-[family-name:var(--font-franklin-gothic)] text-[22px] md:text-[28px] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
-              <div className="flex items-center gap-2">
-                <span className={`block w-[22px] md:w-[30px] h-[1px] transition-colors duration-500 ${lineColor}`} />
-                <span className={`font-[family-name:var(--font-franklin-gothic)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
-                  Designs
-                </span>
-              </div>
+              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[9px] md:text-[11px] font-light uppercase tracking-[6px] md:tracking-[7px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
+                Designs
+              </span>
             </div>
           </Link>
 
