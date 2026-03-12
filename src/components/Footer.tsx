@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { LucideFacebook, LucideInstagram, LucideLinkedin, LucideTwitter, ArrowUp } from 'lucide-react'
+import { LucideFacebook, LucideInstagram, LucideLinkedin, LucideTwitter, LucideYoutube, ArrowUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const navLinks = [
@@ -18,9 +18,10 @@ const socialDefs = [
   { key: 'linkedin',  icon: LucideLinkedin,  label: 'LinkedIn'  },
   { key: 'facebook',  icon: LucideFacebook,  label: 'Facebook'  },
   { key: 'twitter',   icon: LucideTwitter,   label: 'Twitter'   },
+  { key: 'youtube',   icon: LucideYoutube,   label: 'YouTube'   },
 ] as const
 
-type SocialKey = 'instagram' | 'linkedin' | 'facebook' | 'twitter'
+type SocialKey = 'instagram' | 'linkedin' | 'facebook' | 'twitter' | 'youtube'
 type Socials = Partial<Record<SocialKey, string | null>>
 
 export default function Footer() {
@@ -35,6 +36,7 @@ export default function Footer() {
           linkedin:  data.linkedin,
           facebook:  data.facebook,
           twitter:   data.twitter,
+          youtube:   data.youtube,
         })
       )
       .catch(() => {})

@@ -160,6 +160,7 @@ model SiteSettings {
   instagram       String?
   linkedin        String?
   twitter         String?
+  youtube         String?
   logo            String?
   favicon         String?
   heroImage       String?

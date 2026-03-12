@@ -26,6 +26,7 @@ export default function SettingsPage() {
     instagram: '',
     linkedin: '',
     twitter: '',
+    youtube: '',
     logo: '',
     favicon: '',
     heroImage: '',
@@ -101,6 +102,7 @@ export default function SettingsPage() {
           instagram: settings.instagram || '',
           linkedin: settings.linkedin || '',
           twitter: settings.twitter || '',
+          youtube: settings.youtube || '',
           logo: settings.logo || '',
           favicon: settings.favicon || '',
           heroImage: settings.heroImage || '',
@@ -651,6 +653,18 @@ export default function SettingsPage() {
                 onChange={(e) => setForm({ ...form, twitter: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="https://twitter.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                YouTube
+              </label>
+              <input
+                type="url"
+                value={form.youtube}
+                onChange={(e) => setForm({ ...form, youtube: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="https://youtube.com/@..."
               />
             </div>
           </div>
