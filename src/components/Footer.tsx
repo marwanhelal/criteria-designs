@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Facebook, Instagram, Linkedin, Twitter, ArrowUp } from 'lucide-react'
+import { LucideFacebook, LucideInstagram, LucideLinkedin, LucideTwitter, ArrowUp } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const navLinks = [
   { href: '/projects', label: 'Projects' },
@@ -12,14 +13,33 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
-const socialLinks = [
-  { href: '#', icon: Instagram, label: 'Instagram' },
-  { href: '#', icon: Linkedin, label: 'LinkedIn' },
-  { href: '#', icon: Facebook, label: 'Facebook' },
-  { href: '#', icon: Twitter, label: 'Twitter' },
-]
+const socialDefs = [
+  { key: 'instagram', icon: LucideInstagram, label: 'Instagram' },
+  { key: 'linkedin',  icon: LucideLinkedin,  label: 'LinkedIn'  },
+  { key: 'facebook',  icon: LucideFacebook,  label: 'Facebook'  },
+  { key: 'twitter',   icon: LucideTwitter,   label: 'Twitter'   },
+] as const
+
+type SocialKey = 'instagram' | 'linkedin' | 'facebook' | 'twitter'
+type Socials = Partial<Record<SocialKey, string | null>>
 
 export default function Footer() {
+  const [socials, setSocials] = useState<Socials>({})
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then((data: Socials) =>
+        setSocials({
+          instagram: data.instagram,
+          linkedin:  data.linkedin,
+          facebook:  data.facebook,
+          twitter:   data.twitter,
+        })
+      )
+      .catch(() => {})
+  }, [])
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   return (
@@ -38,16 +58,22 @@ export default function Footer() {
 
           {/* Socials + Back to Top */}
           <div className="flex items-center gap-3">
-            {socialLinks.map(({ href, icon: Icon, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors"
-              >
-                <Icon size={15} />
-              </a>
-            ))}
+            {socialDefs.map(({ key, icon: Icon, label }) => {
+              const url = socials[key]
+              if (!url) return null
+              return (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors"
+                >
+                  <Icon size={15} />
+                </a>
+              )
+            })}
 
             <button
               onClick={scrollToTop}
