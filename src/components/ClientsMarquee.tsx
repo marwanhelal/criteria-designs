@@ -50,7 +50,7 @@ function Row({ clients, direction }: { clients: Client[]; direction: 'ltr' | 'rt
         {items.map((client, i) => (
           <div
             key={`${client.id}-${i}`}
-            className="w-[150px] h-[130px] shrink-0 flex items-center justify-center p-5 bg-[#FAFAF8] hover:bg-white border-r border-[#181C23]/[0.06] transition-colors duration-300 cursor-default group"
+            className="w-[150px] h-[130px] shrink-0 flex items-center justify-center p-5 bg-white hover:bg-[#FAFAF8] border-r border-[#181C23]/[0.06] transition-colors duration-300 cursor-default group"
           >
             {client.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -80,7 +80,7 @@ export default function ClientsMarquee({ clients }: { clients: Client[] }) {
   const r2 = row2.length > 0 ? row2 : clients
 
   return (
-    <section className="bg-[#FAFAF8] overflow-hidden border-t border-b border-[#181C23]/[0.07]">
+    <section className="bg-white overflow-hidden border-t border-b border-[#181C23]/[0.07]">
 
       {/* Header row */}
       <div className="px-8 lg:px-16 py-7 flex items-center justify-between gap-6 border-b border-[#181C23]/[0.07]">

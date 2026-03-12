@@ -43,11 +43,11 @@ export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   return (
-    <footer className="bg-[#161616] text-white">
-      <div className="max-w-[1290px] mx-auto px-8">
+    <footer className="bg-white text-[#181C23] border-t border-[#181C23]/10">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16">
 
         {/* Row 1: Logo | Socials + Back to Top */}
-        <div className="flex items-center justify-between py-6 border-b border-white/10">
+        <div className="flex items-center justify-between py-6 border-b border-[#181C23]/10">
           {/* Logo */}
           <Link
             href="/"
@@ -68,7 +68,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors"
+                  className="w-9 h-9 rounded-full bg-[#181C23]/8 border border-[#181C23]/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] hover:text-white transition-colors"
                 >
                   <Icon size={15} />
                 </a>
@@ -77,7 +77,7 @@ export default function Footer() {
 
             <button
               onClick={scrollToTop}
-              className="ml-4 flex items-center gap-2 font-[var(--font-open-sans)] text-[13px] tracking-wide hover:text-[#B1A490] transition-colors whitespace-nowrap"
+              className="ml-4 flex items-center gap-2 font-[var(--font-open-sans)] text-[13px] tracking-wide text-[#181C23]/60 hover:text-[#B1A490] transition-colors whitespace-nowrap"
             >
               Back To Top <ArrowUp size={14} />
             </button>
@@ -92,7 +92,7 @@ export default function Footer() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="font-[var(--font-open-sans)] text-[13px] text-white/70 hover:text-white transition-colors"
+                className="font-[var(--font-open-sans)] text-[13px] text-[#181C23]/60 hover:text-[#181C23] transition-colors"
               >
                 {link.label}
               </Link>
@@ -100,8 +100,8 @@ export default function Footer() {
           </nav>
 
           {/* Legal */}
-          <p className="font-[var(--font-open-sans)] text-[13px] text-white/50 whitespace-nowrap">
-            <Link href="/privacy" className="hover:text-white/80 transition-colors">Legal and policies</Link>
+          <p className="font-[var(--font-open-sans)] text-[13px] text-[#181C23]/40 whitespace-nowrap">
+            <Link href="/privacy" className="hover:text-[#181C23]/70 transition-colors">Legal and policies</Link>
             &nbsp;&nbsp;&copy; {new Date().getFullYear()} Criteria Designs. All Rights Reserved.
           </p>
         </div>
