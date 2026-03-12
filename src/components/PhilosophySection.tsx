@@ -708,7 +708,7 @@ export default function PhilosophySection() {
           {Array(6).fill(null).map((_, i) => (
             <span
               key={i}
-              className="font-[var(--font-playfair)] italic inline-flex items-center select-none"
+              className="font-[family-name:var(--font-icomoon)] inline-flex items-center select-none"
               style={{
                 fontSize: 'clamp(40px, 5vw, 76px)',
                 WebkitTextStroke: i % 2 === 0 ? '1.5px rgba(177,164,144,0.9)' : '0px',

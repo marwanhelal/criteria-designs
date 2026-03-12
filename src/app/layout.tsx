@@ -35,6 +35,11 @@ const franklinGothic = localFont({
   variable: "--font-franklin-gothic",
 });
 
+const icomoon = localFont({
+  src: [{ path: "../../public/fonts/icomoon.ttf", weight: "400", style: "normal" }],
+  variable: "--font-icomoon",
+});
+
 export const metadata: Metadata = {
   title: "Criteria Designs | Architecture & Interior Design",
   description:
@@ -49,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} ${playfairDisplay.variable} ${franklinGothic.variable} antialiased`}
+        className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} ${playfairDisplay.variable} ${franklinGothic.variable} ${icomoon.variable} antialiased`}
       >
         {children}
       </body>
