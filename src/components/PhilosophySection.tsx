@@ -708,14 +708,14 @@ export default function PhilosophySection() {
           {Array(6).fill(null).map((_, i) => (
             <span
               key={i}
-              className="font-[family-name:var(--font-icomoon)] inline-flex items-center select-none"
+              className="font-[family-name:var(--font-merriweather)] inline-flex items-center select-none"
               style={{
                 fontSize: 'clamp(60px, 8vw, 120px)',
-                WebkitTextStroke: '1.5px rgba(177,164,144,0.85)',
+                WebkitTextStroke: '1px rgba(177,164,144,0.75)',
                 color: 'transparent',
                 paddingRight: '4rem',
-                letterSpacing: '0.04em',
-                fontWeight: 500,
+                letterSpacing: '0.06em',
+                fontWeight: 300,
               }}
             >
               Criteria Designs
