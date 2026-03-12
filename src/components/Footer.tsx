@@ -1,132 +1,85 @@
-import Link from 'next/link'
-import { Facebook, Instagram, Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react'
+'use client'
 
-const footerLinks = {
-  company: [
-    { href: '/about', label: 'About Us' },
-    { href: '/projects', label: 'Projects' },
-    { href: '/services', label: 'Services' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/contact', label: 'Contact' },
-  ],
-  services: [
-    { href: '/services', label: 'Architectural Design' },
-    { href: '/services', label: 'Interior Design' },
-    { href: '/services', label: 'Urban Planning' },
-    { href: '/services', label: 'Landscape Design' },
-    { href: '/services', label: 'Renovation' },
-  ],
-}
+import Link from 'next/link'
+import { Facebook, Instagram, Linkedin, Twitter, ArrowUp } from 'lucide-react'
+
+const navLinks = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/services', label: 'Services' },
+  { href: '/about', label: 'About' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/team', label: 'Team' },
+  { href: '/contact', label: 'Contact' },
+]
+
+const socialLinks = [
+  { href: '#', icon: Instagram, label: 'Instagram' },
+  { href: '#', icon: Linkedin, label: 'LinkedIn' },
+  { href: '#', icon: Facebook, label: 'Facebook' },
+  { href: '#', icon: Twitter, label: 'Twitter' },
+]
 
 export default function Footer() {
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
   return (
-    <footer className="bg-[#181C23] text-white">
-      <div className="max-w-[1290px] mx-auto px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div>
-            <Link href="/" className="font-[var(--font-libre-franklin)] text-[28px] leading-[28px]">
-              Criteria
-            </Link>
-            <p className="font-[var(--font-open-sans)] text-[16px] text-gray-400 leading-[30px] mt-6">
-              We build quality real estate projects since 1978. Creating spaces that inspire.
-            </p>
-            <div className="flex gap-4 mt-6">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#B1A490] transition-colors">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#B1A490] transition-colors">
-                <Instagram size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#B1A490] transition-colors">
-                <Linkedin size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#B1A490] transition-colors">
-                <Twitter size={18} />
-              </a>
-            </div>
-          </div>
+    <footer className="bg-[#161616] text-white">
+      <div className="max-w-[1290px] mx-auto px-8">
 
-          {/* Company Links */}
-          <div>
-            <h4 className="font-[var(--font-libre-franklin)] text-[14px] uppercase tracking-[0.56px] text-[#B1A490] mb-6">
-              Company
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="font-[var(--font-open-sans)] text-[16px] text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Row 1: Logo | Socials + Back to Top */}
+        <div className="flex items-center justify-between py-6 border-b border-white/10">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="font-[var(--font-libre-franklin)] text-[22px] font-bold tracking-wide"
+          >
+            Criteria Designs
+          </Link>
 
-          {/* Services Links */}
-          <div>
-            <h4 className="font-[var(--font-libre-franklin)] text-[14px] uppercase tracking-[0.56px] text-[#B1A490] mb-6">
-              Services
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="font-[var(--font-open-sans)] text-[16px] text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Socials + Back to Top */}
+          <div className="flex items-center gap-3">
+            {socialLinks.map(({ href, icon: Icon, label }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={label}
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors"
+              >
+                <Icon size={15} />
+              </a>
+            ))}
 
-          {/* Contact Info */}
-          <div>
-            <h4 className="font-[var(--font-libre-franklin)] text-[14px] uppercase tracking-[0.56px] text-[#B1A490] mb-6">
-              Contact
-            </h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin size={20} className="text-[#B1A490] shrink-0 mt-1" />
-                <span className="font-[var(--font-open-sans)] text-[16px] text-gray-400">
-                  Cairo, Egypt
-                </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={20} className="text-[#B1A490] shrink-0" />
-                <a href="tel:+201151724527" className="font-[var(--font-open-sans)] text-[16px] text-gray-400 hover:text-white transition-colors">
-                  +20 115 172 4527
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={20} className="text-[#B1A490] shrink-0" />
-                <a href="mailto:info@criteriadesigns.com" className="font-[var(--font-open-sans)] text-[16px] text-gray-400 hover:text-white transition-colors">
-                  info@criteriadesigns.com
-                </a>
-              </li>
-            </ul>
+            <button
+              onClick={scrollToTop}
+              className="ml-4 flex items-center gap-2 font-[var(--font-open-sans)] text-[13px] tracking-wide hover:text-[#B1A490] transition-colors whitespace-nowrap"
+            >
+              Back To Top <ArrowUp size={14} />
+            </button>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-[var(--font-open-sans)] text-[14px] text-gray-500">
-            &copy; {new Date().getFullYear()} Criteria Designs. All rights reserved.
+        {/* Row 2: Nav Links | Legal */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-5 gap-4">
+          {/* Nav */}
+          <nav className="flex flex-wrap gap-x-7 gap-y-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="font-[var(--font-open-sans)] text-[13px] text-white/70 hover:text-white transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Legal */}
+          <p className="font-[var(--font-open-sans)] text-[13px] text-white/50 whitespace-nowrap">
+            <Link href="/privacy" className="hover:text-white/80 transition-colors">Legal and policies</Link>
+            &nbsp;&nbsp;&copy; {new Date().getFullYear()} Criteria Designs. All Rights Reserved.
           </p>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="font-[var(--font-open-sans)] text-[14px] text-gray-500 hover:text-white transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="font-[var(--font-open-sans)] text-[14px] text-gray-500 hover:text-white transition-colors">
-              Terms of Service
-            </Link>
-          </div>
         </div>
+
       </div>
     </footer>
   )
