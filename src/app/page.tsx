@@ -301,7 +301,7 @@ export default function Home() {
             <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[5px]">
               Portfolio
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[38px] lg:text-[54px] text-[#181C23] leading-[1.1] mt-5">
+            <h2 className="font-[family-name:var(--font-franklin-gothic)] font-bold text-[38px] lg:text-[54px] text-[#181C23] leading-[1.1] mt-5">
               Design that adds value
             </h2>
             <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#747779] leading-relaxed mt-5 max-w-[280px]">
