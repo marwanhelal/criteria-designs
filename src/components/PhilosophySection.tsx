@@ -702,7 +702,7 @@ export default function PhilosophySection() {
 
         {/* Row 1 — moves LEFT, outlined brand phrases */}
         <div
-          className="flex whitespace-nowrap py-7"
+          className="flex whitespace-nowrap py-4"
           style={{ animation: 'marquee-left 52s linear infinite', width: 'max-content' }}
         >
           {Array(6).fill(null).map((_, i) => (
@@ -710,17 +710,18 @@ export default function PhilosophySection() {
               key={i}
               className="font-[family-name:var(--font-icomoon)] inline-flex items-center select-none"
               style={{
-                fontSize: 'clamp(40px, 5vw, 76px)',
-                WebkitTextStroke: i % 2 === 0 ? '1.5px rgba(177,164,144,0.9)' : '0px',
-                color: i % 2 === 0 ? 'transparent' : 'rgba(177,164,144,0.13)',
-                paddingRight: '5rem',
-                letterSpacing: '0.02em',
+                fontSize: 'clamp(60px, 8vw, 120px)',
+                WebkitTextStroke: '1.5px rgba(177,164,144,0.85)',
+                color: 'transparent',
+                paddingRight: '4rem',
+                letterSpacing: '0.04em',
+                fontWeight: 500,
               }}
             >
               Criteria Designs
-              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.45)', fontSize: '0.28em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.5)', fontSize: '0.22em', margin: '0 2rem', verticalAlign: 'middle' }}>◆</span>
               Design That Adds Value
-              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.45)', fontSize: '0.28em', margin: '0 2.5rem', verticalAlign: 'middle' }}>◆</span>
+              <span style={{ WebkitTextStroke: '0px', color: 'rgba(177,164,144,0.5)', fontSize: '0.22em', margin: '0 2rem', verticalAlign: 'middle' }}>◆</span>
               Culture · Nature · Art
             </span>
           ))}
