@@ -49,17 +49,17 @@ export default function Footer() {
       <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16">
 
         {/* Row 1: Logo | Socials + Back to Top */}
-        <div className="flex items-center justify-between py-6 border-b border-[#181C23]/10">
+        <div className="flex items-center justify-between py-9 border-b border-[#181C23]/10">
           {/* Logo */}
           <Link
             href="/"
-            className="font-[family-name:var(--font-franklin-gothic)] text-[16px] font-normal leading-[24px] tracking-[0.02em]"
+            className="font-[family-name:var(--font-franklin-gothic)] text-[22px] font-bold leading-[32px] tracking-[0.02em]"
           >
             Criteria Designs
           </Link>
 
           {/* Socials + Back to Top */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {socialDefs.map(({ key, icon: Icon, label }) => {
               const url = socials[key]
               if (!url) return null
@@ -70,31 +70,31 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-full bg-[#181C23]/8 border border-[#181C23]/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] hover:text-white transition-colors"
+                  className="w-11 h-11 rounded-full bg-[#181C23]/8 border border-[#181C23]/15 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] hover:text-white transition-colors"
                 >
-                  <Icon size={15} />
+                  <Icon size={18} />
                 </a>
               )
             })}
 
             <button
               onClick={scrollToTop}
-              className="ml-4 flex items-center gap-2 font-[family-name:var(--font-open-sans)] text-[13px] tracking-wide text-[#181C23]/60 hover:text-[#B1A490] transition-colors whitespace-nowrap"
+              className="ml-4 flex items-center gap-2 font-[family-name:var(--font-open-sans)] text-[14px] tracking-wide text-[#181C23]/60 hover:text-[#B1A490] transition-colors whitespace-nowrap"
             >
-              Back To Top <ArrowUp size={14} />
+              Back To Top <ArrowUp size={15} />
             </button>
           </div>
         </div>
 
         {/* Row 2: Nav Links | Legal */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-5 gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-7 gap-4">
           {/* Nav */}
-          <nav className="flex flex-wrap gap-x-7 gap-y-2">
+          <nav className="flex flex-wrap gap-x-9 gap-y-2">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="font-[family-name:var(--font-open-sans)] text-[13px] text-[#181C23]/60 hover:text-[#181C23] transition-colors"
+                className="font-[family-name:var(--font-open-sans)] text-[14px] text-[#181C23]/60 hover:text-[#181C23] transition-colors"
               >
                 {link.label}
               </Link>
@@ -102,7 +102,7 @@ export default function Footer() {
           </nav>
 
           {/* Legal */}
-          <p className="font-[family-name:var(--font-open-sans)] text-[13px] text-[#181C23]/40 whitespace-nowrap">
+          <p className="font-[family-name:var(--font-open-sans)] text-[14px] text-[#181C23]/40 whitespace-nowrap">
             <Link href="/privacy" className="hover:text-[#181C23]/70 transition-colors">Legal and policies</Link>
             &nbsp;&nbsp;&copy; {new Date().getFullYear()} Criteria Designs. All Rights Reserved.
           </p>
