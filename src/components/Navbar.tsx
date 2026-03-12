@@ -111,12 +111,12 @@ export default function Navbar() {
               </div>
             )}
             <div className="flex flex-col gap-[2px]">
-              <span className={`font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
+              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[22px] md:text-[28px] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
               <div className="flex items-center gap-2">
                 <span className={`block w-[22px] md:w-[30px] h-[1px] transition-colors duration-500 ${lineColor}`} />
-                <span className={`font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
+                <span className={`font-[family-name:var(--font-franklin-gothic)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
                   Designs
                 </span>
               </div>
