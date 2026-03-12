@@ -252,6 +252,16 @@ export async function POST() {
       results.push(`✗ folder: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 19. youtube column on SiteSettings
+    try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "youtube" TEXT;`
+      )
+      results.push('✓ youtube column ensured on SiteSettings')
+    } catch (e) {
+      results.push(`✗ youtube: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)
