@@ -94,7 +94,7 @@ function ProjectsHeader({
         }}
       >
         {/* Row 1: Logo + Hamburger */}
-        <div className="px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between border-b border-[#e8e8e8]">
+        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between border-b border-[#e8e8e8]">
           <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
               <Image
@@ -102,26 +102,23 @@ function ProjectsHeader({
                 alt={settings.companyNameEn || 'Criteria Design Group'}
                 width={100}
                 height={100}
-                className="h-[52px] md:h-[72px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                className="h-[clamp(44px,5vw,80px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
                 unoptimized
               />
             )}
-            <div className="flex flex-col gap-[2px]">
-              <span className="font-[var(--font-merriweather)] text-[22px] md:text-[28px] font-normal leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+            <div className="flex flex-col gap-0">
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
                 Criteria
               </span>
-              <div className="flex items-center gap-2">
-                <span className="block w-[22px] md:w-[30px] h-[1px] bg-[#B1A490]/80" />
-                <span className="font-[var(--font-libre-franklin)] text-[10px] md:text-[12px] font-light uppercase tracking-[4px] md:tracking-[5px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
-                  Designs
-                </span>
-              </div>
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+                Designs
+              </span>
             </div>
           </Link>
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full bg-white hover:bg-gray-100 transition-colors duration-300"
+            className="relative z-[60] w-[clamp(38px,3.5vw,54px)] h-[clamp(38px,3.5vw,54px)] flex flex-col items-center justify-center gap-[5px] rounded-full bg-white hover:bg-gray-100 transition-colors duration-300"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
             <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
