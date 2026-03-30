@@ -46,7 +46,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-white text-[#181C23] border-t border-[#181C23]/10">
-      <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16">
+      <div className="w-full px-[clamp(1rem,4vw,7rem)]">
 
         {/* Row 1: Logo | Socials + Back to Top */}
         <div className="flex items-center justify-between py-9 border-b border-[#181C23]/10">

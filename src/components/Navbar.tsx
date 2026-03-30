@@ -93,7 +93,7 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent transition-colors duration-300">
-        <div className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between">
+        <div className="w-full px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between">
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
@@ -104,16 +104,16 @@ export default function Navbar() {
                   alt={settings.companyNameEn || 'Criteria Design Group'}
                   width={100}
                   height={100}
-                  className={`relative h-[52px] md:h-[72px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
+                  className={`relative h-[clamp(44px,5vw,80px)] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
                   unoptimized
                 />
               </div>
             )}
             <div className="flex flex-col gap-0">
-              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[22px] md:text-[28px] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
+              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
                 Criteria
               </span>
-              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[9px] md:text-[11px] font-light uppercase tracking-[6px] md:tracking-[7px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
+              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
                 Designs
               </span>
             </div>
@@ -122,7 +122,7 @@ export default function Navbar() {
           {/* Hamburger Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className={`relative z-[60] w-[42px] h-[42px] md:w-[48px] md:h-[48px] flex flex-col items-center justify-center gap-[5px] md:gap-[6px] rounded-full transition-colors duration-500 ${hamburgerBg}`}
+            className={`relative z-[60] w-[clamp(38px,3.5vw,54px)] h-[clamp(38px,3.5vw,54px)] flex flex-col items-center justify-center gap-[5px] rounded-full transition-colors duration-500 ${hamburgerBg}`}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
             <span className={`block w-[22px] h-[2px] rounded-full transition-all duration-300 ${hamburgerLine} ${

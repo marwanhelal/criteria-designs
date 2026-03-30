@@ -64,7 +64,7 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
         }}
       >
         {/* Row 1: Logo + Hamburger */}
-        <div className="px-4 md:px-12 lg:px-16 h-[72px] md:h-[90px] flex items-center justify-between border-b border-[#e8e8e8]">
+        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between border-b border-[#e8e8e8]">
           <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo && (
               <Image
@@ -72,15 +72,15 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
                 alt={settings.companyNameEn || 'Criteria Design Group'}
                 width={100}
                 height={100}
-                className="h-[52px] md:h-[72px] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                className="h-[clamp(44px,5vw,80px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
                 unoptimized
               />
             )}
             <div className="flex flex-col gap-0">
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[22px] md:text-[28px] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
                 Criteria
               </span>
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[9px] md:text-[11px] font-light uppercase tracking-[6px] md:tracking-[7px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
                 Designs
               </span>
             </div>
