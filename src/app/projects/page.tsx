@@ -129,13 +129,31 @@ function ProjectsHeader({
         </div>
 
         {/* Row 2: Title + Count */}
-        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[family-name:var(--font-franklin-gothic)] text-[#111] text-[clamp(20px,2.5vw,32px)] font-bold tracking-[0.5px]">
-            Projects
-          </h1>
+        <div className="px-6 lg:px-[52px] py-4 flex items-center justify-between border-b border-[#e8e8e8]">
+          <div className="flex items-center gap-4">
+            {/* Gold accent bar */}
+            <span className="hidden sm:block w-[3px] h-[clamp(28px,3vw,40px)] bg-gradient-to-b from-[#C9A96E] to-[#B1A490] rounded-full" />
+            <div>
+              <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[4px] mb-[3px]">
+                Our Work
+              </p>
+              <h1
+                className="font-[var(--font-playfair)] italic font-normal leading-none"
+                style={{
+                  fontSize: 'clamp(22px, 2.8vw, 38px)',
+                  background: 'linear-gradient(120deg, #1a1a1a 0%, #B1A490 60%, #8a7a66 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                Projects
+              </h1>
+            </div>
+          </div>
           {!loading && (
-            <p className="font-[var(--font-libre-franklin)] text-[#9A9A94] text-[13px] tracking-[0.03em]">
-              {filteredCount} {filteredCount === 1 ? 'Project' : 'Projects'}
+            <p className="font-[var(--font-libre-franklin)] text-[#9A9A94] text-[12px] tracking-[0.05em]">
+              {String(filteredCount).padStart(2, '0')} {filteredCount === 1 ? 'Project' : 'Projects'}
             </p>
           )}
         </div>
