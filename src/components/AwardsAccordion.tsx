@@ -83,7 +83,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
       {/* Accordion panels */}
       <div className="px-[clamp(1rem,6vw,8rem)] pt-8 pb-8">
         <div
-          className="flex w-full overflow-hidden"
+          className="flex w-full gap-[6px]"
           style={{ height: 'clamp(440px, 62vh, 760px)' }}
         >
           {items.map((award, i) => (
@@ -93,12 +93,11 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.65, delay: i * 0.07 }}
-              className="relative overflow-hidden cursor-pointer"
+              className="relative overflow-hidden cursor-pointer rounded-2xl"
               style={{
                 flex: i === active ? 8 : 1,
                 transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
                 minWidth: 0,
-                marginRight: i < items.length - 1 ? '3px' : 0,
               }}
               onMouseEnter={() => setActive(i)}
             >
