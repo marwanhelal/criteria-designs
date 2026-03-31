@@ -176,62 +176,82 @@ function AwardsHeader({ awardsCount, papersCount, loading }: { awardsCount: numb
 function RecognitionRow({ award, index, showType }: { award: Award; index: number; showType?: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.55, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      className="group"
     >
-      <div className="h-px bg-[#E0E0DC]" />
-      <div className="group relative -mx-6 lg:-mx-[52px] px-6 lg:px-[52px] py-7 md:py-9 flex items-center gap-6 md:gap-12 hover:bg-[#faf9f7] transition-colors duration-250">
+      <div className="block py-6 md:py-8 relative">
 
-        {/* Left accent bar */}
-        <span className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#B1A490] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-
-        {/* Index */}
-        <span className="hidden lg:block font-[var(--font-libre-franklin)] text-[11px] text-[#C8C8C2] tracking-[0.15em] shrink-0 w-6 text-right select-none">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-
-        {/* Year */}
-        <span className="font-[var(--font-playfair)] text-[28px] md:text-[38px] leading-none text-[#C0BDB8] shrink-0 select-none w-[72px] md:w-[100px]">
-          {award.year}
-        </span>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          {showType && (
-            <span className={`inline-block font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] rounded-full px-2 py-[2px] mb-2 ${
-              award.type === 'PAPER'
-                ? 'text-[#9A9A94] border border-[#9A9A94]/30'
-                : 'text-[#B1A490] border border-[#B1A490]/40'
-            }`}>
-              {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
-            </span>
-          )}
-          <h3 className="font-[var(--font-libre-franklin)] text-[15px] md:text-[19px] font-semibold text-[#1A1A1A] leading-[1.3] group-hover:text-[#B1A490] transition-colors duration-300">
-            {award.titleEn}
-          </h3>
-          {award.subtitleEn && (
-            <p className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-[#9A9A94] tracking-[0.04em] mt-1">
-              {award.subtitleEn}
-            </p>
-          )}
+        {/* Animated gold underline */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-[#E8E6E2] overflow-hidden">
+          <div className="absolute inset-y-0 left-0 bg-[#B1A490] w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
         </div>
 
-        {/* Image */}
-        {award.image && (
+        <div className="flex items-center gap-5 md:gap-10">
+
+          {/* Image — rounded card with shadow */}
           <div className="shrink-0">
-            <div className="relative w-[72px] h-[54px] md:w-[130px] md:h-[96px] rounded-[4px] overflow-hidden bg-white border border-[#eceae6]">
-              <Image
-                src={award.image}
-                alt={award.titleEn}
-                fill
-                className="object-contain p-1 md:p-2"
-                unoptimized
-              />
-            </div>
+            {award.image ? (
+              <div className="relative w-[80px] h-[60px] md:w-[140px] md:h-[100px] rounded-2xl overflow-hidden bg-white shadow-[0_2px_16px_rgba(0,0,0,0.08)] group-hover:shadow-[0_6px_28px_rgba(0,0,0,0.13)] transition-shadow duration-500 border border-[#f0ede8]">
+                <Image
+                  src={award.image}
+                  alt={award.titleEn}
+                  fill
+                  className="object-contain p-2 md:p-3 transition-transform duration-500 group-hover:scale-[1.06]"
+                  unoptimized
+                />
+                {/* Subtle gold shimmer on hover */}
+                <div className="absolute inset-0 rounded-2xl ring-1 ring-[#B1A490]/0 group-hover:ring-[#B1A490]/30 transition-all duration-500" />
+              </div>
+            ) : (
+              <div className="w-[80px] h-[60px] md:w-[140px] md:h-[100px] rounded-2xl bg-[#f5f3ef] border border-[#ece9e3] flex items-center justify-center">
+                <span className="font-[var(--font-playfair)] text-[20px] md:text-[28px] text-[#D4C9BA]">{award.year}</span>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Main content */}
+          <div className="flex-1 min-w-0">
+
+            {/* Top row: type pill + year */}
+            <div className="flex items-center gap-3 mb-2">
+              {showType && (
+                <span className={`font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] rounded-full px-2 py-[2px] border ${
+                  award.type === 'PAPER'
+                    ? 'text-[#9A9A94] border-[#9A9A94]/30'
+                    : 'text-[#B1A490] border-[#B1A490]/40'
+                }`}>
+                  {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
+                </span>
+              )}
+              <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#C8C3BC] tracking-[0.12em]">
+                {award.year}
+              </span>
+            </div>
+
+            {/* Title */}
+            <h3 className="font-[var(--font-merriweather)] text-[16px] md:text-[20px] font-bold text-[#1A1A1A] leading-[1.3] group-hover:text-[#B1A490] transition-colors duration-300 truncate">
+              {award.titleEn}
+            </h3>
+
+            {/* Subtitle */}
+            {award.subtitleEn && (
+              <p className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-[#AEABA5] tracking-[0.04em] mt-1 truncate">
+                {award.subtitleEn}
+              </p>
+            )}
+          </div>
+
+          {/* Arrow */}
+          <div className="shrink-0 w-8 h-8 rounded-full border border-[#E0DDD8] flex items-center justify-center group-hover:bg-[#181C23] group-hover:border-[#181C23] transition-all duration-300">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" className="text-[#9A9A94] group-hover:text-white transition-colors duration-300" style={{ rotate: '-45deg' }}>
+              <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+
+        </div>
       </div>
     </motion.div>
   )
