@@ -138,14 +138,8 @@ function ProjectsHeader({
                 Our Work
               </p>
               <h1
-                className="font-[var(--font-playfair)] italic font-normal leading-none"
-                style={{
-                  fontSize: 'clamp(22px, 2.8vw, 38px)',
-                  background: 'linear-gradient(120deg, #1a1a1a 0%, #B1A490 60%, #8a7a66 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
+                className="font-[var(--font-playfair)] italic font-normal leading-none text-[#111]"
+                style={{ fontSize: 'clamp(22px, 2.8vw, 38px)' }}
               >
                 Projects
               </h1>
