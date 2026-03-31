@@ -152,7 +152,7 @@ export default function Navbar() {
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col justify-center items-center">
           {/* Nav Links */}
-          <div className="flex flex-col items-center gap-1 md:gap-2">
+          <div className="flex flex-col items-center gap-1">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href
               return (
@@ -167,7 +167,7 @@ export default function Navbar() {
                   }`}
                   style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
                 >
-                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
+                  <span className={`font-[var(--font-merriweather)] text-[clamp(28px,5vw,72px)] leading-[1.3] transition-colors duration-300 ${
                     isActive
                       ? 'text-[#B1A490]'
                       : 'text-white/80 group-hover:text-white'
@@ -183,7 +183,7 @@ export default function Navbar() {
           </div>
 
           {/* Bottom info */}
-          <div className={`absolute bottom-12 left-0 right-0 px-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
+          <div className={`absolute bottom-12 left-0 right-0 px-[clamp(1rem,4vw,7rem)] flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
             menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}>
             <p className="font-[var(--font-open-sans)] text-[14px] text-white/40">
