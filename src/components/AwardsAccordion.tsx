@@ -40,7 +40,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
     <section data-navbar-dark className="w-full bg-white relative overflow-hidden">
 
       {/* Header */}
-      <div className="px-8 md:px-16 lg:px-24 pt-12 pb-0">
+      <div className="px-[clamp(1rem,6vw,8rem)] pt-12 pb-0">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b border-black/[0.08]">
           <div>
             <motion.p
@@ -76,7 +76,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
       </div>
 
       {/* Accordion panels */}
-      <div className="px-8 md:px-16 lg:px-24 pt-8 pb-8">
+      <div className="px-[clamp(1rem,6vw,8rem)] pt-8 pb-8">
         <div
           className="flex w-full overflow-hidden"
           style={{ height: 'clamp(440px, 62vh, 760px)' }}

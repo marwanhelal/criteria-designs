@@ -90,7 +90,7 @@ function ShowcaseItem({
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
         {/* Left content */}
-        <div className="absolute inset-0 flex items-center px-8 md:px-16 lg:px-24">
+        <div className="absolute inset-0 flex items-center px-[clamp(1rem,6vw,8rem)]">
           <div className="max-w-[520px]">
 
             {/* Slogan — always visible */}
@@ -118,7 +118,7 @@ function ShowcaseItem({
               initial={{ opacity: 0, x: -40 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className="font-[var(--font-merriweather)] text-[36px] md:text-[52px] lg:text-[64px] text-white leading-[1.05] font-bold mb-6"
+              className="font-[var(--font-merriweather)] text-[clamp(28px,5vw,72px)] text-white leading-[1.05] font-bold mb-6"
             >
               {project.titleEn}
             </motion.h2>
@@ -192,7 +192,7 @@ export default function ShowcaseSection({ projects }: { projects: ShowcaseProjec
     <section className="w-full bg-[#0e1117]">
       {/* Section label — only shown when multiple projects */}
       {projects.length > 1 && (
-        <div className="px-8 md:px-16 lg:px-24 py-16 flex items-center gap-6">
+        <div className="px-[clamp(1rem,6vw,8rem)] py-[clamp(2rem,4vw,5rem)] flex items-center gap-6">
           <div className="w-12 h-px bg-[#B1A490]/40" />
           <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490]/60 uppercase tracking-[6px]">
             Selected Works

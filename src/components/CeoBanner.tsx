@@ -207,7 +207,7 @@ export default function CeoBanner() {
       {/* Floating accent shapes */}
       <FloatingAccents inView={isInView} />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-8 md:px-12 py-[40px] lg:py-[52px]">
+      <div className="relative z-10 px-[clamp(1rem,4vw,7rem)] py-[clamp(2.5rem,4vw,5rem)]">
 
         {/* Section label */}
         <motion.div

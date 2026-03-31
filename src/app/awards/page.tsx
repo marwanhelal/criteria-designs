@@ -98,8 +98,8 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
         </div>
 
         {/* Row 2: Title + Count */}
-        <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[var(--font-playfair)] text-[#111] text-[26px] lg:text-[30px] font-normal tracking-[-0.01em]">
+        <div className="px-[clamp(1rem,4vw,7rem)] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
+          <h1 className="font-[var(--font-playfair)] text-[#111] text-[clamp(20px,2.5vw,32px)] font-normal tracking-[-0.01em]">
             Awards
           </h1>
           {!loading && (

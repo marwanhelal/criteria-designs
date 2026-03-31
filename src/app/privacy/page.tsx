@@ -9,13 +9,13 @@ export default function PrivacyPage() {
     <>
       <Navbar />
 
-      <section data-navbar-dark className="pt-[160px] pb-[100px] px-8">
+      <section data-navbar-dark className="pt-[clamp(6rem,10vw,12rem)] pb-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[800px] mx-auto">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Legal
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] text-[#181C23] leading-[52px] mt-4">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,54px)] text-[#181C23] leading-[1.2] mt-4">
               Privacy Policy
             </h1>
           </AnimatedSection>
