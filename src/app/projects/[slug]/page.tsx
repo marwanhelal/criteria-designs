@@ -99,13 +99,12 @@ export default async function ProjectDetailPage({ params }: Props) {
                     <img
                       src={project.clientLogo}
                       alt={project.clientName}
-                      className="h-[52px] w-auto max-w-[110px] object-contain shrink-0"
-                      style={{ filter: 'brightness(0) invert(1)', opacity: 0.75 }}
+                      className="h-[52px] w-auto max-w-[110px] object-contain shrink-0 opacity-90"
                     />
                   )}
                   <div className="flex flex-col gap-[5px]">
-                    <p className="font-[var(--font-playfair)] italic text-white/80 leading-tight"
-                      style={{ fontSize: 'clamp(15px, 1.4vw, 18px)' }}>
+                    <p className="font-[var(--font-libre-franklin)] text-white/70 leading-tight tracking-[0.4px]"
+                      style={{ fontSize: 'clamp(13px, 1.2vw, 16px)' }}>
                       {project.clientName}
                     </p>
                     <div className="w-6 h-px bg-gradient-to-r from-[#B1A490]/50 to-transparent" />
