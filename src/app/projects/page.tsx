@@ -45,6 +45,7 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
   { href: '/services', label: 'Services' },
+  { href: '/awards', label: 'Recognitions' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ]
@@ -129,11 +130,11 @@ function ProjectsHeader({
 
         {/* Row 2: Title + Count */}
         <div className="px-6 lg:px-[52px] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
-          <h1 className="font-[var(--font-open-sans)] text-[#111] text-[19px] lg:text-[21px] font-normal">
+          <h1 className="font-[family-name:var(--font-franklin-gothic)] text-[#111] text-[clamp(20px,2.5vw,32px)] font-bold tracking-[0.5px]">
             Projects
           </h1>
           {!loading && (
-            <p className="font-[var(--font-open-sans)] text-[#747779] text-[19px] lg:text-[21px]">
+            <p className="font-[var(--font-libre-franklin)] text-[#9A9A94] text-[13px] tracking-[0.03em]">
               {filteredCount} {filteredCount === 1 ? 'Project' : 'Projects'}
             </p>
           )}
