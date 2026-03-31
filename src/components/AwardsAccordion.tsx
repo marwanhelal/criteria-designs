@@ -202,45 +202,54 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                 {i === active && (
                   <motion.div
                     key={`content-${award.id}`}
-                    initial={{ opacity: 0, y: 28 }}
+                    initial={{ opacity: 0, y: 32 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.42, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-12"
                   >
-                    {/* Index line */}
-                    <div className="flex items-center gap-3 mb-5">
-                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/30 tracking-[0.3em]">
+                    {/* Top meta row: index · year */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.18 }}
+                      className="flex items-center gap-3 mb-5"
+                    >
+                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/35 tracking-[0.28em]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="block w-12 h-px bg-white/15" />
-                    </div>
+                      <span className="block w-8 h-px bg-white/20" />
+                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[0.28em]">
+                        {award.year}
+                      </span>
+                    </motion.div>
 
-                    {/* Year pill */}
-                    <motion.span
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.22 }}
-                      className="inline-block font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[4px] border border-[#B1A490]/30 rounded-full px-3 py-1 mb-4"
-                    >
-                      {award.year}
-                    </motion.span>
+                    {/* Gold accent line */}
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: 0.22, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className="w-10 h-[2px] bg-[#B1A490] mb-5 origin-left"
+                    />
 
                     {/* Title */}
-                    <h3
-                      className="font-[var(--font-playfair)] text-white leading-[1.1] mb-3"
-                      style={{ fontSize: 'clamp(22px, 2.8vw, 42px)', maxWidth: 540 }}
+                    <motion.h3
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.26 }}
+                      className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.15] mb-3"
+                      style={{ fontSize: 'clamp(20px, 2.6vw, 40px)', maxWidth: 520 }}
                     >
                       {award.titleEn}
-                    </h3>
+                    </motion.h3>
 
                     {/* Subtitle */}
                     {award.subtitleEn && (
                       <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.28 }}
-                        className="font-[var(--font-libre-franklin)] text-[13px] text-white/45 leading-relaxed max-w-[420px]"
+                        transition={{ delay: 0.32 }}
+                        className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-white/40 tracking-[0.06em] uppercase max-w-[380px]"
                       >
                         {award.subtitleEn}
                       </motion.p>
