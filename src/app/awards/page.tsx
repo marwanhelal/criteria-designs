@@ -13,6 +13,7 @@ interface Award {
   year: number
   subtitleEn: string | null
   image: string | null
+  type: string
 }
 
 interface Settings {
@@ -31,7 +32,7 @@ const navLinks = [
 ]
 
 // ── Self-contained fixed header ───────────────────────────────────────────────
-function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
+function AwardsHeader({ awardsCount, papersCount, loading }: { awardsCount: number; papersCount: number; loading: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [settings, setSettings] = useState<Settings | null>(null)
   const pathname = usePathname()
@@ -97,15 +98,23 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
           </button>
         </div>
 
-        {/* Row 2: Title + Count */}
+        {/* Row 2: Title + Counts */}
         <div className="px-[clamp(1rem,4vw,7rem)] py-5 flex items-baseline justify-between border-b border-[#e8e8e8]">
           <h1 className="font-[var(--font-playfair)] text-[#111] text-[clamp(20px,2.5vw,32px)] font-normal tracking-[-0.01em]">
-            Awards
+            Recognitions
           </h1>
           {!loading && (
-            <p className="font-[var(--font-open-sans)] text-[#747779] text-[14px] lg:text-[15px]">
-              {count} {count === 1 ? 'Award' : 'Awards'}
-            </p>
+            <div className="flex items-center gap-4">
+              <span className="font-[var(--font-open-sans)] text-[#747779] text-[13px] lg:text-[14px]">
+                <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[3px] border border-[#B1A490]/40 rounded-full px-2 py-[2px] mr-2">Award</span>
+                {awardsCount}
+              </span>
+              <span className="w-px h-3 bg-[#ddd]" />
+              <span className="font-[var(--font-open-sans)] text-[#747779] text-[13px] lg:text-[14px]">
+                <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#9A9A94] uppercase tracking-[3px] border border-[#9A9A94]/30 rounded-full px-2 py-[2px] mr-2">Paper</span>
+                {papersCount}
+              </span>
+            </div>
           )}
         </div>
       </div>
@@ -163,8 +172,8 @@ function AwardsHeader({ count, loading }: { count: number; loading: boolean }) {
   )
 }
 
-// ── Award Row ─────────────────────────────────────────────────────────────────
-function AwardRow({ award, index }: { award: Award; index: number }) {
+// ── Row component ─────────────────────────────────────────────────────────────
+function RecognitionRow({ award, index, showType }: { award: Award; index: number; showType?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -190,6 +199,15 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
 
         {/* Info */}
         <div className="flex-1 min-w-0">
+          {showType && (
+            <span className={`inline-block font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] rounded-full px-2 py-[2px] mb-2 ${
+              award.type === 'PAPER'
+                ? 'text-[#9A9A94] border border-[#9A9A94]/30'
+                : 'text-[#B1A490] border border-[#B1A490]/40'
+            }`}>
+              {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
+            </span>
+          )}
           <h3 className="font-[var(--font-libre-franklin)] text-[15px] md:text-[19px] font-semibold text-[#1A1A1A] leading-[1.3] group-hover:text-[#B1A490] transition-colors duration-300">
             {award.titleEn}
           </h3>
@@ -219,21 +237,56 @@ function AwardRow({ award, index }: { award: Award; index: number }) {
   )
 }
 
+// ── Section heading ───────────────────────────────────────────────────────────
+function SectionHeading({ label, count, pill, pillColor }: { label: string; count: number; pill: string; pillColor: 'gold' | 'gray' }) {
+  return (
+    <div className="flex items-baseline justify-between mb-2 mt-14 first:mt-0">
+      <div className="flex items-center gap-3">
+        <span className={`font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] rounded-full px-3 py-1 border ${
+          pillColor === 'gold'
+            ? 'text-[#B1A490] border-[#B1A490]/40'
+            : 'text-[#9A9A94] border-[#9A9A94]/30'
+        }`}>
+          {pill}
+        </span>
+        <h2 className="font-[var(--font-playfair)] text-[clamp(18px,2vw,26px)] text-[#1A1A1A] font-normal tracking-[-0.01em]">
+          {label}
+        </h2>
+      </div>
+      <span className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94]">
+        {count} {count === 1 ? 'entry' : 'entries'}
+      </span>
+    </div>
+  )
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
+type Tab = 'awards' | 'papers' | 'all'
+
 export default function AwardsPage() {
-  const [awards, setAwards] = useState<Award[]>([])
+  const [all, setAll] = useState<Award[]>([])
   const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState<Tab>('awards')
 
   useEffect(() => {
     fetch('/api/awards?status=PUBLISHED')
       .then(res => res.ok ? res.json() : [])
-      .then(data => { setAwards(data); setLoading(false) })
+      .then(data => { setAll(data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
+  const awards = all.filter(a => a.type !== 'PAPER')
+  const papers = all.filter(a => a.type === 'PAPER')
+
+  const tabs: { key: Tab; label: string }[] = [
+    { key: 'awards', label: 'Awards' },
+    { key: 'papers', label: 'Published Papers' },
+    { key: 'all', label: 'All' },
+  ]
+
   return (
     <>
-      <AwardsHeader count={awards.length} loading={loading} />
+      <AwardsHeader awardsCount={awards.length} papersCount={papers.length} loading={loading} />
 
       <div className="min-h-screen bg-white">
         {/* Spacer: logo row + title row */}
@@ -246,10 +299,32 @@ export default function AwardsPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[520px] mb-10"
+            className="font-[var(--font-libre-franklin)] text-[13px] md:text-[14px] text-[#9A9A94] tracking-[0.04em] leading-relaxed max-w-[520px] mb-8"
           >
-            A growing record of design excellence, international recognition, and creative achievement across architecture and interior design.
+            A growing record of design excellence, international recognition, and academic achievement across architecture and interior design.
           </motion.p>
+
+          {/* Tab switcher */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center gap-1 mb-10 border-b border-[#E0E0DC]"
+          >
+            {tabs.map(t => (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[2.5px] px-4 py-3 border-b-2 -mb-px transition-all duration-200 ${
+                  tab === t.key
+                    ? 'border-[#B1A490] text-[#B1A490]'
+                    : 'border-transparent text-[#9A9A94] hover:text-[#555]'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </motion.div>
 
           {/* Skeleton */}
           {loading && (
@@ -270,21 +345,64 @@ export default function AwardsPage() {
             </div>
           )}
 
-          {/* Empty */}
-          {!loading && awards.length === 0 && (
-            <div className="text-center py-24">
-              <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No awards to display yet.</p>
-            </div>
+          {/* ── Awards tab ── */}
+          {!loading && tab === 'awards' && (
+            <>
+              {awards.length === 0 ? (
+                <div className="text-center py-24">
+                  <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No awards to display yet.</p>
+                </div>
+              ) : (
+                <div>
+                  {awards.map((a, i) => <RecognitionRow key={a.id} award={a} index={i} />)}
+                  <div className="h-px bg-[#E0E0DC]" />
+                </div>
+              )}
+            </>
           )}
 
-          {/* List */}
-          {!loading && awards.length > 0 && (
-            <div>
-              {awards.map((award, i) => (
-                <AwardRow key={award.id} award={award} index={i} />
-              ))}
-              <div className="h-px bg-[#E0E0DC]" />
-            </div>
+          {/* ── Published Papers tab ── */}
+          {!loading && tab === 'papers' && (
+            <>
+              {papers.length === 0 ? (
+                <div className="text-center py-24">
+                  <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No published papers to display yet.</p>
+                </div>
+              ) : (
+                <div>
+                  {papers.map((a, i) => <RecognitionRow key={a.id} award={a} index={i} />)}
+                  <div className="h-px bg-[#E0E0DC]" />
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ── All tab ── */}
+          {!loading && tab === 'all' && (
+            <>
+              {all.length === 0 ? (
+                <div className="text-center py-24">
+                  <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No recognitions to display yet.</p>
+                </div>
+              ) : (
+                <div>
+                  {awards.length > 0 && (
+                    <>
+                      <SectionHeading label="Awards" count={awards.length} pill="Award" pillColor="gold" />
+                      {awards.map((a, i) => <RecognitionRow key={a.id} award={a} index={i} />)}
+                      <div className="h-px bg-[#E0E0DC]" />
+                    </>
+                  )}
+                  {papers.length > 0 && (
+                    <>
+                      <SectionHeading label="Published Papers" count={papers.length} pill="Published Paper" pillColor="gray" />
+                      {papers.map((a, i) => <RecognitionRow key={a.id} award={a} index={i} />)}
+                      <div className="h-px bg-[#E0E0DC]" />
+                    </>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
         </div>

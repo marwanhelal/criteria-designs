@@ -262,6 +262,16 @@ export async function POST() {
       results.push(`✗ youtube: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 20. type column on Award table (AWARD or PAPER)
+    try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "Award" ADD COLUMN IF NOT EXISTS "type" TEXT NOT NULL DEFAULT 'AWARD';`
+      )
+      results.push('✓ type column ensured on Award table')
+    } catch (e) {
+      results.push(`✗ Award type: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

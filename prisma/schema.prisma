@@ -247,6 +247,7 @@ model Award {
   subtitleEn String?
   subtitleAr String?
   image      String?
+  type       String   @default("AWARD")
   order      Int      @default(0)
   status     Status   @default(DRAFT)
   createdAt  DateTime @default(now())

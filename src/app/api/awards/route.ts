@@ -7,8 +7,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
 
+    const type = searchParams.get('type')
     const awards = await prisma.award.findMany({
-      where: status ? { status: status as 'DRAFT' | 'PUBLISHED' } : undefined,
+      where: {
+        ...(status ? { status: status as 'DRAFT' | 'PUBLISHED' } : {}),
+        ...(type ? { type } : {}),
+      },
       orderBy: [{ year: 'desc' }, { order: 'asc' }]
     })
 
@@ -35,6 +39,7 @@ export async function POST(request: NextRequest) {
         subtitleEn: data.subtitleEn || null,
         subtitleAr: data.subtitleAr || null,
         image: data.image || null,
+        type: data.type || 'AWARD',
         order: data.order || 0,
         status: data.status || 'DRAFT'
       }

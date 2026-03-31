@@ -17,6 +17,7 @@ export default function NewAwardPage() {
     year: new Date().getFullYear(),
     subtitleEn: '',
     subtitleAr: '',
+    type: 'AWARD',
     order: 0,
     status: 'DRAFT'
   })
@@ -116,7 +117,20 @@ export default function NewAwardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Type *
+              </label>
+              <select
+                value={form.type}
+                onChange={(e) => setForm({ ...form, type: e.target.value })}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="AWARD">Award</option>
+                <option value="PAPER">Published Paper</option>
+              </select>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Year *

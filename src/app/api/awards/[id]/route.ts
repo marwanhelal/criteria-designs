@@ -48,6 +48,7 @@ export async function PUT(
         subtitleEn: data.subtitleEn || null,
         subtitleAr: data.subtitleAr || null,
         image: data.image || null,
+        type: data.type || 'AWARD',
         order: data.order || 0,
         status: data.status || 'DRAFT'
       }

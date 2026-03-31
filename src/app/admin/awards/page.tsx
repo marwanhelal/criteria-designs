@@ -11,6 +11,7 @@ interface Award {
   year: number
   subtitleEn: string | null
   image: string | null
+  type: string
   status: string
   order: number
 }
@@ -198,6 +199,7 @@ export default function AwardsPage() {
                 <th className="w-10 px-4" />
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Image</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Title</th>
+                <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Type</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Year</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Status</th>
                 <th className="text-right px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
@@ -218,6 +220,11 @@ export default function AwardsPage() {
                     <p className="font-medium">{award.titleEn}</p>
                     <p className="text-sm text-gray-500" dir="rtl">{award.titleAr}</p>
                     {award.subtitleEn && <p className="text-xs text-gray-400 mt-1">{award.subtitleEn}</p>}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                      award.type === 'PAPER' ? 'bg-gray-100 text-gray-600' : 'bg-amber-50 text-amber-700'
+                    }`}>{award.type === 'PAPER' ? 'Paper' : 'Award'}</span>
                   </td>
                   <td className="px-6 py-4"><span className="font-medium">{award.year}</span></td>
                   <td className="px-6 py-4">

@@ -43,15 +43,20 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
       <div className="px-[clamp(1rem,6vw,8rem)] pt-12 pb-0">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b border-black/[0.08]">
           <div>
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[5px] mb-3"
+              className="flex items-center gap-2 mb-4"
             >
-              Recognition &amp; Excellence
-            </motion.p>
+              <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[4px] border border-[#B1A490]/40 rounded-full px-3 py-1">
+                Award
+              </span>
+              <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#9A9A94] uppercase tracking-[4px] border border-[#9A9A94]/30 rounded-full px-3 py-1">
+                Published Paper
+              </span>
+            </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -60,7 +65,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               className="font-[var(--font-playfair)] italic font-normal text-[#1A1A1A] leading-[1] tracking-[-0.01em]"
               style={{ fontSize: 'clamp(28px, 3vw, 42px)' }}
             >
-              Award Winning
+              Recognitions
             </motion.h2>
           </div>
           <motion.p
