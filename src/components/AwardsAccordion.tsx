@@ -48,12 +48,15 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="flex items-center gap-2 mb-4"
+              className="flex items-center gap-4 mb-4"
             >
-              <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[4px] border border-[#B1A490]/40 rounded-full px-3 py-1">
+              <span className="flex items-center gap-[7px] font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[2px]">
+                <span className="w-[6px] h-[6px] rounded-full bg-[#B1A490] shrink-0" />
                 Award
               </span>
-              <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#9A9A94] uppercase tracking-[4px] border border-[#9A9A94]/30 rounded-full px-3 py-1">
+              <span className="w-px h-3 bg-[#D8D4CE]" />
+              <span className="flex items-center gap-[7px] font-[var(--font-libre-franklin)] text-[10px] text-[#9A9A94] uppercase tracking-[2px]">
+                <span className="w-[6px] h-[6px] rounded-full bg-[#C8C4BE] shrink-0" />
                 Published Paper
               </span>
             </motion.div>
