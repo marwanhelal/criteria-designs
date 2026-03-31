@@ -89,25 +89,27 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             {/* Developer */}
             {project.clientName && (
-              <div className="pt-5 mt-2 border-t border-white/[0.06]">
-                <p className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] uppercase text-white/25 mb-4">
+              <div className="pt-6 mt-2 border-t border-white/[0.06]">
+                <p className="font-[var(--font-libre-franklin)] text-[9px] tracking-[4px] uppercase text-[#B1A490]/50 mb-5">
                   Developer
                 </p>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   {project.clientLogo && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={project.clientLogo}
                       alt={project.clientName}
-                      className="h-[36px] w-auto max-w-[68px] object-contain shrink-0 opacity-80"
+                      className="h-[52px] w-auto max-w-[110px] object-contain shrink-0"
+                      style={{ filter: 'brightness(0) invert(1)', opacity: 0.75 }}
                     />
                   )}
-                  {project.clientLogo && (
-                    <div className="w-px h-6 bg-white/10 shrink-0" />
-                  )}
-                  <p className="font-[var(--font-libre-franklin)] text-[12px] text-white/50 tracking-[0.5px]">
-                    {project.clientName}
-                  </p>
+                  <div className="flex flex-col gap-[5px]">
+                    <p className="font-[var(--font-playfair)] italic text-white/80 leading-tight"
+                      style={{ fontSize: 'clamp(15px, 1.4vw, 18px)' }}>
+                      {project.clientName}
+                    </p>
+                    <div className="w-6 h-px bg-gradient-to-r from-[#B1A490]/50 to-transparent" />
+                  </div>
                 </div>
               </div>
             )}
