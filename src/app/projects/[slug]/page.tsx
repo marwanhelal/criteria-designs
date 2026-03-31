@@ -171,9 +171,9 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Showcase images — parallax + curtain reveal */}
+          {/* Showcase images — full-bleed, rounded, glowy */}
           {showcaseImages.length > 0 && (
-            <div className={`px-[clamp(1rem,4vw,7rem)] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[clamp(2.5rem,5vw,6rem)]' : ''} pb-[clamp(2.5rem,5vw,6rem)]`}>
+            <div className={`px-[clamp(0.5rem,2vw,2.5rem)] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[clamp(2.5rem,5vw,6rem)]' : 'pt-4'} pb-[clamp(2rem,4vw,5rem)]`}>
               <FinalRevealSection images={showcaseImages} projectTitle={project.titleEn} />
             </div>
           )}

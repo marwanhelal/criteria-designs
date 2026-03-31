@@ -45,7 +45,7 @@ export default function Footer({ dark = false }: { dark?: boolean }) {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   return (
-    <footer className={dark ? 'bg-[#181C23] text-white border-t border-white/10' : 'bg-white text-[#181C23] border-t border-[#181C23]/10'}>
+    <footer className={dark ? 'bg-black text-white border-t border-white/[0.06]' : 'bg-white text-[#181C23] border-t border-[#181C23]/10'}>
       <div className="w-full px-[clamp(1rem,4vw,7rem)]">
 
         {/* Row 1: Logo | Socials + Back to Top */}
