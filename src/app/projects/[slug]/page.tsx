@@ -56,36 +56,41 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             {/* Category badge */}
             {project.category && (
-              <span className="font-[var(--font-open-sans)] self-start text-[10px] tracking-[2px] uppercase text-[#B1A490] border border-[#B1A490]/40 px-3 py-[5px] rounded-full">
-                {CATEGORY_LABELS[project.category] || project.category}
-              </span>
+              <div className="flex items-center gap-[10px] self-start">
+                <span className="w-[5px] h-[5px] rounded-full bg-[#B1A490] shrink-0" />
+                <span className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3.5px] uppercase text-[#B1A490]">
+                  {CATEGORY_LABELS[project.category] || project.category}
+                </span>
+              </div>
             )}
 
             {/* Title */}
             <div>
-              <h1 className="font-[var(--font-merriweather)] text-[clamp(26px,3.5vw,48px)] text-white font-light leading-none tracking-[0.3px]">
+              <h1 className="font-[var(--font-playfair)] italic font-normal text-[clamp(28px,4vw,54px)] text-white leading-[1.1] tracking-[-0.01em]">
                 {project.titleEn}
               </h1>
               {(project.yearCompleted || project.location) && (
-                <p className="font-[var(--font-open-sans)] text-[11px] text-[rgba(255,255,255,0.38)] tracking-[1.5px] uppercase mt-3">
-                  {[project.yearCompleted, project.location].filter(Boolean).join(' · ')}
+                <p className="font-[var(--font-libre-franklin)] text-[10px] text-white/30 tracking-[2px] uppercase mt-3 flex items-center gap-2">
+                  {project.yearCompleted && <span>{project.yearCompleted}</span>}
+                  {project.yearCompleted && project.location && <span className="w-3 h-px bg-white/20 shrink-0" />}
+                  {project.location && <span>{project.location}</span>}
                 </p>
               )}
             </div>
 
             {/* Accent line */}
-            <div className="w-6 h-px bg-[#B1A490]/40" />
+            <div className="w-8 h-[2px] bg-gradient-to-r from-[#B1A490] to-transparent" />
 
             {/* Description */}
-            <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[15px] text-[rgba(255,255,255,0.62)] leading-[1.85]">
+            <p className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] text-white/50 leading-[2] tracking-[0.02em]">
               {project.descriptionEn.replace(/<[^>]*>/g, '').substring(0, 300)}
               {project.descriptionEn.replace(/<[^>]*>/g, '').length > 300 ? '…' : ''}
             </p>
 
             {/* Developer */}
             {project.clientName && (
-              <div className="pt-5 mt-2 border-t border-[rgba(255,255,255,0.07)]">
-                <p className="font-[var(--font-open-sans)] text-[10px] tracking-[2.5px] uppercase text-[rgba(255,255,255,0.3)] mb-4">
+              <div className="pt-5 mt-2 border-t border-white/[0.06]">
+                <p className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] uppercase text-white/25 mb-4">
                   Developer
                 </p>
                 <div className="flex items-center gap-4">
@@ -94,13 +99,13 @@ export default async function ProjectDetailPage({ params }: Props) {
                     <img
                       src={project.clientLogo}
                       alt={project.clientName}
-                      className="h-[38px] w-auto max-w-[72px] object-contain shrink-0 opacity-90"
+                      className="h-[36px] w-auto max-w-[68px] object-contain shrink-0 opacity-80"
                     />
                   )}
                   {project.clientLogo && (
-                    <div className="w-px h-7 bg-white/10 shrink-0" />
+                    <div className="w-px h-6 bg-white/10 shrink-0" />
                   )}
-                  <p className="font-[var(--font-open-sans)] text-[13px] text-white/55 tracking-[0.3px]">
+                  <p className="font-[var(--font-libre-franklin)] text-[12px] text-white/50 tracking-[0.5px]">
                     {project.clientName}
                   </p>
                 </div>
@@ -124,8 +129,9 @@ export default async function ProjectDetailPage({ params }: Props) {
       {galleryImages.length > 0 && (
         <section className="px-[clamp(1rem,4vw,7rem)] pt-14 pb-[clamp(2.5rem,5vw,6rem)] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-10">
-            <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Gallery</span>
-            <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+            <span className="font-[var(--font-playfair)] italic text-[17px] text-[#B1A490]">Gallery</span>
+            <div className="flex-1 h-px bg-white/[0.06]" />
+            <span className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] uppercase text-white/20">{galleryImages.length} images</span>
           </div>
           <GalleryGrid images={galleryImages} projectTitle={project.titleEn} />
         </section>
@@ -135,8 +141,8 @@ export default async function ProjectDetailPage({ params }: Props) {
       {project.timeline.length > 0 && (
         <section className="py-[clamp(2.5rem,5vw,6rem)] px-[clamp(1rem,4vw,7rem)] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-16">
-            <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Design Process</span>
-            <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+            <span className="font-[var(--font-playfair)] italic text-[17px] text-[#B1A490]">Design Process</span>
+            <div className="flex-1 h-px bg-white/[0.06]" />
           </div>
           <TimelineSection entries={project.timeline} />
         </section>
@@ -149,16 +155,16 @@ export default async function ProjectDetailPage({ params }: Props) {
           {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
             <div className="pt-[clamp(2.5rem,5vw,6rem)] pb-[60px] px-[clamp(1rem,4vw,7rem)]">
               <div className="flex items-center gap-5 mb-10">
-                <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Final Design</span>
-                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+                <span className="font-[var(--font-playfair)] italic text-[17px] text-[#B1A490]">Final Design</span>
+                <div className="flex-1 h-px bg-white/[0.06]" />
               </div>
               {project.finalRevealTitleEn && (
-                <h2 className="font-[var(--font-merriweather)] text-[clamp(24px,3.5vw,50px)] text-white font-light leading-[1.15] tracking-[0.5px] mb-5">
+                <h2 className="font-[var(--font-playfair)] italic font-normal text-[clamp(26px,3.8vw,54px)] text-white leading-[1.12] tracking-[-0.01em] mb-5">
                   {project.finalRevealTitleEn}
                 </h2>
               )}
               {project.finalRevealSubtitleEn && (
-                <p className="font-[var(--font-open-sans)] text-[14px] lg:text-[16px] text-[rgba(255,255,255,0.55)] leading-[1.9] max-w-[640px]">
+                <p className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[15px] text-white/45 leading-[2] tracking-[0.02em] max-w-[580px]">
                   {project.finalRevealSubtitleEn}
                 </p>
               )}
