@@ -45,12 +45,12 @@ export default function TeamPage() {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Our people
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
               Our Team
             </h1>
           </AnimatedSection>
@@ -58,13 +58,13 @@ export default function TeamPage() {
       </section>
 
       {/* ===== LEADERSHIP ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Leadership
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4">
+            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4">
               Meet the people behind our success
             </h2>
           </AnimatedSection>
@@ -79,7 +79,7 @@ export default function TeamPage() {
                 <StaggerItem key={member.id}>
                   <div className="group">
                     <div className="relative rounded-lg overflow-hidden bg-gray-200">
-                      <div className="relative h-[400px] overflow-hidden">
+                      <div className="relative h-[clamp(260px,28vw,480px)] overflow-hidden">
                         {member.photo ? (
                           <Image
                             src={member.photo}
@@ -97,7 +97,6 @@ export default function TeamPage() {
                           </div>
                         )}
                       </div>
-                      {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-[#181C23]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                         {member.linkedin && (
                           <a
@@ -137,7 +136,6 @@ export default function TeamPage() {
               ))}
             </StaggerContainer>
           ) : (
-            /* Fallback static team */
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
               {[
                 { name: 'Hesham Helal', role: 'CEO & Founder', bio: 'With over 25 years of experience in architectural design, Hesham leads the vision and strategic direction of Criteria Designs.' },
@@ -148,7 +146,7 @@ export default function TeamPage() {
                 <StaggerItem key={idx}>
                   <div className="group">
                     <div className="relative rounded-lg overflow-hidden bg-gray-200">
-                      <div className="relative h-[400px] overflow-hidden">
+                      <div className="relative h-[clamp(260px,28vw,480px)] overflow-hidden">
                         <div className="w-full h-full flex items-center justify-center bg-[#B1A490]/20">
                           <span className="font-[var(--font-merriweather)] text-[64px] text-[#B1A490]">
                             {member.name.charAt(0)}
@@ -176,12 +174,12 @@ export default function TeamPage() {
       </section>
 
       {/* ===== JOIN CTA ===== */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
           <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
             Join with us
           </span>
-          <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[600px] mx-auto">
+          <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4 max-w-[600px] mx-auto">
             Want to be part of our team?
           </h2>
           <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-6 max-w-[500px] mx-auto">

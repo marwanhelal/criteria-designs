@@ -81,12 +81,12 @@ export default function BlogPage() {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Latest updates
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
               Our Blog
             </h1>
           </AnimatedSection>
@@ -94,7 +94,7 @@ export default function BlogPage() {
       </section>
 
       {/* ===== FILTER & POSTS ===== */}
-      <section data-navbar-dark className="py-[100px] px-8">
+      <section data-navbar-dark className="py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           {/* Category Filter */}
           <AnimatedSection className="flex flex-wrap gap-4 mb-16 justify-center">
@@ -131,7 +131,7 @@ export default function BlogPage() {
                     className="group block"
                   >
                     <div className="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <div className="relative h-[280px] overflow-hidden bg-gray-200">
+                      <div className="relative h-[clamp(180px,20vw,320px)] overflow-hidden bg-gray-200">
                         {post.featuredImage ? (
                           <Image
                             src={post.featuredImage}

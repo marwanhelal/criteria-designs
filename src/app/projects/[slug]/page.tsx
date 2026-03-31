@@ -48,11 +48,11 @@ export default async function ProjectDetailPage({ params }: Props) {
       <Navbar />
 
       {/* ===== PROJECT HEADER ===== */}
-      <section className="pt-[90px] bg-black">
+      <section className="pt-[clamp(68px,6vw,100px)] bg-black">
         <div className="flex flex-col lg:flex-row">
 
           {/* Left info panel */}
-          <div className="px-8 lg:pl-[84px] lg:pr-10 lg:w-[400px] shrink-0 flex flex-col gap-6 py-10 lg:py-14">
+          <div className="px-[clamp(1rem,4vw,7rem)] lg:w-[clamp(300px,28vw,450px)] shrink-0 flex flex-col gap-6 py-10 lg:py-14">
 
             {/* Category badge */}
             {project.category && (
@@ -63,7 +63,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
             {/* Title */}
             <div>
-              <h1 className="font-[var(--font-merriweather)] text-[36px] lg:text-[44px] text-white font-light leading-none tracking-[0.3px]">
+              <h1 className="font-[var(--font-merriweather)] text-[clamp(26px,3.5vw,48px)] text-white font-light leading-none tracking-[0.3px]">
                 {project.titleEn}
               </h1>
               {(project.yearCompleted || project.location) && (
@@ -122,7 +122,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== GALLERY ===== */}
       {galleryImages.length > 0 && (
-        <section className="px-8 lg:px-[84px] pt-14 pb-[80px] bg-black border-t border-[rgba(255,255,255,0.06)]">
+        <section className="px-[clamp(1rem,4vw,7rem)] pt-14 pb-[clamp(2.5rem,5vw,6rem)] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-10">
             <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Gallery</span>
             <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
@@ -133,7 +133,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
       {/* ===== TIMELINE ===== */}
       {project.timeline.length > 0 && (
-        <section className="py-[80px] px-8 lg:px-[84px] bg-black border-t border-[rgba(255,255,255,0.06)]">
+        <section className="py-[clamp(2.5rem,5vw,6rem)] px-[clamp(1rem,4vw,7rem)] bg-black border-t border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center gap-5 mb-16">
             <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Design Process</span>
             <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
@@ -147,13 +147,13 @@ export default async function ProjectDetailPage({ params }: Props) {
         <section className="bg-black border-t border-[rgba(255,255,255,0.06)]">
 
           {(project.finalRevealTitleEn || project.finalRevealSubtitleEn) && (
-            <div className="pt-[80px] pb-[60px] px-8 lg:px-[84px]">
+            <div className="pt-[clamp(2.5rem,5vw,6rem)] pb-[60px] px-[clamp(1rem,4vw,7rem)]">
               <div className="flex items-center gap-5 mb-10">
                 <span className="font-[var(--font-open-sans)] text-[11px] tracking-[2.5px] uppercase text-[#B1A490]">Final Design</span>
                 <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
               </div>
               {project.finalRevealTitleEn && (
-                <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[46px] text-white font-light leading-[1.15] tracking-[0.5px] mb-5">
+                <h2 className="font-[var(--font-merriweather)] text-[clamp(24px,3.5vw,50px)] text-white font-light leading-[1.15] tracking-[0.5px] mb-5">
                   {project.finalRevealTitleEn}
                 </h2>
               )}
@@ -167,7 +167,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
           {/* Showcase images — parallax + curtain reveal */}
           {showcaseImages.length > 0 && (
-            <div className={`px-8 lg:px-[84px] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[80px]' : ''} pb-[80px]`}>
+            <div className={`px-[clamp(1rem,4vw,7rem)] ${!(project.finalRevealTitleEn || project.finalRevealSubtitleEn) ? 'pt-[clamp(2.5rem,5vw,6rem)]' : ''} pb-[clamp(2.5rem,5vw,6rem)]`}>
               <FinalRevealSection images={showcaseImages} projectTitle={project.titleEn} />
             </div>
           )}

@@ -41,12 +41,12 @@ export default function AboutPage() {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Who we are
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
               About {settings.companyNameEn || 'Criteria Designs'}
             </h1>
           </AnimatedSection>
@@ -54,9 +54,9 @@ export default function AboutPage() {
       </section>
 
       {/* ===== ABOUT INTRO ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto flex flex-col lg:flex-row gap-16">
-          <AnimatedSection direction="left" className="w-full lg:w-[633px] h-[400px] lg:h-[630px] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 shrink-0 relative flex items-center justify-center">
+          <AnimatedSection direction="left" className="w-full lg:w-[633px] h-[clamp(280px,40vw,630px)] rounded-lg overflow-hidden bg-gradient-to-br from-[#B1A490]/20 via-[#B1A490]/10 to-[#181C23]/10 shrink-0 relative flex items-center justify-center">
             <Building size={120} className="text-[#B1A490]/30" />
           </AnimatedSection>
 
@@ -64,7 +64,7 @@ export default function AboutPage() {
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Our Story
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[547px]">
+            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4 max-w-[547px]">
               {settings.aboutTitle || 'We build quality real estate projects since 1978'}
             </h2>
             <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-8 max-w-[526px]">
@@ -79,7 +79,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== MISSION & VISION ===== */}
-      <section className="bg-[#181C23] py-[100px] px-8">
+      <section className="bg-[#181C23] py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <StaggerContainer className="max-w-[1290px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16" staggerDelay={0.2}>
           <StaggerItem>
             <div>
@@ -111,7 +111,7 @@ export default function AboutPage() {
       </section>
 
       {/* ===== STATS ===== */}
-      <section data-navbar-dark className="py-[100px] px-8">
+      <section data-navbar-dark className="py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
             {[
@@ -125,7 +125,7 @@ export default function AboutPage() {
                   <div className="w-[80px] h-[80px] rounded-full bg-[#F5F0EB] flex items-center justify-center mx-auto mb-6">
                     <stat.icon size={32} className="text-[#B1A490]" />
                   </div>
-                  <span className="font-[var(--font-merriweather)] text-[48px] text-[#181C23] leading-[58px] block">
+                  <span className="font-[var(--font-merriweather)] text-[clamp(32px,4vw,56px)] text-[#181C23] leading-[1.2] block">
                     {stat.number}
                   </span>
                   <span className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[24px] mt-2 block">
@@ -139,13 +139,13 @@ export default function AboutPage() {
       </section>
 
       {/* ===== VALUES ===== */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-[100px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Our values
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4">
+            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4">
               What drives us
             </h2>
           </AnimatedSection>
@@ -184,9 +184,9 @@ export default function AboutPage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
-          <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] max-w-[600px] mx-auto">
+          <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] max-w-[600px] mx-auto">
             Ready to start your next project?
           </h2>
           <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-6 max-w-[500px] mx-auto">

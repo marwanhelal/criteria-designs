@@ -47,12 +47,12 @@ export default function ServicesPage() {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Why choose us
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
               Our Services
             </h1>
           </AnimatedSection>
@@ -60,13 +60,13 @@ export default function ServicesPage() {
       </section>
 
       {/* ===== SERVICES GRID ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               What we offer
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] mt-4 max-w-[524px] mx-auto">
+            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4 max-w-[524px] mx-auto">
               Making living spaces affordable
             </h2>
           </AnimatedSection>
@@ -91,7 +91,7 @@ export default function ServicesPage() {
                 return (
                   <StaggerItem key={service.id}>
                     <div className="flex flex-col">
-                      <div className="w-[120px] h-[120px] rounded-full bg-[#F5F0EB] flex items-center justify-center">
+                      <div className="w-[clamp(80px,8vw,120px)] h-[clamp(80px,8vw,120px)] rounded-full bg-[#F5F0EB] flex items-center justify-center">
                         <IconComponent size={50} className="text-[#B1A490]" />
                       </div>
                       <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px] mt-8">
@@ -110,13 +110,13 @@ export default function ServicesPage() {
       </section>
 
       {/* ===== PROCESS SECTION ===== */}
-      <section className="bg-[#181C23] py-[100px] px-8">
+      <section className="bg-[#181C23] py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <AnimatedSection className="text-center mb-16">
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               How we work
             </span>
-            <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-white leading-[48px] lg:leading-[56px] mt-4">
+            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-white leading-[1.3] mt-4">
               Our Process
             </h2>
           </AnimatedSection>
@@ -147,9 +147,9 @@ export default function ServicesPage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <AnimatedSection className="max-w-[1290px] mx-auto text-center">
-          <h2 className="font-[var(--font-merriweather)] text-[32px] lg:text-[40px] text-[#181C23] leading-[48px] lg:leading-[56px] max-w-[600px] mx-auto">
+          <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] max-w-[600px] mx-auto">
             Let&apos;s build something amazing together
           </h2>
           <Link

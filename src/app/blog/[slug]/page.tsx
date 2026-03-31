@@ -60,7 +60,7 @@ export default async function BlogDetailPage({ params }: Props) {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-end pb-16 px-8 lg:px-[315px]">
+        <div className="relative z-10 h-full flex flex-col justify-end pb-16 px-[clamp(1rem,10vw,20rem)]">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 font-[var(--font-libre-franklin)] text-[14px] text-white uppercase tracking-[0.56px] mb-6 hover:text-[#B1A490] transition-colors w-fit"
@@ -71,7 +71,7 @@ export default async function BlogDetailPage({ params }: Props) {
           <span className="font-[var(--font-libre-franklin)] text-[12px] text-[#B1A490] uppercase tracking-[0.56px] bg-white/10 px-4 py-1 rounded-full w-fit">
             {post.category}
           </span>
-          <h1 className="font-[var(--font-merriweather)] text-[32px] lg:text-[48px] text-white leading-[42px] lg:leading-[60px] mt-4 max-w-[800px]">
+          <h1 className="font-[var(--font-merriweather)] text-[clamp(24px,4vw,54px)] text-white leading-[1.2] mt-4 max-w-[800px]">
             {post.titleEn}
           </h1>
           <div className="flex items-center gap-6 mt-6">
@@ -94,7 +94,7 @@ export default async function BlogDetailPage({ params }: Props) {
       </section>
 
       {/* ===== CONTENT ===== */}
-      <section data-navbar-dark className="py-[80px] px-8">
+      <section data-navbar-dark className="py-[clamp(2.5rem,5vw,6rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[860px] mx-auto">
           {post.excerptEn && (
             <p className="font-[var(--font-open-sans)] text-[18px] text-[#181C23] leading-[32px] font-medium mb-10 pb-10 border-b border-gray-100">
@@ -106,7 +106,6 @@ export default async function BlogDetailPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contentEn) }}
           />
 
-          {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-gray-100">
               {post.tags.map((tag: string, idx: number) => (
@@ -123,12 +122,12 @@ export default async function BlogDetailPage({ params }: Props) {
       </section>
 
       {/* ===== MORE POSTS ===== */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-[80px] px-8">
+      <section data-navbar-dark className="bg-[#F5F0EB] py-[clamp(2.5rem,5vw,6rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto text-center">
           <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
             Keep reading
           </span>
-          <h2 className="font-[var(--font-merriweather)] text-[32px] text-[#181C23] leading-[48px] mt-4">
+          <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4">
             Explore more articles
           </h2>
           <Link

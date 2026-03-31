@@ -73,12 +73,12 @@ export default function ContactPage() {
             }}
           />
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-8">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
           <AnimatedSection>
             <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
               Get in touch
             </span>
-            <h1 className="font-[var(--font-merriweather)] text-[40px] lg:text-[56px] text-white leading-[52px] lg:leading-[68px] mt-4 max-w-[700px]">
+            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
               Contact Us
             </h1>
           </AnimatedSection>
@@ -86,7 +86,7 @@ export default function ContactPage() {
       </section>
 
       {/* ===== CONTACT INFO + FORM ===== */}
-      <section data-navbar-dark className="py-[140px] px-8">
+      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
         <div className="max-w-[1290px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-20">
             {/* Contact Information */}
@@ -94,7 +94,7 @@ export default function ContactPage() {
               <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
                 Contact Information
               </span>
-              <h2 className="font-[var(--font-merriweather)] text-[32px] text-[#181C23] leading-[48px] mt-4">
+              <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,40px)] text-[#181C23] leading-[1.3] mt-4">
                 Let&apos;s start a conversation
               </h2>
               <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-6">
@@ -273,7 +273,7 @@ export default function ContactPage() {
       </section>
 
       {/* ===== MAP PLACEHOLDER ===== */}
-      <section data-navbar-dark className="h-[450px] bg-gray-200 relative">
+      <section data-navbar-dark className="h-[clamp(300px,30vw,550px)] bg-gray-200 relative">
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">
             Map will be embedded here
