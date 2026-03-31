@@ -175,7 +175,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </section>
       )}
 
-      <Footer />
+      <Footer dark />
     </>
   )
 }
