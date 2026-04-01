@@ -182,13 +182,13 @@ function RecognitionRow({ award, index, showType, onImageClick }: {
     >
       {/* Thumbnail — click to open lightbox */}
       <div
-        className="shrink-0 w-[56px] h-[56px] md:w-[68px] md:h-[68px] rounded-xl overflow-hidden bg-[#F2EFE9] border border-[#E8E5DF] flex items-center justify-center transition-shadow duration-300 group-hover:shadow-[0_4px_20px_rgba(177,164,144,0.2)]"
+        className="shrink-0 w-[72px] h-[72px] md:w-[88px] md:h-[88px] rounded-xl overflow-hidden bg-[#F2EFE9] transition-shadow duration-300 group-hover:shadow-[0_4px_20px_rgba(177,164,144,0.2)]"
         onClick={() => award.image && onImageClick(award)}
         style={{ cursor: award.image ? 'zoom-in' : 'default' }}
       >
         {award.image ? (
           <div className="relative w-full h-full">
-            <Image src={award.image} alt={award.titleEn} fill className="object-contain p-2" unoptimized />
+            <Image src={award.image} alt={award.titleEn} fill className="object-cover" unoptimized />
             {/* hover overlay */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
