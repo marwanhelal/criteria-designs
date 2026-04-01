@@ -119,12 +119,12 @@ function ProjectsHeader({
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative z-[60] w-[clamp(38px,3.5vw,54px)] h-[clamp(38px,3.5vw,54px)] flex flex-col items-center justify-center gap-[5px] rounded-full bg-white hover:bg-gray-100 transition-colors duration-300"
+            className="relative z-[60] w-[clamp(38px,3.5vw,54px)] h-[clamp(38px,3.5vw,54px)] flex flex-col items-center justify-center gap-[5px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors duration-300"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
-            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
-            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-            <span className={`block w-[22px] h-[2px] rounded-full bg-[#181C23] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-[22px] h-[2px] rounded-full bg-white transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
           </button>
         </div>
 
@@ -171,14 +171,17 @@ function ProjectsHeader({
       </div>
 
       {/* Full-screen Menu Overlay */}
-      <div
-        className={`fixed inset-0 z-[55] transition-all duration-500 ${
-          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        <div className="absolute inset-0 bg-[#181C23]" />
-        <div className="relative z-10 h-full flex flex-col justify-center items-center">
-          <div className="flex flex-col items-center gap-1 md:gap-2">
+      <div className={`fixed inset-0 z-[55] transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="absolute inset-0 bg-[#070707]" />
+        <div
+          className={`absolute left-[clamp(1rem,4vw,7rem)] top-[15%] bottom-[15%] w-px transition-all duration-700 delay-200 ${menuOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0'}`}
+          style={{ background: 'linear-gradient(to bottom, transparent, rgba(177,164,144,0.35) 30%, rgba(177,164,144,0.35) 70%, transparent)', transformOrigin: 'top' }}
+        />
+        <div className="absolute right-0 inset-y-0 flex items-center overflow-hidden pointer-events-none select-none pr-[clamp(1rem,4vw,7rem)]">
+          <span className="font-[var(--font-playfair)] italic leading-none text-white/[0.025]" style={{ fontSize: 'clamp(140px,22vw,380px)' }}>Menu</span>
+        </div>
+        <div className="relative z-10 h-full flex flex-col justify-center pl-[clamp(2.5rem,7vw,10rem)]">
+          <nav className="flex flex-col">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href
               return (
@@ -186,35 +189,33 @@ function ProjectsHeader({
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`group relative overflow-hidden transition-all duration-500 ${
-                    menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                  }`}
-                  style={{ transitionDelay: menuOpen ? `${index * 80}ms` : '0ms' }}
+                  className={`group flex items-baseline gap-4 md:gap-6 py-[clamp(6px,1vw,12px)] border-b border-white/[0.05] last:border-0 transition-all duration-500 ${menuOpen ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}
+                  style={{ transitionDelay: menuOpen ? `${120 + index * 65}ms` : '0ms' }}
                 >
-                  <span className={`font-[var(--font-merriweather)] text-[32px] md:text-[56px] lg:text-[64px] leading-[1.3] transition-colors duration-300 ${
-                    isActive ? 'text-[#B1A490]' : 'text-white/80 group-hover:text-white'
-                  }`}>
+                  <span className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] shrink-0 w-7 transition-colors duration-300"
+                    style={{ color: isActive ? '#B1A490' : 'rgba(177,164,144,0.35)' }}>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span
+                    className={`font-[var(--font-playfair)] italic leading-[1.15] transition-all duration-300 group-hover:translate-x-2 ${isActive ? 'text-[#B1A490]' : 'text-white/70 group-hover:text-white'}`}
+                    style={{ fontSize: 'clamp(30px,4.5vw,68px)' }}
+                  >
                     {link.label}
                   </span>
-                  <span className={`block h-[2px] bg-[#B1A490] transition-all duration-300 ${
-                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`} />
+                  {isActive && <span className="ml-2 w-[6px] h-[6px] rounded-full bg-[#B1A490] shrink-0 self-center" />}
                 </Link>
               )
             })}
-          </div>
-          <div className={`absolute bottom-12 left-0 right-0 px-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-500 delay-500 ${
-            menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-          }`}>
-            <p className="font-[var(--font-open-sans)] text-[14px] text-white/40">
-              &copy; {new Date().getFullYear()} Criteria Design Group
-            </p>
-            <Link
-              href="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[1px] hover:text-white transition-colors"
-            >
-              Get in touch &rarr;
+          </nav>
+          <div
+            className={`mt-10 flex items-center justify-between pr-[clamp(2rem,8vw,14rem)] transition-all duration-500 ${menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
+            style={{ transitionDelay: menuOpen ? '580ms' : '0ms' }}
+          >
+            <p className="font-[var(--font-libre-franklin)] text-[10px] tracking-[2.5px] uppercase text-white/20">&copy; {new Date().getFullYear()} Criteria Designs</p>
+            <Link href="/contact" onClick={() => setMenuOpen(false)}
+              className="group flex items-center gap-3 font-[var(--font-libre-franklin)] text-[10px] tracking-[3px] uppercase text-[#B1A490] hover:text-white transition-colors duration-300">
+              Get in touch
+              <span className="block w-7 h-px bg-[#B1A490] group-hover:w-12 transition-all duration-400" />
             </Link>
           </div>
         </div>
