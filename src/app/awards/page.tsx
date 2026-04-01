@@ -76,7 +76,7 @@ function AwardsHeader() {
         <div className={`absolute left-[clamp(1rem,4vw,7rem)] top-[15%] bottom-[15%] w-px transition-all duration-700 delay-200 ${menuOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0'}`}
           style={{ background: 'linear-gradient(to bottom, transparent, rgba(177,164,144,0.35) 30%, rgba(177,164,144,0.35) 70%, transparent)', transformOrigin: 'top' }} />
         <div className="absolute right-0 inset-y-0 flex items-center overflow-hidden pointer-events-none select-none pr-[clamp(1rem,4vw,7rem)]">
-          <span className="font-[var(--font-playfair)] italic leading-none text-white/[0.025]" style={{ fontSize: 'clamp(140px, 22vw, 380px)' }}>Menu</span>
+          <span className="font-[var(--font-playfair)] italic leading-none text-white/[0.025]" style={{ fontSize: 'clamp(140px,22vw,380px)' }}>Menu</span>
         </div>
         <div className="relative z-10 h-full flex flex-col justify-center pl-[clamp(2.5rem,7vw,10rem)]">
           <nav className="flex flex-col">
@@ -86,12 +86,12 @@ function AwardsHeader() {
                 <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)}
                   className={`group flex items-baseline gap-4 md:gap-6 py-[clamp(6px,1vw,12px)] border-b border-white/[0.05] last:border-0 transition-all duration-500 ${menuOpen ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}
                   style={{ transitionDelay: menuOpen ? `${120 + index * 65}ms` : '0ms' }}>
-                  <span className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] shrink-0 transition-colors duration-300 w-7"
+                  <span className="font-[var(--font-libre-franklin)] text-[9px] tracking-[3px] shrink-0 w-7 transition-colors duration-300"
                     style={{ color: isActive ? '#B1A490' : 'rgba(177,164,144,0.35)' }}>
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <span className={`font-[var(--font-playfair)] italic leading-[1.15] transition-all duration-300 group-hover:translate-x-2 ${isActive ? 'text-[#B1A490]' : 'text-white/70 group-hover:text-white'}`}
-                    style={{ fontSize: 'clamp(30px, 4.5vw, 68px)' }}>
+                    style={{ fontSize: 'clamp(30px,4.5vw,68px)' }}>
                     {link.label}
                   </span>
                   {isActive && <span className="ml-2 w-[6px] h-[6px] rounded-full bg-[#B1A490] shrink-0 self-center" />}
@@ -124,53 +124,41 @@ function Lightbox({ award, onClose }: { award: Award; onClose: () => void }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/92 backdrop-blur-sm"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-14 bg-black/90 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.94, opacity: 0, y: 16 }}
+        initial={{ scale: 0.95, opacity: 0, y: 12 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.94, opacity: 0, y: 8 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-3xl rounded-2xl overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.7)]"
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
         onClick={e => e.stopPropagation()}
       >
-        {/* Image */}
         {award.image && (
           <div className="relative w-full bg-[#0a0a0a]" style={{ aspectRatio: '4/3' }}>
             <Image src={award.image} alt={award.titleEn} fill className="object-contain" unoptimized />
           </div>
         )}
-
-        {/* Info bar */}
-        <div className="bg-[#0f0f0f] border-t border-white/[0.06] px-7 py-5 flex items-start justify-between gap-6">
+        <div className="bg-[#0f0f0f] border-t border-white/[0.06] px-6 py-5 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#B1A490]">
-                {award.year}
-              </span>
+              <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#B1A490]">{award.year}</span>
               <span className="w-px h-3 bg-white/10" />
               <span className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2px] text-white/30">
                 {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
               </span>
             </div>
-            <h2 className="font-[var(--font-playfair)] italic text-white leading-[1.25]"
-              style={{ fontSize: 'clamp(16px, 2vw, 24px)' }}>
-              {award.titleEn}
-            </h2>
+            <h2 className="font-[var(--font-playfair)] italic text-white text-[18px] md:text-[22px] leading-[1.25]">{award.titleEn}</h2>
             {award.subtitleEn && (
-              <p className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 mt-2 leading-relaxed">
-                {award.subtitleEn}
-              </p>
+              <p className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 mt-2 leading-relaxed">{award.subtitleEn}</p>
             )}
           </div>
           <button onClick={onClose}
-            className="shrink-0 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors duration-200">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            className="shrink-0 mt-1 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors duration-200">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
               <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
@@ -180,85 +168,71 @@ function Lightbox({ award, onClose }: { award: Award; onClose: () => void }) {
   )
 }
 
-// ── Award card ────────────────────────────────────────────────────────────────
-function AwardCard({ award, index, featured, showType, onImageClick }: {
-  award: Award; index: number; featured?: boolean; showType?: boolean; onImageClick: (a: Award) => void
+// ── Row ───────────────────────────────────────────────────────────────────────
+function RecognitionRow({ award, index, showType, onImageClick }: {
+  award: Award; index: number; showType?: boolean; onImageClick: (a: Award) => void
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className={`group relative rounded-2xl overflow-hidden cursor-pointer bg-[#111] ${featured ? 'col-span-full' : ''}`}
-      style={{ aspectRatio: featured ? '21/8' : '4/3' }}
-      onClick={() => onImageClick(award)}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+      className="group flex items-center gap-5 md:gap-8 py-5 md:py-6 border-b border-[#ECEAE6] hover:border-[#B1A490]/30 transition-colors duration-300"
     >
-      {/* Image or placeholder */}
-      {award.image ? (
-        <Image src={award.image} alt={award.titleEn} fill
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-          unoptimized />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1A17] to-[#0e0d0b] flex items-end justify-end p-8">
-          <span className="font-[var(--font-playfair)] italic text-white/[0.06] leading-none select-none"
-            style={{ fontSize: 'clamp(80px, 12vw, 180px)' }}>
-            {award.year}
-          </span>
-        </div>
-      )}
-
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5 transition-opacity duration-500" />
-
-      {/* Top: type badge */}
-      {showType && (
-        <div className="absolute top-4 left-4">
-          <span className={`font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] px-3 py-[5px] rounded-full backdrop-blur-sm ${
-            award.type === 'PAPER'
-              ? 'bg-white/10 text-white/60 border border-white/15'
-              : 'bg-[#B1A490]/20 text-[#B1A490] border border-[#B1A490]/30'
-          }`}>
-            {award.type === 'PAPER' ? 'Paper' : 'Award'}
-          </span>
-        </div>
-      )}
-
-      {/* Top right: expand icon on hover */}
-      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center">
-          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" className="text-white">
-            <path d="M8 1h5v5M14 0L8 6M6 13H1V8M0 14l6-6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+      {/* Thumbnail — click to open lightbox */}
+      <div
+        className="shrink-0 w-[56px] h-[56px] md:w-[68px] md:h-[68px] rounded-xl overflow-hidden bg-[#F2EFE9] border border-[#E8E5DF] flex items-center justify-center transition-shadow duration-300 group-hover:shadow-[0_4px_20px_rgba(177,164,144,0.2)]"
+        onClick={() => award.image && onImageClick(award)}
+        style={{ cursor: award.image ? 'zoom-in' : 'default' }}
+      >
+        {award.image ? (
+          <div className="relative w-full h-full">
+            <Image src={award.image} alt={award.titleEn} fill className="object-contain p-2" unoptimized />
+            {/* hover overlay */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                <path d="M8 1h5v5M14 0L8 6M6 13H1V8M0 14l6-6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        ) : (
+          <span className="font-[var(--font-playfair)] italic text-[#D4C9BA] text-[13px]">{award.year}</span>
+        )}
       </div>
 
-      {/* Bottom: info */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7">
-        {/* Year + separator */}
-        <div className="flex items-center gap-2 mb-2 md:mb-3">
-          <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#B1A490]">
-            {award.year}
-          </span>
-          <span className="w-4 h-px bg-[#B1A490]/40" />
+      {/* Main content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-[5px]">
+          <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] tracking-[0.1em]">{award.year}</span>
+          {showType && (
+            <>
+              <span className="w-px h-3 bg-[#DEDAD4]" />
+              <span className={`font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2.5px] ${award.type === 'PAPER' ? 'text-[#9A9A94]' : 'text-[#B1A490]'}`}>
+                {award.type === 'PAPER' ? 'Paper' : 'Award'}
+              </span>
+            </>
+          )}
         </div>
-
-        {/* Title */}
-        <h3 className="font-[var(--font-playfair)] italic text-white leading-[1.2]"
-          style={{ fontSize: featured ? 'clamp(18px,2.8vw,38px)' : 'clamp(14px,1.4vw,20px)' }}>
+        <h3 className="font-[var(--font-playfair)] italic text-[#111] leading-[1.25] group-hover:text-[#B1A490] transition-colors duration-300 truncate"
+          style={{ fontSize: 'clamp(14px, 1.4vw, 18px)' }}>
           {award.titleEn}
         </h3>
-
-        {/* Subtitle */}
         {award.subtitleEn && (
-          <p className={`font-[var(--font-libre-franklin)] text-white/50 mt-2 leading-relaxed line-clamp-2 ${featured ? 'text-[12px] md:text-[13px]' : 'text-[11px]'}`}>
+          <p className="font-[var(--font-libre-franklin)] text-[11px] text-[#AEABA5] mt-1 tracking-[0.02em] truncate">
             {award.subtitleEn}
           </p>
         )}
       </div>
 
-      {/* Gold rim on hover */}
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-[#B1A490]/0 group-hover:ring-[#B1A490]/30 transition-all duration-500 pointer-events-none" />
+      {/* Arrow */}
+      <div className="shrink-0 w-7 h-7 rounded-full border border-[#E0DDD8] flex items-center justify-center group-hover:bg-[#111] group-hover:border-[#111] transition-all duration-300">
+        <svg width="10" height="10" viewBox="0 0 14 14" fill="none"
+          className="text-[#C0BCB5] group-hover:text-white transition-colors duration-300" style={{ rotate: '-45deg' }}>
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
     </motion.div>
   )
 }
@@ -266,12 +240,10 @@ function AwardCard({ award, index, featured, showType, onImageClick }: {
 // ── Section label ─────────────────────────────────────────────────────────────
 function SectionLabel({ label, count }: { label: string; count: number }) {
   return (
-    <div className="flex items-center justify-between pt-16 pb-6">
-      <div className="flex items-center gap-4">
-        <div className="w-5 h-px bg-[#B1A490]" />
-        <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[4px] text-[#B1A490]">
-          {label}
-        </span>
+    <div className="flex items-center justify-between pt-12 pb-1">
+      <div className="flex items-center gap-3">
+        <div className="w-4 h-px bg-[#B1A490]" />
+        <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[4px] text-[#B1A490]">{label}</span>
       </div>
       <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] text-[#AEABA5]">
         {count} {count === 1 ? 'Entry' : 'Entries'}
@@ -310,66 +282,54 @@ export default function AwardsPage() {
     { key: 'all', label: 'All' },
   ]
 
-  const renderGrid = (list: Award[], showType = false) => {
+  const renderList = (list: Award[], showType = false) => {
     if (list.length === 0) return (
-      <div className="py-32 flex flex-col items-center gap-3">
-        <div className="w-10 h-px bg-[#DDD]" />
-        <p className="font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[4px] text-[#CCC]">No entries on record</p>
+      <div className="py-24 flex flex-col items-center gap-3">
+        <div className="w-8 h-px bg-[#DDD]" />
+        <p className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[4px] text-[#CCC]">No entries on record</p>
       </div>
     )
-    const [first, ...rest] = list
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {/* Featured first card — full width */}
-        <AwardCard award={first} index={0} featured showType={showType} onImageClick={openLightbox} />
-        {/* Remaining cards */}
-        {rest.map((a, i) => (
-          <AwardCard key={a.id} award={a} index={i + 1} showType={showType} onImageClick={openLightbox} />
-        ))}
-      </div>
-    )
+    return list.map((a, i) => (
+      <RecognitionRow key={a.id} award={a} index={i} showType={showType} onImageClick={openLightbox} />
+    ))
   }
 
   return (
     <>
       <AwardsHeader />
-      <div className="min-h-screen bg-[#F8F7F5]">
-        {/* Nav spacer */}
+      <div className="min-h-screen bg-white">
         <div style={{ height: 'clamp(68px,6vw,100px)' }} />
 
-        {/* ── Hero ── */}
-        <div className="px-[clamp(1rem,4vw,7rem)] pt-14 pb-12 bg-white border-b border-[#ECEAE6]">
-          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
-            <p className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[5px] text-[#B1A490] mb-4">
-              Criteria Designs — Recognition Record
+        {/* ── Page heading ── */}
+        <div className="px-[clamp(1rem,4vw,7rem)] pt-12 pb-10 border-b border-[#ECEAE6]">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+            <p className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[5px] text-[#B1A490] mb-3">
+              Criteria Designs
             </p>
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <h1 className="font-[var(--font-playfair)] italic text-[#111] leading-[1.05]"
-                style={{ fontSize: 'clamp(42px, 7vw, 96px)' }}>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <h1 className="font-[var(--font-playfair)] italic text-[#111] leading-[1.1]"
+                style={{ fontSize: 'clamp(26px, 3vw, 38px)' }}>
                 Recognitions
               </h1>
               {!loading && (
-                <div className="flex items-center gap-8 mb-2">
-                  <div>
-                    <p className="font-[var(--font-playfair)] text-[32px] md:text-[40px] text-[#111] leading-none">{awards.length}</p>
-                    <p className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] text-[#B1A490] mt-1">Awards</p>
+                <div className="flex items-center gap-6 pb-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-[var(--font-playfair)] text-[22px] text-[#111] leading-none">{awards.length}</span>
+                    <span className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2.5px] text-[#B1A490]">Awards</span>
                   </div>
-                  <div className="w-px h-12 bg-[#ECEAE6]" />
-                  <div>
-                    <p className="font-[var(--font-playfair)] text-[32px] md:text-[40px] text-[#111] leading-none">{papers.length}</p>
-                    <p className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[3px] text-[#9A9A94] mt-1">Papers</p>
+                  <div className="w-px h-6 bg-[#ECEAE6]" />
+                  <div className="flex items-center gap-2">
+                    <span className="font-[var(--font-playfair)] text-[22px] text-[#111] leading-none">{papers.length}</span>
+                    <span className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2.5px] text-[#9A9A94]">Papers</span>
                   </div>
                 </div>
               )}
             </div>
-            <p className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] tracking-[0.03em] leading-relaxed max-w-[460px] mt-5">
-              A growing record of design excellence, international recognition, and academic achievement.
-            </p>
           </motion.div>
         </div>
 
         {/* ── Tabs ── */}
-        <div className="sticky top-[clamp(68px,6vw,100px)] z-40 bg-white/95 backdrop-blur-md border-b border-[#ECEAE6] px-[clamp(1rem,4vw,7rem)] flex items-center gap-0">
+        <div className="sticky top-[clamp(68px,6vw,100px)] z-40 bg-white/95 backdrop-blur-md border-b border-[#ECEAE6] px-[clamp(1rem,4vw,7rem)] flex items-center">
           {tabs.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className={`relative font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] px-5 py-4 transition-colors duration-200 ${tab === t.key ? 'text-[#111]' : 'text-[#AEABA5] hover:text-[#555]'}`}>
@@ -383,12 +343,17 @@ export default function AwardsPage() {
         </div>
 
         {/* ── Content ── */}
-        <div className="px-[clamp(1rem,4vw,7rem)] py-10">
+        <div className="px-[clamp(1rem,4vw,7rem)] pb-24">
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className={`rounded-2xl bg-[#E8E5E0] animate-pulse ${i === 1 ? 'col-span-full' : ''}`}
-                  style={{ aspectRatio: i === 1 ? '21/8' : '4/3' }} />
+            <div>
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="flex items-center gap-6 py-5 border-b border-[#ECEAE6]">
+                  <div className="w-[68px] h-[68px] rounded-xl bg-[#F2EFE9] animate-pulse shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-[#F2EFE9] animate-pulse rounded w-1/2" />
+                    <div className="h-3 bg-[#F2EFE9] animate-pulse rounded w-1/3" />
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -396,33 +361,36 @@ export default function AwardsPage() {
           <AnimatePresence mode="wait">
             {!loading && tab === 'awards' && (
               <motion.div key="awards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                {renderGrid(awards)}
+                {renderList(awards)}
               </motion.div>
             )}
             {!loading && tab === 'papers' && (
               <motion.div key="papers" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                {renderGrid(papers)}
+                {renderList(papers)}
               </motion.div>
             )}
             {!loading && tab === 'all' && (
               <motion.div key="all" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                {awards.length > 0 && (
-                  <>
-                    <SectionLabel label="Awards" count={awards.length} />
-                    {renderGrid(awards)}
-                  </>
-                )}
-                {papers.length > 0 && (
-                  <>
-                    <SectionLabel label="Published Papers" count={papers.length} />
-                    {renderGrid(papers, true)}
-                  </>
-                )}
-                {all.length === 0 && (
-                  <div className="py-32 flex flex-col items-center gap-3">
-                    <div className="w-10 h-px bg-[#DDD]" />
-                    <p className="font-[var(--font-libre-franklin)] text-[10px] uppercase tracking-[4px] text-[#CCC]">No entries on record</p>
+                {all.length === 0 ? (
+                  <div className="py-24 flex flex-col items-center gap-3">
+                    <div className="w-8 h-px bg-[#DDD]" />
+                    <p className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[4px] text-[#CCC]">No entries on record</p>
                   </div>
+                ) : (
+                  <>
+                    {awards.length > 0 && (
+                      <>
+                        <SectionLabel label="Awards" count={awards.length} />
+                        {renderList(awards)}
+                      </>
+                    )}
+                    {papers.length > 0 && (
+                      <>
+                        <SectionLabel label="Published Papers" count={papers.length} />
+                        {renderList(papers, true)}
+                      </>
+                    )}
+                  </>
                 )}
               </motion.div>
             )}
@@ -432,7 +400,6 @@ export default function AwardsPage() {
         <Footer />
       </div>
 
-      {/* ── Lightbox ── */}
       <AnimatePresence>
         {lightboxAward && <Lightbox award={lightboxAward} onClose={closeLightbox} />}
       </AnimatePresence>
