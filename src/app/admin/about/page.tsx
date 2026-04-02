@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Save, Upload, X, Image as ImageIcon } from 'lucide-react'
 
-const CHUNK_SIZE = 512 * 1024
-
 interface FormState {
   aboutIntroText: string
   aboutCol1Text: string
@@ -89,24 +87,17 @@ export default function AdminAboutPage() {
     setUploading(true)
     setUploadProgress(0)
     try {
-      const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
-      const uploadId = `about_${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi, '_')}`
-      let finalUrl = ''
-      for (let i = 0; i < totalChunks; i++) {
-        const chunk = file.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
-        const fd = new FormData()
-        fd.append('file', chunk, file.name)
-        fd.append('uploadId', uploadId)
-        fd.append('chunkIndex', String(i))
-        fd.append('totalChunks', String(totalChunks))
-        fd.append('folder', 'about')
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
-        if (!res.ok) throw new Error('Upload failed')
-        const data = await res.json()
-        if (data.url) finalUrl = data.url
-        setUploadProgress(Math.round(((i + 1) / totalChunks) * 100))
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', 'other')
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error((err as { error?: string }).error || 'Upload failed')
       }
-      if (finalUrl) set('aboutImage', finalUrl)
+      const data = await res.json()
+      if (data.url) set('aboutImage', data.url)
+      setUploadProgress(100)
     } catch (err) {
       alert('Image upload failed: ' + (err instanceof Error ? err.message : String(err)))
     } finally {
