@@ -22,6 +22,7 @@ interface FormState {
   aboutStat3Label: string
   aboutStat4Number: string
   aboutStat4Label: string
+  aboutServicesText: string
 }
 
 const DEFAULTS: FormState = {
@@ -41,6 +42,7 @@ const DEFAULTS: FormState = {
   aboutStat3Label: 'Countries',
   aboutStat4Number: '150+',
   aboutStat4Label: 'Team Members',
+  aboutServicesText: 'CDG is a multifaceted company that delivers all types of designs such as residential, hospitality, corporates, educational institutes, and leisure and entertainment constructions. We are committed to delivering the best-desired results using the latest tools in the market. Our associates regularly attend technical conferences and workshops for continuous education and updates for a better service to our clients. As a team, we guarantee sustainable quality in our work and services.',
 }
 
 export default function AdminAboutPage() {
@@ -73,6 +75,7 @@ export default function AdminAboutPage() {
           aboutStat3Label: data.aboutStat3Label || DEFAULTS.aboutStat3Label,
           aboutStat4Number: data.aboutStat4Number || DEFAULTS.aboutStat4Number,
           aboutStat4Label: data.aboutStat4Label || DEFAULTS.aboutStat4Label,
+          aboutServicesText: data.aboutServicesText || DEFAULTS.aboutServicesText,
         })
         setLoading(false)
       })
@@ -312,6 +315,20 @@ export default function AdminAboutPage() {
             rows={4}
             value={form.aboutVisionText}
             onChange={e => set('aboutVisionText', e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none resize-y"
+          />
+        </div>
+      </section>
+
+      {/* Our Services */}
+      <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+        <h2 className="text-base font-semibold text-gray-800 border-b pb-3">Our Services</h2>
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">Services description paragraph</label>
+          <textarea
+            rows={5}
+            value={form.aboutServicesText}
+            onChange={e => set('aboutServicesText', e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none resize-y"
           />
         </div>

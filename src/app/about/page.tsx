@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { motion } from 'framer-motion'
+import { Eye, Target, Layers } from 'lucide-react'
 
 interface Settings {
   companyNameEn?: string
@@ -18,6 +19,7 @@ interface Settings {
   aboutImageCaption?: string | null
   aboutMissionText?: string | null
   aboutVisionText?: string | null
+  aboutServicesText?: string | null
   aboutStat1Number?: string | null
   aboutStat1Label?: string | null
   aboutStat2Number?: string | null
@@ -51,6 +53,7 @@ export default function AboutPage() {
   const imageCaption = settings.aboutImageCaption || 'Designs That Add Value'
   const missionText = settings.aboutMissionText || 'To create innovative, sustainable, and aesthetically compelling architectural solutions that enhance the quality of life for our clients and communities.'
   const visionText = settings.aboutVisionText || 'To be the most trusted and respected architecture firm in the region, known for transforming spaces into extraordinary experiences.'
+  const servicesText = settings.aboutServicesText || 'CDG is a multifaceted company that delivers all types of designs such as residential, hospitality, corporates, educational institutes, and leisure and entertainment constructions. We are committed to delivering the best-desired results using the latest tools in the market. Our associates regularly attend technical conferences and workshops for continuous education and updates for a better service to our clients.'
 
   const stats = [
     { n: settings.aboutStat1Number || '15+', l: settings.aboutStat1Label || 'Years of Experience' },
@@ -197,40 +200,64 @@ export default function AboutPage() {
         </section>
 
         {/* ═══════════════════════════════════════════════
-            SECTION 6 — Mission & Vision (two columns)
+            SECTION 6 — Vision, Mission, Our Services (stacked)
         ═══════════════════════════════════════════════ */}
-        <section className="px-[clamp(1.5rem,6vw,9rem)] py-12 border-b border-[#DEDAD4] bg-[#FAFAF8]">
-          <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-            className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[5px] text-[#B1A490] mb-8">
-            Our Principles
-          </motion.p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[clamp(2rem,5vw,7rem)] gap-y-10">
+        <section className="px-[clamp(1.5rem,6vw,9rem)] py-0 bg-white">
 
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-              <h2 className="font-[var(--font-playfair)] italic text-[#111] mb-4 leading-[1.2]"
-                style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}>
-                Our Mission
+          {/* Vision */}
+          <motion.div
+            variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            className="py-12 border-b border-[#DEDAD4]"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="font-[family-name:var(--font-franklin-gothic)] font-bold text-[#111] leading-none"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 48px)' }}>
+                Vision
               </h2>
-              <div className="w-8 h-px bg-[#B1A490] mb-5" />
-              <p className="font-[var(--font-libre-franklin)] text-[#555] leading-[1.95] text-justify"
-                style={{ fontSize: 'clamp(12.5px, 1vw, 14px)' }}>
-                {missionText}
-              </p>
-            </motion.div>
+              <Eye size={22} className="text-[#B1A490] shrink-0 mt-1" />
+            </div>
+            <p className="font-[var(--font-libre-franklin)] text-[#444] leading-[2] text-justify max-w-[720px] ml-[clamp(1rem,4vw,5rem)]"
+              style={{ fontSize: 'clamp(12.5px, 1vw, 14px)' }}>
+              {visionText}
+            </p>
+          </motion.div>
 
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" custom={1} viewport={{ once: true }}>
-              <h2 className="font-[var(--font-playfair)] italic text-[#111] mb-4 leading-[1.2]"
-                style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}>
-                Our Vision
+          {/* Mission */}
+          <motion.div
+            variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            className="py-12 border-b border-[#DEDAD4]"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="font-[family-name:var(--font-franklin-gothic)] font-bold text-[#111] leading-none"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 48px)' }}>
+                Mission
               </h2>
-              <div className="w-8 h-px bg-[#B1A490] mb-5" />
-              <p className="font-[var(--font-libre-franklin)] text-[#555] leading-[1.95] text-justify"
-                style={{ fontSize: 'clamp(12.5px, 1vw, 14px)' }}>
-                {visionText}
-              </p>
-            </motion.div>
+              <Target size={22} className="text-[#B1A490] shrink-0 mt-1" />
+            </div>
+            <p className="font-[var(--font-libre-franklin)] text-[#444] leading-[2] text-justify max-w-[720px] ml-[clamp(1rem,4vw,5rem)]"
+              style={{ fontSize: 'clamp(12.5px, 1vw, 14px)' }}>
+              {missionText}
+            </p>
+          </motion.div>
 
-          </div>
+          {/* Our Services */}
+          <motion.div
+            variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            className="py-12 border-b border-[#DEDAD4]"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="font-[family-name:var(--font-franklin-gothic)] font-bold text-[#111] leading-none"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 48px)' }}>
+                Our Services
+              </h2>
+              <Layers size={22} className="text-[#B1A490] shrink-0 mt-1" />
+            </div>
+            <p className="font-[var(--font-libre-franklin)] text-[#444] leading-[2] text-justify max-w-[720px] ml-[clamp(1rem,4vw,5rem)]"
+              style={{ fontSize: 'clamp(12.5px, 1vw, 14px)' }}>
+              {servicesText}
+            </p>
+          </motion.div>
+
         </section>
 
         {/* ═══════════════════════════════════════════════

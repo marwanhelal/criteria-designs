@@ -239,6 +239,7 @@ model SiteSettings {
   aboutStat3Label  String?
   aboutStat4Number String?
   aboutStat4Label  String?
+  aboutServicesText String? @db.Text
 
   updatedAt       DateTime @updatedAt
 }

@@ -278,6 +278,7 @@ export async function POST() {
       'aboutImage', 'aboutImageCaption', 'aboutMissionText', 'aboutVisionText',
       'aboutStat1Number', 'aboutStat1Label', 'aboutStat2Number', 'aboutStat2Label',
       'aboutStat3Number', 'aboutStat3Label', 'aboutStat4Number', 'aboutStat4Label',
+      'aboutServicesText',
     ]
     for (const col of aboutCols) {
       try {
