@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { motion, useInView } from 'framer-motion'
@@ -64,12 +63,24 @@ export default function AboutPage() {
   const [settings, setSettings] = useState<Settings>({})
   const statsRef = useRef<HTMLElement>(null)
   const statsInView = useInView(statsRef, { once: true, margin: '-60px' })
+  const panContainerRef = useRef<HTMLDivElement>(null)
+  const [panConstraint, setPanConstraint] = useState(-600)
+  const [hasPanned, setHasPanned] = useState(false)
 
   useEffect(() => {
     fetch('/api/settings')
       .then(res => res.ok ? res.json() : {})
       .then(data => { if (data && typeof data === 'object') setSettings(data) })
       .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const el = panContainerRef.current
+    if (!el) return
+    const update = () => setPanConstraint(-(el.offsetWidth * 0.8))
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
   }, [])
 
   const featureImage = settings.aboutImage
@@ -202,18 +213,56 @@ export default function AboutPage() {
         </section>
 
         {/* ═══════════════════════════════════════════════
-            SECTION 4 — Full-width feature image
+            SECTION 4 — Full-width feature image (panoramic drag)
         ═══════════════════════════════════════════════ */}
         <section className="border-b border-[#DEDAD4]">
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
           >
-            {/* Image */}
-            <div className="relative w-full overflow-hidden bg-[#1C1A17]"
-              style={{ aspectRatio: '16/7' }}>
+            {/* Image — draggable panoramic pan */}
+            <div
+              ref={panContainerRef}
+              className="relative w-full overflow-hidden bg-[#1C1A17] cursor-grab active:cursor-grabbing"
+              style={{ aspectRatio: '16/7' }}
+            >
               {featureImage ? (
-                <Image src={featureImage} alt="Criteria Design Group" fill
-                  className="object-cover" unoptimized />
+                <>
+                  <motion.div
+                    drag="x"
+                    dragConstraints={{ left: panConstraint, right: 0 }}
+                    dragElastic={0.04}
+                    onDragStart={() => setHasPanned(true)}
+                    className="absolute top-0 left-0 h-full select-none"
+                    style={{ width: '180%' }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={featureImage}
+                      alt="Criteria Design Group"
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                      draggable={false}
+                    />
+                  </motion.div>
+
+                  {/* Drag hint — fades out after first drag */}
+                  <motion.div
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full pointer-events-none"
+                    animate={{ opacity: hasPanned ? 0 : 1 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                      <path d="M1 5h14M1 5l3.5-3.5M1 5l3.5 3.5M15 5l-3.5-3.5M15 5l-3.5 3.5"
+                        stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span className="text-white/80 text-[9px] tracking-[2.5px] uppercase font-[var(--font-libre-franklin)]">
+                      Drag to explore
+                    </span>
+                  </motion.div>
+
+                  {/* Side fade gradients */}
+                  <div className="absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-black/25 to-transparent pointer-events-none" />
+                  <div className="absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-black/25 to-transparent pointer-events-none" />
+                </>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1C1A17] via-[#2a2520] to-[#111] flex items-center justify-center">
                   <div className="text-center">
@@ -224,7 +273,7 @@ export default function AboutPage() {
                   </div>
                 </div>
               )}
-              {/* Subtle bottom vignette */}
+              {/* Bottom vignette */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
             </div>
 
