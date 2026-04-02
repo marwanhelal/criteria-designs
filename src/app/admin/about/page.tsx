@@ -55,7 +55,7 @@ export default function AdminAboutPage() {
   useEffect(() => {
     fetch('/api/settings')
       .then(r => r.ok ? r.json() : {})
-      .then(data => {
+      .then((data: Record<string, string | null | undefined>) => {
         setForm({
           aboutIntroText: data.aboutIntroText || DEFAULTS.aboutIntroText,
           aboutCol1Text: data.aboutCol1Text || DEFAULTS.aboutCol1Text,
