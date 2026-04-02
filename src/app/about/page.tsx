@@ -207,6 +207,7 @@ export default function AboutPage() {
         <section className="border-b border-[#DEDAD4]">
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            className="relative"
           >
             {/* Image */}
             <div className="relative w-full overflow-hidden bg-[#1C1A17]"
@@ -226,6 +227,47 @@ export default function AboutPage() {
               )}
               {/* Subtle bottom vignette */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+            </div>
+
+            {/* ── Rotating circular badge ── */}
+            <div
+              className="absolute z-10 w-[130px] h-[130px]"
+              style={{
+                right: 'clamp(1.5rem, 5vw, 7rem)',
+                bottom: '1.2rem',
+                transform: 'translateY(50%)',
+              }}
+            >
+              {/* Spinning ring with circular text */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+              >
+                <svg viewBox="0 0 130 130" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="65" cy="65" r="62" fill="none" stroke="#B1A490" strokeWidth="0.6" opacity="0.5"/>
+                  <circle cx="65" cy="65" r="51" fill="none" stroke="#B1A490" strokeWidth="0.3" opacity="0.3"/>
+                  <defs>
+                    <path id="badgeCircle" d="M 65,65 m -57,0 a 57,57 0 1,1 114,0 a 57,57 0 1,1 -114,0"/>
+                  </defs>
+                  <text fontSize="7.8" fill="#B1A490" letterSpacing="2.6" opacity="0.9"
+                    fontFamily="var(--font-libre-franklin)">
+                    <textPath href="#badgeCircle">CRITERIA DESIGN GROUP · EST. 2007 · CAIRO ·</textPath>
+                  </text>
+                </svg>
+              </motion.div>
+              {/* Static center — white circle with CDG */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-[72px] h-[72px] rounded-full bg-white flex items-center justify-center shadow-sm"
+                  style={{ border: '0.5px solid #E8E4DE' }}>
+                  <span
+                    className="font-[family-name:var(--font-franklin-gothic)] font-bold text-[#B1A490] tracking-[3px]"
+                    style={{ fontSize: '13px' }}
+                  >
+                    CDG
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Caption row */}
