@@ -222,6 +222,24 @@ model SiteSettings {
   homepageAward4Id String?
   homepageAward5Id String?
 
+  // About Us page content
+  aboutIntroText   String?  @db.Text
+  aboutCol1Text    String?  @db.Text
+  aboutCol2Text    String?  @db.Text
+  aboutCol2Text2   String?  @db.Text
+  aboutImage       String?
+  aboutImageCaption String?
+  aboutMissionText String?  @db.Text
+  aboutVisionText  String?  @db.Text
+  aboutStat1Number String?
+  aboutStat1Label  String?
+  aboutStat2Number String?
+  aboutStat2Label  String?
+  aboutStat3Number String?
+  aboutStat3Label  String?
+  aboutStat4Number String?
+  aboutStat4Label  String?
+
   updatedAt       DateTime @updatedAt
 }
 

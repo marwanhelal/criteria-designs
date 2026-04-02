@@ -272,6 +272,24 @@ export async function POST() {
       results.push(`✗ Award type: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 21. About Us page columns on SiteSettings
+    const aboutCols = [
+      'aboutIntroText', 'aboutCol1Text', 'aboutCol2Text', 'aboutCol2Text2',
+      'aboutImage', 'aboutImageCaption', 'aboutMissionText', 'aboutVisionText',
+      'aboutStat1Number', 'aboutStat1Label', 'aboutStat2Number', 'aboutStat2Label',
+      'aboutStat3Number', 'aboutStat3Label', 'aboutStat4Number', 'aboutStat4Label',
+    ]
+    for (const col of aboutCols) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)
