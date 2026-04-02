@@ -30,7 +30,7 @@ const sidebarItems = [
   { name: 'Awards', href: '/admin/awards', icon: Award },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Media', href: '/admin/media', icon: Image },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Home Page', href: '/admin/settings', icon: Settings },
 ]
 
 export default function AdminLayout({
