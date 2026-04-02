@@ -53,7 +53,7 @@ export default function AdminAboutPage() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    fetch('/api/settings')
+    fetch('/api/about-settings')
       .then(r => r.ok ? r.json() : {})
       .then((data: Record<string, string | null | undefined>) => {
         setForm({
@@ -110,7 +110,7 @@ export default function AdminAboutPage() {
     setSaving(true)
     setSaved(false)
     try {
-      const res = await fetch('/api/settings', {
+      const res = await fetch('/api/about-settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
