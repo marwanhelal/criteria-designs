@@ -43,25 +43,23 @@ const icomoon = localFont({
   variable: "--font-icomoon",
 });
 
-export const metadata: Metadata = {
-  title: "Criteria Designs | Architecture & Interior Design",
-  description:
-    "Leading architecture and interior design firm. We build quality real estate projects since 1978.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await prisma.siteSettings.findUnique({ where: { id: 'main' } }).catch(() => null)
+  const favicon = settings?.favicon
+  return {
+    title: "Criteria Designs | Architecture & Interior Design",
+    description: "Leading architecture and interior design firm. We build quality real estate projects since 1978.",
+    icons: favicon ? { icon: favicon } : undefined,
+  }
+}
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await prisma.siteSettings.findUnique({ where: { id: 'main' } }).catch(() => null)
-  const favicon = settings?.favicon
-
   return (
     <html lang="en">
-      <head>
-        {favicon && <link rel="icon" href={favicon} />}
-      </head>
       <body
         className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} ${playfairDisplay.variable} ${franklinGothic.variable} ${icomoon.variable} antialiased`}
       >
