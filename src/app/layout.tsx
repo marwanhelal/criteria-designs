@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { prisma } from "@/lib/db";
 
+export const revalidate = 0
+
 const merriweather = Merriweather({
   variable: "--font-merriweather",
   subsets: ["latin"],
