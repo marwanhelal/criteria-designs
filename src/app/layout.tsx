@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Merriweather, Open_Sans, Libre_Franklin, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { prisma } from "@/lib/db";
 
 const merriweather = Merriweather({
   variable: "--font-merriweather",
@@ -46,13 +47,19 @@ export const metadata: Metadata = {
     "Leading architecture and interior design firm. We build quality real estate projects since 1978.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await prisma.siteSettings.findUnique({ where: { id: 'main' } }).catch(() => null)
+  const favicon = settings?.favicon
+
   return (
     <html lang="en">
+      <head>
+        {favicon && <link rel="icon" href={favicon} />}
+      </head>
       <body
         className={`${merriweather.variable} ${openSans.variable} ${libreFranklin.variable} ${playfairDisplay.variable} ${franklinGothic.variable} ${icomoon.variable} antialiased`}
       >
