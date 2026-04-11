@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const favicon = settings?.favicon
   return {
     title: "Criteria Designs | Architecture, Interior Design & Urban Planning",
-    description: "Criteria Designs (CDG) is a multidisciplinary architecture and interior design firm delivering award-winning spaces across Egypt and 12+ countries. From concept to completion — we design with purpose.",
+    description: "Criteria Designs (CDG) — award-winning architecture, interior design & urban planning firm. 500+ projects across 6 countries. Based in Cairo, Egypt. Designing with purpose since 2007.",
     icons: favicon ? { icon: favicon } : undefined,
   }
 }
