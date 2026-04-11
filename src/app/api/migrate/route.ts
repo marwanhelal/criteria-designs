@@ -326,26 +326,20 @@ export async function POST() {
       results.push(`✗ PhilosophyPage table: ${e instanceof Error ? e.message : String(e)}`)
     }
 
-    // 23. Add new diagram label columns to PhilosophyPage
-    const philoCols: Array<[string, string]> = [
-      ['diagramNature',      'Nature'],
-      ['diagramHumanValues', 'Human Values'],
-      ['diagramArts',        'Arts'],
-      ['diagramDesign',      'Design'],
-      ['diagramInnovative',  'Innovative Solutions'],
-    ]
-    for (const [col, def] of philoCols) {
+    // 23. Add image + label columns to PhilosophyPage
+    const philoCols = ['introImage', 'diagramImage']
+    for (const col of philoCols) {
       try {
         await prisma.$executeRawUnsafe(
-          `ALTER TABLE "PhilosophyPage" ADD COLUMN IF NOT EXISTS "${col}" TEXT NOT NULL DEFAULT '${def}';`
+          `ALTER TABLE "PhilosophyPage" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
         )
         results.push(`✓ PhilosophyPage.${col} ensured`)
       } catch (e) {
         results.push(`✗ PhilosophyPage.${col}: ${e instanceof Error ? e.message : String(e)}`)
       }
     }
-    // Drop solution4/finalMessage/transformationText columns if they exist (cleanup)
-    for (const col of ['solution4', 'finalMessage', 'transformationText']) {
+    // Drop old unused columns if they exist
+    for (const col of ['solution4', 'finalMessage', 'transformationText', 'solution1', 'solution2', 'solution3', 'outcome1', 'outcome2', 'diagramNature', 'diagramHumanValues', 'diagramArts', 'diagramDesign', 'diagramInnovative']) {
       try {
         await prisma.$executeRawUnsafe(
           `ALTER TABLE "PhilosophyPage" DROP COLUMN IF EXISTS "${col}";`
