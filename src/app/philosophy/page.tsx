@@ -259,38 +259,121 @@ export default function PhilosophyPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 3 — DESIGN FLOW DIAGRAM
-          Note: animate always to visible — no sec3In dependency
+          SECTION 3 — DESIGN FLOW DIAGRAM  (dark premium)
       ══════════════════════════════════════════════════════════ */}
       {data.diagramImage && (
-        <section className="relative bg-[#F8F7F4] overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(91,138,91,0.05) 0%, transparent 65%)' }} />
+        <section className="relative overflow-hidden" style={{ background: '#080C10' }}>
 
-          <div className="relative max-w-5xl mx-auto px-10 md:px-16 py-24">
+          {/* Top gradient bridge from section 2 */}
+          <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+            style={{ background: 'linear-gradient(to bottom, #0D1117, transparent)' }} />
+
+          {/* Ambient glow — left gold */}
+          <div className="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(201,162,77,0.07) 0%, transparent 60%)' }} />
+
+          {/* Ambient glow — right green */}
+          <div className="absolute bottom-1/3 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(91,138,91,0.08) 0%, transparent 60%)' }} />
+
+          {/* Subtle dot-grid texture */}
+          <div className="absolute inset-0 pointer-events-none" style={{
+            backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }} />
+
+          {/* Top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-[1px]"
+            style={{ background: 'linear-gradient(90deg, transparent, #C9A24D 30%, #5B8A5B 70%, transparent)' }} />
+
+          <div className="relative max-w-6xl mx-auto px-10 md:px-16 py-28">
 
             {/* Header */}
-            <div className="text-center mb-16">
-              <p className="text-[#5B8A5B] text-[11px] tracking-[0.4em] uppercase font-semibold mb-3 font-[var(--font-open-sans)]">
-                Design Flow
-              </p>
-              <h2 className="font-[var(--font-franklin-gothic)] text-[#181C23] text-3xl md:text-4xl font-bold mb-5">
+            <div className="text-center mb-20">
+              {/* Eyebrow row */}
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, #C9A24D)' }} />
+                <p className="text-[#C9A24D] text-[10px] tracking-[0.45em] uppercase font-semibold font-[var(--font-open-sans)]">
+                  Design Flow
+                </p>
+                <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #C9A24D)' }} />
+              </div>
+
+              <h2 className="font-[var(--font-franklin-gothic)] text-white font-bold mb-6"
+                style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', textShadow: '0 0 60px rgba(91,138,91,0.3)' }}>
                 From insight to outcome.
               </h2>
-              <div className="w-12 h-[2px] bg-[#5B8A5B] mx-auto rounded-full"
-                style={{ boxShadow: '0 0 10px rgba(91,138,91,0.6)' }} />
+
+              <p className="text-gray-500 text-sm font-[var(--font-open-sans)] max-w-md mx-auto leading-relaxed">
+                Every design decision traces a deliberate path — from nature and humanity to resilient, meaningful outcomes.
+              </p>
+
+              {/* Decorative divider */}
+              <div className="flex items-center justify-center gap-3 mt-8">
+                <div className="h-px w-24" style={{ background: 'linear-gradient(to right, transparent, rgba(91,138,91,0.5))' }} />
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#5B8A5B', boxShadow: '0 0 8px rgba(91,138,91,0.8)' }} />
+                <div className="h-px w-24" style={{ background: 'linear-gradient(to left, transparent, rgba(91,138,91,0.5))' }} />
+              </div>
             </div>
 
-            {/* Diagram — always visible, no inView dependency */}
-            <div className="rounded-2xl overflow-hidden"
-              style={{ background: 'white', boxShadow: '0 4px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(177,164,144,0.15)' }}>
-              <img
-                src={data.diagramImage}
-                alt="Design flow diagram"
-                className="w-full h-auto object-contain p-8 md:p-12"
-              />
+            {/* Diagram frame */}
+            <div className="relative">
+              {/* Outer glow ring */}
+              <div className="absolute -inset-[1px] rounded-3xl pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, rgba(201,162,77,0.3), rgba(91,138,91,0.2), rgba(201,162,77,0.1))', filter: 'blur(1px)' }} />
+
+              {/* Corner accents */}
+              <div className="absolute -top-[1px] -left-[1px] w-8 h-8 rounded-tl-3xl border-t-2 border-l-2 border-[#C9A24D]" />
+              <div className="absolute -top-[1px] -right-[1px] w-8 h-8 rounded-tr-3xl border-t-2 border-r-2 border-[#5B8A5B]" />
+              <div className="absolute -bottom-[1px] -left-[1px] w-8 h-8 rounded-bl-3xl border-b-2 border-l-2 border-[#5B8A5B]" />
+              <div className="absolute -bottom-[1px] -right-[1px] w-8 h-8 rounded-br-3xl border-b-2 border-r-2 border-[#C9A24D]" />
+
+              {/* Inner card */}
+              <div className="relative rounded-3xl overflow-hidden"
+                style={{
+                  background: 'linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: '0 0 80px rgba(91,138,91,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                }}>
+
+                {/* Top inner bar */}
+                <div className="flex items-center gap-2 px-6 py-4 border-b border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#C9A24D', boxShadow: '0 0 6px rgba(201,162,77,0.6)' }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#5B8A5B', boxShadow: '0 0 6px rgba(91,138,91,0.6)' }} />
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/10 rounded-full" />
+                  <span className="ml-3 text-[10px] tracking-[0.3em] text-white/20 uppercase font-[var(--font-open-sans)]">
+                    criteria design flow
+                  </span>
+                </div>
+
+                {/* Diagram image */}
+                <div className="relative px-10 py-12 md:px-16 md:py-16"
+                  style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 70%)' }}>
+                  <img
+                    src={data.diagramImage}
+                    alt="Design flow diagram"
+                    className="w-full h-auto object-contain"
+                    style={{ filter: 'drop-shadow(0 0 40px rgba(91,138,91,0.15)) brightness(1.05) contrast(1.02)' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom label row */}
+            <div className="flex justify-center gap-10 mt-12">
+              {['Nature', 'Innovation', 'Sustainability', 'Resilience'].map((label, i) => (
+                <div key={label} className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full"
+                    style={{ background: i % 2 === 0 ? '#5B8A5B' : '#C9A24D', boxShadow: `0 0 6px ${i % 2 === 0 ? 'rgba(91,138,91,0.7)' : 'rgba(201,162,77,0.7)'}` }} />
+                  <span className="text-[10px] tracking-[0.25em] text-gray-600 uppercase font-[var(--font-open-sans)]">{label}</span>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* Bottom accent line */}
+          <div className="absolute bottom-0 left-0 right-0 h-[1px]"
+            style={{ background: 'linear-gradient(90deg, transparent, #5B8A5B 40%, #C9A24D 60%, transparent)' }} />
         </section>
       )}
 
