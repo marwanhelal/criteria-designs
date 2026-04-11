@@ -62,14 +62,13 @@ export default function PhilosophyPage() {
   ]
 
   return (
-    <div className="bg-white overflow-x-hidden">
+    <div className="bg-white overflow-x-hidden" data-navbar-dark>
       <Navbar />
 
       {/* ══════════════════════════════════════════════════════════
           SECTION 1 — HERO INTRO
       ══════════════════════════════════════════════════════════ */}
       <section
-        data-navbar-dark
         className="relative pt-[var(--nav-h)] min-h-[88vh] flex items-center"
         style={{
           backgroundImage: `
