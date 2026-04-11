@@ -47,8 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await prisma.siteSettings.findUnique({ where: { id: 'main' } }).catch(() => null)
   const favicon = settings?.favicon
   return {
-    title: "Criteria Designs | Architecture & Interior Design",
-    description: "Leading architecture and interior design firm. We build quality real estate projects since 1978.",
+    title: "Criteria Designs | Architecture, Interior Design & Urban Planning",
+    description: "Criteria Designs (CDG) is a multidisciplinary architecture and interior design firm delivering award-winning spaces across Egypt and 12+ countries. From concept to completion — we design with purpose.",
     icons: favicon ? { icon: favicon } : undefined,
   }
 }
