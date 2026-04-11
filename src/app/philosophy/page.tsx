@@ -1,16 +1,15 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import Image from 'next/image'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 interface PhilosophyData {
   heroTitle: string
   heroSubtitle: string
   introText: string
-  introImage: string | null
   humanTitle: string
   humanDescription: string
   humanImage: string | null
@@ -20,208 +19,394 @@ interface PhilosophyData {
   cultureTitle: string
   cultureDescription: string
   cultureImage: string | null
-  transformationText: string
+  diagramNature: string
+  diagramHumanValues: string
+  diagramArts: string
+  diagramDesign: string
+  diagramInnovative: string
   solution1: string
   solution2: string
   solution3: string
-  solution4: string
   outcome1: string
   outcome2: string
-  finalMessage: string
 }
 
 const DEFAULTS: PhilosophyData = {
-  heroTitle: 'The Soul of Our Design',
-  heroSubtitle: 'Every project begins with understanding what truly matters.',
-  introText: 'Constructional and architectural products constitute the periphery to all human activities as well as being one of the main effective optical components to the surrounding environment — leading to being the most effective element to human efficiency.',
-  introImage: null,
+  heroTitle: 'Our Philosophy',
+  heroSubtitle: 'what we believe in',
+  introText: 'Constructional and architectural products constitute the periphery to all human activities as well as being one of the main effective optical components to the surrounding environment leading to being the most effective element to human efficiency.',
   humanTitle: 'HUMAN',
-  humanDescription: 'Human basic spiritual and materialistic needs such as artistic and practical ones.',
+  humanDescription: 'human basic spiritual and materialistic needs such as artistic and practical ones.',
   humanImage: null,
   envTitle: 'ENVIRONMENTAL',
-  envDescription: 'Environmental measures such as weather, geography and energy.',
+  envDescription: 'as well as environmental measures such as weather, geography and energy.',
   envImage: null,
   cultureTitle: 'CULTURE',
-  cultureDescription: 'Cultural values such as social and economic ones.',
+  cultureDescription: 'and finally cultural values such as social and economic ones.',
   cultureImage: null,
-  transformationText: 'Where insights become design.',
-  solution1: 'Innovation',
-  solution2: 'Sustainability',
-  solution3: 'Creativity',
-  solution4: 'Uniqueness',
+  diagramNature: 'Nature',
+  diagramHumanValues: 'Human Values',
+  diagramArts: 'Arts',
+  diagramDesign: 'Design',
+  diagramInnovative: 'Innovative Solutions',
+  solution1: 'Sustainability',
+  solution2: 'Creativity',
+  solution3: 'Uniqueness',
   outcome1: 'Happiness',
   outcome2: 'Resilience',
-  finalMessage: "We don't just design buildings.\nWe design outcomes that last.",
 }
 
-// Easing
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.12, ease } }),
+  hidden: { opacity: 0, y: 20 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1, ease } }),
 }
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  show: (i = 0) => ({ opacity: 1, transition: { duration: 0.6, delay: i * 0.1, ease } }),
-}
-
-// ── Human Icon ────────────────────────────────────────────────────────────────
-function HumanIcon({ animated }: { animated: boolean }) {
+// ── Triangle diagram (Section 1 right side) ───────────────────────────────────
+function TriangleDiagram({ inView }: { inView: boolean }) {
   return (
-    <svg viewBox="0 0 80 80" fill="none" className="w-16 h-16">
-      <motion.circle
-        cx="40" cy="22" r="12"
-        stroke="#C9A24D" strokeWidth="2.5"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.8, ease }}
-      />
-      <motion.path
-        d="M18 68 C18 52 62 52 62 68"
-        stroke="#C9A24D" strokeWidth="2.5" strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.8, delay: 0.3, ease }}
-      />
-      <motion.path
-        d="M32 58 L40 50 L48 58"
-        stroke="#C9A24D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.5, ease }}
-      />
+    <svg viewBox="0 0 220 200" className="w-full max-w-[240px]" fill="none">
+      {/* Dashed connecting lines */}
+      <motion.line x1="110" y1="50" x2="50" y2="155"
+        stroke="#6B9E6B" strokeWidth="1.2" strokeDasharray="4 3"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.2, ease }} />
+      <motion.line x1="110" y1="50" x2="170" y2="155"
+        stroke="#6B9E6B" strokeWidth="1.2" strokeDasharray="4 3"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.35, ease }} />
+      <motion.line x1="50" y1="155" x2="170" y2="155"
+        stroke="#6B9E6B" strokeWidth="1.2" strokeDasharray="4 3"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.5, ease }} />
+
+      {/* Top node — Human (gold) */}
+      <motion.circle cx="110" cy="42" r="28"
+        fill="#F5F0E8" stroke="#D4A843" strokeWidth="1.5"
+        initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.5, ease }} />
+      {/* Head */}
+      <circle cx="110" cy="34" r="8" stroke="#D4A843" strokeWidth="1.5" fill="none" />
+      {/* Body arc */}
+      <path d="M96 58 Q110 50 124 58" stroke="#D4A843" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+
+      {/* Bottom-left node — Building/Architecture (green) */}
+      <motion.circle cx="50" cy="160" r="26"
+        fill="#EBF3EB" stroke="#6B9E6B" strokeWidth="1.5"
+        initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.3, ease }} />
+      {/* Building */}
+      <rect x="38" y="150" width="24" height="18" stroke="#6B9E6B" strokeWidth="1.2" fill="none" rx="0.5" />
+      <line x1="38" y1="155" x2="62" y2="155" stroke="#6B9E6B" strokeWidth="0.8" />
+      <line x1="38" y1="160" x2="62" y2="160" stroke="#6B9E6B" strokeWidth="0.8" />
+      <line x1="38" y1="165" x2="62" y2="165" stroke="#6B9E6B" strokeWidth="0.8" />
+      <path d="M32 150 L50 138 L68 150" stroke="#6B9E6B" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
+      {/* Bottom-right node — Tree/Nature (green) */}
+      <motion.circle cx="170" cy="160" r="26"
+        fill="#EBF3EB" stroke="#6B9E6B" strokeWidth="1.5"
+        initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.5, ease }} />
+      {/* Tree trunk */}
+      <line x1="170" y1="175" x2="170" y2="160" stroke="#6B9E6B" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Tree leaves */}
+      <path d="M170 160 C170 160 160 152 162 144 C164 136 178 136 178 144 C180 152 170 160 170 160Z" stroke="#6B9E6B" strokeWidth="1.2" fill="none" />
+      <line x1="158" y1="172" x2="182" y2="172" stroke="#6B9E6B" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
 
-// ── Environmental Icon ────────────────────────────────────────────────────────
-function EnvIcon({ animated }: { animated: boolean }) {
+// ── Human icon (large, gold/amber) ────────────────────────────────────────────
+function HumanIcon({ inView, customImage }: { inView: boolean; customImage: string | null }) {
+  if (customImage) return <img src={customImage} alt="Human" className="w-24 h-24 object-contain" />
   return (
-    <svg viewBox="0 0 80 80" fill="none" className="w-16 h-16">
+    <svg viewBox="0 0 100 110" className="w-24 h-auto" fill="none">
+      {/* Speech bubble body */}
       <motion.path
-        d="M40 70 L40 30"
-        stroke="#5B8C5A" strokeWidth="2.5" strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
+        d="M15 10 Q10 10 10 20 L10 75 Q10 85 20 85 L42 85 L50 98 L58 85 L80 85 Q90 85 90 75 L90 20 Q90 10 85 10 Z"
+        fill="#F5CC5A" stroke="#D4A843" strokeWidth="1"
+        initial={{ opacity: 0, scale: 0.7 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
         transition={{ duration: 0.6, ease }}
       />
-      <motion.path
-        d="M40 42 C40 42 24 36 24 20 C24 12 32 8 40 14 C48 8 56 12 56 20 C56 36 40 42 40 42Z"
-        stroke="#5B8C5A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 0.2, ease }}
+      {/* Head */}
+      <motion.circle cx="50" cy="38" r="14"
+        fill="#D4A843"
+        initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.3, ease }}
       />
-      <motion.path
-        d="M28 68 L52 68"
-        stroke="#5B8C5A" strokeWidth="2.5" strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.4, delay: 0.6, ease }}
+      {/* Shoulders */}
+      <motion.path d="M26 78 Q50 60 74 78"
+        stroke="#D4A843" strokeWidth="3" strokeLinecap="round" fill="none"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.4, ease }}
       />
     </svg>
   )
 }
 
-// ── Culture Icon ──────────────────────────────────────────────────────────────
-function CultureIcon({ animated }: { animated: boolean }) {
+// ── Environmental icon (trees, green) ────────────────────────────────────────
+function EnvIcon({ inView, customImage }: { inView: boolean; customImage: string | null }) {
+  if (customImage) return <img src={customImage} alt="Environmental" className="w-24 h-24 object-contain" />
+  const trees = [
+    { x: 25, h: 45, w: 8 },
+    { x: 38, h: 60, w: 10 },
+    { x: 52, h: 72, w: 12 },
+    { x: 67, h: 58, w: 10 },
+    { x: 80, h: 42, w: 8 },
+  ]
   return (
-    <svg viewBox="0 0 80 80" fill="none" className="w-16 h-16">
-      <motion.rect
-        x="22" y="30" width="36" height="38" rx="1"
-        stroke="#B1A490" strokeWidth="2.5"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.8, ease }}
-      />
-      <motion.path
-        d="M14 32 L40 12 L66 32"
-        stroke="#B1A490" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.7, delay: 0.3, ease }}
-      />
-      <motion.rect
-        x="34" y="50" width="12" height="18" rx="1"
-        stroke="#B1A490" strokeWidth="2"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.6, ease }}
-      />
-      <motion.rect
-        x="26" y="36" width="8" height="8" rx="0.5"
-        stroke="#B1A490" strokeWidth="1.5"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.4, delay: 0.8, ease }}
-      />
-      <motion.rect
-        x="46" y="36" width="8" height="8" rx="0.5"
-        stroke="#B1A490" strokeWidth="1.5"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={animated ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.4, delay: 0.9, ease }}
-      />
+    <svg viewBox="0 0 105 100" className="w-24 h-auto" fill="none">
+      {trees.map((t, i) => (
+        <motion.g key={i}
+          initial={{ opacity: 0, scaleY: 0 }} animate={inView ? { opacity: 1, scaleY: 1 } : {}}
+          style={{ originY: '100%' }}
+          transition={{ duration: 0.5, delay: 0.1 * i, ease }}>
+          {/* Trunk */}
+          <line x1={t.x + t.w / 2} y1="90" x2={t.x + t.w / 2} y2={90 - t.h * 0.3}
+            stroke="#5B8A5B" strokeWidth="2" strokeLinecap="round" />
+          {/* Leaves - multiple layers */}
+          <path d={`M${t.x} ${90 - t.h * 0.35} L${t.x + t.w / 2} ${90 - t.h} L${t.x + t.w} ${90 - t.h * 0.35} Z`}
+            fill="#6BAA6B" stroke="#4A7A4A" strokeWidth="0.5" />
+          <path d={`M${t.x + 1} ${90 - t.h * 0.55} L${t.x + t.w / 2} ${90 - t.h * 1.25} L${t.x + t.w - 1} ${90 - t.h * 0.55} Z`}
+            fill="#7CBB7C" stroke="#4A7A4A" strokeWidth="0.5" />
+          <path d={`M${t.x + 2} ${90 - t.h * 0.75} L${t.x + t.w / 2} ${90 - t.h * 1.5} L${t.x + t.w - 2} ${90 - t.h * 0.75} Z`}
+            fill="#8EC88E" stroke="#4A7A4A" strokeWidth="0.5" />
+          {/* Ground line */}
+          <line x1={t.x - 2} y1="90" x2={t.x + t.w + 2} y2="90"
+            stroke="#5B8A5B" strokeWidth="1.5" strokeLinecap="round" />
+        </motion.g>
+      ))}
     </svg>
   )
 }
 
-// ── Architectural grid background ─────────────────────────────────────────────
-function GridBackground() {
+// ── Culture icon (building, gold-green) ───────────────────────────────────────
+function CultureIcon({ inView, customImage }: { inView: boolean; customImage: string | null }) {
+  if (customImage) return <img src={customImage} alt="Culture" className="w-24 h-24 object-contain" />
   return (
-    <svg className="absolute inset-0 w-full h-full" aria-hidden>
+    <svg viewBox="0 0 80 100" className="w-20 h-auto" fill="none">
+      {/* Main tower */}
+      <motion.rect x="20" y="20" width="40" height="75" rx="1"
+        fill="#A8C89A" stroke="#6B9E6B" strokeWidth="1.2"
+        initial={{ pathLength: 0, opacity: 0 }} animate={inView ? { pathLength: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.7, ease }}
+      />
+      {/* Roof triangle */}
+      <motion.path d="M12 22 L40 4 L68 22"
+        stroke="#6B9E6B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.6, delay: 0.3, ease }}
+      />
+      {/* Window rows */}
+      {[30, 42, 54, 66].map((y, i) => (
+        <motion.g key={y}
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.3, delay: 0.4 + i * 0.08, ease }}>
+          <rect x="25" y={y} width="7" height="7" rx="0.5" fill="#D4A843" opacity="0.8" />
+          <rect x="37" y={y} width="7" height="7" rx="0.5" fill="#D4A843" opacity="0.8" />
+          <rect x="49" y={y} width="7" height="7" rx="0.5" fill="#D4A843" opacity="0.8" />
+        </motion.g>
+      ))}
+      {/* Door */}
+      <rect x="33" y="78" width="14" height="17" rx="1" fill="#5B7A5B" />
+    </svg>
+  )
+}
+
+// ── Section 3 — Node Diagram ──────────────────────────────────────────────────
+function NodeDiagram({ d, inView }: { d: PhilosophyData; inView: boolean }) {
+  // Layout constants (viewBox 0 0 700 280)
+  const NODE_COLOR = '#4A8C7A'
+  const LINE_COLOR = '#4A8C7A'
+  const TEXT_COLOR = '#333'
+
+  return (
+    <svg viewBox="0 0 700 280" className="w-full" fill="none">
+      {/* ── Lines first (drawn with animation) ── */}
+
+      {/* Nature → Design */}
+      <motion.line x1="95" y1="148" x2="178" y2="148"
+        stroke={LINE_COLOR} strokeWidth="1.5" markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.1, ease }} />
+
+      {/* Human Values → Design */}
+      <motion.line x1="223" y1="80" x2="223" y2="122"
+        stroke={LINE_COLOR} strokeWidth="1.2"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.3, ease }} />
+
+      {/* Arts → Design */}
+      <motion.line x1="223" y1="218" x2="223" y2="175"
+        stroke={LINE_COLOR} strokeWidth="1.2"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.35, ease }} />
+
+      {/* Design → Innovative Solutions (dashed) */}
+      <motion.line x1="268" y1="148" x2="340" y2="148"
+        stroke={LINE_COLOR} strokeWidth="1.2" strokeDasharray="5 3"
+        markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.5, ease }} />
+
+      {/* Innovative Solutions → Lightbulb */}
+      <motion.line x1="397" y1="148" x2="432" y2="148"
+        stroke={LINE_COLOR} strokeWidth="1.5" markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.65, ease }} />
+
+      {/* Lightbulb → Sustainability */}
+      <motion.line x1="468" y1="138" x2="510" y2="108"
+        stroke={LINE_COLOR} strokeWidth="1.2" markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.75, ease }} />
+
+      {/* Lightbulb → Creativity */}
+      <motion.line x1="470" y1="148" x2="510" y2="148"
+        stroke={LINE_COLOR} strokeWidth="1.2" markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.8, ease }} />
+
+      {/* Lightbulb → Uniqueness */}
+      <motion.line x1="468" y1="158" x2="510" y2="188"
+        stroke={LINE_COLOR} strokeWidth="1.2" markerEnd="url(#arrow)"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.85, ease }} />
+
+      {/* Sustainability → Happiness */}
+      <motion.line x1="580" y1="100" x2="618" y2="88"
+        stroke={LINE_COLOR} strokeWidth="1.2"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.95, ease }} />
+
+      {/* Uniqueness → Resilience */}
+      <motion.line x1="580" y1="196" x2="618" y2="208"
+        stroke={LINE_COLOR} strokeWidth="1.2"
+        initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+        transition={{ duration: 0.4, delay: 1, ease }} />
+
+      {/* Arrowhead marker */}
       <defs>
-        <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="0.4" />
-        </pattern>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill={LINE_COLOR} />
+        </marker>
       </defs>
-      <rect width="100%" height="100%" fill="url(#grid)" className="text-gray-300" />
-    </svg>
-  )
-}
 
-// ── Node component ────────────────────────────────────────────────────────────
-function Node({
-  label, color, delay, inView, size = 'md',
-}: {
-  label: string; color: string; delay: number; inView: boolean; size?: 'sm' | 'md' | 'lg'
-}) {
-  const sz = size === 'lg' ? 'w-20 h-20' : size === 'sm' ? 'w-12 h-12' : 'w-16 h-16'
-  const txt = size === 'lg' ? 'text-sm' : 'text-xs'
-  return (
-    <motion.div
-      className="flex flex-col items-center gap-2"
-      initial={{ opacity: 0, scale: 0.6 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.5, delay, ease }}
-    >
-      <div
-        className={`${sz} rounded-full border-2 flex items-center justify-center`}
-        style={{ borderColor: color, backgroundColor: `${color}18` }}
-      >
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-      </div>
-      <span className={`${txt} font-medium tracking-wide text-center`} style={{ color }}>
-        {label}
-      </span>
-    </motion.div>
-  )
-}
+      {/* ── Nodes ── */}
 
-// ── Connecting SVG line ───────────────────────────────────────────────────────
-function AnimatedLine({ inView, delay = 0, className = '' }: { inView: boolean; delay?: number; className?: string }) {
-  return (
-    <svg className={`absolute ${className}`} viewBox="0 0 200 2" preserveAspectRatio="none">
-      <motion.line
-        x1="0" y1="1" x2="200" y2="1"
-        stroke="#B1A490" strokeWidth="1"
-        strokeDasharray="4 4"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 1 } : {}}
-        transition={{ duration: 1, delay, ease }}
-      />
+      {/* Nature */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '50px 148px' }} transition={{ duration: 0.4, ease }}>
+        <circle cx="50" cy="148" r="28" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Tree icon */}
+        <line x1="50" y1="168" x2="50" y2="154" stroke={NODE_COLOR} strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M50 154 C50 154 41 147 43 139 C45 131 57 131 57 139 C59 147 50 154 50 154Z" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <line x1="42" y1="166" x2="58" y2="166" stroke={NODE_COLOR} strokeWidth="1.5" strokeLinecap="round" />
+        <text x="50" y="188" textAnchor="middle" fontSize="10" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramNature}</text>
+      </motion.g>
+
+      {/* Human Values */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '223px 60px' }} transition={{ duration: 0.4, delay: 0.2, ease }}>
+        <circle cx="223" cy="60" r="22" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Clock/compass icon */}
+        <circle cx="223" cy="60" r="10" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <line x1="223" y1="54" x2="223" y2="60" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="223" y1="60" x2="228" y2="63" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" />
+        <text x="223" y="95" textAnchor="middle" fontSize="9.5" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramHumanValues.split(' ').map((w, i) =>
+          `${w}${i === 0 && d.diagramHumanValues.includes(' ') ? '\n' : ''}`
+        ).join('')}</text>
+        <text x="223" y="95" textAnchor="middle" fontSize="9.5" fill={TEXT_COLOR} fontFamily="sans-serif">
+          <tspan x="223" dy="0">{d.diagramHumanValues.split(' ')[0]}</tspan>
+          {d.diagramHumanValues.split(' ').length > 1 && (
+            <tspan x="223" dy="12">{d.diagramHumanValues.split(' ').slice(1).join(' ')}</tspan>
+          )}
+        </text>
+      </motion.g>
+
+      {/* Design (larger central node) */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '223px 148px' }} transition={{ duration: 0.5, delay: 0.25, ease }}>
+        <circle cx="223" cy="148" r="30" stroke={NODE_COLOR} strokeWidth="2" fill="#D8EDE6" />
+        {/* Building icon */}
+        <rect x="213" y="136" width="20" height="22" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" rx="0.5" />
+        <path d="M209 138 L223 128 L237 138" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <line x1="218" y1="140" x2="222" y2="140" stroke={NODE_COLOR} strokeWidth="0.8" />
+        <line x1="218" y1="145" x2="222" y2="145" stroke={NODE_COLOR} strokeWidth="0.8" />
+        <line x1="224" y1="140" x2="228" y2="140" stroke={NODE_COLOR} strokeWidth="0.8" />
+        <line x1="224" y1="145" x2="228" y2="145" stroke={NODE_COLOR} strokeWidth="0.8" />
+        <text x="223" y="192" textAnchor="middle" fontSize="11" fontWeight="600" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramDesign}</text>
+      </motion.g>
+
+      {/* Arts */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '223px 228px' }} transition={{ duration: 0.4, delay: 0.3, ease }}>
+        <circle cx="223" cy="228" r="22" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Decorative arts icon (star/flower) */}
+        <circle cx="223" cy="228" r="8" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <path d="M223 218 L225 225 L223 228 L221 225 Z" fill={NODE_COLOR} opacity="0.5" />
+        <path d="M233 228 L226 226 L223 228 L226 230 Z" fill={NODE_COLOR} opacity="0.5" />
+        <path d="M223 238 L221 231 L223 228 L225 231 Z" fill={NODE_COLOR} opacity="0.5" />
+        <path d="M213 228 L220 230 L223 228 L220 226 Z" fill={NODE_COLOR} opacity="0.5" />
+        <text x="223" y="262" textAnchor="middle" fontSize="9.5" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramArts}</text>
+      </motion.g>
+
+      {/* Innovative Solutions label */}
+      <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.55, ease }}>
+        <text x="368" y="142" textAnchor="middle" fontSize="9" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramInnovative.split(' ')[0]}</text>
+        <text x="368" y="154" textAnchor="middle" fontSize="9" fill={TEXT_COLOR} fontFamily="sans-serif">{d.diagramInnovative.split(' ').slice(1).join(' ')}</text>
+      </motion.g>
+
+      {/* Lightbulb node */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '450px 148px' }} transition={{ duration: 0.4, delay: 0.7, ease }}>
+        <circle cx="450" cy="148" r="22" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Lightbulb icon */}
+        <path d="M450 138 C445 138 441 142 441 147 C441 151 443 154 446 156 L446 160 L454 160 L454 156 C457 154 459 151 459 147 C459 142 455 138 450 138Z"
+          stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <line x1="446" y1="162" x2="454" y2="162" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="447" y1="165" x2="453" y2="165" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" />
+      </motion.g>
+
+      {/* Sustainability */}
+      <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.3, delay: 0.8, ease }}>
+        <text x="545" y="105" textAnchor="start" fontSize="10" fill={TEXT_COLOR} fontFamily="sans-serif" fontWeight="500">{d.solution1}</text>
+      </motion.g>
+
+      {/* Creativity */}
+      <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.3, delay: 0.85, ease }}>
+        <text x="545" y="152" textAnchor="start" fontSize="10" fill={TEXT_COLOR} fontFamily="sans-serif" fontWeight="500">{d.solution2}</text>
+      </motion.g>
+
+      {/* Uniqueness */}
+      <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.3, delay: 0.9, ease }}>
+        <text x="545" y="198" textAnchor="start" fontSize="10" fill={TEXT_COLOR} fontFamily="sans-serif" fontWeight="500">{d.solution3}</text>
+      </motion.g>
+
+      {/* Happiness node */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '638px 80px' }} transition={{ duration: 0.4, delay: 1, ease }}>
+        <circle cx="638" cy="80" r="22" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Person icon */}
+        <circle cx="638" cy="72" r="6" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <path d="M628 92 Q638 84 648 92" stroke={NODE_COLOR} strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <text x="638" y="114" textAnchor="middle" fontSize="9.5" fill={TEXT_COLOR} fontFamily="sans-serif">{d.outcome1}</text>
+      </motion.g>
+
+      {/* Resilience node */}
+      <motion.g initial={{ opacity: 0, scale: 0.5 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+        style={{ transformOrigin: '638px 215px' }} transition={{ duration: 0.4, delay: 1.05, ease }}>
+        <circle cx="638" cy="215" r="22" stroke={NODE_COLOR} strokeWidth="1.5" fill="#EBF5F0" />
+        {/* Tree icon */}
+        <line x1="638" y1="230" x2="638" y2="218" stroke={NODE_COLOR} strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M638 218 C638 218 630 211 632 204 C634 197 644 197 644 204 C646 211 638 218 638 218Z" stroke={NODE_COLOR} strokeWidth="1.2" fill="none" />
+        <line x1="631" y1="227" x2="645" y2="227" stroke={NODE_COLOR} strokeWidth="1.5" strokeLinecap="round" />
+        <text x="638" y="250" textAnchor="middle" fontSize="9.5" fill={TEXT_COLOR} fontFamily="sans-serif">{d.outcome2}</text>
+      </motion.g>
     </svg>
   )
 }
@@ -232,470 +417,148 @@ export default function PhilosophyPage() {
   useEffect(() => {
     fetch('/api/philosophy')
       .then(r => r.ok ? r.json() : DEFAULTS)
-      .then((d: PhilosophyData) => setData({ ...DEFAULTS, ...d }))
+      .then((d: Partial<PhilosophyData>) => setData({ ...DEFAULTS, ...d }))
       .catch(() => {})
   }, [])
 
-  // Section refs for inView
-  const heroRef = useRef(null)
-  const introRef = useRef(null)
-  const foundationsRef = useRef(null)
-  const transformRef = useRef(null)
-  const solutionsRef = useRef(null)
-  const finalRef = useRef(null)
-
-  const introInView = useInView(introRef, { once: true, margin: '-80px' })
-  const foundationsInView = useInView(foundationsRef, { once: true, margin: '-60px' })
-  const transformInView = useInView(transformRef, { once: true, margin: '-60px' })
-  const solutionsInView = useInView(solutionsRef, { once: true, margin: '-60px' })
-  const finalInView = useInView(finalRef, { once: true, margin: '-60px' })
-
-  // Parallax on hero title
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-
-  const solutions = [data.solution1, data.solution2, data.solution3, data.solution4]
-  const solutionColors = ['#C9A24D', '#5B8C5A', '#B1A490', '#181C23']
+  const sec1Ref = useRef(null)
+  const sec2Ref = useRef(null)
+  const sec3Ref = useRef(null)
+  const sec1In  = useInView(sec1Ref,  { once: true, margin: '-60px' })
+  const sec2In  = useInView(sec2Ref,  { once: true, margin: '-60px' })
+  const sec3In  = useInView(sec3Ref,  { once: true, margin: '-60px' })
 
   return (
-    <div className="bg-white overflow-x-hidden">
+    <div className="bg-white">
       <Navbar />
 
-      {/* ═══════════════════════════════════════════════════════════
-          1. HERO
-      ═══════════════════════════════════════════════════════════ */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#F8F7F4]"
-      >
-        <GridBackground />
+      {/* ═══════════════════════════════════════════════════
+          SECTION 1 — Our Philosophy / Intro + Triangle diagram
+      ═══════════════════════════════════════════════════ */}
+      <section ref={sec1Ref} className="pt-[var(--nav-h)] border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-8 py-14 grid md:grid-cols-[1fr_auto] gap-10 items-start">
 
-        {/* Decorative corner lines */}
-        <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-[#B1A490]/30" />
-        <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-[#B1A490]/30" />
-
-        <motion.div
-          style={{ y: heroY, opacity: heroOpacity }}
-          className="relative z-10 text-center px-6 max-w-4xl mx-auto"
-        >
-          {/* Eyebrow */}
-          <motion.p
-            variants={fadeIn} initial="hidden" animate="show" custom={0}
-            className="text-xs font-semibold tracking-[0.3em] text-[#B1A490] uppercase mb-6"
-          >
-            Our Philosophy
-          </motion.p>
-
-          {/* Main title */}
-          <motion.h1
-            variants={fadeUp} initial="hidden" animate="show" custom={1}
-            className="font-[var(--font-merriweather)] text-5xl md:text-7xl font-bold text-[#181C23] leading-tight mb-8"
-          >
-            {data.heroTitle}
-          </motion.h1>
-
-          {/* Accent line */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4, ease }}
-            className="w-16 h-0.5 bg-[#B1A490] mx-auto mb-8 origin-left"
-          />
-
-          {/* Subtitle */}
-          <motion.p
-            variants={fadeUp} initial="hidden" animate="show" custom={3}
-            className="text-lg md:text-xl text-[#666] font-[var(--font-open-sans)] max-w-xl mx-auto leading-relaxed"
-          >
-            {data.heroSubtitle}
-          </motion.p>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        >
-          <span className="text-[10px] tracking-[0.25em] text-[#B1A490] uppercase">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-            className="w-px h-10 bg-gradient-to-b from-[#B1A490] to-transparent"
-          />
-        </motion.div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════
-          2. WHAT WE BELIEVE IN — INTRO
-      ═══════════════════════════════════════════════════════════ */}
-      <section ref={introRef} className="py-28 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+          {/* Left: text */}
           <div>
-            <motion.p
-              variants={fadeIn} initial="hidden" animate={introInView ? 'show' : 'hidden'} custom={0}
-              className="text-xs font-semibold tracking-[0.3em] text-[#B1A490] uppercase mb-4"
+            <motion.h1
+              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={0}
+              className="font-[var(--font-franklin-gothic)] text-5xl md:text-6xl font-bold text-[#181C23] leading-tight mb-1"
             >
-              What We Believe In
+              {data.heroTitle}
+            </motion.h1>
+            <motion.p
+              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={1}
+              className="text-[#4A7A4A] font-[var(--font-open-sans)] text-lg font-semibold italic mb-6"
+            >
+              {data.heroSubtitle}
             </motion.p>
-            <motion.h2
-              variants={fadeUp} initial="hidden" animate={introInView ? 'show' : 'hidden'} custom={1}
-              className="font-[var(--font-merriweather)] text-3xl md:text-4xl font-bold text-[#181C23] mb-8 leading-tight"
-            >
-              Design rooted in purpose,<br />not just aesthetics.
-            </motion.h2>
             <motion.p
-              variants={fadeUp} initial="hidden" animate={introInView ? 'show' : 'hidden'} custom={2}
-              className="text-[#666] leading-relaxed text-base md:text-lg font-[var(--font-open-sans)]"
+              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={2}
+              className="text-[#333] font-[var(--font-open-sans)] text-sm leading-relaxed text-justify max-w-lg"
             >
               {data.introText}
             </motion.p>
           </div>
 
-          {/* Visual — diagram or image */}
+          {/* Right: triangle diagram */}
           <motion.div
-            variants={fadeUp} initial="hidden" animate={introInView ? 'show' : 'hidden'} custom={3}
-            className="flex items-center justify-center"
+            variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={3}
+            className="w-52 flex-shrink-0 pt-2"
           >
-            {data.introImage ? (
-              <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden">
-                <Image src={data.introImage} alt="Philosophy diagram" fill className="object-contain" />
-              </div>
-            ) : (
-              /* Default architectural diagram */
-              <svg viewBox="0 0 300 300" className="w-64 h-64 opacity-60">
-                <circle cx="150" cy="80" r="32" stroke="#C9A24D" strokeWidth="1.5" fill="none" strokeDasharray="4 3" />
-                <circle cx="80" cy="220" r="32" stroke="#5B8C5A" strokeWidth="1.5" fill="none" strokeDasharray="4 3" />
-                <circle cx="220" cy="220" r="32" stroke="#B1A490" strokeWidth="1.5" fill="none" strokeDasharray="4 3" />
-                <line x1="150" y1="112" x2="100" y2="190" stroke="#B1A490" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="150" y1="112" x2="200" y2="190" stroke="#B1A490" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="112" y1="220" x2="188" y2="220" stroke="#B1A490" strokeWidth="1" strokeDasharray="3 3" />
-                <text x="150" y="84" textAnchor="middle" fontSize="9" fill="#C9A24D" fontFamily="serif">Human</text>
-                <text x="80" y="224" textAnchor="middle" fontSize="9" fill="#5B8C5A" fontFamily="serif">Nature</text>
-                <text x="220" y="224" textAnchor="middle" fontSize="9" fill="#B1A490" fontFamily="serif">Culture</text>
-              </svg>
-            )}
+            <TriangleDiagram inView={sec1In} />
           </motion.div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════
-          3. THREE FOUNDATIONS
-      ═══════════════════════════════════════════════════════════ */}
-      <section ref={foundationsRef} className="py-24 bg-[#F5F4F1] px-6 overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <motion.p
-            variants={fadeIn} initial="hidden" animate={foundationsInView ? 'show' : 'hidden'}
-            className="text-xs font-semibold tracking-[0.3em] text-[#B1A490] uppercase mb-4 text-center"
-          >
-            The Three Foundations
-          </motion.p>
-          <motion.h2
-            variants={fadeUp} initial="hidden" animate={foundationsInView ? 'show' : 'hidden'} custom={1}
-            className="font-[var(--font-merriweather)] text-3xl md:text-4xl font-bold text-[#181C23] text-center mb-20"
-          >
-            Every project is shaped by three forces.
-          </motion.h2>
+      {/* ═══════════════════════════════════════════════════
+          SECTION 2 — Three Foundations: Human & Environmental & Culture
+      ═══════════════════════════════════════════════════ */}
+      <section ref={sec2Ref} className="bg-[#F2F0EB] border-t-4 border-b-4 border-[#5B8A5B]">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-3 divide-x divide-[#D5D0C8]">
 
-          {/* Foundation cards */}
-          <div className="relative grid md:grid-cols-3 gap-0">
-
-            {/* Card 1 — Human */}
+            {/* Column 1 — Human */}
             <motion.div
-              variants={fadeUp} initial="hidden" animate={foundationsInView ? 'show' : 'hidden'} custom={0}
-              className="flex flex-col items-center text-center px-10 py-12 relative"
+              variants={fadeUp} initial="hidden" animate={sec2In ? 'show' : 'hidden'} custom={0}
+              className="flex flex-col items-center text-center px-8"
             >
-              <div className="mb-6">
-                <HumanIcon animated={foundationsInView} />
+              <div className="mb-6 flex items-end justify-center h-28">
+                <HumanIcon inView={sec2In} customImage={data.humanImage} />
               </div>
-              <h3 className="font-[var(--font-merriweather)] text-xl font-bold text-[#181C23] mb-4 tracking-wide">
+              <h3 className="font-[var(--font-franklin-gothic)] text-xl font-bold text-[#181C23] tracking-wider mb-3">
                 {data.humanTitle}
               </h3>
-              <p className="text-[#666] text-sm leading-relaxed font-[var(--font-open-sans)]">
+              <p className="text-[#555] text-sm leading-relaxed font-[var(--font-open-sans)]">
                 {data.humanDescription}
               </p>
             </motion.div>
 
-            {/* Separator & */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={foundationsInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.4, ease }}
-              className="hidden md:flex items-center justify-center absolute left-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-            >
-              <span className="text-4xl font-light text-[#5B8C5A] select-none">&amp;</span>
-            </motion.div>
-
-            {/* Card 2 — Environmental */}
-            <motion.div
-              variants={fadeUp} initial="hidden" animate={foundationsInView ? 'show' : 'hidden'} custom={1}
-              className="flex flex-col items-center text-center px-10 py-12 relative border-t md:border-t-0 md:border-x border-[#E0DDD8]"
-            >
-              <div className="mb-6">
-                <EnvIcon animated={foundationsInView} />
-              </div>
-              <h3 className="font-[var(--font-merriweather)] text-xl font-bold text-[#181C23] mb-4 tracking-wide">
-                {data.envTitle}
-              </h3>
-              <p className="text-[#666] text-sm leading-relaxed font-[var(--font-open-sans)]">
-                {data.envDescription}
-              </p>
-            </motion.div>
-
-            {/* Separator & */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={foundationsInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.6, ease }}
-              className="hidden md:flex items-center justify-center absolute left-2/3 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-            >
-              <span className="text-4xl font-light text-[#5B8C5A] select-none">&amp;</span>
-            </motion.div>
-
-            {/* Card 3 — Culture */}
-            <motion.div
-              variants={fadeUp} initial="hidden" animate={foundationsInView ? 'show' : 'hidden'} custom={2}
-              className="flex flex-col items-center text-center px-10 py-12 border-t md:border-t-0"
-            >
-              <div className="mb-6">
-                <CultureIcon animated={foundationsInView} />
-              </div>
-              <h3 className="font-[var(--font-merriweather)] text-xl font-bold text-[#181C23] mb-4 tracking-wide">
-                {data.cultureTitle}
-              </h3>
-              <p className="text-[#666] text-sm leading-relaxed font-[var(--font-open-sans)]">
-                {data.cultureDescription}
-              </p>
-            </motion.div>
-          </div>
-
-          {/* Connecting line */}
-          <div className="relative h-px mt-4 hidden md:block">
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#C9A24D] via-[#5B8C5A] to-[#B1A490]"
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={foundationsInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1.2, delay: 0.8, ease }}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════
-          4. TRANSFORMATION MOMENT
-      ═══════════════════════════════════════════════════════════ */}
-      <section ref={transformRef} className="py-32 bg-[#181C23] relative overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={transformInView ? { opacity: 0.15, scale: 1 } : {}}
-            transition={{ duration: 1.5, ease }}
-            className="w-96 h-96 rounded-full bg-[#B1A490] blur-3xl"
-          />
-        </div>
-
-        <div className="relative max-w-4xl mx-auto px-6 text-center">
-          {/* Three dots converging */}
-          <div className="flex items-center justify-center gap-8 mb-16">
-            {[
-              { color: '#C9A24D', delay: 0, x: -60 },
-              { color: '#5B8C5A', delay: 0.15, x: 0 },
-              { color: '#B1A490', delay: 0.3, x: 60 },
-            ].map((dot, i) => (
+            {/* Ampersand + Column 2 — Environmental */}
+            <div className="relative">
+              {/* Left & */}
               <motion.div
-                key={i}
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: dot.color }}
-                initial={{ opacity: 0, x: dot.x }}
-                animate={transformInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.8, delay: dot.delay, ease }}
-              />
-            ))}
-          </div>
-
-          {/* Central design node */}
-          <motion.div
-            className="relative inline-flex items-center justify-center mb-12"
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={transformInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.5, ease }}
-          >
-            <motion.div
-              className="w-24 h-24 rounded-full border-2 border-[#B1A490]/40 absolute"
-              animate={transformInView ? { scale: [1, 1.3, 1], opacity: [0.4, 0.1, 0.4] } : {}}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            />
-            <motion.div
-              className="w-20 h-20 rounded-full border-2 border-[#B1A490]/60 absolute"
-              animate={transformInView ? { scale: [1, 1.15, 1], opacity: [0.6, 0.2, 0.6] } : {}}
-              transition={{ repeat: Infinity, duration: 2.5, delay: 0.3, ease: 'easeInOut' }}
-            />
-            <div className="w-14 h-14 rounded-full bg-[#B1A490]/20 border border-[#B1A490] flex items-center justify-center relative z-10">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-[#B1A490]" fill="none" strokeWidth="1.5">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </motion.div>
-
-          {/* Transformation text */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={transformInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.8, ease }}
-            className="text-xs font-semibold tracking-[0.3em] text-[#B1A490]/70 uppercase mb-4"
-          >
-            The Convergence
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={transformInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 1, ease }}
-            className="font-[var(--font-merriweather)] text-3xl md:text-5xl font-bold text-white leading-tight"
-          >
-            {data.transformationText}
-          </motion.h2>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════
-          5. DESIGN FLOW — SOLUTIONS
-      ═══════════════════════════════════════════════════════════ */}
-      <section ref={solutionsRef} className="py-28 bg-white px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.p
-            variants={fadeIn} initial="hidden" animate={solutionsInView ? 'show' : 'hidden'}
-            className="text-xs font-semibold tracking-[0.3em] text-[#B1A490] uppercase mb-4 text-center"
-          >
-            Design Flow
-          </motion.p>
-          <motion.h2
-            variants={fadeUp} initial="hidden" animate={solutionsInView ? 'show' : 'hidden'} custom={1}
-            className="font-[var(--font-merriweather)] text-3xl md:text-4xl font-bold text-[#181C23] text-center mb-20"
-          >
-            From insight, solutions emerge.
-          </motion.h2>
-
-          {/* Node diagram */}
-          <div className="flex flex-col items-center gap-8">
-            {/* Central Design Node */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={solutionsInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.6, ease }}
-              className="flex flex-col items-center gap-2"
-            >
-              <div className="w-20 h-20 rounded-full border-2 border-[#181C23] bg-[#181C23]/5 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-7 h-7 stroke-[#181C23]" fill="none" strokeWidth="1.5">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round" />
-                </svg>
-              </div>
-              <span className="text-sm font-bold tracking-widest text-[#181C23] uppercase">Design</span>
-            </motion.div>
-
-            {/* Arrow down */}
-            <motion.div
-              initial={{ opacity: 0, scaleY: 0 }}
-              animate={solutionsInView ? { opacity: 1, scaleY: 1 } : {}}
-              transition={{ duration: 0.4, delay: 0.3, ease }}
-              className="flex flex-col items-center gap-1 origin-top"
-            >
-              <div className="w-px h-8 bg-[#B1A490]" />
-              <div className="w-2 h-2 rotate-45 border-r-2 border-b-2 border-[#B1A490] -mt-2" />
-            </motion.div>
-
-            {/* Innovative Solutions label */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={solutionsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.5, ease }}
-              className="px-6 py-2 border border-[#B1A490]/40 rounded-full"
-            >
-              <span className="text-xs tracking-[0.2em] text-[#B1A490] uppercase font-medium">Innovative Solutions</span>
-            </motion.div>
-
-            {/* Arrow down */}
-            <motion.div
-              initial={{ opacity: 0, scaleY: 0 }}
-              animate={solutionsInView ? { opacity: 1, scaleY: 1 } : {}}
-              transition={{ duration: 0.4, delay: 0.7, ease }}
-              className="flex flex-col items-center gap-1 origin-top"
-            >
-              <div className="w-px h-8 bg-[#B1A490]" />
-              <div className="w-2 h-2 rotate-45 border-r-2 border-b-2 border-[#B1A490] -mt-2" />
-            </motion.div>
-
-            {/* 4 solution nodes */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-full max-w-2xl">
-              {solutions.map((s, i) => (
-                <Node
-                  key={i}
-                  label={s}
-                  color={solutionColors[i]}
-                  delay={0.8 + i * 0.12}
-                  inView={solutionsInView}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════
-          6. FINAL IMPACT
-      ═══════════════════════════════════════════════════════════ */}
-      <section ref={finalRef} className="py-32 bg-[#F5F4F1] px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.p
-            variants={fadeIn} initial="hidden" animate={finalInView ? 'show' : 'hidden'}
-            className="text-xs font-semibold tracking-[0.3em] text-[#B1A490] uppercase mb-4"
-          >
-            The Outcome
-          </motion.p>
-          <motion.h2
-            variants={fadeUp} initial="hidden" animate={finalInView ? 'show' : 'hidden'} custom={1}
-            className="font-[var(--font-merriweather)] text-3xl md:text-4xl font-bold text-[#181C23] mb-16"
-          >
-            Every decision leads to lasting impact.
-          </motion.h2>
-
-          {/* Outcome nodes */}
-          <div className="flex items-center justify-center gap-16 mb-20">
-            <Node label={data.outcome1} color="#C9A24D" delay={0.3} inView={finalInView} size="lg" />
-
-            {/* Connecting line */}
-            <motion.div
-              className="flex-1 max-w-32 h-px bg-gradient-to-r from-[#C9A24D] to-[#5B8C5A]"
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={finalInView ? { scaleX: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.6, ease }}
-            />
-
-            <Node label={data.outcome2} color="#5B8C5A" delay={0.5} inView={finalInView} size="lg" />
-          </div>
-
-          {/* Final message */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={finalInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.8, ease }}
-          >
-            <div className="w-12 h-0.5 bg-[#B1A490] mx-auto mb-8" />
-            {data.finalMessage.split('\n').map((line, i) => (
-              <p
-                key={i}
-                className={`font-[var(--font-merriweather)] ${i === 0
-                  ? 'text-2xl md:text-3xl font-bold text-[#181C23]'
-                  : 'text-2xl md:text-3xl font-bold text-[#B1A490]'
-                  } leading-snug`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={sec2In ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: 0.3, ease }}
+                className="absolute -left-6 top-8 z-10 text-4xl font-light text-[#5B8A5B] select-none leading-none"
               >
-                {line}
-              </p>
-            ))}
-          </motion.div>
+                &amp;
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp} initial="hidden" animate={sec2In ? 'show' : 'hidden'} custom={1}
+                className="flex flex-col items-center text-center px-8"
+              >
+                <div className="mb-6 flex items-end justify-center h-28">
+                  <EnvIcon inView={sec2In} customImage={data.envImage} />
+                </div>
+                <h3 className="font-[var(--font-franklin-gothic)] text-xl font-bold text-[#181C23] tracking-wider mb-3">
+                  {data.envTitle}
+                </h3>
+                <p className="text-[#555] text-sm leading-relaxed font-[var(--font-open-sans)]">
+                  {data.envDescription}
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Right & + Column 3 — Culture */}
+            <div className="relative">
+              {/* Right & */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={sec2In ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: 0.5, ease }}
+                className="absolute -left-6 top-8 z-10 text-4xl font-light text-[#5B8A5B] select-none leading-none"
+              >
+                &amp;
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp} initial="hidden" animate={sec2In ? 'show' : 'hidden'} custom={2}
+                className="flex flex-col items-center text-center px-8"
+              >
+                <div className="mb-6 flex items-end justify-center h-28">
+                  <CultureIcon inView={sec2In} customImage={data.cultureImage} />
+                </div>
+                <h3 className="font-[var(--font-franklin-gothic)] text-xl font-bold text-[#181C23] tracking-wider mb-3">
+                  {data.cultureTitle}
+                </h3>
+                <p className="text-[#555] text-sm leading-relaxed font-[var(--font-open-sans)]">
+                  {data.cultureDescription}
+                </p>
+              </motion.div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 3 — Node Diagram
+      ═══════════════════════════════════════════════════ */}
+      <section ref={sec3Ref} className="border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <NodeDiagram d={data} inView={sec3In} />
         </div>
       </section>
 

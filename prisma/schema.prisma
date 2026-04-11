@@ -304,18 +304,17 @@ model PhilosophyPage {
   // Transformation moment
   transformationText String?  @db.Text
 
-  // Four solution nodes
-  solution1          String   @default("Innovation")
-  solution2          String   @default("Sustainability")
-  solution3          String   @default("Creativity")
-  solution4          String   @default("Uniqueness")
-
-  // Two outcome nodes
+  // Section 3 diagram – node labels
+  diagramNature      String   @default("Nature")
+  diagramHumanValues String   @default("Human Values")
+  diagramArts        String   @default("Arts")
+  diagramDesign      String   @default("Design")
+  diagramInnovative  String   @default("Innovative Solutions")
+  solution1          String   @default("Sustainability")
+  solution2          String   @default("Creativity")
+  solution3          String   @default("Uniqueness")
   outcome1           String   @default("Happiness")
   outcome2           String   @default("Resilience")
-
-  // Final message
-  finalMessage       String?  @db.Text
 
   updatedAt          DateTime @updatedAt
 }

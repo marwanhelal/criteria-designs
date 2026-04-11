@@ -291,7 +291,7 @@ export async function POST() {
       }
     }
 
-    // 22. Create PhilosophyPage table
+    // 22. Create PhilosophyPage table (initial structure)
     try {
       await prisma.$executeRawUnsafe(`
         CREATE TABLE IF NOT EXISTS "PhilosophyPage" (
@@ -324,6 +324,33 @@ export async function POST() {
       results.push('✓ PhilosophyPage table ensured')
     } catch (e) {
       results.push(`✗ PhilosophyPage table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
+    // 23. Add new diagram label columns to PhilosophyPage
+    const philoCols: Array<[string, string]> = [
+      ['diagramNature',      'Nature'],
+      ['diagramHumanValues', 'Human Values'],
+      ['diagramArts',        'Arts'],
+      ['diagramDesign',      'Design'],
+      ['diagramInnovative',  'Innovative Solutions'],
+    ]
+    for (const [col, def] of philoCols) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "PhilosophyPage" ADD COLUMN IF NOT EXISTS "${col}" TEXT NOT NULL DEFAULT '${def}';`
+        )
+        results.push(`✓ PhilosophyPage.${col} ensured`)
+      } catch (e) {
+        results.push(`✗ PhilosophyPage.${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+    // Drop solution4/finalMessage/transformationText columns if they exist (cleanup)
+    for (const col of ['solution4', 'finalMessage', 'transformationText']) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "PhilosophyPage" DROP COLUMN IF EXISTS "${col}";`
+        )
+      } catch { /* ignore */ }
     }
 
     return NextResponse.json({ success: true, results })
