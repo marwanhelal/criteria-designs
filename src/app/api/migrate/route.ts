@@ -291,6 +291,41 @@ export async function POST() {
       }
     }
 
+    // 22. Create PhilosophyPage table
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "PhilosophyPage" (
+          "id"                 TEXT NOT NULL DEFAULT 'main',
+          "heroTitle"          TEXT NOT NULL DEFAULT 'The Soul of Our Design',
+          "heroSubtitle"       TEXT,
+          "introText"          TEXT,
+          "introImage"         TEXT,
+          "humanTitle"         TEXT NOT NULL DEFAULT 'HUMAN',
+          "humanDescription"   TEXT,
+          "humanImage"         TEXT,
+          "envTitle"           TEXT NOT NULL DEFAULT 'ENVIRONMENTAL',
+          "envDescription"     TEXT,
+          "envImage"           TEXT,
+          "cultureTitle"       TEXT NOT NULL DEFAULT 'CULTURE',
+          "cultureDescription" TEXT,
+          "cultureImage"       TEXT,
+          "transformationText" TEXT,
+          "solution1"          TEXT NOT NULL DEFAULT 'Innovation',
+          "solution2"          TEXT NOT NULL DEFAULT 'Sustainability',
+          "solution3"          TEXT NOT NULL DEFAULT 'Creativity',
+          "solution4"          TEXT NOT NULL DEFAULT 'Uniqueness',
+          "outcome1"           TEXT NOT NULL DEFAULT 'Happiness',
+          "outcome2"           TEXT NOT NULL DEFAULT 'Resilience',
+          "finalMessage"       TEXT,
+          "updatedAt"          TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "PhilosophyPage_pkey" PRIMARY KEY ("id")
+        );
+      `)
+      results.push('✓ PhilosophyPage table ensured')
+    } catch (e) {
+      results.push(`✗ PhilosophyPage table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

@@ -15,6 +15,7 @@ import {
   Building2,
   Award,
   BookOpen,
+  Lightbulb,
 } from 'lucide-react'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -24,6 +25,7 @@ const sidebarItems = [
   { name: 'About Us', href: '/admin/about', icon: BookOpen },
   { name: 'Projects', href: '/admin/projects', icon: FolderKanban },
   { name: 'Team', href: '/admin/team', icon: Users },
+  { name: 'Philosophy', href: '/admin/philosophy', icon: Lightbulb },
   { name: 'Clients', href: '/admin/clients', icon: Building2 },
   { name: 'Awards', href: '/admin/awards', icon: Award },
   { name: 'Blog', href: '/admin/blog', icon: FileText },

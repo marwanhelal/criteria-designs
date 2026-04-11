@@ -273,6 +273,53 @@ model Award {
   updatedAt  DateTime @updatedAt
 }
 
+// ==================== PHILOSOPHY PAGE ====================
+
+model PhilosophyPage {
+  id                 String   @id @default("main")
+
+  // Hero
+  heroTitle          String   @default("The Soul of Our Design")
+  heroSubtitle       String?  @db.Text
+
+  // Intro
+  introText          String?  @db.Text
+  introImage         String?
+
+  // Foundation 1 – Human
+  humanTitle         String   @default("HUMAN")
+  humanDescription   String?  @db.Text
+  humanImage         String?
+
+  // Foundation 2 – Environment
+  envTitle           String   @default("ENVIRONMENTAL")
+  envDescription     String?  @db.Text
+  envImage           String?
+
+  // Foundation 3 – Culture
+  cultureTitle       String   @default("CULTURE")
+  cultureDescription String?  @db.Text
+  cultureImage       String?
+
+  // Transformation moment
+  transformationText String?  @db.Text
+
+  // Four solution nodes
+  solution1          String   @default("Innovation")
+  solution2          String   @default("Sustainability")
+  solution3          String   @default("Creativity")
+  solution4          String   @default("Uniqueness")
+
+  // Two outcome nodes
+  outcome1           String   @default("Happiness")
+  outcome2           String   @default("Resilience")
+
+  // Final message
+  finalMessage       String?  @db.Text
+
+  updatedAt          DateTime @updatedAt
+}
+
 // ==================== MEDIA ====================
 
 model Media {
