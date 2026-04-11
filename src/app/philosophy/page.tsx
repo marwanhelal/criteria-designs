@@ -142,7 +142,7 @@ export default function PhilosophyPage() {
           {/* Right — intro image */}
           {data.introImage && (
             <div className="hidden md:flex items-center justify-center">
-              <div className="relative w-full" style={{ aspectRatio: '1 / 1', filter: 'drop-shadow(0 0 40px rgba(91,138,91,0.25))' }}>
+              <div className="relative w-[120%]" style={{ aspectRatio: '1 / 1', filter: 'drop-shadow(0 0 40px rgba(91,138,91,0.25))' }}>
                 <Image src={data.introImage} alt="Philosophy diagram" fill className="object-contain" />
               </div>
             </div>
