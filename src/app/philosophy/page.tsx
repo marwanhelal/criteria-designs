@@ -56,12 +56,10 @@ export default function PhilosophyPage() {
       .catch(() => {})
   }, [])
 
-  const sec1Ref = useRef(null)
-  const sec2Ref = useRef(null)
-  const sec3Ref = useRef(null)
-  const sec1In  = useInView(sec1Ref, { once: true, margin: '-60px' })
-  const sec2In  = useInView(sec2Ref, { once: true, margin: '-60px' })
-  const sec3In  = useInView(sec3Ref, { once: true, margin: '-60px' })
+  const sec2Ref = useRef<HTMLElement>(null)
+  const sec3Ref = useRef<HTMLElement>(null)
+  const sec2In  = useInView(sec2Ref, { once: true, amount: 0.1 })
+  const sec3In  = useInView(sec3Ref, { once: true, amount: 0.1 })
 
   return (
     <div className="bg-white">
@@ -70,27 +68,27 @@ export default function PhilosophyPage() {
       {/* ═══════════════════════════════════════════════════
           SECTION 1 — Our Philosophy / Intro + Diagram Image
       ═══════════════════════════════════════════════════ */}
-      <section ref={sec1Ref} className="pt-[var(--nav-h)] border-b border-gray-200">
+      <section className="pt-[var(--nav-h)] border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-8 py-14 grid md:grid-cols-[1fr_auto] gap-12 items-start">
 
           {/* Left: text */}
           <div>
             <motion.h1
-              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={0}
+              variants={fadeUp} initial="hidden" animate="show" custom={0}
               className="font-[var(--font-franklin-gothic)] text-5xl md:text-6xl font-bold text-[#181C23] leading-tight mb-2"
             >
               {data.heroTitle}
             </motion.h1>
 
             <motion.p
-              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={1}
+              variants={fadeUp} initial="hidden" animate="show" custom={1}
               className="text-[#4A7A4A] font-[var(--font-open-sans)] text-lg font-semibold italic mb-8"
             >
               {data.heroSubtitle}
             </motion.p>
 
             <motion.p
-              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={2}
+              variants={fadeUp} initial="hidden" animate="show" custom={2}
               className="text-[#333] font-[var(--font-open-sans)] text-sm leading-relaxed text-justify max-w-lg"
             >
               {data.introText}
@@ -100,7 +98,7 @@ export default function PhilosophyPage() {
           {/* Right: uploaded diagram image */}
           {data.introImage && (
             <motion.div
-              variants={fadeUp} initial="hidden" animate={sec1In ? 'show' : 'hidden'} custom={3}
+              variants={fadeUp} initial="hidden" animate="show" custom={3}
               className="w-56 flex-shrink-0 pt-2"
             >
               <div className="relative w-full aspect-square">
