@@ -226,7 +226,7 @@ export default function PhilosophyPage() {
           SECTION 3 — DESIGN FLOW DIAGRAM  (clean light)
       ══════════════════════════════════════════════════════════ */}
       {data.diagramImage && (
-        <section className="relative bg-[#F8F7F4] overflow-hidden">
+        <section className="relative bg-white overflow-hidden">
 
           <div className="max-w-5xl mx-auto px-10 md:px-16 py-20 md:py-28">
 
