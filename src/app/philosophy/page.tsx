@@ -87,7 +87,7 @@ export default function PhilosophyPage() {
         <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(91,138,91,0.06) 0%, transparent 65%)' }} />
 
-        <div className="max-w-6xl mx-auto px-10 md:px-20 py-24 w-full grid md:grid-cols-[1fr_340px] gap-20 items-center">
+        <div className="max-w-6xl mx-auto px-10 md:px-20 py-24 w-full grid md:grid-cols-[1fr_480px] gap-16 items-center">
 
           {/* Left — text */}
           <div>
@@ -141,8 +141,7 @@ export default function PhilosophyPage() {
           {/* Right — intro image */}
           {data.introImage && (
             <div className="hidden md:flex items-center justify-center">
-              <div className="relative w-72 h-72"
-                style={{ filter: 'drop-shadow(0 0 30px rgba(91,138,91,0.2))' }}>
+              <div className="relative w-full" style={{ aspectRatio: '1 / 1', filter: 'drop-shadow(0 0 40px rgba(91,138,91,0.25))' }}>
                 <Image src={data.introImage} alt="Philosophy diagram" fill className="object-contain" />
               </div>
             </div>
