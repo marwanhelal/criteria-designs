@@ -57,9 +57,7 @@ export default function PhilosophyPage() {
   }, [])
 
   const sec2Ref = useRef<HTMLElement>(null)
-  const sec3Ref = useRef<HTMLElement>(null)
   const sec2In  = useInView(sec2Ref, { once: true, amount: 0.1 })
-  const sec3In  = useInView(sec3Ref, { once: true, amount: 0.1 })
 
   return (
     <div className="bg-white">
@@ -211,22 +209,13 @@ export default function PhilosophyPage() {
           SECTION 3 — Design Flow Diagram Image
       ═══════════════════════════════════════════════════ */}
       {data.diagramImage && (
-        <section ref={sec3Ref} className="border-b border-gray-200">
+        <section className="border-b border-gray-200">
           <div className="max-w-5xl mx-auto px-6 py-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={sec3In ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease }}
-              className="relative w-full"
-            >
-              <Image
-                src={data.diagramImage}
-                alt="Design flow diagram"
-                width={900}
-                height={400}
-                className="w-full h-auto object-contain"
-              />
-            </motion.div>
+            <img
+              src={data.diagramImage}
+              alt="Design flow diagram"
+              className="w-full h-auto object-contain"
+            />
           </div>
         </section>
       )}
