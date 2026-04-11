@@ -278,33 +278,24 @@ model Award {
 model PhilosophyPage {
   id                 String   @id @default("main")
 
-  // Hero
-  heroTitle          String   @default("The Soul of Our Design")
-  heroSubtitle       String?  @db.Text
-
-  // Intro
+  // Section 1
+  heroTitle          String   @default("Our Philosophy")
+  heroSubtitle       String?
   introText          String?  @db.Text
   introImage         String?
 
-  // Section 1 – diagram image (right side)
-  introImage         String?
-
-  // Foundation 1 – Human
+  // Section 2 – Three Foundations
   humanTitle         String   @default("HUMAN")
   humanDescription   String?  @db.Text
   humanImage         String?
-
-  // Foundation 2 – Environment
   envTitle           String   @default("ENVIRONMENTAL")
   envDescription     String?  @db.Text
   envImage           String?
-
-  // Foundation 3 – Culture
   cultureTitle       String   @default("CULTURE")
   cultureDescription String?  @db.Text
   cultureImage       String?
 
-  // Section 3 – full node diagram image
+  // Section 3 – node diagram image
   diagramImage       String?
 
   updatedAt          DateTime @updatedAt
