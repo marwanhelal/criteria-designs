@@ -210,13 +210,11 @@ export default function PhilosophyPage() {
       ═══════════════════════════════════════════════════ */}
       {data.diagramImage && (
         <section className="border-b border-gray-200">
-          <div className="max-w-5xl mx-auto px-6 py-16">
-            <img
-              src={data.diagramImage}
-              alt="Design flow diagram"
-              className="w-full h-auto object-contain"
-            />
-          </div>
+          <img
+            src={data.diagramImage}
+            alt="Design flow diagram"
+            className="w-full h-auto object-contain block"
+          />
         </section>
       )}
 
