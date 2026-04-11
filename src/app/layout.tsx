@@ -46,10 +46,28 @@ const icomoon = localFont({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await prisma.siteSettings.findUnique({ where: { id: 'main' } }).catch(() => null)
   const favicon = settings?.favicon
+
+  const title = settings?.seoTitleEn?.trim()
+    || "Criteria Designs | Architecture, Interior Design & Urban Planning"
+  const description = settings?.seoDescriptionEn?.trim()
+    || "Criteria Designs (CDG) — award-winning architecture, interior design & urban planning firm. 500+ projects across 6 countries. Based in Cairo, Egypt. Designing with purpose since 2007."
+
   return {
-    title: "Criteria Designs | Architecture, Interior Design & Urban Planning",
-    description: "Criteria Designs (CDG) — award-winning architecture, interior design & urban planning firm. 500+ projects across 6 countries. Based in Cairo, Egypt. Designing with purpose since 2007.",
+    title,
+    description,
     icons: favicon ? { icon: favicon } : undefined,
+    openGraph: {
+      title,
+      description,
+      siteName: 'Criteria Designs',
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   }
 }
 
