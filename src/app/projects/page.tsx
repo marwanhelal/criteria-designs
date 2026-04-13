@@ -77,10 +77,23 @@ interface Settings {
 }
 
 const filterTabs = [
-  { value: 'ALL',          label: 'All' },
-  { value: 'URBAN_LANDSCAPE', label: 'Urban & Landscape' },
-  { value: 'ARCHITECTURE', label: 'Architecture' },
-  { value: 'INTERIOR',     label: 'Interior Design' },
+  { value: 'ALL',             label: 'All',                sub: null },
+  { value: 'URBAN_LANDSCAPE', label: 'Urban & Landscape',  sub: [
+      { label: 'Urban Design',    id: 'section-URBAN' },
+      { label: 'Landscape Design',id: 'section-LANDSCAPE' },
+  ]},
+  { value: 'ARCHITECTURE',    label: 'Architecture',       sub: [
+      { label: 'Mixed Use',       id: 'section-MIXED_USE' },
+      { label: 'Commercial',      id: 'section-COMMERCIAL' },
+      { label: 'Residential',     id: 'section-RESIDENTIAL' },
+      { label: 'Educational',     id: 'section-EDUCATIONAL' },
+      { label: 'Hospitality',     id: 'section-HOSPITALITY' },
+      { label: 'Renovation',      id: 'section-RENOVATION' },
+  ]},
+  { value: 'INTERIOR',        label: 'Interior Design',    sub: [
+      { label: 'Commercial & Administrative', id: 'section-INTERIOR_COMMERCIAL' },
+      { label: 'Residential',                 id: 'section-INTERIOR_RESIDENTIAL' },
+  ]},
 ]
 
 const navLinks = [
@@ -216,10 +229,6 @@ function ProjectsHeader({
         {/* Row 3: Category Filters with dropdowns */}
         <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 relative" ref={dropdownRef}>
           {filterTabs.map(tab => {
-            const groupDef = GROUP_DEFS.find(g => g.key === tab.value)
-            const subLabels = groupDef && 'subLabels' in groupDef
-              ? groupDef.subLabels as Record<string, string>
-              : null
             const isActive = activeCategory === tab.value
             const isOpen = openDropdown === tab.value
 
@@ -228,43 +237,33 @@ function ProjectsHeader({
                 <button
                   onClick={() => {
                     onCategoryChange(tab.value)
-                    if (tab.value === 'ALL') {
-                      onDropdownChange(null)
-                    } else {
-                      onDropdownChange(isOpen ? null : tab.value)
-                    }
+                    onDropdownChange(!tab.sub ? null : (isOpen ? null : tab.value))
                   }}
                   className={`flex items-center gap-1 font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                    isActive
-                      ? 'text-[#111] border-b border-[#111]'
-                      : 'text-[#aaa] hover:text-[#333]'
+                    isActive ? 'text-[#111] border-b border-[#111]' : 'text-[#aaa] hover:text-[#333]'
                   }`}
                 >
                   {tab.label}
-                  {subLabels && (
-                    <ChevronDown
-                      size={12}
-                      className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                    />
+                  {tab.sub && (
+                    <ChevronDown size={12} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                   )}
                 </button>
 
                 {/* Dropdown */}
-                {isOpen && subLabels && (
+                {isOpen && tab.sub && (
                   <div
-                    className="absolute top-[calc(100%+8px)] left-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-[100] min-w-[200px]"
-                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+                    className="absolute top-[calc(100%+8px)] left-0 bg-white rounded-xl py-2 z-[100] min-w-[220px]"
+                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.14)', border: '1px solid rgba(0,0,0,0.07)' }}
                   >
-                    {/* Arrow */}
                     <div className="absolute -top-[6px] left-4 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
-                    {Object.entries(subLabels).map(([cat, label]) => (
+                    {tab.sub.map(item => (
                       <button
-                        key={cat}
-                        onClick={() => onScrollTo(`section-${cat}`)}
+                        key={item.id}
+                        onClick={() => onScrollTo(item.id)}
                         className="w-full text-left px-5 py-2.5 text-[13px] text-gray-600 hover:bg-gray-50 hover:text-[#111] transition-colors font-[var(--font-open-sans)] flex items-center gap-2 group"
                       >
-                        <span className="w-1 h-1 rounded-full bg-gray-300 group-hover:bg-[#C9A24D] transition-colors" />
-                        {label}
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-[#C9A24D] flex-shrink-0 transition-colors" />
+                        {item.label}
                       </button>
                     ))}
                   </div>
