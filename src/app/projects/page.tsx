@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Footer from '@/components/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<string, string> = {
   URBAN:               'Urban Design',
@@ -28,6 +29,10 @@ const GROUP_DEFS = [
     label: 'Urban & Landscape Design',
     categories: ['URBAN', 'LANDSCAPE'],
     accentColor: '#5B8A5B',
+    subLabels: {
+      URBAN:     'Urban Design',
+      LANDSCAPE: 'Landscape Design',
+    },
   },
   {
     key: 'ARCHITECTURE',
@@ -94,15 +99,33 @@ function ProjectsHeader({
   loading,
   activeCategory,
   onCategoryChange,
+  openDropdown,
+  onDropdownChange,
+  onScrollTo,
 }: {
   filteredCount: number
   loading: boolean
   activeCategory: string
   onCategoryChange: (cat: string) => void
+  openDropdown: string | null
+  onDropdownChange: (key: string | null) => void
+  onScrollTo: (id: string) => void
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [settings, setSettings] = useState<Settings | null>(null)
   const pathname = usePathname()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        onDropdownChange(null)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [onDropdownChange])
 
   useEffect(() => {
     fetch('/api/settings')
@@ -190,21 +213,65 @@ function ProjectsHeader({
           )}
         </div>
 
-        {/* Row 3: Category Filters */}
-        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3">
-          {filterTabs.map(tab => (
-            <button
-              key={tab.value}
-              onClick={() => onCategoryChange(tab.value)}
-              className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                activeCategory === tab.value
-                  ? 'text-[#111] border-b border-[#111]'
-                  : 'text-[#aaa] hover:text-[#333]'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* Row 3: Category Filters with dropdowns */}
+        <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3 relative" ref={dropdownRef}>
+          {filterTabs.map(tab => {
+            const groupDef = GROUP_DEFS.find(g => g.key === tab.value)
+            const subLabels = groupDef && 'subLabels' in groupDef
+              ? groupDef.subLabels as Record<string, string>
+              : null
+            const isActive = activeCategory === tab.value
+            const isOpen = openDropdown === tab.value
+
+            return (
+              <div key={tab.value} className="relative">
+                <button
+                  onClick={() => {
+                    onCategoryChange(tab.value)
+                    if (tab.value === 'ALL') {
+                      onDropdownChange(null)
+                    } else {
+                      onDropdownChange(isOpen ? null : tab.value)
+                    }
+                  }}
+                  className={`flex items-center gap-1 font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
+                    isActive
+                      ? 'text-[#111] border-b border-[#111]'
+                      : 'text-[#aaa] hover:text-[#333]'
+                  }`}
+                >
+                  {tab.label}
+                  {subLabels && (
+                    <ChevronDown
+                      size={12}
+                      className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    />
+                  )}
+                </button>
+
+                {/* Dropdown */}
+                {isOpen && subLabels && (
+                  <div
+                    className="absolute top-[calc(100%+8px)] left-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-[100] min-w-[200px]"
+                    style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+                  >
+                    {/* Arrow */}
+                    <div className="absolute -top-[6px] left-4 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
+                    {Object.entries(subLabels).map(([cat, label]) => (
+                      <button
+                        key={cat}
+                        onClick={() => onScrollTo(`section-${cat}`)}
+                        className="w-full text-left px-5 py-2.5 text-[13px] text-gray-600 hover:bg-gray-50 hover:text-[#111] transition-colors font-[var(--font-open-sans)] flex items-center gap-2 group"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-gray-300 group-hover:bg-[#C9A24D] transition-colors" />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -359,7 +426,7 @@ function GroupedSection({
 
       {subSections ? (
         subSections.map(sub => (
-          <div key={sub.cat} className="mb-10">
+          <div key={sub.cat} className="mb-10" id={`section-${sub.cat}`} style={{ scrollMarginTop: '220px' }}>
             {/* Sub-section label */}
             <div className="flex items-center gap-3 mb-5">
               <span className="font-[var(--font-open-sans)] text-[11px] uppercase tracking-[0.3em] font-semibold"
@@ -392,6 +459,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('ALL')
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/projects?status=PUBLISHED')
@@ -411,6 +479,18 @@ export default function ProjectsPage() {
 
   const totalVisible = visibleGroups.reduce((n, g) => n + g.projects.length, 0)
 
+  const scrollToSection = (id: string) => {
+    setOpenDropdown(null)
+    // Small delay so tab filter re-renders first if needed
+    setTimeout(() => {
+      const el = document.getElementById(id)
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 230
+        window.scrollTo({ top, behavior: 'smooth' })
+      }
+    }, 80)
+  }
+
   return (
     <>
       <ProjectsHeader
@@ -418,6 +498,9 @@ export default function ProjectsPage() {
         loading={loading}
         activeCategory={activeTab}
         onCategoryChange={setActiveTab}
+        openDropdown={openDropdown}
+        onDropdownChange={setOpenDropdown}
+        onScrollTo={scrollToSection}
       />
 
       <div className="min-h-screen bg-white">
