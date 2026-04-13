@@ -21,9 +21,9 @@ interface TeamMember {
 }
 
 const STEP = 1
-const CARD_W = 135        // px — card width
-const CARD_H = 200        // px — photo height (ratio ~1.5, matches design)
-const CARD_GAP = 18       // px — gap between cards
+const CARD_W = 135
+const CARD_H = 200
+const CARD_GAP = 18
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
@@ -53,30 +53,41 @@ export default function FounderTeamSection() {
   const offset = idx * (CARD_W + CARD_GAP)
 
   return (
-    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '520px' }}>
+    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '500px' }}>
 
-      {/* ══ LEFT: Founder ══════════════════════════════════════ */}
-      <div className="lg:w-[43%] shrink-0 flex bg-[#ECEAE6] overflow-hidden">
-
-        {/* Portrait — fills full height */}
+      {/* ══ LEFT: Founder — photo fills entire panel, text overlaid bottom ══ */}
+      <div
+        className="lg:w-[43%] shrink-0 relative overflow-hidden bg-[#ECEAE6]"
+        style={{ minHeight: '500px' }}
+      >
+        {/* Photo fills the full panel */}
         {founder?.founderImage && (
-          <div className="relative shrink-0 self-stretch" style={{ width: '220px', minHeight: '520px' }}>
+          <div className="absolute inset-0">
             <Image
               src={founder.founderImage}
               alt={founder.founderNameEn || 'Founder'}
               fill
-              sizes="200px"
+              sizes="50vw"
               className="object-cover object-top"
               unoptimized
             />
           </div>
         )}
 
-        {/* Text — bottom-aligned */}
-        <div className="flex flex-col justify-end px-8 pb-12 pt-8 lg:px-10 lg:pb-14">
+        {/* Gradient fade: photo → panel bg, so text is readable at bottom */}
+        <div
+          className="absolute inset-x-0 bottom-0"
+          style={{
+            height: '55%',
+            background: 'linear-gradient(to top, #ECEAE6 35%, rgba(236,234,230,0.7) 65%, transparent 100%)',
+          }}
+        />
+
+        {/* Text — overlaid at the bottom of the panel */}
+        <div className="absolute inset-x-0 bottom-0 px-10 pb-12">
           <h2
             className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.15] mb-3"
-            style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}
+            style={{ fontSize: 'clamp(22px, 2.2vw, 30px)' }}
           >
             {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
           </h2>
@@ -84,7 +95,7 @@ export default function FounderTeamSection() {
           {founder?.founderDescriptionEn && (
             <p
               className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-5"
-              style={{ fontSize: '13px', maxWidth: '290px' }}
+              style={{ fontSize: '13px', maxWidth: '320px' }}
             >
               {founder.founderDescriptionEn}
             </p>
@@ -147,7 +158,7 @@ export default function FounderTeamSection() {
                     className="shrink-0 flex flex-col items-center text-center"
                     style={{ width: `${CARD_W}px` }}
                   >
-                    {/* Portrait photo — rectangle, no border-radius */}
+                    {/* Portrait photo — rectangle */}
                     <div
                       className="overflow-hidden bg-[#E4E1DC] mb-3"
                       style={{ width: `${CARD_W}px`, height: `${CARD_H}px` }}
