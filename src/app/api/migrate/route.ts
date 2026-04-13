@@ -348,7 +348,7 @@ export async function POST() {
     }
 
     // 24. Add new ProjectCategory enum values (safe — PostgreSQL ignores IF EXISTS)
-    for (const val of ['MIXED_USE', 'EDUCATIONAL', 'INTERIOR_COMMERCIAL', 'INTERIOR_RESIDENTIAL']) {
+    for (const val of ['MIXED_USE', 'EDUCATIONAL', 'HOSPITALITY', 'INTERIOR_COMMERCIAL', 'INTERIOR_RESIDENTIAL']) {
       try {
         await prisma.$executeRawUnsafe(
           `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = '${val}' AND enumtypid = 'ProjectCategory'::regtype) THEN ALTER TYPE "ProjectCategory" ADD VALUE '${val}'; END IF; END $$;`

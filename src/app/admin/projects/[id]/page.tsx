@@ -14,6 +14,7 @@ const categories = [
   { value: 'COMMERCIAL',         label: 'Architecture — Commercial',            group: 'Architecture' },
   { value: 'RESIDENTIAL',        label: 'Architecture — Residential',           group: 'Architecture' },
   { value: 'EDUCATIONAL',        label: 'Architecture — Educational',           group: 'Architecture' },
+  { value: 'HOSPITALITY',        label: 'Architecture — Hospitality',           group: 'Architecture' },
   { value: 'RENOVATION',         label: 'Architecture — Renovation',            group: 'Architecture' },
   // Interior Design
   { value: 'INTERIOR_COMMERCIAL',label: 'Interior Design — Commercial & Administrative', group: 'Interior Design' },

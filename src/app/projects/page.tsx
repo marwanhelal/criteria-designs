@@ -14,6 +14,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   COMMERCIAL:          'Commercial',
   RESIDENTIAL:         'Residential',
   EDUCATIONAL:         'Educational',
+  HOSPITALITY:         'Hospitality',
   RENOVATION:          'Renovation',
   INTERIOR_COMMERCIAL: 'Commercial & Administrative',
   INTERIOR_RESIDENTIAL:'Residential',
@@ -31,13 +32,14 @@ const GROUP_DEFS = [
   {
     key: 'ARCHITECTURE',
     label: 'Architecture',
-    categories: ['MIXED_USE', 'COMMERCIAL', 'RESIDENTIAL', 'EDUCATIONAL', 'RENOVATION'],
+    categories: ['MIXED_USE', 'COMMERCIAL', 'RESIDENTIAL', 'EDUCATIONAL', 'HOSPITALITY', 'RENOVATION'],
     accentColor: '#C9A24D',
     subLabels: {
       MIXED_USE:   'Mixed Use',
       COMMERCIAL:  'Commercial',
       RESIDENTIAL: 'Residential',
       EDUCATIONAL: 'Educational',
+      HOSPITALITY: 'Hospitality',
       RENOVATION:  'Renovation',
     },
   },
