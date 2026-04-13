@@ -79,11 +79,6 @@ export async function DELETE(
         where: { image: url },
         data: { image: null }
       }),
-      // BlogPost: nullify featuredImage
-      prisma.blogPost.updateMany({
-        where: { featuredImage: url },
-        data: { featuredImage: null }
-      }),
       // User: nullify image
       prisma.user.updateMany({
         where: { image: url },

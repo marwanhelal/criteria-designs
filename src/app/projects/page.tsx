@@ -103,7 +103,6 @@ const navLinks = [
   { href: '/philosophy', label: 'Philosophy' },
   { href: '/projects', label: 'Projects' },
   { href: '/awards', label: 'Recognitions' },
-  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ]
 

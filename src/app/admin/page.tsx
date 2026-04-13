@@ -1,20 +1,19 @@
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
-import { FolderKanban, Users, Briefcase, FileText } from 'lucide-react'
+import { FolderKanban, Users, Briefcase } from 'lucide-react'
 import MigrateButton from './components/MigrateButton'
 
 // Force dynamic rendering (don't prerender at build time)
 export const dynamic = 'force-dynamic'
 
 async function getStats() {
-  const [projects, team, services, posts] = await Promise.all([
+  const [projects, team, services] = await Promise.all([
     prisma.project.count(),
     prisma.teamMember.count(),
     prisma.service.count(),
-    prisma.blogPost.count(),
   ])
 
-  return { projects, team, services, posts }
+  return { projects, team, services }
 }
 
 export default async function AdminDashboard() {
@@ -24,7 +23,6 @@ export default async function AdminDashboard() {
     { name: 'Projects', count: stats.projects, icon: FolderKanban, color: 'bg-blue-500' },
     { name: 'Team Members', count: stats.team, icon: Users, color: 'bg-green-500' },
     { name: 'Services', count: stats.services, icon: Briefcase, color: 'bg-purple-500' },
-    { name: 'Blog Posts', count: stats.posts, icon: FileText, color: 'bg-orange-500' },
   ]
 
   return (
@@ -56,9 +54,6 @@ export default async function AdminDashboard() {
           <div className="space-y-2">
             <Link href="/admin/projects/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
               + Add New Project
-            </Link>
-            <Link href="/admin/blog/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-              + Create Blog Post
             </Link>
             <Link href="/admin/team/new" className="block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
               + Add Team Member

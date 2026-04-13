@@ -5,7 +5,6 @@ import { getToken } from 'next-auth/jwt'
 // Routes that require authentication (write operations)
 const PROTECTED_API_ROUTES = [
   '/api/projects',
-  '/api/blog',
   '/api/team',
   '/api/services',
   '/api/settings',

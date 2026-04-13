@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   FolderKanban,
   Users,
-  FileText,
   Image,
   Settings,
   LogOut,
@@ -28,7 +27,6 @@ const sidebarItems = [
   { name: 'Philosophy', href: '/admin/philosophy', icon: Lightbulb },
   { name: 'Clients', href: '/admin/clients', icon: Building2 },
   { name: 'Awards', href: '/admin/awards', icon: Award },
-  { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Media', href: '/admin/media', icon: Image },
   { name: 'Home Page', href: '/admin/settings', icon: Settings },
 ]
