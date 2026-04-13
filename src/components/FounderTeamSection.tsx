@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface FounderData {
@@ -21,9 +20,9 @@ interface TeamMember {
 }
 
 const STEP = 1
-const CARD_W = 135
-const CARD_H = 200
-const CARD_GAP = 18
+const CARD_W = 176
+const CARD_H = 240
+const CARD_GAP = 16
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
@@ -42,7 +41,7 @@ export default function FounderTeamSection() {
       .catch(() => {})
   }, [])
 
-  const visibleCount = 4
+  const visibleCount = 3
   const maxIdx = Math.max(0, team.length - visibleCount)
   const prev = () => setIdx(i => Math.max(0, i - STEP))
   const next = () => setIdx(i => Math.min(maxIdx, i + STEP))
@@ -53,168 +52,177 @@ export default function FounderTeamSection() {
   const offset = idx * (CARD_W + CARD_GAP)
 
   return (
-    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '500px' }}>
-
-      {/* ══ LEFT: Founder — photo fills entire panel, text overlaid bottom ══ */}
+    <section data-navbar-dark className="bg-[#ECEAE6] py-14 lg:py-20 px-5 lg:px-10">
       <div
-        className="lg:w-[43%] shrink-0 relative overflow-hidden bg-[#ECEAE6]"
-        style={{ minHeight: '500px' }}
+        className="max-w-7xl mx-auto bg-white rounded-3xl overflow-hidden"
+        style={{ boxShadow: '0 40px 100px -20px rgba(0,0,0,0.10)' }}
       >
-        {/* Photo fills the full panel */}
-        {founder?.founderImage && (
-          <div className="absolute inset-0">
-            <Image
-              src={founder.founderImage}
-              alt={founder.founderNameEn || 'Founder'}
-              fill
-              sizes="50vw"
-              className="object-cover object-top"
-              unoptimized
-            />
-          </div>
-        )}
+        <div className="flex flex-col lg:flex-row p-10 lg:p-16 gap-12 lg:gap-16">
 
-        {/* Gradient fade: photo → panel bg, so text is readable at bottom */}
-        <div
-          className="absolute inset-x-0 bottom-0"
-          style={{
-            height: '55%',
-            background: 'linear-gradient(to top, #ECEAE6 35%, rgba(236,234,230,0.7) 65%, transparent 100%)',
-          }}
-        />
+          {/* ══ LEFT: Founder Spotlight ══ */}
+          <section className="lg:w-2/5 flex flex-col relative z-10">
 
-        {/* Text — overlaid at the bottom of the panel */}
-        <div className="absolute inset-x-0 bottom-0 px-10 pb-12">
-          <h2
-            className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.15] mb-3"
-            style={{ fontSize: 'clamp(22px, 2.2vw, 30px)' }}
-          >
-            {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
-          </h2>
-
-          {founder?.founderDescriptionEn && (
-            <p
-              className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-5"
-              style={{ fontSize: '13px', maxWidth: '320px' }}
-            >
-              {founder.founderDescriptionEn}
-            </p>
-          )}
-
-          {founder?.founderNameEn && (
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-px bg-[#B1A490]" />
-              <span
-                className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
-                style={{ fontSize: '10px' }}
-              >
-                {founder.founderNameEn}
-                {founder.founderTitleEn && ` · ${founder.founderTitleEn}`}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Vertical divider */}
-      <div className="hidden lg:block w-px bg-[#D5D1CC] shrink-0" />
-
-      {/* ══ RIGHT: Team ════════════════════════════════════════ */}
-      <div className="flex-1 bg-white flex flex-col justify-start px-10 pt-12 pb-12 lg:px-14 lg:pt-14 overflow-hidden">
-
-        <h2
-          className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.2] mb-10"
-          style={{ fontSize: 'clamp(18px, 1.8vw, 24px)' }}
-        >
-          {founder?.teamSectionTitleEn || 'Modern Creative Team Showcase'}
-        </h2>
-
-        {team.length > 0 ? (
-          <div className="flex items-center gap-4">
-
-            {/* ← Prev */}
-            <button
-              onClick={prev}
-              disabled={idx === 0}
-              className="shrink-0 w-8 h-8 rounded-full border border-[#CCCAC6] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-20 transition-all duration-200"
-              aria-label="Previous"
-            >
-              <ChevronLeft size={14} />
-            </button>
-
-            {/* Cards viewport */}
-            <div className="flex-1 overflow-hidden">
+            {/* Portrait area */}
+            <div className="relative mb-10">
+              {/* Decorative background rectangle */}
               <div
-                className="flex"
-                style={{
-                  gap: `${CARD_GAP}px`,
-                  transform: `translateX(-${offset}px)`,
-                  transition: 'transform 0.4s cubic-bezier(0.25,0.4,0.25,1)',
-                }}
+                className="absolute -z-10 left-0 bg-[#E4E1DC] rounded-2xl opacity-60"
+                style={{ top: '40px', width: '256px', height: '176px' }}
+              />
+
+              {/* Portrait — breaks out upward into the top padding */}
+              <div
+                className="relative"
+                style={{ marginTop: '-40px', width: '224px', height: '288px' }}
               >
-                {team.map((member) => (
+                {founder?.founderImage ? (
+                  <img
+                    src={founder.founderImage}
+                    alt={founder.founderNameEn || 'Founder'}
+                    className="w-full h-full object-cover object-top rounded-2xl"
+                    style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.15))' }}
+                  />
+                ) : (
                   <div
-                    key={member.id}
-                    className="shrink-0 flex flex-col items-center text-center"
-                    style={{ width: `${CARD_W}px` }}
+                    className="w-full h-full bg-[#D5D1CC] rounded-2xl flex items-center justify-center"
+                    style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.10))' }}
                   >
-                    {/* Portrait photo — rectangle */}
-                    <div
-                      className="overflow-hidden bg-[#E4E1DC] mb-3"
-                      style={{ width: `${CARD_W}px`, height: `${CARD_H}px` }}
-                    >
-                      {member.photo ? (
-                        <img
-                          src={member.photo}
-                          alt={member.nameEn}
-                          className="w-full h-full object-cover object-top"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-[#C5C0B8]">
-                          <span className="font-[var(--font-merriweather)] text-white text-[28px] font-bold">
-                            {member.nameEn.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Name */}
-                    <p
-                      className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight"
-                      style={{ fontSize: '13px' }}
-                    >
-                      {member.nameEn}
-                    </p>
-
-                    {/* Role */}
-                    <p
-                      className="font-[var(--font-libre-franklin)] text-[#9A9A94] mt-1 leading-snug"
-                      style={{ fontSize: '11px' }}
-                    >
-                      {member.roleEn}
-                    </p>
+                    <span className="font-[var(--font-merriweather)] text-white font-bold" style={{ fontSize: '40px' }}>
+                      {founder?.founderNameEn?.charAt(0) || 'F'}
+                    </span>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
-            {/* → Next */}
-            <button
-              onClick={next}
-              disabled={idx >= maxIdx}
-              className="shrink-0 w-8 h-8 rounded-full border border-[#CCCAC6] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-20 transition-all duration-200"
-              aria-label="Next"
-            >
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        ) : (
-          <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94]">
-            No team members yet. Add them from the Team section.
-          </p>
-        )}
-      </div>
+            {/* Text — below the portrait */}
+            <div style={{ maxWidth: '380px' }}>
+              <h2
+                className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.1] mb-5"
+                style={{ fontSize: 'clamp(26px, 2.8vw, 42px)' }}
+              >
+                {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
+              </h2>
 
+              {founder?.founderDescriptionEn && (
+                <p
+                  className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-5"
+                  style={{ fontSize: '13.5px', maxWidth: '320px' }}
+                >
+                  {founder.founderDescriptionEn}
+                </p>
+              )}
+
+              {founder?.founderNameEn && (
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-px bg-[#B1A490]" />
+                  <span
+                    className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
+                    style={{ fontSize: '10px' }}
+                  >
+                    {founder.founderNameEn}
+                    {founder.founderTitleEn && ` · ${founder.founderTitleEn}`}
+                  </span>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* ══ RIGHT: Team Showcase ══ */}
+          <section className="lg:w-3/5 flex flex-col">
+
+            <h3
+              className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight mb-10"
+              style={{ fontSize: 'clamp(20px, 2.2vw, 34px)', maxWidth: '280px' }}
+            >
+              {founder?.teamSectionTitleEn || 'Modern Creative Team Showcase'}
+            </h3>
+
+            {team.length > 0 ? (
+              <div className="relative px-6">
+
+                {/* ← Prev */}
+                <button
+                  onClick={prev}
+                  disabled={idx === 0}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md z-20 text-[#181C23]/40 hover:text-[#181C23] disabled:opacity-20 transition-colors"
+                  aria-label="Previous"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+
+                {/* Cards viewport */}
+                <div className="overflow-hidden">
+                  <div
+                    className="flex"
+                    style={{
+                      gap: `${CARD_GAP}px`,
+                      transform: `translateX(-${offset}px)`,
+                      transition: 'transform 0.4s cubic-bezier(0.25,0.4,0.25,1)',
+                    }}
+                  >
+                    {team.map((member) => (
+                      <div
+                        key={member.id}
+                        className="flex-none rounded-2xl overflow-hidden bg-white border border-black/5"
+                        style={{
+                          width: `${CARD_W}px`,
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.07)',
+                        }}
+                      >
+                        {/* Portrait photo */}
+                        <div style={{ height: `${CARD_H}px` }} className="overflow-hidden">
+                          {member.photo ? (
+                            <img
+                              src={member.photo}
+                              alt={member.nameEn}
+                              className="w-full h-full object-cover object-top"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-[#C5C0B8] flex items-center justify-center">
+                              <span className="font-[var(--font-merriweather)] text-white font-bold" style={{ fontSize: '28px' }}>
+                                {member.nameEn.charAt(0)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Info panel */}
+                        <div className="p-4 bg-white">
+                          <p className="font-[var(--font-merriweather)] font-bold text-[#181C23] text-sm leading-tight">
+                            {member.nameEn}
+                          </p>
+                          <p
+                            className="font-[var(--font-libre-franklin)] text-[#9A9A94] mt-1 leading-snug"
+                            style={{ fontSize: '10px' }}
+                          >
+                            {member.roleEn}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* → Next */}
+                <button
+                  onClick={next}
+                  disabled={idx >= maxIdx}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md z-20 text-[#181C23]/40 hover:text-[#181C23] disabled:opacity-20 transition-colors"
+                  aria-label="Next"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            ) : (
+              <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94]">
+                No team members yet. Add them from the Team section.
+              </p>
+            )}
+
+          </section>
+        </div>
+      </div>
     </section>
   )
 }
