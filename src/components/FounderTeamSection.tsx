@@ -41,7 +41,6 @@ export default function FounderTeamSection() {
       .catch(() => {})
   }, [])
 
-  // Measure a single card width (track width / CARDS_VISIBLE)
   useEffect(() => {
     const measure = () => {
       if (trackRef.current) {
@@ -57,48 +56,56 @@ export default function FounderTeamSection() {
   const prev = () => setIdx(i => Math.max(0, i - 1))
   const next = () => setIdx(i => Math.min(maxIdx, i + 1))
 
-  // Hide section if no founder image AND no description AND no team
   const hasFounder = founder?.founderImage || founder?.founderDescriptionEn
   if (!hasFounder && team.length === 0) return null
 
   return (
-    <section data-navbar-dark className="flex flex-col lg:flex-row min-h-[320px]">
+    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '420px' }}>
 
       {/* ── LEFT: Founder ─────────────────────────────────── */}
-      <div className="lg:w-[44%] shrink-0 flex bg-[#ECEAE6]">
+      <div className="lg:w-[42%] shrink-0 relative flex bg-[#ECEAE6] overflow-hidden">
 
-        {/* Portrait */}
+        {/* Portrait — fills full height on the left */}
         {founder?.founderImage && (
-          <div className="relative w-[180px] lg:w-[210px] shrink-0 self-stretch">
+          <div className="relative shrink-0" style={{ width: '200px' }}>
             <Image
               src={founder.founderImage}
               alt={founder.founderNameEn || 'Founder'}
               fill
-              sizes="210px"
+              sizes="200px"
               className="object-cover object-top"
               unoptimized
             />
           </div>
         )}
 
-        {/* Text */}
-        <div className="flex flex-col justify-end px-8 py-10 lg:px-10 lg:py-12">
+        {/* Text — anchored to the bottom-left of the remaining space */}
+        <div className="flex flex-col justify-end px-8 pb-10 pt-10 lg:px-10 lg:pb-12">
           <h2
-            className="font-[var(--font-merriweather)] text-[22px] lg:text-[28px] font-bold text-[#181C23] leading-[1.2] mb-4"
+            className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.15] mb-4"
+            style={{ fontSize: 'clamp(22px, 2.2vw, 30px)' }}
           >
             {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
           </h2>
+
           {founder?.founderDescriptionEn && (
-            <p className="font-[var(--font-libre-franklin)] text-[13px] lg:text-[14px] text-[#5A5A58] leading-relaxed max-w-[320px]">
+            <p
+              className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed"
+              style={{ fontSize: 'clamp(12px, 1vw, 14px)', maxWidth: '280px' }}
+            >
               {founder.founderDescriptionEn}
             </p>
           )}
+
           {founder?.founderNameEn && (
             <div className="mt-5 flex items-center gap-3">
-              <div className="w-6 h-px bg-[#B1A490]" />
-              <span className="font-[var(--font-libre-franklin)] text-[11px] text-[#B1A490] uppercase tracking-[3px]">
+              <div className="w-5 h-px bg-[#B1A490]" />
+              <span
+                className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
+                style={{ fontSize: '10px' }}
+              >
                 {founder.founderNameEn}
-                {founder.founderTitleEn && ` — ${founder.founderTitleEn}`}
+                {founder.founderTitleEn && ` · ${founder.founderTitleEn}`}
               </span>
             </div>
           )}
@@ -106,26 +113,29 @@ export default function FounderTeamSection() {
       </div>
 
       {/* Vertical divider */}
-      <div className="hidden lg:block w-px bg-[#D8D4CE] shrink-0" />
+      <div className="hidden lg:block w-px bg-[#D5D1CC] shrink-0" />
 
       {/* ── RIGHT: Team ────────────────────────────────────── */}
-      <div className="flex-1 bg-white px-8 py-10 lg:px-12 lg:py-12">
+      <div className="flex-1 bg-white flex flex-col justify-center px-8 py-10 lg:px-14 lg:py-12">
 
-        <h2 className="font-[var(--font-merriweather)] text-[20px] lg:text-[26px] font-bold text-[#181C23] leading-[1.2] mb-8">
+        <h2
+          className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.2] mb-8"
+          style={{ fontSize: 'clamp(20px, 2vw, 26px)' }}
+        >
           {founder?.teamSectionTitleEn || 'Modern Creative Team Showcase'}
         </h2>
 
         {team.length > 0 ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
 
             {/* Prev arrow */}
             <button
               onClick={prev}
               disabled={idx === 0}
-              className="shrink-0 w-9 h-9 rounded-full border border-[#D0CCC8] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-25 transition-all duration-200"
+              className="shrink-0 w-8 h-8 rounded-full border border-[#CCCAC6] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-20 transition-all duration-200"
               aria-label="Previous"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={14} />
             </button>
 
             {/* Cards track */}
@@ -137,18 +147,21 @@ export default function FounderTeamSection() {
                 {team.map((member) => (
                   <div
                     key={member.id}
-                    className="shrink-0 flex flex-col items-center text-center px-3"
-                    style={{ width: cardW || `${100 / CARDS_VISIBLE}%` }}
+                    className="shrink-0 flex flex-col items-center text-center px-2"
+                    style={{ width: cardW > 0 ? `${cardW}px` : `${100 / CARDS_VISIBLE}%` }}
                   >
-                    {/* Photo */}
-                    <div className="relative w-[90px] h-[90px] lg:w-[110px] lg:h-[110px] rounded-full overflow-hidden bg-[#E8E5E0] mb-3 shadow-sm">
+                    {/* Photo — portrait rectangle matching the design */}
+                    <div
+                      className="relative w-full overflow-hidden bg-[#E8E5E0] mb-3"
+                      style={{ aspectRatio: '3/4', maxWidth: '120px' }}
+                    >
                       {member.photo ? (
                         <Image
                           src={member.photo}
                           alt={member.nameEn}
                           fill
-                          sizes="110px"
-                          className="object-cover"
+                          sizes="120px"
+                          className="object-cover object-top"
                           unoptimized
                         />
                       ) : (
@@ -161,12 +174,18 @@ export default function FounderTeamSection() {
                     </div>
 
                     {/* Name */}
-                    <p className="font-[var(--font-merriweather)] text-[13px] lg:text-[14px] font-bold text-[#181C23] leading-tight">
+                    <p
+                      className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight"
+                      style={{ fontSize: 'clamp(11px, 0.9vw, 13px)' }}
+                    >
                       {member.nameEn}
                     </p>
 
                     {/* Role */}
-                    <p className="font-[var(--font-libre-franklin)] text-[10px] lg:text-[11px] text-[#9A9A94] tracking-[0.5px] mt-1 leading-snug">
+                    <p
+                      className="font-[var(--font-libre-franklin)] text-[#9A9A94] mt-1 leading-snug"
+                      style={{ fontSize: 'clamp(9px, 0.75vw, 11px)' }}
+                    >
                       {member.roleEn}
                     </p>
                   </div>
@@ -178,10 +197,10 @@ export default function FounderTeamSection() {
             <button
               onClick={next}
               disabled={idx >= maxIdx}
-              className="shrink-0 w-9 h-9 rounded-full border border-[#D0CCC8] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-25 transition-all duration-200"
+              className="shrink-0 w-8 h-8 rounded-full border border-[#CCCAC6] flex items-center justify-center text-[#181C23] hover:bg-[#181C23] hover:border-[#181C23] hover:text-white disabled:opacity-20 transition-all duration-200"
               aria-label="Next"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={14} />
             </button>
           </div>
         ) : (
