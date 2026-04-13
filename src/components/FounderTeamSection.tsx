@@ -20,9 +20,9 @@ interface TeamMember {
 }
 
 const STEP = 1
-const CARD_W = 210
-const CARD_H = 290
-const CARD_GAP = 20
+const CARD_W = 152
+const CARD_H = 215
+const CARD_GAP = 14
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
@@ -41,7 +41,7 @@ export default function FounderTeamSection() {
       .catch(() => {})
   }, [])
 
-  const visibleCount = 3
+  const visibleCount = 4
   const maxIdx = Math.max(0, team.length - visibleCount)
   const prev = () => setIdx(i => Math.max(0, i - STEP))
   const next = () => setIdx(i => Math.min(maxIdx, i + STEP))
@@ -188,8 +188,8 @@ export default function FounderTeamSection() {
                         </div>
 
                         {/* Info panel */}
-                        <div className="p-5 bg-white">
-                          <p className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight" style={{ fontSize: '14px' }}>
+                        <div className="p-4 bg-white">
+                          <p className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight" style={{ fontSize: '13px' }}>
                             {member.nameEn}
                           </p>
                           <p
