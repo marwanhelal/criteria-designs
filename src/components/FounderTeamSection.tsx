@@ -52,7 +52,7 @@ export default function FounderTeamSection() {
   const offset = idx * (CARD_W + CARD_GAP)
 
   return (
-    <section data-navbar-dark className="bg-[#ECEAE6] py-14 lg:py-20 px-5 lg:px-10">
+    <section data-navbar-dark className="bg-white py-14 lg:py-20 px-5 lg:px-10">
       <div
         className="max-w-7xl mx-auto bg-white rounded-3xl overflow-hidden"
         style={{ boxShadow: '0 40px 100px -20px rgba(0,0,0,0.10)' }}
