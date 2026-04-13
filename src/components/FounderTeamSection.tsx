@@ -20,11 +20,10 @@ interface TeamMember {
   photo: string | null
 }
 
-// How many cards to slide per click
 const STEP = 1
-// Card fixed width + gap (px) — must match CSS below
-const CARD_W = 130
-const CARD_GAP = 20
+const CARD_W = 135        // px — card width
+const CARD_H = 200        // px — photo height (ratio ~1.5, matches design)
+const CARD_GAP = 18       // px — gap between cards
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
@@ -54,14 +53,14 @@ export default function FounderTeamSection() {
   const offset = idx * (CARD_W + CARD_GAP)
 
   return (
-    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '460px' }}>
+    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '520px' }}>
 
       {/* ══ LEFT: Founder ══════════════════════════════════════ */}
       <div className="lg:w-[43%] shrink-0 flex bg-[#ECEAE6] overflow-hidden">
 
         {/* Portrait — fills full height */}
         {founder?.founderImage && (
-          <div className="relative shrink-0 self-stretch" style={{ width: '200px', minHeight: '460px' }}>
+          <div className="relative shrink-0 self-stretch" style={{ width: '220px', minHeight: '520px' }}>
             <Image
               src={founder.founderImage}
               alt={founder.founderNameEn || 'Founder'}
@@ -110,7 +109,7 @@ export default function FounderTeamSection() {
       <div className="hidden lg:block w-px bg-[#D5D1CC] shrink-0" />
 
       {/* ══ RIGHT: Team ════════════════════════════════════════ */}
-      <div className="flex-1 bg-white flex flex-col justify-center px-10 py-12 lg:px-14 lg:py-14 overflow-hidden">
+      <div className="flex-1 bg-white flex flex-col justify-start px-10 pt-12 pb-12 lg:px-14 lg:pt-14 overflow-hidden">
 
         <h2
           className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.2] mb-10"
@@ -151,7 +150,7 @@ export default function FounderTeamSection() {
                     {/* Portrait photo — rectangle, no border-radius */}
                     <div
                       className="overflow-hidden bg-[#E4E1DC] mb-3"
-                      style={{ width: `${CARD_W}px`, height: `${Math.round(CARD_W * 1.25)}px` }}
+                      style={{ width: `${CARD_W}px`, height: `${CARD_H}px` }}
                     >
                       {member.photo ? (
                         <img
