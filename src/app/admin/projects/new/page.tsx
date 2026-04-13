@@ -6,12 +6,19 @@ import Link from 'next/link'
 import { ArrowLeft, Save, Upload, X, Plus, Trash2 } from 'lucide-react'
 
 const categories = [
-  { value: 'RESIDENTIAL', label: 'Residential' },
-  { value: 'COMMERCIAL', label: 'Commercial' },
-  { value: 'INTERIOR', label: 'Interior' },
-  { value: 'URBAN', label: 'Urban' },
-  { value: 'LANDSCAPE', label: 'Landscape' },
-  { value: 'RENOVATION', label: 'Renovation' }
+  // Urban & Landscape
+  { value: 'URBAN',              label: 'Urban Design',                         group: 'Urban & Landscape' },
+  { value: 'LANDSCAPE',          label: 'Landscape Design',                     group: 'Urban & Landscape' },
+  // Architecture
+  { value: 'MIXED_USE',          label: 'Architecture — Mixed Use',             group: 'Architecture' },
+  { value: 'COMMERCIAL',         label: 'Architecture — Commercial',            group: 'Architecture' },
+  { value: 'RESIDENTIAL',        label: 'Architecture — Residential',           group: 'Architecture' },
+  { value: 'EDUCATIONAL',        label: 'Architecture — Educational',           group: 'Architecture' },
+  { value: 'RENOVATION',         label: 'Architecture — Renovation',            group: 'Architecture' },
+  // Interior Design
+  { value: 'INTERIOR_COMMERCIAL',label: 'Interior Design — Commercial & Administrative', group: 'Interior Design' },
+  { value: 'INTERIOR_RESIDENTIAL',label: 'Interior Design — Residential',      group: 'Interior Design' },
+  { value: 'INTERIOR',           label: 'Interior Design (Other)',              group: 'Interior Design' },
 ]
 
 interface TimelineEntry {
@@ -45,7 +52,7 @@ export default function NewProjectPage() {
     slug: '',
     descriptionEn: '',
     descriptionAr: '',
-    category: 'RESIDENTIAL',
+    category: 'MIXED_USE',
     yearCompleted: '',
     location: '',
     clientName: '',
@@ -243,7 +250,13 @@ export default function NewProjectPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                {categories.map(cat => <option key={cat.value} value={cat.value}>{cat.label}</option>)}
+                {['Urban & Landscape', 'Architecture', 'Interior Design'].map(group => (
+                  <optgroup key={group} label={group}>
+                    {categories.filter(c => c.group === group).map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </optgroup>
+                ))}
               </select>
             </div>
             <div>

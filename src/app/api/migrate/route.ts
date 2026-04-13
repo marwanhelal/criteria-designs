@@ -347,6 +347,18 @@ export async function POST() {
       } catch { /* ignore */ }
     }
 
+    // 24. Add new ProjectCategory enum values (safe — PostgreSQL ignores IF EXISTS)
+    for (const val of ['MIXED_USE', 'EDUCATIONAL', 'INTERIOR_COMMERCIAL', 'INTERIOR_RESIDENTIAL']) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = '${val}' AND enumtypid = 'ProjectCategory'::regtype) THEN ALTER TYPE "ProjectCategory" ADD VALUE '${val}'; END IF; END $$;`
+        )
+        results.push(`✓ ProjectCategory.${val} ensured`)
+      } catch (e) {
+        results.push(`✗ ProjectCategory.${val}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

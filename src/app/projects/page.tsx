@@ -8,13 +8,51 @@ import Footer from '@/components/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const CATEGORY_LABELS: Record<string, string> = {
-  RESIDENTIAL: 'Residential',
-  COMMERCIAL: 'Commercial',
-  INTERIOR: 'Interior',
-  URBAN: 'Urban Planning',
-  LANDSCAPE: 'Landscape',
-  RENOVATION: 'Renovation',
+  URBAN:               'Urban Design',
+  LANDSCAPE:           'Landscape Design',
+  MIXED_USE:           'Mixed Use',
+  COMMERCIAL:          'Commercial',
+  RESIDENTIAL:         'Residential',
+  EDUCATIONAL:         'Educational',
+  RENOVATION:          'Renovation',
+  INTERIOR_COMMERCIAL: 'Commercial & Administrative',
+  INTERIOR_RESIDENTIAL:'Residential',
+  INTERIOR:            'Interior Design',
 }
+
+// How categories map to the 3 top-level display groups
+const GROUP_DEFS = [
+  {
+    key: 'URBAN_LANDSCAPE',
+    label: 'Urban & Landscape Design',
+    categories: ['URBAN', 'LANDSCAPE'],
+    accentColor: '#5B8A5B',
+  },
+  {
+    key: 'ARCHITECTURE',
+    label: 'Architecture',
+    categories: ['MIXED_USE', 'COMMERCIAL', 'RESIDENTIAL', 'EDUCATIONAL', 'RENOVATION'],
+    accentColor: '#C9A24D',
+    subLabels: {
+      MIXED_USE:   'Mixed Use',
+      COMMERCIAL:  'Commercial',
+      RESIDENTIAL: 'Residential',
+      EDUCATIONAL: 'Educational',
+      RENOVATION:  'Renovation',
+    },
+  },
+  {
+    key: 'INTERIOR',
+    label: 'Interior Design',
+    categories: ['INTERIOR_COMMERCIAL', 'INTERIOR_RESIDENTIAL', 'INTERIOR'],
+    accentColor: '#B1A490',
+    subLabels: {
+      INTERIOR_COMMERCIAL:  'Commercial & Administrative',
+      INTERIOR_RESIDENTIAL: 'Residential',
+      INTERIOR:             'Other',
+    },
+  },
+] as const
 
 interface Project {
   id: string
@@ -31,20 +69,18 @@ interface Settings {
   companyNameEn: string
 }
 
-const categories = [
-  { value: 'ALL', label: 'All' },
-  { value: 'RESIDENTIAL', label: 'Residential' },
-  { value: 'COMMERCIAL', label: 'Commercial' },
-  { value: 'INTERIOR', label: 'Interior' },
-  { value: 'URBAN', label: 'Urban Planning' },
-  { value: 'LANDSCAPE', label: 'Landscape' },
+const filterTabs = [
+  { value: 'ALL',          label: 'All' },
+  { value: 'URBAN_LANDSCAPE', label: 'Urban & Landscape' },
+  { value: 'ARCHITECTURE', label: 'Architecture' },
+  { value: 'INTERIOR',     label: 'Interior Design' },
 ]
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/philosophy', label: 'Philosophy' },
   { href: '/projects', label: 'Projects' },
-  { href: '/services', label: 'Services' },
   { href: '/awards', label: 'Recognitions' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
@@ -154,17 +190,17 @@ function ProjectsHeader({
 
         {/* Row 3: Category Filters */}
         <div className="px-6 lg:px-[52px] py-4 flex flex-wrap gap-x-8 gap-y-3">
-          {categories.map(cat => (
+          {filterTabs.map(tab => (
             <button
-              key={cat.value}
-              onClick={() => onCategoryChange(cat.value)}
+              key={tab.value}
+              onClick={() => onCategoryChange(tab.value)}
               className={`font-[var(--font-open-sans)] text-[13px] transition-all duration-200 pb-px ${
-                activeCategory === cat.value
+                activeCategory === tab.value
                   ? 'text-[#111] border-b border-[#111]'
                   : 'text-[#aaa] hover:text-[#333]'
               }`}
             >
-              {cat.label}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -278,11 +314,82 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   )
 }
 
+// ── Grouped section renderer ──────────────────────────────────────────────────
+function GroupedSection({
+  group,
+  projects,
+}: {
+  group: typeof GROUP_DEFS[number]
+  projects: Project[]
+}) {
+  if (projects.length === 0) return null
+
+  // Does this group have subgroup labels?
+  const subLabels = 'subLabels' in group ? group.subLabels as Record<string, string> : null
+
+  // Build sub-sections if subLabels exist
+  const subSections = subLabels
+    ? group.categories
+        .map(cat => ({
+          cat,
+          label: subLabels[cat as keyof typeof subLabels] ?? CATEGORY_LABELS[cat] ?? cat,
+          items: projects.filter(p => p.category === cat),
+        }))
+        .filter(s => s.items.length > 0)
+    : null
+
+  return (
+    <div className="mb-16">
+      {/* Section header */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-1 h-10 rounded-full" style={{ background: group.accentColor }} />
+        <div>
+          <h2 className="font-[var(--font-franklin-gothic)] text-[#181C23] font-bold"
+            style={{ fontSize: 'clamp(1.2rem, 2vw, 1.6rem)' }}>
+            {group.label}
+          </h2>
+          <p className="font-[var(--font-open-sans)] text-[#aaa] text-[12px] mt-0.5">
+            {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+          </p>
+        </div>
+        <div className="flex-1 h-px ml-4" style={{ background: `linear-gradient(to right, ${group.accentColor}33, transparent)` }} />
+      </div>
+
+      {subSections ? (
+        subSections.map(sub => (
+          <div key={sub.cat} className="mb-10">
+            {/* Sub-section label */}
+            <div className="flex items-center gap-3 mb-5">
+              <span className="font-[var(--font-open-sans)] text-[11px] uppercase tracking-[0.3em] font-semibold"
+                style={{ color: group.accentColor }}>
+                {sub.label}
+              </span>
+              <div className="flex-1 h-px" style={{ background: `${group.accentColor}22` }} />
+              <span className="font-[var(--font-open-sans)] text-[11px] text-[#ccc]">{sub.items.length}</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+              {sub.items.map((project, i) => (
+                <ProjectCard key={project.id} project={project} index={i} />
+              ))}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8">
+          {projects.map((project, i) => (
+            <ProjectCard key={project.id} project={project} index={i} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [activeTab, setActiveTab] = useState('ALL')
 
   useEffect(() => {
     fetch('/api/projects?status=PUBLISHED')
@@ -292,21 +399,26 @@ export default function ProjectsPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const filteredProjects = activeCategory === 'ALL'
-    ? projects
-    : projects.filter(p => p.category === activeCategory)
+  // Resolve which projects belong to each tab
+  const visibleGroups = GROUP_DEFS.map(g => ({
+    ...g,
+    projects: projects.filter(p => (g.categories as readonly string[]).includes(p.category)),
+  })).filter(g =>
+    activeTab === 'ALL' || g.key === activeTab
+  )
+
+  const totalVisible = visibleGroups.reduce((n, g) => n + g.projects.length, 0)
 
   return (
     <>
       <ProjectsHeader
-        filteredCount={filteredProjects.length}
+        filteredCount={totalVisible}
         loading={loading}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
+        activeCategory={activeTab}
+        onCategoryChange={setActiveTab}
       />
 
       <div className="min-h-screen bg-white">
-        {/* Spacer: nav row (72/90) + title row + filter row */}
         <div className="h-[190px] md:h-[210px]" />
 
         <div className="px-6 lg:px-[52px] pt-10 pb-20">
@@ -330,25 +442,24 @@ export default function ProjectsPage() {
           )}
 
           {/* Empty */}
-          {!loading && filteredProjects.length === 0 && (
+          {!loading && totalVisible === 0 && (
             <div className="text-center py-24">
               <p className="font-[var(--font-open-sans)] text-[#bbb] text-[14px]">No projects found.</p>
             </div>
           )}
 
-          {/* Cards */}
-          {!loading && filteredProjects.length > 0 && (
+          {/* Grouped sections */}
+          {!loading && totalVisible > 0 && (
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeCategory}
-                className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-8"
+                key={activeTab}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {filteredProjects.map((project, i) => (
-                  <ProjectCard key={project.id} project={project} index={i} />
+                {visibleGroups.map(g => (
+                  <GroupedSection key={g.key} group={g} projects={g.projects} />
                 ))}
               </motion.div>
             </AnimatePresence>

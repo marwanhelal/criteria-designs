@@ -75,12 +75,19 @@ model ProjectTimeline {
 }
 
 enum ProjectCategory {
-  RESIDENTIAL
-  COMMERCIAL
-  INTERIOR
+  // Urban & Landscape
   URBAN
   LANDSCAPE
+  // Architecture
+  MIXED_USE
+  COMMERCIAL
+  RESIDENTIAL
+  EDUCATIONAL
   RENOVATION
+  // Interior Design
+  INTERIOR_COMMERCIAL
+  INTERIOR_RESIDENTIAL
+  INTERIOR               // legacy — maps to Interior Design
 }
 
 // ==================== TEAM ====================
