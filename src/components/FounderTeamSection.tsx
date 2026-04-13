@@ -88,7 +88,7 @@ export default function FounderTeamSection() {
       >
         <div className="flex flex-col lg:flex-row p-12 lg:p-20 gap-14 lg:gap-20">
 
-          {/* ══ LEFT: Founder — slides in from left on scroll ══ */}
+          {/* ══ LEFT: Founder ══ */}
           <motion.section
             className="lg:w-2/5 flex flex-col relative z-10"
             initial={{ opacity: 0, x: -40 }}
@@ -102,9 +102,15 @@ export default function FounderTeamSection() {
                 className="absolute -z-10 left-0 bg-[#E4E1DC] rounded-2xl opacity-60"
                 style={{ top: '48px', width: '300px', height: '210px' }}
               />
-              <div
+
+              {/* #4 — Cinematic scale entrance: settles from 1.06 → 1.0 */}
+              <motion.div
                 className="relative"
                 style={{ marginTop: '-48px', width: '260px', height: '350px' }}
+                initial={{ scale: 1.06 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
               >
                 {founder?.founderImage ? (
                   <img
@@ -126,30 +132,60 @@ export default function FounderTeamSection() {
                     </span>
                   </div>
                 )}
-              </div>
+              </motion.div>
             </div>
 
-            {/* Text */}
-            <div style={{ maxWidth: '420px' }}>
-              <h2
+            {/* #2 — Staggered text reveal: heading → description → name */}
+            <motion.div
+              style={{ maxWidth: '420px' }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-80px' }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.22, delayChildren: 0.25 } },
+              }}
+            >
+              <motion.h2
                 className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.1] mb-5"
                 style={{ fontSize: 'clamp(28px, 3vw, 46px)' }}
+                variants={{
+                  hidden: { opacity: 0, y: 14 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+                }}
               >
                 {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
-              </h2>
+              </motion.h2>
 
               {founder?.founderDescriptionEn && (
-                <p
+                <motion.p
                   className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-6"
                   style={{ fontSize: '15px', maxWidth: '360px' }}
+                  variants={{
+                    hidden: { opacity: 0, y: 14 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+                  }}
                 >
                   {founder.founderDescriptionEn}
-                </p>
+                </motion.p>
               )}
 
               {founder?.founderNameEn && (
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-px bg-[#B1A490]" />
+                <motion.div
+                  className="flex items-center gap-3"
+                  variants={{
+                    hidden: { opacity: 0, y: 14 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                >
+                  {/* #3 — Gold line draws from 0 → full width */}
+                  <motion.div
+                    className="h-px bg-[#B1A490]"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: 28 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.85 }}
+                  />
                   <span
                     className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
                     style={{ fontSize: '10px' }}
@@ -157,9 +193,9 @@ export default function FounderTeamSection() {
                     {founder.founderNameEn}
                     {founder.founderTitleEn && ` · ${founder.founderTitleEn}`}
                   </span>
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           </motion.section>
 
           {/* ══ RIGHT: Team — slides in from right on scroll ══ */}
