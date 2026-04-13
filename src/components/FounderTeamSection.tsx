@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 
 interface FounderData {
   founderSectionTitleEn: string | null
@@ -19,15 +19,21 @@ interface TeamMember {
   photo: string | null
 }
 
-const STEP = 1
 const CARD_W = 152
 const CARD_H = 215
 const CARD_GAP = 14
+const SPEED = 0.45 // px per frame — slow, calm drift
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
   const [team, setTeam] = useState<TeamMember[]>([])
-  const [idx, setIdx] = useState(0)
+  const [activeCard, setActiveCard] = useState(1)
+
+  const trackRef = useRef<HTMLDivElement>(null)
+  const posRef = useRef(0)
+  const pausedRef = useRef(false)
+  const rafRef = useRef<number | null>(null)
+  const frameCountRef = useRef(0)
 
   useEffect(() => {
     fetch('/api/settings')
@@ -41,15 +47,38 @@ export default function FounderTeamSection() {
       .catch(() => {})
   }, [])
 
-  const visibleCount = 4
-  const maxIdx = Math.max(0, team.length - visibleCount)
-  const prev = () => setIdx(i => Math.max(0, i - STEP))
-  const next = () => setIdx(i => Math.min(maxIdx, i + STEP))
+  // Auto-scroll loop
+  useEffect(() => {
+    if (team.length === 0) return
+    const totalWidth = team.length * (CARD_W + CARD_GAP)
+
+    const tick = () => {
+      if (!pausedRef.current) {
+        posRef.current += SPEED
+        if (posRef.current >= totalWidth) posRef.current -= totalWidth
+        if (trackRef.current) {
+          trackRef.current.style.transform = `translateX(-${posRef.current}px)`
+        }
+        // Update counter every ~18 frames (~0.3s at 60fps)
+        frameCountRef.current++
+        if (frameCountRef.current % 18 === 0) {
+          setActiveCard(Math.floor(posRef.current / (CARD_W + CARD_GAP)) % team.length + 1)
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick)
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+    }
+  }, [team])
 
   const hasContent = founder?.founderImage || founder?.founderDescriptionEn || team.length > 0
   if (!hasContent) return null
 
-  const offset = idx * (CARD_W + CARD_GAP)
+  // Triple cards for seamless loop — when pos resets, visuals are identical
+  const loopCards = team.length > 0 ? [...team, ...team, ...team] : []
 
   return (
     <section data-navbar-dark className="bg-white py-16 lg:py-24 px-6 lg:px-14">
@@ -59,18 +88,20 @@ export default function FounderTeamSection() {
       >
         <div className="flex flex-col lg:flex-row p-12 lg:p-20 gap-14 lg:gap-20">
 
-          {/* ══ LEFT: Founder Spotlight ══ */}
-          <section className="lg:w-2/5 flex flex-col relative z-10">
-
-            {/* Portrait area */}
-            <div className="relative mb-10">
-              {/* Decorative background rectangle */}
+          {/* ══ LEFT: Founder — slides in from left on scroll ══ */}
+          <motion.section
+            className="lg:w-2/5 flex flex-col relative z-10"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Portrait + decorative rectangle */}
+            <div className="relative mb-10" style={{ alignSelf: 'flex-start' }}>
               <div
                 className="absolute -z-10 left-0 bg-[#E4E1DC] rounded-2xl opacity-60"
                 style={{ top: '48px', width: '300px', height: '210px' }}
               />
-
-              {/* Portrait — breaks out upward into the top padding */}
               <div
                 className="relative"
                 style={{ marginTop: '-48px', width: '260px', height: '350px' }}
@@ -87,7 +118,10 @@ export default function FounderTeamSection() {
                     className="w-full h-full bg-[#D5D1CC] rounded-2xl flex items-center justify-center"
                     style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.10))' }}
                   >
-                    <span className="font-[var(--font-merriweather)] text-white font-bold" style={{ fontSize: '40px' }}>
+                    <span
+                      className="font-[var(--font-merriweather)] text-white font-bold"
+                      style={{ fontSize: '48px' }}
+                    >
                       {founder?.founderNameEn?.charAt(0) || 'F'}
                     </span>
                   </div>
@@ -95,7 +129,7 @@ export default function FounderTeamSection() {
               </div>
             </div>
 
-            {/* Text — below the portrait */}
+            {/* Text */}
             <div style={{ maxWidth: '420px' }}>
               <h2
                 className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.1] mb-5"
@@ -106,7 +140,7 @@ export default function FounderTeamSection() {
 
               {founder?.founderDescriptionEn && (
                 <p
-                  className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-5"
+                  className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-6"
                   style={{ fontSize: '15px', maxWidth: '360px' }}
                 >
                   {founder.founderDescriptionEn}
@@ -115,7 +149,7 @@ export default function FounderTeamSection() {
 
               {founder?.founderNameEn && (
                 <div className="flex items-center gap-3">
-                  <div className="w-6 h-px bg-[#B1A490]" />
+                  <div className="w-7 h-px bg-[#B1A490]" />
                   <span
                     className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
                     style={{ fontSize: '10px' }}
@@ -126,11 +160,16 @@ export default function FounderTeamSection() {
                 </div>
               )}
             </div>
-          </section>
+          </motion.section>
 
-          {/* ══ RIGHT: Team Showcase ══ */}
-          <section className="lg:w-3/5 flex flex-col">
-
+          {/* ══ RIGHT: Team — slides in from right on scroll ══ */}
+          <motion.section
+            className="lg:w-3/5 flex flex-col"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          >
             <h3
               className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight mb-10"
               style={{ fontSize: 'clamp(22px, 2.4vw, 38px)', maxWidth: '320px' }}
@@ -139,38 +178,39 @@ export default function FounderTeamSection() {
             </h3>
 
             {team.length > 0 ? (
-              <div className="relative px-6">
-
-                {/* ← Prev */}
-                <button
-                  onClick={prev}
-                  disabled={idx === 0}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md z-20 text-[#181C23]/40 hover:text-[#181C23] disabled:opacity-20 transition-colors"
-                  aria-label="Previous"
+              <>
+                {/* Auto-scroll track — pauses on hover */}
+                <div
+                  className="overflow-hidden py-3"
+                  onMouseEnter={() => { pausedRef.current = true }}
+                  onMouseLeave={() => { pausedRef.current = false }}
                 >
-                  <ChevronLeft size={16} />
-                </button>
-
-                {/* Cards viewport */}
-                <div className="overflow-hidden">
                   <div
+                    ref={trackRef}
                     className="flex"
-                    style={{
-                      gap: `${CARD_GAP}px`,
-                      transform: `translateX(-${offset}px)`,
-                      transition: 'transform 0.4s cubic-bezier(0.25,0.4,0.25,1)',
-                    }}
+                    style={{ gap: `${CARD_GAP}px` }}
                   >
-                    {team.map((member) => (
+                    {loopCards.map((member, i) => (
                       <div
-                        key={member.id}
-                        className="flex-none rounded-2xl overflow-hidden bg-white border border-black/5"
+                        key={i}
+                        className="flex-none rounded-2xl overflow-hidden bg-white border border-black/5 cursor-default"
                         style={{
                           width: `${CARD_W}px`,
                           boxShadow: '0 4px 20px rgba(0,0,0,0.07)',
+                          transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+                        }}
+                        onMouseEnter={e => {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.transform = 'translateY(-6px)'
+                          el.style.boxShadow = '0 16px 40px rgba(0,0,0,0.13)'
+                        }}
+                        onMouseLeave={e => {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.transform = 'translateY(0)'
+                          el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.07)'
                         }}
                       >
-                        {/* Portrait photo */}
+                        {/* Portrait */}
                         <div style={{ height: `${CARD_H}px` }} className="overflow-hidden">
                           {member.photo ? (
                             <img
@@ -180,16 +220,22 @@ export default function FounderTeamSection() {
                             />
                           ) : (
                             <div className="w-full h-full bg-[#C5C0B8] flex items-center justify-center">
-                              <span className="font-[var(--font-merriweather)] text-white font-bold" style={{ fontSize: '28px' }}>
+                              <span
+                                className="font-[var(--font-merriweather)] text-white font-bold"
+                                style={{ fontSize: '28px' }}
+                              >
                                 {member.nameEn.charAt(0)}
                               </span>
                             </div>
                           )}
                         </div>
 
-                        {/* Info panel */}
+                        {/* Info */}
                         <div className="p-4 bg-white">
-                          <p className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight" style={{ fontSize: '13px' }}>
+                          <p
+                            className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight"
+                            style={{ fontSize: '13px' }}
+                          >
                             {member.nameEn}
                           </p>
                           <p
@@ -204,23 +250,38 @@ export default function FounderTeamSection() {
                   </div>
                 </div>
 
-                {/* → Next */}
-                <button
-                  onClick={next}
-                  disabled={idx >= maxIdx}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md z-20 text-[#181C23]/40 hover:text-[#181C23] disabled:opacity-20 transition-colors"
-                  aria-label="Next"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
+                {/* Progress bar + counter */}
+                <div className="mt-6 flex items-center gap-4">
+                  <span
+                    className="font-[var(--font-libre-franklin)] font-semibold text-[#181C23] tabular-nums"
+                    style={{ fontSize: '12px', minWidth: '22px' }}
+                  >
+                    {String(activeCard).padStart(2, '0')}
+                  </span>
+                  <div className="flex-1 h-px bg-[#E8E4DF] relative rounded-full overflow-hidden">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-[#B1A490] rounded-full"
+                      style={{
+                        width: `${(activeCard / team.length) * 100}%`,
+                        transition: 'width 0.3s ease',
+                      }}
+                    />
+                  </div>
+                  <span
+                    className="font-[var(--font-libre-franklin)] text-[#AEABA5] tabular-nums"
+                    style={{ fontSize: '12px', minWidth: '22px' }}
+                  >
+                    {String(team.length).padStart(2, '0')}
+                  </span>
+                </div>
+              </>
             ) : (
               <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#9A9A94]">
                 No team members yet. Add them from the Team section.
               </p>
             )}
+          </motion.section>
 
-          </section>
         </div>
       </div>
     </section>
