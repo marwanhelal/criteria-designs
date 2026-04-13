@@ -93,6 +93,7 @@ const filterTabs = [
   { value: 'INTERIOR',        label: 'Interior Design',    sub: [
       { label: 'Commercial & Administrative', id: 'section-INTERIOR_COMMERCIAL' },
       { label: 'Residential',                 id: 'section-INTERIOR_RESIDENTIAL' },
+      { label: 'Other',                       id: 'section-INTERIOR' },
   ]},
 ]
 
