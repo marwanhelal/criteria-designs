@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import CeoBanner from '@/components/CeoBanner'
 import PhilosophySection from '@/components/PhilosophySection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
@@ -296,9 +295,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== CEO BANNER ===== */}
       <PhilosophySection />
-      <CeoBanner />
       <ShowcaseSection projects={showcaseHero} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
