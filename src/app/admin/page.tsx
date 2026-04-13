@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
 import { FolderKanban, Users, Briefcase, FileText } from 'lucide-react'
+import MigrateButton from './components/MigrateButton'
 
 // Force dynamic rendering (don't prerender at build time)
 export const dynamic = 'force-dynamic'
@@ -65,16 +66,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Getting Started</h2>
-          <ul className="space-y-2 text-gray-600">
-            <li>1. Add your company information in Settings</li>
-            <li>2. Upload your team members</li>
-            <li>3. Add your services</li>
-            <li>4. Showcase your projects</li>
-            <li>5. Start writing blog posts</li>
-          </ul>
-        </div>
+        <MigrateButton />
       </div>
     </div>
   )
