@@ -674,10 +674,10 @@ export default function PhilosophySection() {
                 className="mt-10 flex justify-center"
               >
                 <Link
-                  href="/projects"
+                  href="/philosophy"
                   className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#B1A490] border border-[#B1A490]/30 px-8 py-4 hover:border-[#B1A490] hover:bg-[#B1A490]/08 transition-all duration-300"
                 >
-                  <span className="transition-transform duration-300 group-hover:-translate-x-1">Discover Our Projects</span>
+                  <span className="transition-transform duration-300 group-hover:-translate-x-1">Explore Our Philosophy</span>
                   <span className="opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">→</span>
                 </Link>
               </motion.div>
