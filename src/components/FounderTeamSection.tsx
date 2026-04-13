@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -20,14 +20,16 @@ interface TeamMember {
   photo: string | null
 }
 
-const CARDS_VISIBLE = 4
+// How many cards to slide per click
+const STEP = 1
+// Card fixed width + gap (px) — must match CSS below
+const CARD_W = 130
+const CARD_GAP = 20
 
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
   const [team, setTeam] = useState<TeamMember[]>([])
   const [idx, setIdx] = useState(0)
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [cardW, setCardW] = useState(0)
 
   useEffect(() => {
     fetch('/api/settings')
@@ -41,33 +43,25 @@ export default function FounderTeamSection() {
       .catch(() => {})
   }, [])
 
-  useEffect(() => {
-    const measure = () => {
-      if (trackRef.current) {
-        setCardW(trackRef.current.offsetWidth / CARDS_VISIBLE)
-      }
-    }
-    measure()
-    window.addEventListener('resize', measure, { passive: true })
-    return () => window.removeEventListener('resize', measure)
-  }, [team])
+  const visibleCount = 4
+  const maxIdx = Math.max(0, team.length - visibleCount)
+  const prev = () => setIdx(i => Math.max(0, i - STEP))
+  const next = () => setIdx(i => Math.min(maxIdx, i + STEP))
 
-  const maxIdx = Math.max(0, team.length - CARDS_VISIBLE)
-  const prev = () => setIdx(i => Math.max(0, i - 1))
-  const next = () => setIdx(i => Math.min(maxIdx, i + 1))
+  const hasContent = founder?.founderImage || founder?.founderDescriptionEn || team.length > 0
+  if (!hasContent) return null
 
-  const hasFounder = founder?.founderImage || founder?.founderDescriptionEn
-  if (!hasFounder && team.length === 0) return null
+  const offset = idx * (CARD_W + CARD_GAP)
 
   return (
-    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '420px' }}>
+    <section data-navbar-dark className="flex flex-col lg:flex-row" style={{ minHeight: '460px' }}>
 
-      {/* ── LEFT: Founder ─────────────────────────────────── */}
-      <div className="lg:w-[42%] shrink-0 relative flex bg-[#ECEAE6] overflow-hidden">
+      {/* ══ LEFT: Founder ══════════════════════════════════════ */}
+      <div className="lg:w-[43%] shrink-0 flex bg-[#ECEAE6] overflow-hidden">
 
-        {/* Portrait — fills full height on the left */}
+        {/* Portrait — fills full height */}
         {founder?.founderImage && (
-          <div className="relative shrink-0" style={{ width: '200px' }}>
+          <div className="relative shrink-0 self-stretch" style={{ width: '200px', minHeight: '460px' }}>
             <Image
               src={founder.founderImage}
               alt={founder.founderNameEn || 'Founder'}
@@ -79,27 +73,27 @@ export default function FounderTeamSection() {
           </div>
         )}
 
-        {/* Text — anchored to the bottom-left of the remaining space */}
-        <div className="flex flex-col justify-end px-8 pb-10 pt-10 lg:px-10 lg:pb-12">
+        {/* Text — bottom-aligned */}
+        <div className="flex flex-col justify-end px-8 pb-12 pt-8 lg:px-10 lg:pb-14">
           <h2
-            className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.15] mb-4"
-            style={{ fontSize: 'clamp(22px, 2.2vw, 30px)' }}
+            className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.15] mb-3"
+            style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}
           >
             {founder?.founderSectionTitleEn || 'Our Founder and CEO'}
           </h2>
 
           {founder?.founderDescriptionEn && (
             <p
-              className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed"
-              style={{ fontSize: 'clamp(12px, 1vw, 14px)', maxWidth: '280px' }}
+              className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-relaxed mb-5"
+              style={{ fontSize: '13px', maxWidth: '290px' }}
             >
               {founder.founderDescriptionEn}
             </p>
           )}
 
           {founder?.founderNameEn && (
-            <div className="mt-5 flex items-center gap-3">
-              <div className="w-5 h-px bg-[#B1A490]" />
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-px bg-[#B1A490]" />
               <span
                 className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase tracking-[2.5px]"
                 style={{ fontSize: '10px' }}
@@ -115,20 +109,20 @@ export default function FounderTeamSection() {
       {/* Vertical divider */}
       <div className="hidden lg:block w-px bg-[#D5D1CC] shrink-0" />
 
-      {/* ── RIGHT: Team ────────────────────────────────────── */}
-      <div className="flex-1 bg-white flex flex-col justify-center px-8 py-10 lg:px-14 lg:py-12">
+      {/* ══ RIGHT: Team ════════════════════════════════════════ */}
+      <div className="flex-1 bg-white flex flex-col justify-center px-10 py-12 lg:px-14 lg:py-14 overflow-hidden">
 
         <h2
-          className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.2] mb-8"
-          style={{ fontSize: 'clamp(20px, 2vw, 26px)' }}
+          className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-[1.2] mb-10"
+          style={{ fontSize: 'clamp(18px, 1.8vw, 24px)' }}
         >
           {founder?.teamSectionTitleEn || 'Modern Creative Team Showcase'}
         </h2>
 
         {team.length > 0 ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
 
-            {/* Prev arrow */}
+            {/* ← Prev */}
             <button
               onClick={prev}
               disabled={idx === 0}
@@ -138,35 +132,36 @@ export default function FounderTeamSection() {
               <ChevronLeft size={14} />
             </button>
 
-            {/* Cards track */}
-            <div ref={trackRef} className="flex-1 overflow-hidden">
+            {/* Cards viewport */}
+            <div className="flex-1 overflow-hidden">
               <div
-                className="flex transition-transform duration-400 ease-[cubic-bezier(0.25,0.4,0.25,1)]"
-                style={{ transform: `translateX(-${idx * cardW}px)` }}
+                className="flex"
+                style={{
+                  gap: `${CARD_GAP}px`,
+                  transform: `translateX(-${offset}px)`,
+                  transition: 'transform 0.4s cubic-bezier(0.25,0.4,0.25,1)',
+                }}
               >
                 {team.map((member) => (
                   <div
                     key={member.id}
-                    className="shrink-0 flex flex-col items-center text-center px-2"
-                    style={{ width: cardW > 0 ? `${cardW}px` : `${100 / CARDS_VISIBLE}%` }}
+                    className="shrink-0 flex flex-col items-center text-center"
+                    style={{ width: `${CARD_W}px` }}
                   >
-                    {/* Photo — portrait rectangle matching the design */}
+                    {/* Portrait photo — rectangle, no border-radius */}
                     <div
-                      className="relative w-full overflow-hidden bg-[#E8E5E0] mb-3"
-                      style={{ aspectRatio: '3/4', maxWidth: '120px' }}
+                      className="overflow-hidden bg-[#E4E1DC] mb-3"
+                      style={{ width: `${CARD_W}px`, height: `${Math.round(CARD_W * 1.25)}px` }}
                     >
                       {member.photo ? (
-                        <Image
+                        <img
                           src={member.photo}
                           alt={member.nameEn}
-                          fill
-                          sizes="120px"
-                          className="object-cover object-top"
-                          unoptimized
+                          className="w-full h-full object-cover object-top"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-[#C9C4BC]">
-                          <span className="font-[var(--font-merriweather)] text-white text-[22px] font-bold">
+                        <div className="w-full h-full flex items-center justify-center bg-[#C5C0B8]">
+                          <span className="font-[var(--font-merriweather)] text-white text-[28px] font-bold">
                             {member.nameEn.charAt(0)}
                           </span>
                         </div>
@@ -176,7 +171,7 @@ export default function FounderTeamSection() {
                     {/* Name */}
                     <p
                       className="font-[var(--font-merriweather)] font-bold text-[#181C23] leading-tight"
-                      style={{ fontSize: 'clamp(11px, 0.9vw, 13px)' }}
+                      style={{ fontSize: '13px' }}
                     >
                       {member.nameEn}
                     </p>
@@ -184,7 +179,7 @@ export default function FounderTeamSection() {
                     {/* Role */}
                     <p
                       className="font-[var(--font-libre-franklin)] text-[#9A9A94] mt-1 leading-snug"
-                      style={{ fontSize: 'clamp(9px, 0.75vw, 11px)' }}
+                      style={{ fontSize: '11px' }}
                     >
                       {member.roleEn}
                     </p>
@@ -193,7 +188,7 @@ export default function FounderTeamSection() {
               </div>
             </div>
 
-            {/* Next arrow */}
+            {/* → Next */}
             <button
               onClick={next}
               disabled={idx >= maxIdx}
@@ -209,6 +204,7 @@ export default function FounderTeamSection() {
           </p>
         )}
       </div>
+
     </section>
   )
 }
