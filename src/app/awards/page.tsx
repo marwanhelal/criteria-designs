@@ -24,8 +24,8 @@ interface Settings {
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/philosophy', label: 'Philosophy' },
   { href: '/projects', label: 'Projects' },
-  { href: '/services', label: 'Services' },
   { href: '/awards', label: 'Recognitions' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
