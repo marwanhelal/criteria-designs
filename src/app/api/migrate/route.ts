@@ -77,6 +77,22 @@ export async function POST() {
       results.push(`✗ ProjectTimeline index: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 7. Founder & Team section columns on SiteSettings
+    const founderColumns = [
+      'founderSectionTitleEn', 'founderNameEn', 'founderTitleEn',
+      'founderDescriptionEn', 'founderImage', 'teamSectionTitleEn',
+    ]
+    for (const col of founderColumns) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
     // 8. Showcase project columns on SiteSettings
     const showcaseColumns = [
       'showcaseProject1Id', 'showcaseProject2Id', 'showcaseProject3Id',

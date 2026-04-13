@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PhilosophySection from '@/components/PhilosophySection'
+import FounderTeamSection from '@/components/FounderTeamSection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
 import AwardsAccordion from '@/components/AwardsAccordion'
@@ -365,6 +366,8 @@ export default function Home() {
           <div className="h-px bg-[#E8E8E4]" />
         </div>
       </div>
+
+      <FounderTeamSection />
 
       <AwardsAccordion
         awards={(() => {

@@ -90,6 +90,13 @@ export async function PUT(request: NextRequest) {
         seoTitleAr: data.seoTitleAr || null,
         seoDescriptionEn: data.seoDescriptionEn || null,
         seoDescriptionAr: data.seoDescriptionAr || null,
+        // Founder & Team Section
+        founderSectionTitleEn: data.founderSectionTitleEn || null,
+        founderNameEn: data.founderNameEn || null,
+        founderTitleEn: data.founderTitleEn || null,
+        founderDescriptionEn: data.founderDescriptionEn || null,
+        founderImage: data.founderImage || null,
+        teamSectionTitleEn: data.teamSectionTitleEn || null,
         // Showcase projects
         showcaseProject1Id: data.showcaseProject1Id || null,
         showcaseProject2Id: data.showcaseProject2Id || null,
@@ -149,6 +156,13 @@ export async function PUT(request: NextRequest) {
         seoTitleAr: data.seoTitleAr || null,
         seoDescriptionEn: data.seoDescriptionEn || null,
         seoDescriptionAr: data.seoDescriptionAr || null,
+        // Founder & Team Section
+        founderSectionTitleEn: data.founderSectionTitleEn || null,
+        founderNameEn: data.founderNameEn || null,
+        founderTitleEn: data.founderTitleEn || null,
+        founderDescriptionEn: data.founderDescriptionEn || null,
+        founderImage: data.founderImage || null,
+        teamSectionTitleEn: data.teamSectionTitleEn || null,
         // Showcase projects
         showcaseProject1Id: data.showcaseProject1Id || null,
         showcaseProject2Id: data.showcaseProject2Id || null,

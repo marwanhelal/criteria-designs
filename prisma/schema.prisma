@@ -189,6 +189,14 @@ model SiteSettings {
   showcaseProject4Id String?
   showcaseProject5Id String?
 
+  // Founder & Team Section
+  founderSectionTitleEn  String?
+  founderNameEn          String?
+  founderTitleEn         String?
+  founderDescriptionEn   String?  @db.Text
+  founderImage           String?
+  teamSectionTitleEn     String?
+
   // Awards section stats
   awardsCountries  String?  @default("12+")
   awardsSince      String?  @default("2001")
