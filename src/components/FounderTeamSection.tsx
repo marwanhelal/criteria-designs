@@ -51,6 +51,8 @@ export default function FounderTeamSection() {
   useEffect(() => {
     if (team.length === 0) return
     const totalWidth = team.length * (CARD_W + CARD_GAP)
+    frameCountRef.current = 0
+    posRef.current = 0
 
     const tick = () => {
       if (!pausedRef.current) {

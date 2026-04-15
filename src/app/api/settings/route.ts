@@ -216,6 +216,7 @@ export async function PUT(request: NextRequest) {
         aboutStat3Label: data.aboutStat3Label || null,
         aboutStat4Number: data.aboutStat4Number || null,
         aboutStat4Label: data.aboutStat4Label || null,
+        aboutServicesText: data.aboutServicesText || null,
       }
     })
 

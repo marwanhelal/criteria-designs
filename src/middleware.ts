@@ -7,7 +7,11 @@ const PROTECTED_API_ROUTES = [
   '/api/projects',
   '/api/team',
   '/api/services',
+  '/api/awards',
+  '/api/clients',
   '/api/settings',
+  '/api/about-settings',
+  '/api/philosophy',
   '/api/media',
   '/api/upload',
 ]

@@ -13,10 +13,21 @@ export async function deleteFile(url: string | null | undefined): Promise<void> 
   const filepath = join(process.cwd(), 'public', 'uploads', filename)
 
   // Delete physical file (ignore if already gone)
-  try { await unlink(filepath) } catch {}
+  try {
+    await unlink(filepath)
+  } catch (err: unknown) {
+    const code = (err as NodeJS.ErrnoException).code
+    if (code !== 'ENOENT') {
+      console.warn(`[deleteFile] Could not unlink ${filepath}:`, err)
+    }
+  }
 
   // Remove Media record (ignore if not found)
-  try { await prisma.media.deleteMany({ where: { url } }) } catch {}
+  try {
+    await prisma.media.deleteMany({ where: { url } })
+  } catch (err) {
+    console.warn(`[deleteFile] Could not remove Media record for ${url}:`, err)
+  }
 }
 
 /**
