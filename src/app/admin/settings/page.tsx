@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Save, Upload } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 const CHUNK_SIZE = 512 * 1024 // 512 KB — safely below any reverse-proxy body-size limit
 
@@ -11,6 +12,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
   const [uploadProgress, setUploadProgress] = useState(0)
   const [unsavedVideo, setUnsavedVideo] = useState(false)
   const [projects, setProjects] = useState<ProjectOption[]>([])
@@ -225,6 +227,7 @@ export default function SettingsPage() {
 
   return (
     <div>
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Site Settings</h1>
       </div>
@@ -360,7 +363,7 @@ export default function SettingsPage() {
                   {form.logo && (
                     <button
                       type="button"
-                      onClick={() => setForm(prev => ({ ...prev, logo: '' }))}
+                      onClick={() => confirmDeleteImage(form.logo, () => setForm(prev => ({ ...prev, logo: '' })))}
                       className="text-xs text-red-500 hover:text-red-600"
                     >
                       Remove
@@ -429,7 +432,7 @@ export default function SettingsPage() {
                 {form.heroImage && (
                   <button
                     type="button"
-                    onClick={() => setForm(prev => ({ ...prev, heroImage: '' }))}
+                    onClick={() => confirmDeleteImage(form.heroImage, () => setForm(prev => ({ ...prev, heroImage: '' })))}
                     className="text-sm text-red-600 hover:text-red-700"
                   >
                     Remove
@@ -464,7 +467,7 @@ export default function SettingsPage() {
                 {form.heroVideo && (
                   <button
                     type="button"
-                    onClick={() => setForm(prev => ({ ...prev, heroVideo: '' }))}
+                    onClick={() => confirmDeleteImage(form.heroVideo, () => setForm(prev => ({ ...prev, heroVideo: '' })))}
                     className="text-sm text-red-600 hover:text-red-700"
                   >
                     Remove
@@ -509,7 +512,7 @@ export default function SettingsPage() {
                   <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'philosophyImage')} className="hidden" disabled={uploading === 'philosophyImage'} />
                 </label>
                 {form.philosophyImage && (
-                  <button type="button" onClick={() => setForm(prev => ({ ...prev, philosophyImage: '' }))} className="text-xs text-red-500 hover:text-red-600 text-left">Remove</button>
+                  <button type="button" onClick={() => confirmDeleteImage(form.philosophyImage, () => setForm(prev => ({ ...prev, philosophyImage: '' })))} className="text-xs text-red-500 hover:text-red-600 text-left">Remove</button>
                 )}
                 <p className="text-xs text-gray-400 max-w-[260px]">Upload the final Criteria Designs logo (PNG with transparent background recommended).</p>
               </div>
@@ -537,7 +540,7 @@ export default function SettingsPage() {
                     <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field)} className="hidden" disabled={uploading === field} />
                   </label>
                   {form[field] && (
-                    <button type="button" onClick={() => setForm(prev => ({ ...prev, [field]: '' }))} className="text-xs text-red-500 hover:text-red-600">Remove</button>
+                    <button type="button" onClick={() => confirmDeleteImage(form[field], () => setForm(prev => ({ ...prev, [field]: '' })))} className="text-xs text-red-500 hover:text-red-600">Remove</button>
                   )}
                 </div>
               </div>

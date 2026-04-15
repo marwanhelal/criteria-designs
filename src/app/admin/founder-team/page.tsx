@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { Save, Users } from 'lucide-react'
 import Link from 'next/link'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 export default function FounderTeamAdminPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const [form, setForm] = useState({
     founderSectionTitleEn: '',
@@ -84,6 +86,7 @@ export default function FounderTeamAdminPage() {
 
   return (
     <div>
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Founder &amp; Team Section</h1>
         <button
@@ -193,7 +196,7 @@ export default function FounderTeamAdminPage() {
                 {form.founderImage && (
                   <button
                     type="button"
-                    onClick={() => setForm(prev => ({ ...prev, founderImage: '' }))}
+                    onClick={() => confirmDeleteImage(form.founderImage, () => setForm(prev => ({ ...prev, founderImage: '' })))}
                     className="text-xs text-red-500 hover:text-red-600"
                   >
                     Remove

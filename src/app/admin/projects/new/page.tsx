@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Upload, X, Plus, Trash2 } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 const categories = [
   // Urban & Landscape
@@ -33,6 +34,7 @@ interface TimelineEntry {
 export default function NewProjectPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   // Separate image states per section
   const [heroImage, setHeroImage] = useState('')
@@ -197,6 +199,7 @@ export default function NewProjectPage() {
 
   return (
     <div>
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
       <div className="flex items-center gap-4 mb-6">
         <Link href="/admin/projects" className="p-2 hover:bg-gray-100 rounded">
           <ArrowLeft size={20} />
@@ -286,7 +289,7 @@ export default function NewProjectPage() {
               {form.clientLogo && (
                 <div className="relative">
                   <img src={form.clientLogo} alt="Client logo" className="h-12 object-contain" />
-                  <button type="button" onClick={() => setForm({ ...form, clientLogo: '' })}
+                  <button type="button" onClick={() => confirmDeleteImage(form.clientLogo, () => setForm(f => ({ ...f, clientLogo: '' })))}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5"><X size={12} /></button>
                 </div>
               )}
@@ -306,7 +309,7 @@ export default function NewProjectPage() {
             {heroImage && (
               <div className="relative">
                 <img src={heroImage} alt="Hero" className="w-48 h-32 object-cover rounded-lg" />
-                <button type="button" onClick={() => setHeroImage('')}
+                <button type="button" onClick={() => confirmDeleteImage(heroImage, () => setHeroImage(''))}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X size={16} /></button>
               </div>
             )}
@@ -328,7 +331,7 @@ export default function NewProjectPage() {
             {galleryImages.map((img, index) => (
               <div key={index} className="relative">
                 <img src={img.url} alt={img.alt || ''} className="w-32 h-32 object-cover rounded-lg" />
-                <button type="button" onClick={() => setGalleryImages(galleryImages.filter((_, i) => i !== index))}
+                <button type="button" onClick={() => confirmDeleteImage(img.url, () => setGalleryImages(prev => prev.filter((_, i) => i !== index)))}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X size={16} /></button>
                 <span className="absolute bottom-1 left-1 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">{index + 1}</span>
               </div>
@@ -403,7 +406,7 @@ export default function NewProjectPage() {
                   {entry.image && (
                     <div className="relative">
                       <img src={entry.image} alt="" className="w-24 h-24 object-cover rounded" />
-                      <button type="button" onClick={() => updateTimeline(index, 'image', '')}
+                      <button type="button" onClick={() => confirmDeleteImage(entry.image, () => updateTimeline(index, 'image', ''))}
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5"><X size={12} /></button>
                     </div>
                   )}
@@ -463,7 +466,7 @@ export default function NewProjectPage() {
               {finalRevealImages.map((img, index) => (
                 <div key={index} className="relative">
                   <img src={img.url} alt={img.alt || ''} className="w-32 h-32 object-cover rounded-lg" />
-                  <button type="button" onClick={() => setFinalRevealImages(finalRevealImages.filter((_, i) => i !== index))}
+                  <button type="button" onClick={() => confirmDeleteImage(img.url, () => setFinalRevealImages(prev => prev.filter((_, i) => i !== index)))}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X size={16} /></button>
                   <span className="absolute bottom-1 left-1 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">{index + 1}</span>
                 </div>

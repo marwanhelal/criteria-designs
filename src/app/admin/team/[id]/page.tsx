@@ -4,6 +4,7 @@ import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Upload } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 export default function EditTeamMemberPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -12,6 +13,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [photo, setPhoto] = useState<string | null>(null)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const [form, setForm] = useState({
     nameEn: '',
@@ -113,6 +115,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
 
   return (
     <div>
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
       <div className="flex items-center gap-4 mb-6">
         <Link href="/admin/team" className="p-2 hover:bg-gray-100 rounded">
           <ArrowLeft size={20} />
@@ -145,6 +148,15 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
                   disabled={uploading}
                 />
               </label>
+              {photo && (
+                <button
+                  type="button"
+                  onClick={() => confirmDeleteImage(photo, () => setPhoto(null))}
+                  className="mt-1 text-xs text-red-500 hover:text-red-600"
+                >
+                  Remove Photo
+                </button>
+              )}
             </div>
 
             <div className="flex-1 space-y-4">

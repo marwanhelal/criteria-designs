@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Save, Upload, X } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 interface FormState {
   heroTitle: string
@@ -45,6 +46,7 @@ export default function AdminPhilosophyPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [uploading, setUploading] = useState<UploadField | null>(null)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const introRef   = useRef<HTMLInputElement>(null)
   const humanRef   = useRef<HTMLInputElement>(null)
@@ -112,7 +114,7 @@ export default function AdminPhilosophyPage() {
           <div className="relative inline-block">
             <img src={form[field]} alt={label} className="h-28 w-auto rounded-lg border object-contain bg-gray-50" />
             <button
-              onClick={() => set(field, '')}
+              onClick={() => confirmDeleteImage(form[field], () => set(field, ''))}
               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow"
             >
               <X size={13} />
@@ -140,6 +142,7 @@ export default function AdminPhilosophyPage() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-8">
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
 
       {/* Header */}
       <div className="flex items-center justify-between">

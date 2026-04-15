@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Save, Upload, X, Image as ImageIcon } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 interface FormState {
   aboutIntroText: string
@@ -51,6 +52,7 @@ export default function AdminAboutPage() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [saved, setSaved] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   useEffect(() => {
     fetch('/api/about-settings')
@@ -131,6 +133,7 @@ export default function AdminAboutPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
 
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -204,7 +207,7 @@ export default function AdminAboutPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={form.aboutImage} alt="About feature" className="w-full h-full object-cover" />
             <button
-              onClick={() => set('aboutImage', '')}
+              onClick={() => confirmDeleteImage(form.aboutImage, () => set('aboutImage', ''))}
               className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600"
             >
               <X size={14} />
