@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Trash2, GripVertical } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
 
 interface Client {
   id: string
@@ -19,6 +20,7 @@ export default function ClientsPage() {
   const [newLogo, setNewLogo] = useState('')
   const [newBgColor, setNewBgColor] = useState('#FFFFFF')
   const [uploading, setUploading] = useState(false)
+  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   useEffect(() => { fetchClients() }, [])
 
@@ -73,6 +75,7 @@ export default function ClientsPage() {
 
   return (
     <div className="p-8 max-w-3xl">
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
       </div>
@@ -131,6 +134,13 @@ export default function ClientsPage() {
                 <img src={newLogo} alt="preview" className="max-h-10 max-w-full object-contain" />
               </div>
               <span className="text-xs text-gray-400">Preview with background</span>
+              <button
+                type="button"
+                onClick={() => confirmDeleteImage(newLogo, () => setNewLogo(''))}
+                className="text-xs text-red-500 hover:text-red-600"
+              >
+                Remove
+              </button>
             </div>
           )}
 
