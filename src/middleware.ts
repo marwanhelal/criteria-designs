@@ -14,6 +14,7 @@ const PROTECTED_API_ROUTES = [
   '/api/philosophy',
   '/api/media',
   '/api/upload',
+  '/api/admin',
 ]
 
 // Routes that are always public
@@ -29,8 +30,8 @@ export async function middleware(request: NextRequest) {
   const { pathname, } = request.nextUrl
   const method = request.method
 
-  // Allow all GET requests to API routes (public data)
-  if (pathname.startsWith('/api/') && method === 'GET') {
+  // Allow all GET requests to API routes (public data) — except admin-only routes
+  if (pathname.startsWith('/api/') && method === 'GET' && !pathname.startsWith('/api/admin')) {
     return NextResponse.next()
   }
 

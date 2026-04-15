@@ -15,6 +15,7 @@ import {
   BookOpen,
   Lightbulb,
   UserCircle,
+  Trash2,
 } from 'lucide-react'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -29,6 +30,7 @@ const sidebarItems = [
   { name: 'Clients', href: '/admin/clients', icon: Building2 },
   { name: 'Awards', href: '/admin/awards', icon: Award },
   { name: 'Home Page', href: '/admin/settings', icon: Settings },
+  { name: 'Storage Cleanup', href: '/admin/cleanup', icon: Trash2 },
 ]
 
 export default function AdminLayout({
