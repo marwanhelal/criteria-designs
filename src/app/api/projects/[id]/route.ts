@@ -69,7 +69,11 @@ export async function PUT(
     // Delete existing timeline entries if new ones provided
     if (data.timeline) {
       try {
+        const oldTimeline = await prisma.projectTimeline.findMany({ where: { projectId: id } })
+        const oldTimelineImageUrls = oldTimeline.map(t => t.image).filter(Boolean) as string[]
         await prisma.projectTimeline.deleteMany({ where: { projectId: id } })
+        // Queue timeline image URLs for deletion (after DB update)
+        removedImageUrls = [...removedImageUrls, ...oldTimelineImageUrls]
       } catch {
         // timeline table may not exist yet
       }

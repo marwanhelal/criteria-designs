@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { deleteFiles } from '@/lib/deleteFile'
+
+const PHILOSOPHY_IMAGE_FIELDS = [
+  'introImage', 'humanImage', 'envImage', 'cultureImage', 'diagramImage',
+] as const
 
 const DEFAULTS = {
   heroTitle: 'Our Philosophy',
@@ -38,6 +43,18 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json()
+
+    // Collect replaced image URLs before overwriting
+    const current = await prisma.philosophyPage.findUnique({ where: { id: 'main' } })
+    const urlsToDelete: (string | null | undefined)[] = []
+    if (current) {
+      for (const field of PHILOSOPHY_IMAGE_FIELDS) {
+        const oldVal = current[field] as string | null
+        const newVal = data[field] || null
+        if (oldVal && oldVal !== newVal) urlsToDelete.push(oldVal)
+      }
+    }
+
     const page = await prisma.philosophyPage.upsert({
       where: { id: 'main' },
       update: {
@@ -74,6 +91,7 @@ export async function PUT(request: NextRequest) {
         diagramImage:       data.diagramImage       || null,
       },
     })
+    await deleteFiles(urlsToDelete)
     return NextResponse.json(page)
   } catch (error) {
     console.error('Error updating philosophy page:', error)

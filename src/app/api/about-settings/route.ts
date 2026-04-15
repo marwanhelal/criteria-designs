@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { deleteFile } from '@/lib/deleteFile'
 
 export async function GET() {
   try {
@@ -33,6 +34,12 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json()
+
+    // Delete old aboutImage if it was replaced or removed
+    const current = await prisma.siteSettings.findUnique({ where: { id: 'main' } })
+    const oldImage = current?.aboutImage ?? null
+    const newImage = data.aboutImage || null
+
     const settings = await prisma.siteSettings.upsert({
       where: { id: 'main' },
       update: {
@@ -75,6 +82,7 @@ export async function PUT(request: NextRequest) {
         aboutServicesText: data.aboutServicesText || null,
       },
     })
+    if (oldImage && oldImage !== newImage) await deleteFile(oldImage)
     return NextResponse.json(settings)
   } catch (error) {
     console.error('Error updating about settings:', error)
