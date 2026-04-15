@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { deleteFiles } from '@/lib/deleteFile'
+
+// Image fields on SiteSettings that should be cleaned up when replaced
+const IMAGE_FIELDS = [
+  'logo', 'favicon', 'heroImage', 'heroVideo',
+  'philosophyImage', 'philosophyCultureImage', 'philosophyNatureImage', 'philosophyArtImage',
+  'founderImage', 'aboutImage',
+] as const
 
 // GET site settings
 export async function GET() {
@@ -63,6 +71,19 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json()
+
+    // Detect which image fields are being replaced so we can delete the old files
+    const current = await prisma.siteSettings.findUnique({ where: { id: 'main' } })
+    const urlsToDelete: (string | null | undefined)[] = []
+    if (current) {
+      for (const field of IMAGE_FIELDS) {
+        const oldVal = current[field] as string | null
+        const newVal = data[field] || null
+        if (oldVal && oldVal !== newVal) {
+          urlsToDelete.push(oldVal)
+        }
+      }
+    }
 
     const settings = await prisma.siteSettings.upsert({
       where: { id: 'main' },
@@ -197,6 +218,9 @@ export async function PUT(request: NextRequest) {
         aboutStat4Label: data.aboutStat4Label || null,
       }
     })
+
+    // Delete replaced image files after the DB update succeeds
+    await deleteFiles(urlsToDelete)
 
     return NextResponse.json(settings)
   } catch (error) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { deleteFile, deleteFiles } from '@/lib/deleteFile'
 
 // GET single project
 export async function GET(
@@ -51,19 +52,24 @@ export async function PUT(
     const { id } = await params
     const data = await request.json()
 
-    // Delete existing images if new ones provided
+    // Collect old image URLs before overwriting so we can delete removed ones
+    let removedImageUrls: string[] = []
     if (data.images) {
-      await prisma.projectImage.deleteMany({
-        where: { projectId: id }
+      const oldProject = await prisma.project.findUnique({
+        where: { id },
+        include: { images: true }
       })
+      const oldUrls = new Set((oldProject?.images ?? []).map(img => img.url))
+      const newUrls = new Set((data.images as { url: string }[]).map(img => img.url))
+      removedImageUrls = [...oldUrls].filter(url => !newUrls.has(url))
+
+      await prisma.projectImage.deleteMany({ where: { projectId: id } })
     }
 
-    // Try to delete timeline entries (table may not exist)
+    // Delete existing timeline entries if new ones provided
     if (data.timeline) {
       try {
-        await prisma.projectTimeline.deleteMany({
-          where: { projectId: id }
-        })
+        await prisma.projectTimeline.deleteMany({ where: { projectId: id } })
       } catch {
         // timeline table may not exist yet
       }
@@ -127,6 +133,9 @@ export async function PUT(
       })
     }
 
+    // Delete files that were removed from the project
+    await deleteFiles(removedImageUrls)
+
     return NextResponse.json(project)
   } catch (error) {
     console.error('Error updating project:', error)
@@ -145,9 +154,42 @@ export async function DELETE(
   try {
     const { id } = await params
 
-    await prisma.project.delete({
-      where: { id }
-    })
+    // Collect all file URLs before deletion
+    let imageUrls: string[] = []
+    let timelineImageUrls: string[] = []
+    let clientLogoUrl: string | null = null
+
+    try {
+      const project = await prisma.project.findUnique({
+        where: { id },
+        include: { images: true, timeline: true }
+      })
+      if (project) {
+        imageUrls = project.images.map(img => img.url)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        timelineImageUrls = ((project as any).timeline ?? [])
+          .map((t: { image: string | null }) => t.image)
+          .filter(Boolean)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        clientLogoUrl = (project as any).clientLogo ?? null
+      }
+    } catch {
+      // timeline may not exist — fall back to images only
+      const project = await prisma.project.findUnique({
+        where: { id },
+        include: { images: true }
+      })
+      if (project) {
+        imageUrls = project.images.map(img => img.url)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        clientLogoUrl = (project as any).clientLogo ?? null
+      }
+    }
+
+    await prisma.project.delete({ where: { id } })
+
+    // Delete all associated files from disk + media table
+    await deleteFiles([...imageUrls, ...timelineImageUrls, clientLogoUrl])
 
     return NextResponse.json({ success: true })
   } catch (error) {

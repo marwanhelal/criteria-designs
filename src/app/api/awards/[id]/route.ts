@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { deleteFile } from '@/lib/deleteFile'
 
 // GET single award
 export async function GET(
@@ -9,9 +10,7 @@ export async function GET(
   try {
     const { id } = await params
 
-    const award = await prisma.award.findUnique({
-      where: { id }
-    })
+    const award = await prisma.award.findUnique({ where: { id } })
 
     if (!award) {
       return NextResponse.json(
@@ -39,6 +38,8 @@ export async function PUT(
     const { id } = await params
     const data = await request.json()
 
+    const old = await prisma.award.findUnique({ where: { id } })
+
     const award = await prisma.award.update({
       where: { id },
       data: {
@@ -53,6 +54,11 @@ export async function PUT(
         status: data.status || 'DRAFT'
       }
     })
+
+    // Delete old image if it was replaced or removed
+    if (old?.image && old.image !== (data.image || null)) {
+      await deleteFile(old.image)
+    }
 
     return NextResponse.json(award)
   } catch (error) {
@@ -72,9 +78,11 @@ export async function DELETE(
   try {
     const { id } = await params
 
-    await prisma.award.delete({
-      where: { id }
-    })
+    const award = await prisma.award.findUnique({ where: { id } })
+    await prisma.award.delete({ where: { id } })
+
+    // Delete image from disk + media table
+    await deleteFile(award?.image)
 
     return NextResponse.json({ success: true })
   } catch (error) {
