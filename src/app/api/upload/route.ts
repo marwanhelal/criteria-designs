@@ -3,6 +3,7 @@ import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { prisma } from '@/lib/db'
 import { transcodeAndUpdate } from '@/lib/transcode'
+import { deleteFile } from '@/lib/deleteFile'
 
 export const runtime = 'nodejs'
 export const maxDuration = 300
@@ -85,5 +86,18 @@ export async function POST(request: NextRequest) {
       { error: 'Failed to upload file' },
       { status: 500 }
     )
+  }
+}
+
+// DELETE /api/upload — immediately delete a file by URL
+export async function DELETE(request: NextRequest) {
+  try {
+    const { url } = await request.json()
+    if (!url) return NextResponse.json({ error: 'URL required' }, { status: 400 })
+    await deleteFile(url)
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting file:', error)
+    return NextResponse.json({ error: 'Failed to delete file' }, { status: 500 })
   }
 }

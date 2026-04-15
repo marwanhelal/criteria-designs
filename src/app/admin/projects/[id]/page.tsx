@@ -3,7 +3,53 @@
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Upload, X, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, Save, Upload, X, Plus, Trash2, AlertTriangle } from 'lucide-react'
+
+// ── Confirmation modal ────────────────────────────────────────────────────────
+function DeleteImageModal({
+  onConfirm,
+  onCancel,
+  deleting,
+}: {
+  onConfirm: () => void
+  onCancel: () => void
+  deleting: boolean
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm mx-4">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+            <AlertTriangle size={20} className="text-red-600" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">Delete Image?</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              This image will be permanently deleted from the server and cannot be recovered.
+            </p>
+          </div>
+        </div>
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            disabled={deleting}
+            className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50 disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={deleting}
+            className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+          >
+            {deleting ? 'Deleting...' : 'Yes, Delete'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 const categories = [
   // Urban & Landscape
@@ -43,6 +89,35 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+
+  // Confirmation modal state
+  const [pendingDelete, setPendingDelete] = useState<{
+    url: string
+    onConfirmed: () => void
+  } | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
+  const confirmDeleteImage = (url: string, onConfirmed: () => void) => {
+    setPendingDelete({ url, onConfirmed })
+  }
+
+  const handleDeleteConfirmed = async () => {
+    if (!pendingDelete) return
+    setDeleting(true)
+    try {
+      await fetch('/api/upload', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: pendingDelete.url }),
+      })
+      pendingDelete.onConfirmed()
+    } catch (err) {
+      console.error('Delete failed:', err)
+    } finally {
+      setDeleting(false)
+      setPendingDelete(null)
+    }
+  }
 
   // Separate image states per section
   const [heroImage, setHeroImage] = useState('')
@@ -274,6 +349,13 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div>
+      {pendingDelete && (
+        <DeleteImageModal
+          onConfirm={handleDeleteConfirmed}
+          onCancel={() => setPendingDelete(null)}
+          deleting={deleting}
+        />
+      )}
       <div className="flex items-center gap-4 mb-6">
         <Link href="/admin/projects" className="p-2 hover:bg-gray-100 rounded">
           <ArrowLeft size={20} />
@@ -371,7 +453,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
               {form.clientLogo && (
                 <div className="relative">
                   <img src={form.clientLogo} alt="Client logo" className="h-12 object-contain" />
-                  <button type="button" onClick={() => setForm({ ...form, clientLogo: '' })}
+                  <button type="button" onClick={() => confirmDeleteImage(form.clientLogo, () => setForm(f => ({ ...f, clientLogo: '' })))}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5">
                     <X size={12} />
                   </button>
@@ -393,7 +475,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             {heroImage && (
               <div className="relative">
                 <img src={heroImage} alt="Hero" className="w-48 h-32 object-cover rounded-lg" />
-                <button type="button" onClick={() => setHeroImage('')}
+                <button type="button" onClick={() => confirmDeleteImage(heroImage, () => setHeroImage(''))}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
                   <X size={16} />
                 </button>
@@ -417,7 +499,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
             {galleryImages.map((img, index) => (
               <div key={index} className="relative">
                 <img src={img.url} alt={img.alt || ''} className="w-32 h-32 object-cover rounded-lg" />
-                <button type="button" onClick={() => setGalleryImages(galleryImages.filter((_, i) => i !== index))}
+                <button type="button" onClick={() => confirmDeleteImage(img.url, () => setGalleryImages(prev => prev.filter((_, i) => i !== index)))}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
                   <X size={16} />
                 </button>
@@ -497,7 +579,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
                   {entry.image && (
                     <div className="relative">
                       <img src={entry.image} alt="" className="w-24 h-24 object-cover rounded" />
-                      <button type="button" onClick={() => updateTimeline(index, 'image', '')}
+                      <button type="button" onClick={() => confirmDeleteImage(entry.image, () => updateTimeline(index, 'image', ''))}
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5">
                         <X size={12} />
                       </button>
@@ -559,7 +641,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
               {finalRevealImages.map((img, index) => (
                 <div key={index} className="relative">
                   <img src={img.url} alt={img.alt || ''} className="w-32 h-32 object-cover rounded-lg" />
-                  <button type="button" onClick={() => setFinalRevealImages(finalRevealImages.filter((_, i) => i !== index))}
+                  <button type="button" onClick={() => confirmDeleteImage(img.url, () => setFinalRevealImages(prev => prev.filter((_, i) => i !== index)))}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
                     <X size={16} />
                   </button>
