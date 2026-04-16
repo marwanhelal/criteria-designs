@@ -38,14 +38,22 @@ export async function PUT(
     const { id } = await params
     const data = await request.json()
 
+    if (!data.titleEn?.trim() || !data.titleAr?.trim()) {
+      return NextResponse.json({ error: 'Title (English and Arabic) is required' }, { status: 400 })
+    }
+    const year = parseInt(data.year)
+    if (isNaN(year) || year < 1900 || year > 2100) {
+      return NextResponse.json({ error: 'A valid year is required' }, { status: 400 })
+    }
+
     const old = await prisma.award.findUnique({ where: { id } })
 
     const award = await prisma.award.update({
       where: { id },
       data: {
-        titleEn: data.titleEn,
-        titleAr: data.titleAr,
-        year: parseInt(data.year),
+        titleEn: data.titleEn.trim(),
+        titleAr: data.titleAr.trim(),
+        year,
         subtitleEn: data.subtitleEn || null,
         subtitleAr: data.subtitleAr || null,
         image: data.image || null,

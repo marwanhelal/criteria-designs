@@ -15,6 +15,7 @@ const PROTECTED_API_ROUTES = [
   '/api/media',
   '/api/upload',
   '/api/admin',
+  '/api/migrate',
 ]
 
 // Routes that are always public

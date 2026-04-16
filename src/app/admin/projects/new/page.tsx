@@ -34,7 +34,7 @@ interface TimelineEntry {
 export default function NewProjectPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   // Separate image states per section
   const [heroImage, setHeroImage] = useState('')
@@ -199,7 +199,7 @@ export default function NewProjectPage() {
 
   return (
     <div>
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} error={deleteError} />
       <div className="flex items-center gap-4 mb-6">
         <Link href="/admin/projects" className="p-2 hover:bg-gray-100 rounded">
           <ArrowLeft size={20} />

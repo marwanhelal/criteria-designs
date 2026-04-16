@@ -12,7 +12,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState<string | null>(null)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
   const [uploadProgress, setUploadProgress] = useState(0)
   const [unsavedVideo, setUnsavedVideo] = useState(false)
   const [projects, setProjects] = useState<ProjectOption[]>([])
@@ -227,7 +227,7 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} error={deleteError} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Site Settings</h1>
       </div>

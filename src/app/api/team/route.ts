@@ -23,12 +23,19 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
+    if (!data.nameEn?.trim() || !data.nameAr?.trim()) {
+      return NextResponse.json({ error: 'Name (English and Arabic) is required' }, { status: 400 })
+    }
+    if (!data.roleEn?.trim() || !data.roleAr?.trim()) {
+      return NextResponse.json({ error: 'Role (English and Arabic) is required' }, { status: 400 })
+    }
+
     const member = await prisma.teamMember.create({
       data: {
-        nameEn: data.nameEn,
-        nameAr: data.nameAr,
-        roleEn: data.roleEn,
-        roleAr: data.roleAr,
+        nameEn: data.nameEn.trim(),
+        nameAr: data.nameAr.trim(),
+        roleEn: data.roleEn.trim(),
+        roleAr: data.roleAr.trim(),
         bioEn: data.bioEn || null,
         bioAr: data.bioAr || null,
         photo: data.photo || null,

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, GripVertical, Save } from 'lucide-react'
+import { Plus, Edit, Trash2, Save } from 'lucide-react'
+import { useConfirmDelete, ConfirmDeleteModal } from '@/components/admin/DeleteImageModal'
 
 interface Award {
   id: string
@@ -25,6 +26,7 @@ export default function AwardsPage() {
   const [slots, setSlots] = useState(['', '', '', '', ''])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const { confirmDelete, pending, confirming, confirmError, handleConfirmed, handleCancel } = useConfirmDelete()
 
   useEffect(() => {
     fetchAwards()
@@ -83,14 +85,15 @@ export default function AwardsPage() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this award?')) return
-    try {
-      await fetch(`/api/awards/${id}`, { method: 'DELETE' })
-      setAwards(awards.filter(a => a.id !== id))
-    } catch (error) {
-      console.error('Error deleting award:', error)
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmDelete(
+      `"${title}" will be permanently deleted. This cannot be undone.`,
+      async () => {
+        const res = await fetch(`/api/awards/${id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Failed to delete')
+        setAwards(prev => prev.filter(a => a.id !== id))
+      }
+    )
   }
 
   if (loading) return <div className="p-6">Loading...</div>
@@ -99,6 +102,7 @@ export default function AwardsPage() {
 
   return (
     <div className="space-y-6">
+      <ConfirmDeleteModal open={!!pending} message={pending?.message ?? ''} onConfirm={handleConfirmed} onCancel={handleCancel} confirming={confirming} error={confirmError} />
 
       {/* Header */}
       <div className="flex justify-between items-center">
@@ -208,7 +212,7 @@ export default function AwardsPage() {
             <tbody className="divide-y">
               {awards.map((award) => (
                 <tr key={award.id} className="hover:bg-gray-50">
-                  <td className="px-4"><GripVertical className="text-gray-400 cursor-move" size={18} /></td>
+                  <td className="w-4" />
                   <td className="px-6 py-4">
                     {award.image ? (
                       <img src={award.image} alt={award.titleEn} className="w-16 h-12 rounded object-cover" />
@@ -237,7 +241,7 @@ export default function AwardsPage() {
                       <Link href={`/admin/awards/${award.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Edit">
                         <Edit size={18} />
                       </Link>
-                      <button onClick={() => handleDelete(award.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Delete">
+                      <button onClick={() => handleDelete(award.id, award.titleEn)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Delete">
                         <Trash2 size={18} />
                       </button>
                     </div>

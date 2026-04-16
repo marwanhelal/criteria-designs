@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, GripVertical } from 'lucide-react'
+import { Plus, Edit, Trash2 } from 'lucide-react'
+import { useConfirmDelete, ConfirmDeleteModal } from '@/components/admin/DeleteImageModal'
 
 interface TeamMember {
   id: string
@@ -18,6 +19,7 @@ interface TeamMember {
 export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([])
   const [loading, setLoading] = useState(true)
+  const { confirmDelete, pending, confirming, confirmError, handleConfirmed, handleCancel } = useConfirmDelete()
 
   useEffect(() => {
     fetchMembers()
@@ -35,15 +37,15 @@ export default function TeamPage() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this team member?')) return
-
-    try {
-      await fetch(`/api/team/${id}`, { method: 'DELETE' })
-      setMembers(members.filter(m => m.id !== id))
-    } catch (error) {
-      console.error('Error deleting team member:', error)
-    }
+  const handleDelete = (id: string, name: string) => {
+    confirmDelete(
+      `"${name}" will be permanently deleted. This cannot be undone.`,
+      async () => {
+        const res = await fetch(`/api/team/${id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Failed to delete')
+        setMembers(prev => prev.filter(m => m.id !== id))
+      }
+    )
   }
 
   if (loading) {
@@ -52,6 +54,7 @@ export default function TeamPage() {
 
   return (
     <div>
+      <ConfirmDeleteModal open={!!pending} message={pending?.message ?? ''} onConfirm={handleConfirmed} onCancel={handleCancel} confirming={confirming} error={confirmError} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Team Members</h1>
         <Link
@@ -78,7 +81,6 @@ export default function TeamPage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
-                <th className="w-10 px-4"></th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Photo</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Name</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Role</th>
@@ -89,9 +91,6 @@ export default function TeamPage() {
             <tbody className="divide-y">
               {members.map((member) => (
                 <tr key={member.id} className="hover:bg-gray-50">
-                  <td className="px-4">
-                    <GripVertical className="text-gray-400 cursor-move" size={18} />
-                  </td>
                   <td className="px-6 py-4">
                     {member.photo ? (
                       <img
@@ -130,7 +129,7 @@ export default function TeamPage() {
                         <Edit size={18} />
                       </Link>
                       <button
-                        onClick={() => handleDelete(member.id)}
+                        onClick={() => handleDelete(member.id, member.nameEn)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                         title="Delete"
                       >

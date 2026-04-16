@@ -11,7 +11,7 @@ export default function NewAwardPage() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [image, setImage] = useState<string | null>(null)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const [form, setForm] = useState({
     titleEn: '',
@@ -79,7 +79,7 @@ export default function NewAwardPage() {
 
   return (
     <div>
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} error={deleteError} />
       <div className="flex items-center gap-4 mb-6">
         <Link href="/admin/awards" className="p-2 hover:bg-gray-100 rounded">
           <ArrowLeft size={20} />

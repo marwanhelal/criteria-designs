@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Plus, Edit, Trash2, Eye, Star } from 'lucide-react'
+import { useConfirmDelete, ConfirmDeleteModal } from '@/components/admin/DeleteImageModal'
 
 interface Project {
   id: string
@@ -18,6 +19,7 @@ interface Project {
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const { confirmDelete, pending, confirming, confirmError, handleConfirmed, handleCancel } = useConfirmDelete()
 
   useEffect(() => {
     fetchProjects()
@@ -41,25 +43,30 @@ export default function ProjectsPage() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return
-
-    try {
-      await fetch(`/api/projects/${id}`, { method: 'DELETE' })
-      setProjects(projects.filter(p => p.id !== id))
-    } catch (error) {
-      console.error('Error deleting project:', error)
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmDelete(
+      `"${title}" will be permanently deleted along with all its images. This cannot be undone.`,
+      async () => {
+        const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Failed to delete')
+        setProjects(prev => prev.filter(p => p.id !== id))
+      }
+    )
   }
 
   const categoryLabel = (category: string) => {
     const labels: Record<string, string> = {
-      RESIDENTIAL: 'Residential',
-      COMMERCIAL: 'Commercial',
-      INTERIOR: 'Interior',
       URBAN: 'Urban',
       LANDSCAPE: 'Landscape',
-      RENOVATION: 'Renovation'
+      MIXED_USE: 'Mixed Use',
+      COMMERCIAL: 'Commercial',
+      RESIDENTIAL: 'Residential',
+      EDUCATIONAL: 'Educational',
+      HOSPITALITY: 'Hospitality',
+      RENOVATION: 'Renovation',
+      INTERIOR_COMMERCIAL: 'Interior – Commercial',
+      INTERIOR_RESIDENTIAL: 'Interior – Residential',
+      INTERIOR: 'Interior Design',
     }
     return labels[category] || category
   }
@@ -70,6 +77,7 @@ export default function ProjectsPage() {
 
   return (
     <div>
+      <ConfirmDeleteModal open={!!pending} message={pending?.message ?? ''} onConfirm={handleConfirmed} onCancel={handleCancel} confirming={confirming} error={confirmError} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Projects</h1>
         <Link
@@ -147,7 +155,7 @@ export default function ProjectsPage() {
                         <Edit size={18} />
                       </Link>
                       <button
-                        onClick={() => handleDelete(project.id)}
+                        onClick={() => handleDelete(project.id, project.titleEn)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                         title="Delete"
                       >

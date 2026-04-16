@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, GripVertical } from 'lucide-react'
-import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
+import { Plus, Trash2 } from 'lucide-react'
+import { useDeleteImage, DeleteImageModal, useConfirmDelete, ConfirmDeleteModal } from '@/components/admin/DeleteImageModal'
 
 interface Client {
   id: string
@@ -20,7 +20,8 @@ export default function ClientsPage() {
   const [newLogo, setNewLogo] = useState('')
   const [newBgColor, setNewBgColor] = useState('#FFFFFF')
   const [uploading, setUploading] = useState(false)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel: handleImageCancel } = useDeleteImage()
+  const { confirmDelete, pending: confirmPending, confirming, confirmError, handleConfirmed, handleCancel: handleConfirmCancel } = useConfirmDelete()
 
   useEffect(() => { fetchClients() }, [])
 
@@ -52,10 +53,15 @@ export default function ClientsPage() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this client?')) return
-    await fetch(`/api/clients/${id}`, { method: 'DELETE' })
-    setClients(prev => prev.filter(c => c.id !== id))
+  const handleDelete = (id: string, name: string) => {
+    confirmDelete(
+      `"${name}" will be permanently deleted. This cannot be undone.`,
+      async () => {
+        const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Failed to delete')
+        setClients(prev => prev.filter(c => c.id !== id))
+      }
+    )
   }
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +81,8 @@ export default function ClientsPage() {
 
   return (
     <div className="p-8 max-w-3xl">
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleImageCancel} deleting={deleting} error={deleteError} />
+      <ConfirmDeleteModal open={!!confirmPending} message={confirmPending?.message ?? ''} onConfirm={handleConfirmed} onCancel={handleConfirmCancel} confirming={confirming} error={confirmError} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
       </div>
@@ -137,7 +144,7 @@ export default function ClientsPage() {
               <button
                 type="button"
                 onClick={() => confirmDeleteImage(newLogo, () => setNewLogo(''))}
-                className="text-xs text-red-500 hover:text-red-600"
+                className="text-xs text-red-500 hover:text-red-600 ml-2"
               >
                 Remove
               </button>
@@ -164,7 +171,6 @@ export default function ClientsPage() {
         <div className="space-y-2">
           {clients.map(client => (
             <div key={client.id} className="flex items-center gap-4 bg-white border border-gray-200 rounded-xl px-4 py-3">
-              <GripVertical size={16} className="text-gray-300 shrink-0" />
               <div
                 className="h-9 w-16 flex items-center justify-center rounded shrink-0"
                 style={{ backgroundColor: client.bgColor || '#FFFFFF' }}
@@ -177,7 +183,7 @@ export default function ClientsPage() {
               <span className="flex-1 text-sm text-gray-800">{client.nameEn}</span>
               <div className="w-5 h-5 rounded border border-gray-200 shrink-0" style={{ backgroundColor: client.bgColor || '#FFFFFF' }} title={client.bgColor} />
               <button
-                onClick={() => handleDelete(client.id)}
+                onClick={() => handleDelete(client.id, client.nameEn)}
                 className="text-red-400 hover:text-red-600 transition-colors"
               >
                 <Trash2 size={15} />

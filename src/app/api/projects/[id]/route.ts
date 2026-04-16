@@ -70,10 +70,16 @@ export async function PUT(
     if (data.timeline) {
       try {
         const oldTimeline = await prisma.projectTimeline.findMany({ where: { projectId: id } })
-        const oldTimelineImageUrls = oldTimeline.map(t => t.image).filter(Boolean) as string[]
+        const oldTimelineImageUrls = new Set(
+          oldTimeline.map(t => t.image).filter(Boolean) as string[]
+        )
+        const newTimelineImageUrls = new Set(
+          (data.timeline as { image?: string }[]).map(t => t.image).filter(Boolean) as string[]
+        )
+        // Only queue images that are no longer referenced in the new timeline
+        const removedTimelineImages = [...oldTimelineImageUrls].filter(u => !newTimelineImageUrls.has(u))
         await prisma.projectTimeline.deleteMany({ where: { projectId: id } })
-        // Queue timeline image URLs for deletion (after DB update)
-        removedImageUrls = [...removedImageUrls, ...oldTimelineImageUrls]
+        removedImageUrls = [...removedImageUrls, ...removedTimelineImages]
       } catch {
         // timeline table may not exist yet
       }
@@ -141,8 +147,15 @@ export async function PUT(
     await deleteFiles(removedImageUrls)
 
     return NextResponse.json(project)
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error updating project:', error)
+    // Prisma unique constraint violation (duplicate slug)
+    if (
+      typeof error === 'object' && error !== null &&
+      'code' in error && (error as { code: string }).code === 'P2002'
+    ) {
+      return NextResponse.json({ error: 'A project with this URL slug already exists' }, { status: 409 })
+    }
     return NextResponse.json(
       { error: 'Failed to update project' },
       { status: 500 }

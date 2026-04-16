@@ -46,7 +46,7 @@ export default function AdminPhilosophyPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [uploading, setUploading] = useState<UploadField | null>(null)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const introRef   = useRef<HTMLInputElement>(null)
   const humanRef   = useRef<HTMLInputElement>(null)
@@ -142,7 +142,7 @@ export default function AdminPhilosophyPage() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-8">
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} error={deleteError} />
 
       {/* Header */}
       <div className="flex items-center justify-between">

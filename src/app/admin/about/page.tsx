@@ -52,7 +52,7 @@ export default function AdminAboutPage() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [saved, setSaved] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
-  const { confirmDeleteImage, pendingDelete, deleting, handleDeleteConfirmed, handleCancel } = useDeleteImage()
+  const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   useEffect(() => {
     fetch('/api/about-settings')
@@ -133,7 +133,7 @@ export default function AdminAboutPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} />
+      <DeleteImageModal open={!!pendingDelete} onConfirm={handleDeleteConfirmed} onCancel={handleCancel} deleting={deleting} error={deleteError} />
 
       {/* Header */}
       <div className="flex items-center justify-between">
