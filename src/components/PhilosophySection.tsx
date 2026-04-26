@@ -37,6 +37,25 @@ const EASE = [0.25, 0.4, 0.25, 1] as [number, number, number, number]
 const EL   = 175
 const LOGO = 240
 
+// Defined outside the section component so React sees a stable component type
+// across renders (avoids error #310 from changing component identity on each render)
+function LogoEl({ src, size }: { src: string | null | undefined; size: number }) {
+  return src ? (
+    <div className="relative" style={{ width: size, height: size }}>
+      <Image src={src} alt="Criteria Designs" fill className="object-contain" unoptimized />
+    </div>
+  ) : (
+    <div
+      className="rounded-full border border-[#B1A490]/25 flex items-center justify-center"
+      style={{ width: size, height: size }}
+    >
+      <span className="font-[var(--font-merriweather)] font-bold text-[#B1A490]" style={{ fontSize: size * 0.22 }}>
+        CD
+      </span>
+    </div>
+  )
+}
+
 // ── Element image during animation ─────────────────────────────────
 function ElementImg({ src, label, color }: { src: string | null; label: string; color: string }) {
   return src ? (
@@ -233,12 +252,18 @@ export default function PhilosophySection() {
     setViewedSet(prev => {
       const next = new Set(prev)
       next.add(idx)
-      if (next.size === 3) {
-        setTimeout(() => setShowFinale(true), 2800)
-      }
       return next
     })
   }, [showFinale])
+
+  // Trigger finale after all three pillars have been viewed
+  const viewedCount = viewedSet.size
+  useEffect(() => {
+    if (viewedCount === 3 && !showFinale) {
+      const id = setTimeout(() => setShowFinale(true), 2800)
+      return () => clearTimeout(id)
+    }
+  }, [viewedCount, showFinale])
 
   const prev = useCallback(() => handleGoCard((activeCard - 1 + 3) % 3), [activeCard, handleGoCard])
   const next = useCallback(() => handleGoCard((activeCard + 1) % 3), [activeCard, handleGoCard])
@@ -262,22 +287,7 @@ export default function PhilosophySection() {
   }, [phase, showFinale, activeCard, next])
 
   const cardImages = [data?.philosophyCultureImage, data?.philosophyNatureImage, data?.philosophyArtImage]
-
-  const LogoEl = ({ size }: { size: number }) =>
-    data?.philosophyImage ? (
-      <div className="relative" style={{ width: size, height: size }}>
-        <Image src={data.philosophyImage} alt="Criteria Designs" fill className="object-contain" unoptimized />
-      </div>
-    ) : (
-      <div
-        className="rounded-full border border-[#B1A490]/25 flex items-center justify-center"
-        style={{ width: size, height: size }}
-      >
-        <span className="font-[var(--font-merriweather)] font-bold text-[#B1A490]" style={{ fontSize: size * 0.22 }}>
-          CD
-        </span>
-      </div>
-    )
+  const logoSrc = data?.philosophyImage ?? null
 
   const glowColors = ['rgba(196,168,122,0.07)', 'rgba(61,139,90,0.07)', 'rgba(212,168,44,0.07)']
 
@@ -445,7 +455,7 @@ export default function PhilosophySection() {
             }}
             transition={{ duration: 0.7, ease: EASE }}
           >
-            <LogoEl size={LOGO} />
+            <LogoEl src={logoSrc} size={LOGO} />
           </motion.div>
 
         </div>
@@ -481,7 +491,7 @@ export default function PhilosophySection() {
               border: '1px solid rgba(177,164,144,0.18)',
             }}
           >
-            <LogoEl size={138} />
+            <LogoEl src={logoSrc} size={138} />
           </div>
           <div className="flex flex-col items-center gap-2 mt-1">
             <div className="w-10 h-px bg-[#B1A490]/35" />
@@ -526,7 +536,7 @@ export default function PhilosophySection() {
                     border: '1px solid rgba(177,164,144,0.18)',
                   }}
                 >
-                  <LogoEl size={94} />
+                  <LogoEl src={logoSrc} size={94} />
                 </div>
                 <p className="font-[var(--font-playfair)] text-[17px] text-white italic leading-none">
                   Criteria Designs
