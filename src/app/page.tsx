@@ -201,7 +201,7 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([])
   const [settings, setSettings] = useState<Settings | null>(null)
   const [clients, setClients] = useState<{ id: string; nameEn: string; logo?: string | null }[]>([])
-  const [awards, setAwards] = useState<{ id: string; titleEn: string; year: number; subtitleEn: string | null; image: string | null }[]>([])
+  const [awards, setAwards] = useState<{ id: string; titleEn: string; year: number; subtitleEn: string | null; image: string | null; images?: { url: string; alt?: string }[] }[]>([])
 
   useEffect(() => {
     fetch('/api/clients')

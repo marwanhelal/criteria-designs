@@ -245,18 +245,28 @@ model Client {
 // ==================== AWARDS ====================
 
 model Award {
-  id         String   @id @default(cuid())
+  id         String       @id @default(cuid())
   titleEn    String
   titleAr    String
   year       Int
   subtitleEn String?
   subtitleAr String?
   image      String?
-  type       String   @default("AWARD")
-  order      Int      @default(0)
-  status     Status   @default(DRAFT)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  images     AwardImage[]
+  type       String       @default("AWARD")
+  order      Int          @default(0)
+  status     Status       @default(DRAFT)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model AwardImage {
+  id      String @id @default(cuid())
+  url     String
+  alt     String?
+  order   Int    @default(0)
+  awardId String
+  award   Award  @relation(fields: [awardId], references: [id], onDelete: Cascade)
 }
 
 // ==================== PHILOSOPHY PAGE ====================

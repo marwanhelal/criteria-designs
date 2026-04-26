@@ -353,6 +353,33 @@ export async function POST() {
       }
     }
 
+    // 25. Create AwardImage table (gallery photos per award)
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "AwardImage" (
+          "id"      TEXT    NOT NULL,
+          "url"     TEXT    NOT NULL,
+          "alt"     TEXT,
+          "order"   INTEGER NOT NULL DEFAULT 0,
+          "awardId" TEXT    NOT NULL,
+          CONSTRAINT "AwardImage_pkey" PRIMARY KEY ("id"),
+          CONSTRAINT "AwardImage_awardId_fkey" FOREIGN KEY ("awardId")
+            REFERENCES "Award"("id") ON DELETE CASCADE ON UPDATE CASCADE
+        );
+      `)
+      results.push('✓ AwardImage table ensured')
+    } catch (e) {
+      results.push(`✗ AwardImage table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE INDEX IF NOT EXISTS "AwardImage_awardId_idx" ON "AwardImage"("awardId");
+      `)
+      results.push('✓ AwardImage index ensured')
+    } catch (e) {
+      results.push(`✗ AwardImage index: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

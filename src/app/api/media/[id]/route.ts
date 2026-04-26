@@ -51,8 +51,10 @@ export async function DELETE(
       prisma.project.updateMany({ where: { clientLogo: url }, data: { clientLogo: null } }),
       // TeamMember: nullify photo
       prisma.teamMember.updateMany({ where: { photo: url }, data: { photo: null } }),
-      // Award: nullify image
+      // Award: nullify primary image
       prisma.award.updateMany({ where: { image: url }, data: { image: null } }),
+      // AwardImage: delete gallery record
+      prisma.awardImage.deleteMany({ where: { url } }).catch(() => {}),
       // Client: nullify logo
       prisma.client.updateMany({ where: { logo: url }, data: { logo: null } }),
       // Service: nullify image

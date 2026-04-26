@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Upload } from 'lucide-react'
 import { useDeleteImage, DeleteImageModal } from '@/components/admin/DeleteImageModal'
+import AwardGallerySection from '@/components/admin/AwardGallerySection'
+
+interface GalleryImage { url: string; alt?: string }
 
 export default function EditAwardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -12,7 +15,9 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [galleryUploading, setGalleryUploading] = useState(false)
   const [image, setImage] = useState<string | null>(null)
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
   const { confirmDeleteImage, pendingDelete, deleting, deleteError, handleDeleteConfirmed, handleCancel } = useDeleteImage()
 
   const [form, setForm] = useState({
@@ -26,9 +31,7 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
     status: 'DRAFT'
   })
 
-  useEffect(() => {
-    fetchAward()
-  }, [id])
+  useEffect(() => { fetchAward() }, [id])
 
   const fetchAward = async () => {
     try {
@@ -46,6 +49,7 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
           status: award.status
         })
         setImage(award.image)
+        setGalleryImages(award.images || [])
       }
     } catch (error) {
       console.error('Error fetching award:', error)
@@ -57,21 +61,12 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
     setUploading(true)
     try {
       const formData = new FormData()
       formData.append('file', file)
-
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      if (res.ok) {
-        const media = await res.json()
-        setImage(media.url)
-      }
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (res.ok) setImage((await res.json()).url)
     } catch (error) {
       console.error('Error uploading image:', error)
     } finally {
@@ -79,20 +74,40 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
     }
   }
 
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+    setGalleryUploading(true)
+    try {
+      const uploads = await Promise.all(files.map(async (file) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        const res = await fetch('/api/upload', { method: 'POST', body: formData })
+        if (res.ok) return await res.json()
+        return null
+      }))
+      const newImgs = uploads.filter(Boolean).map(m => ({ url: m.url }))
+      setGalleryImages(prev => [...prev, ...newImgs])
+    } catch (error) {
+      console.error('Error uploading gallery images:', error)
+    } finally {
+      setGalleryUploading(false)
+    }
+  }
+
+  const handleGalleryRemove = (url: string) => {
+    confirmDeleteImage(url, () => setGalleryImages(prev => prev.filter(img => img.url !== url)))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-
     try {
       const res = await fetch(`/api/awards/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          image
-        })
+        body: JSON.stringify({ ...form, image, images: galleryImages })
       })
-
       if (res.ok) {
         router.push('/admin/awards')
       } else {
@@ -107,9 +122,7 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
     }
   }
 
-  if (loading) {
-    return <div className="p-6">Loading...</div>
-  }
+  if (loading) return <div className="p-6">Loading...</div>
 
   return (
     <div>
@@ -127,80 +140,34 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Award Name (English) *
-              </label>
-              <input
-                type="text"
-                value={form.titleEn}
-                onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Award Name (English) *</label>
+              <input type="text" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Award Name (Arabic) *
-              </label>
-              <input
-                type="text"
-                value={form.titleAr}
-                onChange={(e) => setForm({ ...form, titleAr: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                dir="rtl"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Award Name (Arabic) *</label>
+              <input type="text" value={form.titleAr} onChange={(e) => setForm({ ...form, titleAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" dir="rtl" required />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Type *
-              </label>
-              <select
-                value={form.type}
-                onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
                 <option value="AWARD">Award</option>
                 <option value="PAPER">Published Paper</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Year *
-              </label>
-              <input
-                type="number"
-                value={form.year}
-                onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 0 })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                min={1900}
-                max={2100}
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Year *</label>
+              <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 0 })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" min={1900} max={2100} required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Order
-              </label>
-              <input
-                type="number"
-                value={form.order}
-                onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Order</label>
+              <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
               </select>
@@ -209,82 +176,51 @@ export default function EditAwardPage({ params }: { params: Promise<{ id: string
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subtitle (English)
-              </label>
-              <input
-                type="text"
-                value={form.subtitleEn}
-                onChange={(e) => setForm({ ...form, subtitleEn: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g. Laureate 2024, Honor Award 2023"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle (English)</label>
+              <input type="text" value={form.subtitleEn} onChange={(e) => setForm({ ...form, subtitleEn: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g. Laureate 2024, Honor Award 2023" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subtitle (Arabic)
-              </label>
-              <input
-                type="text"
-                value={form.subtitleAr}
-                onChange={(e) => setForm({ ...form, subtitleAr: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                dir="rtl"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle (Arabic)</label>
+              <input type="text" value={form.subtitleAr} onChange={(e) => setForm({ ...form, subtitleAr: e.target.value })} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" dir="rtl" />
             </div>
           </div>
         </div>
 
+        {/* Primary image */}
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="font-semibold text-lg border-b pb-2">Award Image</h2>
-          <p className="text-sm text-gray-500">This image appears when hovering over the award on the homepage.</p>
-
+          <h2 className="font-semibold text-lg border-b pb-2">Primary Image</h2>
+          <p className="text-sm text-gray-500">Shown as the first image and in the admin list. If no gallery photos exist, this is the only image shown.</p>
           <div className="flex items-start gap-4">
             <div className="w-48 h-32 rounded-lg overflow-hidden bg-gray-100">
               {image ? (
                 <img src={image} alt="Award" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <Upload size={32} />
-                </div>
+                <div className="w-full h-full flex items-center justify-center text-gray-400"><Upload size={32} /></div>
               )}
             </div>
             <div>
               <label className="inline-block px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">
                 {uploading ? 'Uploading...' : 'Change Image'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  disabled={uploading}
-                />
+                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
               </label>
               {image && (
-                <button
-                  type="button"
-                  onClick={() => confirmDeleteImage(image, () => setImage(null))}
-                  className="block mt-2 text-xs text-red-500 hover:text-red-600"
-                >
-                  Remove
-                </button>
+                <button type="button" onClick={() => confirmDeleteImage(image, () => setImage(null))} className="block mt-2 text-xs text-red-500 hover:text-red-600">Remove</button>
               )}
             </div>
           </div>
         </div>
 
+        {/* Gallery */}
+        <AwardGallerySection
+          images={galleryImages}
+          uploading={galleryUploading}
+          onUpload={handleGalleryUpload}
+          onRemove={handleGalleryRemove}
+        />
+
         <div className="flex justify-end gap-4">
-          <Link
-            href="/admin/awards"
-            className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-          >
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={saving}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
+          <Link href="/admin/awards" className="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</Link>
+          <button type="submit" disabled={saving} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
             <Save size={20} />
             {saving ? 'Saving...' : 'Save Changes'}
           </button>

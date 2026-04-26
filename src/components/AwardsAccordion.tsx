@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
+
+interface AwardImage { url: string; alt?: string }
 
 interface Award {
   id: string
@@ -11,6 +13,7 @@ interface Award {
   year: number
   subtitleEn: string | null
   image: string | null
+  images?: AwardImage[]
 }
 
 interface Props {
@@ -28,11 +31,57 @@ const FALLBACK_GRADIENTS = [
   'linear-gradient(160deg,#221e14 0%,#18160c 100%)',
 ]
 
+/** Merge primary image + gallery images into a deduplicated ordered list */
+function getImageList(award: Award): string[] {
+  const seen = new Set<string>()
+  const result: string[] = []
+  if (award.image) { seen.add(award.image); result.push(award.image) }
+  for (const img of award.images ?? []) {
+    if (!seen.has(img.url)) { seen.add(img.url); result.push(img.url) }
+  }
+  return result
+}
+
 export default function AwardsAccordion({ awards, totalCount, countries, since }: Props) {
   const [active, setActive] = useState(0)
-  const items = awards.slice(0, 5)
+  // Index of the currently displayed image within the active panel
+  const [imgIdx, setImgIdx] = useState(0)
+  const [prevImgIdx, setPrevImgIdx] = useState<number | null>(null)
+  const [fading, setFading] = useState(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  const items = awards.slice(0, 5)
   if (items.length === 0) return null
+
+  const activeAward = items[active]
+  const activeImages = getImageList(activeAward)
+
+  // Reset image index when active panel changes
+  useEffect(() => {
+    setImgIdx(0)
+    setPrevImgIdx(null)
+    setFading(false)
+  }, [active])
+
+  // Auto-cycle images of the active panel
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (activeImages.length <= 1) return
+
+    intervalRef.current = setInterval(() => {
+      setFading(true)
+      setTimeout(() => {
+        setImgIdx(prev => {
+          const next = (prev + 1) % activeImages.length
+          setPrevImgIdx(prev)
+          return next
+        })
+        setTimeout(() => setFading(false), 50)
+      }, 400) // half of the CSS transition duration
+    }, 3500)
+
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  }, [active, activeImages.length])
 
   const sinceStr = since || '2001'
 
@@ -89,176 +138,243 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
           className="flex w-full gap-[6px]"
           style={{ height: 'clamp(440px, 62vh, 760px)' }}
         >
-          {items.map((award, i) => (
-            <motion.div
-              key={award.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.65, delay: i * 0.07 }}
-              className="relative overflow-hidden cursor-pointer rounded-2xl"
-              style={{
-                flex: i === active ? 8 : 1,
-                transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
-                minWidth: 0,
-              }}
-              onMouseEnter={() => setActive(i)}
-            >
-              {/* Background */}
-              {award.image ? (
-                <Image
-                  src={award.image}
-                  alt={award.titleEn}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 70vw"
-                  className="object-cover"
-                  style={{
-                    transform: i === active ? 'scale(1.03)' : 'scale(1.1)',
-                    filter: i === active
-                      ? 'grayscale(0%) brightness(0.78)'
-                      : 'grayscale(100%) brightness(0.3)',
-                    transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
-                  }}
-                  unoptimized
-                  priority={i === 0}
-                />
-              ) : (
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length],
-                    filter: i === active ? 'brightness(1.4)' : 'brightness(1)',
-                    transition: 'filter 0.85s ease',
-                  }}
-                />
-              )}
+          {items.map((award, i) => {
+            const allImages = getImageList(award)
+            const isActive = i === active
+            // Which image to show in this panel
+            const displayImgUrl = isActive
+              ? allImages[imgIdx] ?? null
+              : allImages[0] ?? null
+            const prevImgUrl = isActive && prevImgIdx !== null
+              ? allImages[prevImgIdx] ?? null
+              : null
 
-              {/* Bottom gradient (active only) */}
-              <div
-                className="absolute inset-x-0 bottom-0 h-3/4 pointer-events-none"
+            return (
+              <motion.div
+                key={award.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.65, delay: i * 0.07 }}
+                className="relative overflow-hidden cursor-pointer rounded-2xl"
                 style={{
-                  background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
-                  opacity: i === active ? 1 : 0,
-                  transition: 'opacity 0.5s ease',
+                  flex: isActive ? 8 : 1,
+                  transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
+                  minWidth: 0,
                 }}
-              />
-
-              {/* Veil on inactive */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'rgba(247,245,241,0.15)',
-                  opacity: i === active ? 0 : 1,
-                  transition: 'opacity 0.85s ease',
-                }}
-              />
-
-              {/* Gold top border */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left pointer-events-none"
-                style={{
-                  transform: i === active ? 'scaleX(1)' : 'scaleX(0)',
-                  transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
-                }}
-              />
-
-              {/* Collapsed: vertical label */}
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{
-                  opacity: i === active ? 0 : 1,
-                  transition: 'opacity 0.3s ease',
-                }}
+                onMouseEnter={() => setActive(i)}
               >
-                <div className="flex flex-col items-center gap-4">
-                  <span
-                    className="font-[var(--font-playfair)] text-[#B1A490]"
+                {/* ── Background image layer (previous, fades out) ── */}
+                {prevImgUrl && (
+                  <div
+                    className="absolute inset-0"
                     style={{
-                      fontSize: 'clamp(12px, 1.4vw, 17px)',
-                      writingMode: 'vertical-rl',
-                      transform: 'rotate(180deg)',
-                      letterSpacing: '0.06em',
+                      opacity: fading ? 0 : 1,
+                      transition: 'opacity 0.8s ease',
+                      zIndex: 1,
                     }}
                   >
-                    {award.year}
-                  </span>
-                  <span className="block w-px h-8 bg-white/20" />
-                  <span
-                    className="font-[var(--font-libre-franklin)] text-white/40 uppercase whitespace-nowrap"
-                    style={{
-                      fontSize: 'clamp(7px, 0.75vw, 9px)',
-                      writingMode: 'vertical-rl',
-                      transform: 'rotate(180deg)',
-                      letterSpacing: '0.22em',
-                    }}
-                  >
-                    {award.titleEn.length > 22 ? award.titleEn.slice(0, 22) + '…' : award.titleEn}
-                  </span>
-                </div>
-              </div>
-
-              {/* Expanded content */}
-              <AnimatePresence>
-                {i === active && (
-                  <motion.div
-                    key={`content-${award.id}`}
-                    initial={{ opacity: 0, y: 32 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-12"
-                  >
-                    {/* Top meta row: index · year */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.18 }}
-                      className="flex items-center gap-3 mb-5"
-                    >
-                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/35 tracking-[0.28em]">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span className="block w-8 h-px bg-white/20" />
-                      <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[0.28em]">
-                        {award.year}
-                      </span>
-                    </motion.div>
-
-                    {/* Gold accent line */}
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ delay: 0.22, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                      className="w-10 h-[2px] bg-[#B1A490] mb-5 origin-left"
+                    <Image
+                      src={prevImgUrl}
+                      alt={award.titleEn}
+                      fill
+                      sizes="70vw"
+                      className="object-cover"
+                      style={{
+                        transform: 'scale(1.03)',
+                        filter: 'grayscale(0%) brightness(0.78)',
+                      }}
+                      unoptimized
                     />
-
-                    {/* Title */}
-                    <motion.h3
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.26 }}
-                      className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.15] mb-3"
-                      style={{ fontSize: 'clamp(20px, 2.6vw, 40px)', maxWidth: 520 }}
-                    >
-                      {award.titleEn}
-                    </motion.h3>
-
-                    {/* Subtitle */}
-                    {award.subtitleEn && (
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.32 }}
-                        className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-white/40 tracking-[0.06em] uppercase max-w-[380px]"
-                      >
-                        {award.subtitleEn}
-                      </motion.p>
-                    )}
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
+
+                {/* ── Background image layer (current) ── */}
+                {displayImgUrl ? (
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      opacity: fading ? 0 : 1,
+                      transition: prevImgUrl ? 'opacity 0.8s ease' : 'none',
+                      zIndex: prevImgUrl ? 2 : 1,
+                    }}
+                  >
+                    <Image
+                      src={displayImgUrl}
+                      alt={award.titleEn}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 70vw"
+                      className="object-cover"
+                      style={{
+                        transform: isActive ? 'scale(1.03)' : 'scale(1.1)',
+                        filter: isActive
+                          ? 'grayscale(0%) brightness(0.78)'
+                          : 'grayscale(100%) brightness(0.3)',
+                        transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
+                      }}
+                      unoptimized
+                      priority={i === 0}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length],
+                      filter: isActive ? 'brightness(1.4)' : 'brightness(1)',
+                      transition: 'filter 0.85s ease',
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+
+                {/* ── Overlays (above images) ── */}
+                {/* Bottom gradient (active only) */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-3/4 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
+                    opacity: isActive ? 1 : 0,
+                    transition: 'opacity 0.5s ease',
+                    zIndex: 10,
+                  }}
+                />
+                {/* Veil on inactive */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'rgba(247,245,241,0.15)',
+                    opacity: isActive ? 0 : 1,
+                    transition: 'opacity 0.85s ease',
+                    zIndex: 10,
+                  }}
+                />
+                {/* Gold top border */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left pointer-events-none"
+                  style={{
+                    transform: isActive ? 'scaleX(1)' : 'scaleX(0)',
+                    transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+                    zIndex: 10,
+                  }}
+                />
+
+                {/* ── Image counter dots (active, multiple images) ── */}
+                {isActive && allImages.length > 1 && (
+                  <div
+                    className="absolute top-4 right-4 flex gap-[5px] pointer-events-none"
+                    style={{ zIndex: 20 }}
+                  >
+                    {allImages.map((_, di) => (
+                      <span
+                        key={di}
+                        className="block rounded-full transition-all duration-500"
+                        style={{
+                          width: di === imgIdx ? 16 : 5,
+                          height: 5,
+                          background: di === imgIdx ? '#B1A490' : 'rgba(255,255,255,0.35)',
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* ── Collapsed: vertical label ── */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{
+                    opacity: isActive ? 0 : 1,
+                    transition: 'opacity 0.3s ease',
+                    zIndex: 15,
+                  }}
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <span
+                      className="font-[var(--font-playfair)] text-[#B1A490]"
+                      style={{
+                        fontSize: 'clamp(12px, 1.4vw, 17px)',
+                        writingMode: 'vertical-rl',
+                        transform: 'rotate(180deg)',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      {award.year}
+                    </span>
+                    <span className="block w-px h-8 bg-white/20" />
+                    <span
+                      className="font-[var(--font-libre-franklin)] text-white/40 uppercase whitespace-nowrap"
+                      style={{
+                        fontSize: 'clamp(7px, 0.75vw, 9px)',
+                        writingMode: 'vertical-rl',
+                        transform: 'rotate(180deg)',
+                        letterSpacing: '0.22em',
+                      }}
+                    >
+                      {award.titleEn.length > 22 ? award.titleEn.slice(0, 22) + '…' : award.titleEn}
+                    </span>
+                  </div>
+                </div>
+
+                {/* ── Expanded content ── */}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      key={`content-${award.id}`}
+                      initial={{ opacity: 0, y: 32 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-12"
+                      style={{ zIndex: 20 }}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.18 }}
+                        className="flex items-center gap-3 mb-5"
+                      >
+                        <span className="font-[var(--font-libre-franklin)] text-[9px] text-white/35 tracking-[0.28em]">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="block w-8 h-px bg-white/20" />
+                        <span className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] tracking-[0.28em]">
+                          {award.year}
+                        </span>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ delay: 0.22, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="w-10 h-[2px] bg-[#B1A490] mb-5 origin-left"
+                      />
+
+                      <motion.h3
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.26 }}
+                        className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.15] mb-3"
+                        style={{ fontSize: 'clamp(20px, 2.6vw, 40px)', maxWidth: 520 }}
+                      >
+                        {award.titleEn}
+                      </motion.h3>
+
+                      {award.subtitleEn && (
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.32 }}
+                          className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-white/40 tracking-[0.06em] uppercase max-w-[380px]"
+                        >
+                          {award.subtitleEn}
+                        </motion.p>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          })}
         </div>
 
         {/* Footer row */}

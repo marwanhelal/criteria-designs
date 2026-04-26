@@ -35,9 +35,15 @@ async function getReferencedUrls(): Promise<Set<string>> {
   const posts = await prisma.blogPost.findMany({ select: { featuredImage: true } })
   posts.forEach(r => add(r.featuredImage))
 
-  // Award
+  // Award (primary image)
   const awards = await prisma.award.findMany({ select: { image: true } })
   awards.forEach(r => add(r.image))
+
+  // AwardImage (gallery photos)
+  try {
+    const awardImages = await prisma.awardImage.findMany({ select: { url: true } })
+    awardImages.forEach(r => add(r.url))
+  } catch { /* table may not exist yet */ }
 
   // Client
   const clients = await prisma.client.findMany({ select: { logo: true } })

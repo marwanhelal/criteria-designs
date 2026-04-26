@@ -6,23 +6,21 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
-
     const type = searchParams.get('type')
+
     const awards = await prisma.award.findMany({
       where: {
         ...(status ? { status: status as 'DRAFT' | 'PUBLISHED' } : {}),
         ...(type ? { type } : {}),
       },
+      include: { images: { orderBy: { order: 'asc' } } },
       orderBy: [{ year: 'desc' }, { order: 'asc' }]
     })
 
     return NextResponse.json(awards)
   } catch (error) {
     console.error('Error fetching awards:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch awards' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch awards' }, { status: 500 })
   }
 }
 
@@ -49,16 +47,21 @@ export async function POST(request: NextRequest) {
         image: data.image || null,
         type: data.type || 'AWARD',
         order: data.order || 0,
-        status: data.status || 'DRAFT'
-      }
+        status: data.status || 'DRAFT',
+        images: data.images?.length ? {
+          create: (data.images as { url: string; alt?: string }[]).map((img, idx) => ({
+            url: img.url,
+            alt: img.alt || null,
+            order: idx,
+          }))
+        } : undefined,
+      },
+      include: { images: { orderBy: { order: 'asc' } } },
     })
 
     return NextResponse.json(award, { status: 201 })
   } catch (error) {
     console.error('Error creating award:', error)
-    return NextResponse.json(
-      { error: 'Failed to create award' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create award' }, { status: 500 })
   }
 }
