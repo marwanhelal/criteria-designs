@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -31,7 +31,6 @@ const FALLBACK_GRADIENTS = [
   'linear-gradient(160deg,#221e14 0%,#18160c 100%)',
 ]
 
-/** Merge primary image + gallery images into a deduplicated ordered list */
 function getImageList(award: Award): string[] {
   const seen = new Set<string>()
   const result: string[] = []
@@ -42,48 +41,28 @@ function getImageList(award: Award): string[] {
   return result
 }
 
-export default function AwardsAccordion({ awards, totalCount, countries, since }: Props) {
+export default function AwardsAccordion({ awards }: Props) {
   const [active, setActive] = useState(0)
-  // Index of the currently displayed image within the active panel
   const [imgIdx, setImgIdx] = useState(0)
-  const [prevImgIdx, setPrevImgIdx] = useState<number | null>(null)
-  const [fading, setFading] = useState(false)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const items = awards.slice(0, 5)
   if (items.length === 0) return null
 
-  const activeAward = items[active]
-  const activeImages = getImageList(activeAward)
+  const activeImages = getImageList(items[active])
 
-  // Reset image index when active panel changes
+  // Reset image index when switching panels
   useEffect(() => {
     setImgIdx(0)
-    setPrevImgIdx(null)
-    setFading(false)
   }, [active])
 
-  // Auto-cycle images of the active panel
+  // Auto-cycle through images of the active panel
   useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current)
     if (activeImages.length <= 1) return
-
-    intervalRef.current = setInterval(() => {
-      setFading(true)
-      setTimeout(() => {
-        setImgIdx(prev => {
-          const next = (prev + 1) % activeImages.length
-          setPrevImgIdx(prev)
-          return next
-        })
-        setTimeout(() => setFading(false), 50)
-      }, 400) // half of the CSS transition duration
+    const interval = setInterval(() => {
+      setImgIdx(prev => (prev + 1) % activeImages.length)
     }, 3500)
-
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+    return () => clearInterval(interval)
   }, [active, activeImages.length])
-
-  const sinceStr = since || '2001'
 
   return (
     <section data-navbar-dark className="w-full bg-white relative overflow-hidden">
@@ -141,13 +120,9 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
           {items.map((award, i) => {
             const allImages = getImageList(award)
             const isActive = i === active
-            // Which image to show in this panel
-            const displayImgUrl = isActive
-              ? allImages[imgIdx] ?? null
-              : allImages[0] ?? null
-            const prevImgUrl = isActive && prevImgIdx !== null
-              ? allImages[prevImgIdx] ?? null
-              : null
+            const displayUrl = isActive
+              ? (allImages[imgIdx] ?? allImages[0] ?? null)
+              : (allImages[0] ?? null)
 
             return (
               <motion.div
@@ -164,58 +139,36 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                 }}
                 onMouseEnter={() => setActive(i)}
               >
-                {/* ── Background image layer (previous, fades out) ── */}
-                {prevImgUrl && (
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      opacity: fading ? 0 : 1,
-                      transition: 'opacity 0.8s ease',
-                      zIndex: 1,
-                    }}
-                  >
-                    <Image
-                      src={prevImgUrl}
-                      alt={award.titleEn}
-                      fill
-                      sizes="70vw"
-                      className="object-cover"
-                      style={{
-                        transform: 'scale(1.03)',
-                        filter: 'grayscale(0%) brightness(0.78)',
-                      }}
-                      unoptimized
-                    />
-                  </div>
-                )}
-
-                {/* ── Background image layer (current) ── */}
-                {displayImgUrl ? (
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      opacity: fading ? 0 : 1,
-                      transition: prevImgUrl ? 'opacity 0.8s ease' : 'none',
-                      zIndex: prevImgUrl ? 2 : 1,
-                    }}
-                  >
-                    <Image
-                      src={displayImgUrl}
-                      alt={award.titleEn}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 70vw"
-                      className="object-cover"
-                      style={{
-                        transform: isActive ? 'scale(1.03)' : 'scale(1.1)',
-                        filter: isActive
-                          ? 'grayscale(0%) brightness(0.78)'
-                          : 'grayscale(100%) brightness(0.3)',
-                        transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
-                      }}
-                      unoptimized
-                      priority={i === 0}
-                    />
-                  </div>
+                {/* Background — AnimatePresence crossfade between images */}
+                {displayUrl ? (
+                  <AnimatePresence mode="sync" initial={false}>
+                    <motion.div
+                      key={displayUrl}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.8, ease: 'easeInOut' }}
+                      className="absolute inset-0"
+                      style={{ zIndex: 1 }}
+                    >
+                      <Image
+                        src={displayUrl}
+                        alt={award.titleEn}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 70vw"
+                        className="object-cover"
+                        style={{
+                          transform: isActive ? 'scale(1.03)' : 'scale(1.1)',
+                          filter: isActive
+                            ? 'grayscale(0%) brightness(0.78)'
+                            : 'grayscale(100%) brightness(0.3)',
+                          transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
+                        }}
+                        unoptimized
+                        priority={i === 0}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 ) : (
                   <div
                     className="absolute inset-0"
@@ -228,15 +181,14 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   />
                 )}
 
-                {/* ── Overlays (above images) ── */}
-                {/* Bottom gradient (active only) */}
+                {/* Bottom gradient */}
                 <div
                   className="absolute inset-x-0 bottom-0 h-3/4 pointer-events-none"
                   style={{
                     background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
                     opacity: isActive ? 1 : 0,
                     transition: 'opacity 0.5s ease',
-                    zIndex: 10,
+                    zIndex: 5,
                   }}
                 />
                 {/* Veil on inactive */}
@@ -246,7 +198,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                     background: 'rgba(247,245,241,0.15)',
                     opacity: isActive ? 0 : 1,
                     transition: 'opacity 0.85s ease',
-                    zIndex: 10,
+                    zIndex: 5,
                   }}
                 />
                 {/* Gold top border */}
@@ -259,7 +211,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   }}
                 />
 
-                {/* ── Image counter dots (active, multiple images) ── */}
+                {/* Dot indicator (active panel, multiple images) */}
                 {isActive && allImages.length > 1 && (
                   <div
                     className="absolute top-4 right-4 flex gap-[5px] pointer-events-none"
@@ -279,7 +231,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   </div>
                 )}
 
-                {/* ── Collapsed: vertical label ── */}
+                {/* Collapsed: vertical label */}
                 <div
                   className="absolute inset-0 flex items-center justify-center pointer-events-none"
                   style={{
@@ -315,7 +267,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
                   </div>
                 </div>
 
-                {/* ── Expanded content ── */}
+                {/* Expanded content */}
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
@@ -377,7 +329,7 @@ export default function AwardsAccordion({ awards, totalCount, countries, since }
           })}
         </div>
 
-        {/* Footer row */}
+        {/* Footer */}
         <div className="flex items-center justify-center pt-8 mt-1 border-t border-black/[0.08]">
           <Link href="/awards" className="group relative inline-block">
             <span
