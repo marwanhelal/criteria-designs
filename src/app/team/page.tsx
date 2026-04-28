@@ -208,50 +208,6 @@ export default function TeamPage() {
     <>
       <Navbar />
 
-      {/* ══════════════ HERO ══════════════ */}
-      <section
-        className="relative min-h-[55vh] w-full flex flex-col justify-end overflow-hidden"
-        style={{ background: '#0E1118' }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(177,164,144,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(177,164,144,0.03) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
-        />
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.4, delay: 0.3 }}
-          className="absolute right-[clamp(1rem,5vw,7rem)] top-1/2 -translate-y-1/2 font-[var(--font-playfair)] text-white/[0.025] select-none pointer-events-none"
-          style={{ fontSize: 'clamp(160px, 22vw, 320px)', lineHeight: 1 }}
-        >
-          CDG
-        </motion.span>
-
-        <div className="relative z-10 px-[clamp(1.5rem,6vw,8rem)] pb-[clamp(3.5rem,6vw,8rem)] pt-[clamp(8rem,13vw,14rem)]">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="flex items-center gap-4 mb-7">
-            <span className="block w-7 h-px bg-[#B1A490]" />
-            <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Our People</span>
-            <span className="block w-px h-3 bg-[#B1A490]/25" />
-            <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px]">Criteria Designs Group</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.05]"
-            style={{ fontSize: 'clamp(40px, 7vw, 100px)', maxWidth: '750px' }}
-          >
-            Founder &amp;<br />
-            <span style={{ color: '#B1A490' }}>Team</span>
-          </motion.h1>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, #0E1118)' }} />
-      </section>
-
       {/* ══════════════ FOUNDER BIOGRAPHY ══════════════ */}
       <section data-navbar-dark className="w-full bg-white overflow-hidden">
         <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
