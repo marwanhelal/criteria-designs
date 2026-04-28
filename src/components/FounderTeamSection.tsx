@@ -27,9 +27,10 @@ const SPEED = 0.45 // px per frame — slow, calm drift
 export default function FounderTeamSection() {
   const [founder, setFounder] = useState<FounderData | null>(null)
   const [team, setTeam] = useState<TeamMember[]>([])
-  const [activeCard, setActiveCard] = useState(1)
 
   const trackRef = useRef<HTMLDivElement>(null)
+  const counterRef = useRef<HTMLSpanElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
   const posRef = useRef(0)
   const pausedRef = useRef(false)
   const rafRef = useRef<number | null>(null)
@@ -61,10 +62,13 @@ export default function FounderTeamSection() {
         if (trackRef.current) {
           trackRef.current.style.transform = `translateX(-${posRef.current}px)`
         }
-        // Update counter every ~18 frames (~0.3s at 60fps)
+        // Update counter DOM directly — avoids calling setState from RAF
+        // which triggers React 19 error #310 (update during concurrent render)
         frameCountRef.current++
         if (frameCountRef.current % 18 === 0) {
-          setActiveCard(Math.floor(posRef.current / (CARD_W + CARD_GAP)) % team.length + 1)
+          const card = Math.floor(posRef.current / (CARD_W + CARD_GAP)) % team.length + 1
+          if (counterRef.current) counterRef.current.textContent = String(card).padStart(2, '0')
+          if (progressRef.current) progressRef.current.style.width = `${(card / team.length) * 100}%`
         }
       }
       rafRef.current = requestAnimationFrame(tick)
@@ -288,19 +292,21 @@ export default function FounderTeamSection() {
                   </div>
                 </div>
 
-                {/* Progress bar + counter */}
+                {/* Progress bar + counter — updated via DOM refs from RAF, not React state */}
                 <div className="mt-6 flex items-center gap-4">
                   <span
+                    ref={counterRef}
                     className="font-[var(--font-libre-franklin)] font-semibold text-[#181C23] tabular-nums"
                     style={{ fontSize: '12px', minWidth: '22px' }}
                   >
-                    {String(activeCard).padStart(2, '0')}
+                    01
                   </span>
                   <div className="flex-1 h-px bg-[#E8E4DF] relative rounded-full overflow-hidden">
                     <div
+                      ref={progressRef}
                       className="absolute inset-y-0 left-0 bg-[#B1A490] rounded-full"
                       style={{
-                        width: `${(activeCard / team.length) * 100}%`,
+                        width: `${(1 / team.length) * 100}%`,
                         transition: 'width 0.3s ease',
                       }}
                     />
