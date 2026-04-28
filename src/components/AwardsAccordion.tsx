@@ -161,7 +161,7 @@ export default function AwardsAccordion({ awards }: Props) {
                         style={{
                           transform: isActive ? 'scale(1.03)' : 'scale(1.1)',
                           filter: isActive
-                            ? 'grayscale(0%) brightness(0.78)'
+                            ? 'none'
                             : 'grayscale(100%) brightness(0.3)',
                           transition: 'transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), filter 0.85s ease',
                         }}
@@ -182,16 +182,16 @@ export default function AwardsAccordion({ awards }: Props) {
                   />
                 )}
 
-                {/* Bottom gradient */}
-                <div
-                  className="absolute inset-x-0 bottom-0 h-3/4 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
-                    opacity: isActive ? 1 : 0,
-                    transition: 'opacity 0.5s ease',
-                    zIndex: 5,
-                  }}
-                />
+                {/* Subtle gradient only on inactive panels for depth */}
+                {!isActive && (
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)',
+                      zIndex: 5,
+                    }}
+                  />
+                )}
                 {/* Veil on inactive */}
                 <div
                   className="absolute inset-0 pointer-events-none"
@@ -278,7 +278,7 @@ export default function AwardsAccordion({ awards }: Props) {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-12"
-                      style={{ zIndex: 20 }}
+                      style={{ zIndex: 20, textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
