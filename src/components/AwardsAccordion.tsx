@@ -59,7 +59,7 @@ export default function AwardsAccordion({ awards }: Props) {
     if (activeImages.length <= 1) return
     const interval = setInterval(() => {
       setImgIdx(prev => (prev + 1) % activeImages.length)
-    }, 3500)
+    }, 7000)
     return () => clearInterval(interval)
   }, [active, activeImages.length])
 
