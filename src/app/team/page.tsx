@@ -208,148 +208,233 @@ export default function TeamPage() {
     <>
       <Navbar />
 
-      {/* ══════════════ FOUNDER BIOGRAPHY ══════════════ */}
-      <section data-navbar-dark className="w-full bg-white overflow-hidden">
-        <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
+      {/* ══════════════ FOUNDER BIOGRAPHY — CINEMATIC SPLIT ══════════════ */}
+      <section className="w-full overflow-hidden" style={{ background: '#0E1118' }}>
+        <div className="flex flex-col lg:flex-row" style={{ minHeight: 'clamp(600px, 90vh, 1000px)' }}>
 
-          {/* Name + Title header */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-[clamp(2.5rem,4vw,5rem)] pb-[clamp(2rem,3vw,4rem)]" style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+          {/* ── LEFT: Full-bleed portrait ── */}
+          <motion.div
+            className="relative lg:w-[45%] shrink-0 overflow-hidden"
+            style={{ minHeight: 'clamp(380px, 55vw, 700px)' }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.1 }}
+          >
+            {founder?.founderImage ? (
+              <motion.img
+                src={founder.founderImage}
+                alt={founder?.founderNameEn || 'Founder'}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+                initial={{ scale: 1.06 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'linear-gradient(160deg,#1e2530,#141820)' }}>
+                <span className="font-[var(--font-playfair)] italic text-[#B1A490]/20" style={{ fontSize: '160px' }}>H</span>
+              </div>
+            )}
+
+            {/* Right-edge fade into dark bg */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to right, transparent 60%, #0E1118 100%)' }} />
+            {/* Bottom fade on mobile */}
+            <div className="absolute inset-0 pointer-events-none lg:hidden" style={{ background: 'linear-gradient(to bottom, transparent 50%, #0E1118 100%)' }} />
+
+            {/* Floating index label */}
+            <div className="absolute top-8 left-8 flex items-center gap-3">
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px]">01</span>
+              <span className="block w-6 h-px bg-[#B1A490]/40" />
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490]/60 uppercase tracking-[3px]">Founder</span>
+            </div>
+          </motion.div>
+
+          {/* ── RIGHT: Content ── */}
+          <div className="lg:w-[55%] flex flex-col justify-center px-[clamp(2rem,5vw,7rem)] py-[clamp(3rem,5vw,7rem)]">
+
+            {/* Label */}
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.75 }}
+              transition={{ duration: 0.55 }}
+              className="flex items-center gap-3 mb-6"
             >
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-7 h-px bg-[#B1A490]" />
-                <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Founder Biography</span>
-              </div>
-              <h2
-                className="font-[var(--font-playfair)] italic font-normal text-[#181C23] leading-[1.05]"
-                style={{ fontSize: 'clamp(36px, 5.5vw, 80px)' }}
-              >
-                {founder?.founderNameEn || 'Arch. Hesham Helal'}
-              </h2>
+              <span className="w-7 h-px bg-[#B1A490]" />
+              <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Founder Biography</span>
             </motion.div>
+
+            {/* "Arch." prefix */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="font-[var(--font-libre-franklin)] text-white/30 uppercase mb-1"
+              style={{ fontSize: 'clamp(11px, 0.9vw, 14px)', letterSpacing: '4px' }}
+            >
+              Arch.
+            </motion.p>
+
+            {/* Name — two lines, HUGE Playfair 900 */}
+            <div className="mb-4" style={{ lineHeight: 0.92 }}>
+              {(() => {
+                const fullName = founder?.founderNameEn || 'Hesham Helal'
+                const cleaned = fullName.replace(/^Arch\.\s*/i, '')
+                const parts = cleaned.trim().split(' ')
+                const first = parts.slice(0, -1).join(' ') || parts[0]
+                const last = parts.length > 1 ? parts[parts.length - 1] : ''
+                return (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <span
+                        className="block font-[var(--font-playfair)] text-white"
+                        style={{ fontSize: 'clamp(56px, 7.5vw, 118px)', fontWeight: 900, fontStyle: 'italic' }}
+                      >
+                        {first}
+                      </span>
+                    </motion.div>
+                    {last && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <span
+                          className="block font-[var(--font-playfair)]"
+                          style={{ fontSize: 'clamp(56px, 7.5vw, 118px)', fontWeight: 900, fontStyle: 'italic', color: '#B1A490' }}
+                        >
+                          {last}
+                        </span>
+                      </motion.div>
+                    )}
+                  </>
+                )
+              })()}
+            </div>
+
+            {/* Gold rule + Title */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:text-right pb-1"
+              transition={{ duration: 0.5, delay: 0.32 }}
+              className="flex items-center gap-4 mb-8"
             >
-              <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#B1A490] uppercase tracking-[2px]">
+              <motion.div
+                className="h-px bg-[#B1A490]"
+                initial={{ width: 0 }}
+                whileInView={{ width: 40 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              />
+              <span
+                className="font-[family-name:var(--font-franklin-gothic)] text-white/50 uppercase"
+                style={{ fontSize: 'clamp(11px, 0.85vw, 13px)', letterSpacing: '3.5px', fontWeight: 700 }}
+              >
                 {founder?.founderTitleEn || 'CEO & Founder, M.Sc'}
-              </p>
+              </span>
             </motion.div>
-          </div>
 
-          {/* Portrait + Stats + Bio */}
-          <div className="flex flex-col lg:flex-row gap-[clamp(3rem,5vw,7rem)]">
-
-            {/* Left: Portrait */}
+            {/* Stats — 2×2 grid */}
             <motion.div
-              className="lg:w-[34%] shrink-0"
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: 0.38 }}
+              className="grid grid-cols-2 gap-x-8 gap-y-6 mb-10 pb-10"
+              style={{ borderBottom: '1px solid rgba(177,164,144,0.12)' }}
             >
-              <div className="relative" style={{ paddingTop: '40px' }}>
-                <div className="absolute left-0 bg-[#EDE9E3] rounded-3xl" style={{ top: 0, width: '80%', height: '45%', zIndex: 0 }} />
-                <motion.div
-                  className="relative rounded-3xl overflow-hidden"
-                  style={{ width: '82%', aspectRatio: '3/4', zIndex: 1, boxShadow: '0 24px 64px -8px rgba(0,0,0,0.15)' }}
-                  initial={{ scale: 1.04 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {founder?.founderImage ? (
-                    <img src={founder.founderImage} alt={founder?.founderNameEn || 'Founder'} className="w-full h-full object-cover object-top" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(160deg,#e0dbd4,#cac4bc)' }}>
-                      <span className="font-[var(--font-playfair)] italic text-white/50" style={{ fontSize: '80px' }}>H</span>
-                    </div>
-                  )}
-                </motion.div>
-                {/* Title badge */}
-                <motion.div
-                  className="absolute bg-[#181C23] rounded-2xl px-5 py-4"
-                  style={{ bottom: '10px', right: '4px', zIndex: 2, boxShadow: '0 10px 30px rgba(0,0,0,0.18)' }}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5, duration: 0.55 }}
-                >
-                  <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[2px] mb-1">Title</p>
-                  <p className="font-[var(--font-playfair)] italic text-white" style={{ fontSize: '14px' }}>
-                    {founder?.founderTitleEn || 'CEO & Founder'}
+              {stats.map((s, i) => (
+                <div key={i} className="flex flex-col gap-1">
+                  <span
+                    className="font-[var(--font-playfair)] text-white leading-none"
+                    style={{ fontSize: 'clamp(36px, 3.8vw, 58px)', fontWeight: 900, fontStyle: 'italic' }}
+                  >
+                    {s.value}
+                  </span>
+                  <span
+                    className="font-[var(--font-libre-franklin)] text-white/35 uppercase"
+                    style={{ fontSize: '10px', letterSpacing: '2.5px' }}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Bio columns */}
+            {(founder?.founderBioCol1En || founder?.founderBioCol2En) ? (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, delay: 0.44 }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10"
+              >
+                {founder?.founderBioCol1En && (
+                  <p className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}>
+                    {founder.founderBioCol1En}
                   </p>
-                </motion.div>
-              </div>
-            </motion.div>
+                )}
+                {founder?.founderBioCol2En && (
+                  <p className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}>
+                    {founder.founderBioCol2En}
+                  </p>
+                )}
+              </motion.div>
+            ) : founder?.founderDescriptionEn ? (
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.44 }}
+                className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] mb-10"
+                style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}
+              >
+                {founder.founderDescriptionEn}
+              </motion.p>
+            ) : null}
 
-            {/* Right: Stats + Bio */}
-            <motion.div
-              className="lg:w-[66%] flex flex-col"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {/* Stats row — dark band */}
-              {(founder?.founderYearsExp || founder?.founderProjectsCount) && (
-                <div
-                  className="rounded-2xl px-8 py-7 mb-10 grid grid-cols-2 md:grid-cols-4 gap-6"
-                  style={{ background: '#181C23' }}
-                >
-                  {stats.map((s, i) => (
-                    <StatItem key={i} value={s.value} label={s.label} />
-                  ))}
-                </div>
-              )}
-
-              {/* Bio columns */}
-              {(founder?.founderBioCol1En || founder?.founderBioCol2En) ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                  {founder?.founderBioCol1En && (
-                    <div className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
-                      {founder.founderBioCol1En}
-                    </div>
-                  )}
-                  {founder?.founderBioCol2En && (
-                    <div className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
-                      {founder.founderBioCol2En}
-                    </div>
-                  )}
-                </div>
-              ) : founder?.founderDescriptionEn ? (
-                <p className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] mb-10" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
-                  {founder.founderDescriptionEn}
-                </p>
-              ) : null}
-
-              {/* Certifications */}
-              {(founder?.founderCertTextEn || certLogos.length > 0) && (
-                <div className="pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}>
-                  {founder?.founderCertTextEn && (
-                    <p className="font-[var(--font-libre-franklin)] font-semibold text-[#181C23] mb-6" style={{ fontSize: '13px' }}>
-                      {founder.founderCertTextEn}
-                    </p>
-                  )}
-                  {certLogos.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-6">
-                      {certLogos.map((src, i) => (
-                        <div key={i} className="h-12 flex items-center">
-                          <img src={src} alt={`Certification ${i + 1}`} className="h-full w-auto object-contain" style={{ filter: 'grayscale(20%)' }} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </motion.div>
+            {/* Certifications */}
+            {(founder?.founderCertTextEn || certLogos.length > 0) && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                {founder?.founderCertTextEn && (
+                  <p
+                    className="font-[var(--font-libre-franklin)] text-white/55 mb-5"
+                    style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.3px' }}
+                  >
+                    {founder.founderCertTextEn}
+                  </p>
+                )}
+                {certLogos.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-6">
+                    {certLogos.map((src, i) => (
+                      <div key={i} className="h-10 flex items-center">
+                        <img
+                          src={src}
+                          alt={`Certification ${i + 1}`}
+                          className="h-full w-auto object-contain"
+                          style={{ filter: 'brightness(0) invert(1) opacity(0.5)' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
 
           </div>
         </div>
