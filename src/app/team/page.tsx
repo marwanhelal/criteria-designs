@@ -251,7 +251,7 @@ export default function TeamPage() {
           </motion.div>
 
           {/* ── RIGHT: Content ── */}
-          <div className="lg:w-[55%] flex flex-col justify-center px-[clamp(2rem,5vw,7rem)] py-[clamp(3rem,5vw,7rem)]">
+          <div className="lg:w-[55%] flex flex-col justify-center px-[clamp(2rem,5vw,7rem)] py-[clamp(3rem,5vw,7rem)] bg-white" data-navbar-dark>
 
             {/* Label */}
             <motion.div
@@ -271,7 +271,7 @@ export default function TeamPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="font-[var(--font-libre-franklin)] text-white/30 uppercase mb-1"
+              className="font-[var(--font-libre-franklin)] text-[#9A9A94] uppercase mb-1"
               style={{ fontSize: 'clamp(11px, 0.9vw, 14px)', letterSpacing: '4px' }}
             >
               Arch.
@@ -294,7 +294,7 @@ export default function TeamPage() {
                       transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <span
-                        className="block font-[var(--font-playfair)] text-white"
+                        className="block font-[var(--font-playfair)] text-[#181C23]"
                         style={{ fontSize: 'clamp(56px, 7.5vw, 118px)', fontWeight: 900, fontStyle: 'italic' }}
                       >
                         {first}
@@ -336,7 +336,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               />
               <span
-                className="font-[family-name:var(--font-franklin-gothic)] text-white/50 uppercase"
+                className="font-[family-name:var(--font-franklin-gothic)] text-[#888] uppercase"
                 style={{ fontSize: 'clamp(11px, 0.85vw, 13px)', letterSpacing: '3.5px', fontWeight: 700 }}
               >
                 {founder?.founderTitleEn || 'CEO & Founder, M.Sc'}
@@ -350,18 +350,18 @@ export default function TeamPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.65, delay: 0.38 }}
               className="grid grid-cols-2 gap-x-8 gap-y-6 mb-10 pb-10"
-              style={{ borderBottom: '1px solid rgba(177,164,144,0.12)' }}
+              style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}
             >
               {stats.map((s, i) => (
                 <div key={i} className="flex flex-col gap-1">
                   <span
-                    className="font-[var(--font-playfair)] text-white leading-none"
+                    className="font-[var(--font-playfair)] text-[#181C23] leading-none"
                     style={{ fontSize: 'clamp(36px, 3.8vw, 58px)', fontWeight: 900, fontStyle: 'italic' }}
                   >
                     {s.value}
                   </span>
                   <span
-                    className="font-[var(--font-libre-franklin)] text-white/35 uppercase"
+                    className="font-[var(--font-libre-franklin)] text-[#9A9A94] uppercase"
                     style={{ fontSize: '10px', letterSpacing: '2.5px' }}
                   >
                     {s.label}
@@ -380,12 +380,12 @@ export default function TeamPage() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10"
               >
                 {founder?.founderBioCol1En && (
-                  <p className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}>
+                  <p className="font-[var(--font-merriweather)] text-[#4A4845] leading-[1.95] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 0.9vw, 15px)', fontWeight: 300 }}>
                     {founder.founderBioCol1En}
                   </p>
                 )}
                 {founder?.founderBioCol2En && (
-                  <p className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}>
+                  <p className="font-[var(--font-merriweather)] text-[#4A4845] leading-[1.95] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 0.9vw, 15px)', fontWeight: 300 }}>
                     {founder.founderBioCol2En}
                   </p>
                 )}
@@ -396,8 +396,8 @@ export default function TeamPage() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.44 }}
-                className="font-[var(--font-open-sans)] text-white/45 leading-[1.9] mb-10"
-                style={{ fontSize: 'clamp(12px, 0.85vw, 14px)', fontWeight: 300 }}
+                className="font-[var(--font-merriweather)] text-[#4A4845] leading-[1.95] mb-10"
+                style={{ fontSize: 'clamp(13px, 0.9vw, 15px)', fontWeight: 300 }}
               >
                 {founder.founderDescriptionEn}
               </motion.p>
@@ -413,8 +413,8 @@ export default function TeamPage() {
               >
                 {founder?.founderCertTextEn && (
                   <p
-                    className="font-[var(--font-libre-franklin)] text-white/55 mb-5"
-                    style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.3px' }}
+                    className="font-[var(--font-libre-franklin)] text-[#181C23] mb-5"
+                    style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.3px' }}
                   >
                     {founder.founderCertTextEn}
                   </p>
@@ -427,7 +427,7 @@ export default function TeamPage() {
                           src={src}
                           alt={`Certification ${i + 1}`}
                           className="h-full w-auto object-contain"
-                          style={{ filter: 'brightness(0) invert(1) opacity(0.5)' }}
+                          style={{ filter: 'grayscale(15%) opacity(0.85)' }}
                         />
                       </div>
                     ))}
