@@ -380,6 +380,42 @@ export async function POST() {
       results.push(`✗ AwardImage index: ${e instanceof Error ? e.message : String(e)}`)
     }
 
+    // 26. Founder extended biography columns on SiteSettings
+    const founderExtCols = [
+      'founderYearsExp', 'founderProjectsCount', 'founderCountriesCount', 'founderPapersCount',
+      'founderBioCol1En', 'founderBioCol2En', 'founderCertTextEn',
+      'founderCert1Image', 'founderCert2Image', 'founderCert3Image',
+    ]
+    for (const col of founderExtCols) {
+      try {
+        await prisma.$executeRawUnsafe(
+          `ALTER TABLE "SiteSettings" ADD COLUMN IF NOT EXISTS "${col}" TEXT;`
+        )
+        results.push(`✓ ${col} column ensured on SiteSettings`)
+      } catch (e) {
+        results.push(`✗ ${col}: ${e instanceof Error ? e.message : String(e)}`)
+      }
+    }
+
+    // 27. Create Video table
+    try {
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "Video" (
+          "id"          TEXT        NOT NULL,
+          "titleEn"     TEXT        NOT NULL,
+          "youtubeUrl"  TEXT        NOT NULL,
+          "description" TEXT,
+          "order"       INTEGER     NOT NULL DEFAULT 0,
+          "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Video_pkey" PRIMARY KEY ("id")
+        );
+      `)
+      results.push('✓ Video table ensured')
+    } catch (e) {
+      results.push(`✗ Video table: ${e instanceof Error ? e.message : String(e)}`)
+    }
+
     return NextResponse.json({ success: true, results })
   } catch (error) {
     console.error('Migration error:', error)

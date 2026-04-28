@@ -7,6 +7,7 @@ const IMAGE_FIELDS = [
   'logo', 'favicon', 'heroImage', 'heroVideo',
   'philosophyImage', 'philosophyCultureImage', 'philosophyNatureImage', 'philosophyArtImage',
   'founderImage', 'aboutImage',
+  'founderCert1Image', 'founderCert2Image', 'founderCert3Image',
 ] as const
 
 // GET site settings
@@ -118,6 +119,16 @@ export async function PUT(request: NextRequest) {
         founderDescriptionEn: data.founderDescriptionEn || null,
         founderImage: data.founderImage || null,
         teamSectionTitleEn: data.teamSectionTitleEn || null,
+        founderYearsExp: data.founderYearsExp || null,
+        founderProjectsCount: data.founderProjectsCount || null,
+        founderCountriesCount: data.founderCountriesCount || null,
+        founderPapersCount: data.founderPapersCount || null,
+        founderBioCol1En: data.founderBioCol1En || null,
+        founderBioCol2En: data.founderBioCol2En || null,
+        founderCertTextEn: data.founderCertTextEn || null,
+        founderCert1Image: data.founderCert1Image || null,
+        founderCert2Image: data.founderCert2Image || null,
+        founderCert3Image: data.founderCert3Image || null,
         // Showcase projects
         showcaseProject1Id: data.showcaseProject1Id || null,
         showcaseProject2Id: data.showcaseProject2Id || null,
@@ -184,6 +195,16 @@ export async function PUT(request: NextRequest) {
         founderDescriptionEn: data.founderDescriptionEn || null,
         founderImage: data.founderImage || null,
         teamSectionTitleEn: data.teamSectionTitleEn || null,
+        founderYearsExp: data.founderYearsExp || null,
+        founderProjectsCount: data.founderProjectsCount || null,
+        founderCountriesCount: data.founderCountriesCount || null,
+        founderPapersCount: data.founderPapersCount || null,
+        founderBioCol1En: data.founderBioCol1En || null,
+        founderBioCol2En: data.founderBioCol2En || null,
+        founderCertTextEn: data.founderCertTextEn || null,
+        founderCert1Image: data.founderCert1Image || null,
+        founderCert2Image: data.founderCert2Image || null,
+        founderCert3Image: data.founderCert3Image || null,
         // Showcase projects
         showcaseProject1Id: data.showcaseProject1Id || null,
         showcaseProject2Id: data.showcaseProject2Id || null,

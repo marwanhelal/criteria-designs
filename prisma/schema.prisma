@@ -196,6 +196,17 @@ model SiteSettings {
   founderDescriptionEn   String?  @db.Text
   founderImage           String?
   teamSectionTitleEn     String?
+  // Founder extended biography
+  founderYearsExp        String?
+  founderProjectsCount   String?
+  founderCountriesCount  String?
+  founderPapersCount     String?
+  founderBioCol1En       String?  @db.Text
+  founderBioCol2En       String?  @db.Text
+  founderCertTextEn      String?
+  founderCert1Image      String?
+  founderCert2Image      String?
+  founderCert3Image      String?
 
   // Awards section stats
   awardsCountries  String?  @default("12+")
@@ -295,6 +306,18 @@ model PhilosophyPage {
   diagramImage       String?
 
   updatedAt          DateTime @updatedAt
+}
+
+// ==================== VIDEOS ====================
+
+model Video {
+  id          String   @id @default(cuid())
+  titleEn     String
+  youtubeUrl  String
+  description String?  @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // ==================== MEDIA ====================

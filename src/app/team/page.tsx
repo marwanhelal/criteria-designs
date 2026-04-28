@@ -1,12 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import Link from 'next/link'
-import AnimatedSection, { StaggerContainer, StaggerItem } from '@/components/AnimatedSection'
-import { Linkedin, Mail } from 'lucide-react'
+import { Linkedin, Mail, ExternalLink, Play } from 'lucide-react'
+
+// ── Types ──────────────────────────────────────────────────────────────────
+interface FounderData {
+  founderNameEn: string | null
+  founderTitleEn: string | null
+  founderDescriptionEn: string | null
+  founderImage: string | null
+  founderYearsExp: string | null
+  founderProjectsCount: string | null
+  founderCountriesCount: string | null
+  founderPapersCount: string | null
+  founderBioCol1En: string | null
+  founderBioCol2En: string | null
+  founderCertTextEn: string | null
+  founderCert1Image: string | null
+  founderCert2Image: string | null
+  founderCert3Image: string | null
+}
 
 interface TeamMember {
   id: string
@@ -18,180 +35,565 @@ interface TeamMember {
   linkedin: string | null
 }
 
-export default function TeamPage() {
-  const [team, setTeam] = useState<TeamMember[]>([])
-  const [loading, setLoading] = useState(true)
+interface Video {
+  id: string
+  titleEn: string
+  youtubeUrl: string
+  description: string | null
+  order: number
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function getYouTubeId(url: string): string | null {
+  if (!url) return null
+  const watchMatch = url.match(/[?&]v=([^&]+)/)
+  if (watchMatch) return watchMatch[1]
+  const shortMatch = url.match(/youtu\.be\/([^?&]+)/)
+  if (shortMatch) return shortMatch[1]
+  const embedMatch = url.match(/embed\/([^?&]+)/)
+  if (embedMatch) return embedMatch[1]
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url.trim())) return url.trim()
+  return null
+}
+
+// ── Stat counter component ────────────────────────────────────────────────
+function StatItem({ value, label }: { value: string; label: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    fetch('/api/team')
-      .then(res => res.ok ? res.json() : [])
-      .then(data => setTeam(data))
-      .catch(() => setTeam([]))
-      .finally(() => setLoading(false))
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
+      { threshold: 0.5 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
   }, [])
+
+  return (
+    <div ref={ref} className="flex flex-col items-start gap-1">
+      <motion.span
+        className="font-[var(--font-playfair)] italic text-white leading-none"
+        style={{ fontSize: 'clamp(32px, 3.5vw, 54px)' }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={visible ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {value}
+      </motion.span>
+      <motion.span
+        className="font-[var(--font-libre-franklin)] text-white/40 uppercase"
+        style={{ fontSize: '10px', letterSpacing: '2.5px' }}
+        initial={{ opacity: 0 }}
+        animate={visible ? { opacity: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.15 }}
+      >
+        {label}
+      </motion.span>
+    </div>
+  )
+}
+
+// ── Video card with facade lazy-load ─────────────────────────────────────
+function VideoCard({ video }: { video: Video }) {
+  const [playing, setPlaying] = useState(false)
+  const ytId = getYouTubeId(video.youtubeUrl)
+
+  if (!ytId) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.65 }}
+      className="flex flex-col gap-4"
+    >
+      {/* Player */}
+      <div
+        className="relative rounded-2xl overflow-hidden bg-black cursor-pointer group"
+        style={{ aspectRatio: '16/9' }}
+        onClick={() => setPlaying(true)}
+      >
+        {playing ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
+            title={video.titleEn}
+            className="absolute inset-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <>
+            <img
+              src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
+              alt={video.titleEn}
+              className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` }}
+            />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
+            {/* Play button */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/25 transition-all duration-300"
+                style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+              >
+                <Play size={22} className="text-white ml-1" fill="white" />
+              </div>
+            </div>
+            {/* Gold top border on hover */}
+            <div
+              className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left"
+              style={{ transform: 'scaleX(0)', transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)' }}
+            />
+          </>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3
+            className="font-[var(--font-playfair)] italic text-white leading-snug"
+            style={{ fontSize: 'clamp(15px, 1.3vw, 20px)' }}
+          >
+            {video.titleEn}
+          </h3>
+          {video.description && (
+            <p className="font-[var(--font-libre-franklin)] text-white/35 text-[12px] mt-1 leading-relaxed line-clamp-2">
+              {video.description}
+            </p>
+          )}
+        </div>
+        <a
+          href={`https://www.youtube.com/watch?v=${ytId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 shrink-0 font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[2px] hover:text-white transition-colors mt-1"
+        >
+          <ExternalLink size={11} />
+          YouTube
+        </a>
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────
+export default function TeamPage() {
+  const [founder, setFounder] = useState<FounderData | null>(null)
+  const [team, setTeam] = useState<TeamMember[]>([])
+  const [videos, setVideos] = useState<Video[]>([])
+  const [hovered, setHovered] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.ok ? r.json() : null).then(d => { if (d) setFounder(d) }).catch(() => {})
+    fetch('/api/team').then(r => r.ok ? r.json() : []).then(setTeam).catch(() => {})
+    fetch('/api/videos').then(r => r.ok ? r.json() : []).then(setVideos).catch(() => {})
+  }, [])
+
+  const stats = [
+    { value: founder?.founderYearsExp || '+25', label: 'Years of Experience' },
+    { value: founder?.founderProjectsCount || '+500', label: 'Completed Projects' },
+    { value: founder?.founderCountriesCount || '6', label: 'Countries' },
+    { value: founder?.founderPapersCount || '6', label: 'Published Papers' },
+  ]
+
+  const certLogos = [founder?.founderCert1Image, founder?.founderCert2Image, founder?.founderCert3Image].filter(Boolean) as string[]
 
   return (
     <>
       <Navbar />
 
-      {/* ===== HERO ===== */}
-      <section className="relative h-[60vh] w-full overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#181C23] via-[#2a2f3a] to-[#181C23]">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(24, 28, 35, 0.7) 0%, rgba(24, 28, 35, 0.5) 100%)',
-            }}
-          />
+      {/* ══════════════ HERO ══════════════ */}
+      <section
+        className="relative min-h-[55vh] w-full flex flex-col justify-end overflow-hidden"
+        style={{ background: '#0E1118' }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(177,164,144,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(177,164,144,0.03) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+          }}
+        />
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.4, delay: 0.3 }}
+          className="absolute right-[clamp(1rem,5vw,7rem)] top-1/2 -translate-y-1/2 font-[var(--font-playfair)] text-white/[0.025] select-none pointer-events-none"
+          style={{ fontSize: 'clamp(160px, 22vw, 320px)', lineHeight: 1 }}
+        >
+          CDG
+        </motion.span>
+
+        <div className="relative z-10 px-[clamp(1.5rem,6vw,8rem)] pb-[clamp(3.5rem,6vw,8rem)] pt-[clamp(8rem,13vw,14rem)]">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="flex items-center gap-4 mb-7">
+            <span className="block w-7 h-px bg-[#B1A490]" />
+            <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Our People</span>
+            <span className="block w-px h-3 bg-[#B1A490]/25" />
+            <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/20 uppercase tracking-[3px]">Criteria Designs Group</span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.05]"
+            style={{ fontSize: 'clamp(40px, 7vw, 100px)', maxWidth: '750px' }}
+          >
+            Founder &amp;<br />
+            <span style={{ color: '#B1A490' }}>Team</span>
+          </motion.h1>
         </div>
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-[clamp(1rem,4vw,7rem)]">
-          <AnimatedSection>
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              Our people
-            </span>
-            <h1 className="font-[var(--font-merriweather)] text-[clamp(28px,4vw,60px)] text-white leading-[1.2] mt-4 max-w-[700px]">
-              Our Team
-            </h1>
-          </AnimatedSection>
+        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, #0E1118)' }} />
+      </section>
+
+      {/* ══════════════ FOUNDER BIOGRAPHY ══════════════ */}
+      <section data-navbar-dark className="w-full bg-white overflow-hidden">
+        <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
+
+          {/* Name + Title header */}
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-[clamp(2.5rem,4vw,5rem)] pb-[clamp(2rem,3vw,4rem)]" style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.75 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-7 h-px bg-[#B1A490]" />
+                <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Founder Biography</span>
+              </div>
+              <h2
+                className="font-[var(--font-playfair)] italic font-normal text-[#181C23] leading-[1.05]"
+                style={{ fontSize: 'clamp(36px, 5.5vw, 80px)' }}
+              >
+                {founder?.founderNameEn || 'Arch. Hesham Helal'}
+              </h2>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:text-right pb-1"
+            >
+              <p className="font-[var(--font-libre-franklin)] text-[13px] text-[#B1A490] uppercase tracking-[2px]">
+                {founder?.founderTitleEn || 'CEO & Founder, M.Sc'}
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Portrait + Stats + Bio */}
+          <div className="flex flex-col lg:flex-row gap-[clamp(3rem,5vw,7rem)]">
+
+            {/* Left: Portrait */}
+            <motion.div
+              className="lg:w-[34%] shrink-0"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative" style={{ paddingTop: '40px' }}>
+                <div className="absolute left-0 bg-[#EDE9E3] rounded-3xl" style={{ top: 0, width: '80%', height: '45%', zIndex: 0 }} />
+                <motion.div
+                  className="relative rounded-3xl overflow-hidden"
+                  style={{ width: '82%', aspectRatio: '3/4', zIndex: 1, boxShadow: '0 24px 64px -8px rgba(0,0,0,0.15)' }}
+                  initial={{ scale: 1.04 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {founder?.founderImage ? (
+                    <img src={founder.founderImage} alt={founder?.founderNameEn || 'Founder'} className="w-full h-full object-cover object-top" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(160deg,#e0dbd4,#cac4bc)' }}>
+                      <span className="font-[var(--font-playfair)] italic text-white/50" style={{ fontSize: '80px' }}>H</span>
+                    </div>
+                  )}
+                </motion.div>
+                {/* Title badge */}
+                <motion.div
+                  className="absolute bg-[#181C23] rounded-2xl px-5 py-4"
+                  style={{ bottom: '10px', right: '4px', zIndex: 2, boxShadow: '0 10px 30px rgba(0,0,0,0.18)' }}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, duration: 0.55 }}
+                >
+                  <p className="font-[var(--font-libre-franklin)] text-[9px] text-[#B1A490] uppercase tracking-[2px] mb-1">Title</p>
+                  <p className="font-[var(--font-playfair)] italic text-white" style={{ fontSize: '14px' }}>
+                    {founder?.founderTitleEn || 'CEO & Founder'}
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Right: Stats + Bio */}
+            <motion.div
+              className="lg:w-[66%] flex flex-col"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Stats row — dark band */}
+              {(founder?.founderYearsExp || founder?.founderProjectsCount) && (
+                <div
+                  className="rounded-2xl px-8 py-7 mb-10 grid grid-cols-2 md:grid-cols-4 gap-6"
+                  style={{ background: '#181C23' }}
+                >
+                  {stats.map((s, i) => (
+                    <StatItem key={i} value={s.value} label={s.label} />
+                  ))}
+                </div>
+              )}
+
+              {/* Bio columns */}
+              {(founder?.founderBioCol1En || founder?.founderBioCol2En) ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                  {founder?.founderBioCol1En && (
+                    <div className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
+                      {founder.founderBioCol1En}
+                    </div>
+                  )}
+                  {founder?.founderBioCol2En && (
+                    <div className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] whitespace-pre-line" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
+                      {founder.founderBioCol2En}
+                    </div>
+                  )}
+                </div>
+              ) : founder?.founderDescriptionEn ? (
+                <p className="font-[var(--font-libre-franklin)] text-[#4A4845] leading-[1.9] mb-10" style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}>
+                  {founder.founderDescriptionEn}
+                </p>
+              ) : null}
+
+              {/* Certifications */}
+              {(founder?.founderCertTextEn || certLogos.length > 0) && (
+                <div className="pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}>
+                  {founder?.founderCertTextEn && (
+                    <p className="font-[var(--font-libre-franklin)] font-semibold text-[#181C23] mb-6" style={{ fontSize: '13px' }}>
+                      {founder.founderCertTextEn}
+                    </p>
+                  )}
+                  {certLogos.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-6">
+                      {certLogos.map((src, i) => (
+                        <div key={i} className="h-12 flex items-center">
+                          <img src={src} alt={`Certification ${i + 1}`} className="h-full w-auto object-contain" style={{ filter: 'grayscale(20%)' }} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
-      {/* ===== LEADERSHIP ===== */}
-      <section data-navbar-dark className="py-[clamp(4rem,8vw,10rem)] px-[clamp(1rem,4vw,7rem)]">
-        <div className="max-w-[1290px] mx-auto">
-          <AnimatedSection className="text-center mb-16">
-            <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-              Leadership
-            </span>
-            <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4">
-              Meet the people behind our success
-            </h2>
-          </AnimatedSection>
+      {/* ══════════════ VIDEOS ══════════════ */}
+      {videos.length > 0 && (
+        <section className="w-full overflow-hidden" style={{ background: '#181C23' }}>
+          <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
 
-          {loading ? (
-            <div className="text-center py-20">
-              <p className="font-[var(--font-open-sans)] text-[16px] text-[#666]">Loading team...</p>
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-[clamp(2.5rem,4vw,5rem)]">
+              <div>
+                <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55 }} className="flex items-center gap-3 mb-5">
+                  <span className="w-7 h-px bg-[#B1A490]" />
+                  <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Our Work</span>
+                </motion.div>
+                <motion.h2
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.08 }}
+                  className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.1]"
+                  style={{ fontSize: 'clamp(26px, 3vw, 46px)' }}
+                >
+                  In Motion
+                </motion.h2>
+              </div>
+              <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="font-[var(--font-libre-franklin)] text-[12px] text-white/25 leading-relaxed max-w-[240px] md:text-right pb-1">
+                Watch our projects come to life. Click to play directly on the site.
+              </motion.p>
             </div>
-          ) : team.length > 0 ? (
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
-              {team.map((member) => (
-                <StaggerItem key={member.id}>
-                  <div className="group">
-                    <div className="relative rounded-lg overflow-hidden bg-gray-200">
-                      <div className="relative h-[clamp(260px,28vw,480px)] overflow-hidden">
-                        {member.photo ? (
-                          <Image
-                            src={member.photo}
-                            alt={member.nameEn}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#B1A490]/20">
-                            <span className="font-[var(--font-merriweather)] text-[64px] text-[#B1A490]">
-                              {member.nameEn.charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="absolute inset-0 bg-[#181C23]/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                        {member.linkedin && (
-                          <a
-                            href={member.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-[48px] h-[48px] rounded-full bg-white/20 flex items-center justify-center hover:bg-[#B1A490] transition-colors"
+
+            {/* Grid */}
+            <div className={`grid gap-[clamp(24px,3vw,40px)] ${videos.length === 1 ? 'grid-cols-1 max-w-2xl' : 'grid-cols-1 md:grid-cols-2'}`}>
+              {videos.map(video => (
+                <VideoCard key={video.id} video={video} />
+              ))}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════ TEAM GRID ══════════════ */}
+      {team.length > 0 && (
+        <section data-navbar-dark className="w-full overflow-hidden bg-[#FAFAF8]">
+          <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
+
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-[clamp(2.5rem,4vw,5rem)]">
+              <div>
+                <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55 }} className="flex items-center gap-3 mb-5">
+                  <span className="w-7 h-px bg-[#B1A490]" />
+                  <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">The CDG Family</span>
+                  <span className="w-px h-3 bg-[#B1A490]/20" />
+                  <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#9A9A94] uppercase tracking-[3px]">{String(team.length).padStart(2, '0')} Members</span>
+                </motion.div>
+                <motion.h2
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.08 }}
+                  className="font-[var(--font-playfair)] italic font-normal text-[#181C23] leading-[1.1]"
+                  style={{ fontSize: 'clamp(26px, 3vw, 46px)' }}
+                >
+                  The People Behind<br />Every Project
+                </motion.h2>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[clamp(12px,1.5vw,20px)]">
+              {team.map((member, i) => (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.6, delay: (i % 4) * 0.07 }}
+                  className="group cursor-default"
+                  onMouseEnter={() => setHovered(member.id)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <div className="relative rounded-2xl overflow-hidden bg-white" style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                    {/* Gold top border */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left z-10 pointer-events-none"
+                      style={{
+                        transform: hovered === member.id ? 'scaleX(1)' : 'scaleX(0)',
+                        transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)',
+                      }}
+                    />
+                    {/* Portrait */}
+                    <div className="relative overflow-hidden" style={{ aspectRatio: '3/4', maxHeight: '360px' }}>
+                      {member.photo ? (
+                        <img
+                          src={member.photo}
+                          alt={member.nameEn}
+                          className="w-full h-full object-cover object-top"
+                          style={{
+                            transform: hovered === member.id ? 'scale(1.05)' : 'scale(1)',
+                            transition: 'transform 0.65s cubic-bezier(0.22,1,0.36,1)',
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(160deg,#e8e4de,#d5d0c9)' }}>
+                          <span className="font-[var(--font-playfair)] italic text-white/60" style={{ fontSize: '56px' }}>{member.nameEn.charAt(0)}</span>
+                        </div>
+                      )}
+
+                      {/* Hover overlay with bio + socials */}
+                      <AnimatePresence>
+                        {hovered === member.id && (member.bioEn || member.linkedin || member.email) && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="absolute inset-0 flex flex-col justify-end p-5"
+                            style={{ background: 'linear-gradient(to top, rgba(24,28,35,0.93) 0%, rgba(24,28,35,0.4) 55%, transparent 100%)' }}
                           >
-                            <Linkedin size={20} className="text-white" />
-                          </a>
+                            {member.bioEn && (
+                              <motion.p
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.05 }}
+                                className="font-[var(--font-libre-franklin)] text-[11px] text-white/60 leading-[1.7] mb-3 line-clamp-4"
+                              >
+                                {member.bioEn}
+                              </motion.p>
+                            )}
+                            {(member.linkedin || member.email) && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="flex gap-2"
+                              >
+                                {member.linkedin && (
+                                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-[#B1A490]/40 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors">
+                                    <Linkedin size={13} className="text-[#B1A490]" />
+                                  </a>
+                                )}
+                                {member.email && (
+                                  <a href={`mailto:${member.email}`} className="w-8 h-8 rounded-full border border-[#B1A490]/40 flex items-center justify-center hover:bg-[#B1A490] hover:border-[#B1A490] transition-colors">
+                                    <Mail size={13} className="text-[#B1A490]" />
+                                  </a>
+                                )}
+                              </motion.div>
+                            )}
+                          </motion.div>
                         )}
-                        {member.email && (
-                          <a
-                            href={`mailto:${member.email}`}
-                            className="w-[48px] h-[48px] rounded-full bg-white/20 flex items-center justify-center hover:bg-[#B1A490] transition-colors"
-                          >
-                            <Mail size={20} className="text-white" />
-                          </a>
-                        )}
-                      </div>
+                      </AnimatePresence>
                     </div>
-                    <div className="mt-6">
-                      <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px]">
+
+                    {/* Info */}
+                    <div className="px-4 py-4">
+                      <p className="font-[var(--font-playfair)] italic text-[#181C23]" style={{ fontSize: 'clamp(14px, 1.1vw, 17px)' }}>
                         {member.nameEn}
-                      </h3>
-                      <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-1">
+                      </p>
+                      <p className="font-[var(--font-libre-franklin)] text-[#B1A490] uppercase mt-1" style={{ fontSize: '10px', letterSpacing: '1.8px' }}>
                         {member.roleEn}
                       </p>
-                      {member.bioEn && (
-                        <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[26px] mt-4 line-clamp-3">
-                          {member.bioEn}
-                        </p>
-                      )}
                     </div>
                   </div>
-                </StaggerItem>
+                </motion.div>
               ))}
-            </StaggerContainer>
-          ) : (
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
-              {[
-                { name: 'Hesham Helal', role: 'CEO & Founder', bio: 'With over 25 years of experience in architectural design, Hesham leads the vision and strategic direction of Criteria Designs.' },
-                { name: 'Ahmed Hassan', role: 'Lead Architect', bio: 'Ahmed brings innovative design solutions and leads our architectural team in delivering award-winning projects.' },
-                { name: 'Sara Mohamed', role: 'Interior Designer', bio: 'Sara transforms interior spaces with her keen eye for detail and passion for creating harmonious environments.' },
-                { name: 'Omar Khalil', role: 'Project Manager', bio: 'Omar ensures every project is delivered on time and within budget while maintaining the highest quality standards.' },
-              ].map((member, idx) => (
-                <StaggerItem key={idx}>
-                  <div className="group">
-                    <div className="relative rounded-lg overflow-hidden bg-gray-200">
-                      <div className="relative h-[clamp(260px,28vw,480px)] overflow-hidden">
-                        <div className="w-full h-full flex items-center justify-center bg-[#B1A490]/20">
-                          <span className="font-[var(--font-merriweather)] text-[64px] text-[#B1A490]">
-                            {member.name.charAt(0)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-6">
-                      <h3 className="font-[var(--font-merriweather)] text-[20px] text-[#181C23] leading-[28px]">
-                        {member.name}
-                      </h3>
-                      <p className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] mt-1">
-                        {member.role}
-                      </p>
-                      <p className="font-[var(--font-open-sans)] text-[15px] text-[#666] leading-[26px] mt-4 line-clamp-3">
-                        {member.bio}
-                      </p>
-                    </div>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          )}
-        </div>
-      </section>
+            </div>
 
-      {/* ===== JOIN CTA ===== */}
-      <section data-navbar-dark className="bg-[#F5F0EB] py-[clamp(3rem,6vw,8rem)] px-[clamp(1rem,4vw,7rem)]">
-        <AnimatedSection className="max-w-[1290px] mx-auto text-center">
-          <span className="font-[var(--font-libre-franklin)] text-[14px] text-[#B1A490] uppercase tracking-[0.56px] leading-[24px]">
-            Join with us
-          </span>
-          <h2 className="font-[var(--font-merriweather)] text-[clamp(22px,3vw,44px)] text-[#181C23] leading-[1.3] mt-4 max-w-[600px] mx-auto">
-            Want to be part of our team?
-          </h2>
-          <p className="font-[var(--font-open-sans)] text-[16px] text-[#666] leading-[30px] mt-6 max-w-[500px] mx-auto">
-            We&apos;re always looking for talented individuals who are passionate about architecture and design.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center font-[var(--font-libre-franklin)] text-[14px] text-[#181C23] uppercase tracking-[0.56px] leading-[24px] border-2 border-[#B1A490] px-[40px] py-[18px] rounded-[30px] hover:bg-[#B1A490]/10 transition-colors mt-10"
-          >
-            Get in Touch
-          </Link>
-        </AnimatedSection>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════ JOIN CTA ══════════════ */}
+      <section data-navbar-dark className="w-full overflow-hidden" style={{ background: '#F5F0EB' }}>
+        <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,8vw,11rem)]">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-7 h-px bg-[#B1A490]" />
+                <span className="font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[3px]">Careers</span>
+              </div>
+              <h2
+                className="font-[var(--font-playfair)] italic font-normal text-[#181C23] leading-[1.1]"
+                style={{ fontSize: 'clamp(28px, 3.8vw, 56px)', maxWidth: '520px' }}
+              >
+                Join the Team Behind CDG
+              </h2>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15 }} className="lg:max-w-[360px]">
+              <p className="font-[var(--font-libre-franklin)] text-[#5A5855] leading-[1.85] mb-8" style={{ fontSize: '14px' }}>
+                We are always seeking passionate, driven individuals who share our commitment to design excellence and architectural innovation.
+              </p>
+              <Link href="/contact" className="group inline-flex items-center gap-4">
+                <span className="inline-flex items-center justify-center border border-[#181C23] px-8 py-4 rounded-full font-[var(--font-libre-franklin)] text-[11px] text-[#181C23] uppercase tracking-[2.5px] group-hover:bg-[#181C23] group-hover:text-white transition-all duration-300">
+                  Get in Touch
+                </span>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
       </section>
 
       <Footer />

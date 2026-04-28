@@ -16,6 +16,7 @@ import {
   Lightbulb,
   UserCircle,
   Trash2,
+  Youtube,
 } from 'lucide-react'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -26,6 +27,7 @@ const sidebarItems = [
   { name: 'Projects', href: '/admin/projects', icon: FolderKanban },
   { name: 'Team', href: '/admin/team', icon: Users },
   { name: 'Founder & Team', href: '/admin/founder-team', icon: UserCircle },
+  { name: 'Videos', href: '/admin/videos', icon: Youtube },
   { name: 'Philosophy', href: '/admin/philosophy', icon: Lightbulb },
   { name: 'Clients', href: '/admin/clients', icon: Building2 },
   { name: 'Awards', href: '/admin/awards', icon: Award },
