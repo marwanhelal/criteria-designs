@@ -46,16 +46,15 @@ export default function AwardsAccordion({ awards }: Props) {
   const [imgIdx, setImgIdx] = useState(0)
 
   const items = awards.slice(0, 5)
-  if (items.length === 0) return null
+  const activeImages = items.length > 0
+    ? getImageList(items[Math.min(active, items.length - 1)])
+    : []
 
-  const activeImages = getImageList(items[active])
-
-  // Reset image index when switching panels
+  // All hooks must come before any early return (Rules of Hooks)
   useEffect(() => {
     setImgIdx(0)
   }, [active])
 
-  // Auto-cycle through images of the active panel
   useEffect(() => {
     if (activeImages.length <= 1) return
     const interval = setInterval(() => {
@@ -63,6 +62,8 @@ export default function AwardsAccordion({ awards }: Props) {
     }, 3500)
     return () => clearInterval(interval)
   }, [active, activeImages.length])
+
+  if (items.length === 0) return null
 
   return (
     <section data-navbar-dark className="w-full bg-white relative overflow-hidden">
