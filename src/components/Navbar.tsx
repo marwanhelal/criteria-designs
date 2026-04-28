@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/philosophy', label: 'Philosophy' },
   { href: '/projects', label: 'Projects' },
   { href: '/awards', label: 'Recognitions' },
+  { href: '/team', label: 'Team' },
   { href: '/contact', label: 'Contact' },
 ]
 
