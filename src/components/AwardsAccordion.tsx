@@ -144,7 +144,7 @@ export default function AwardsAccordion({ awards }: Props) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.65, delay: i * 0.07 }}
-                className="relative overflow-hidden rounded-2xl"
+                className="relative overflow-hidden rounded-2xl bg-black"
                 style={{
                   flex: isActive ? 8 : 1,
                   transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
@@ -173,7 +173,7 @@ export default function AwardsAccordion({ awards }: Props) {
                         alt={award.titleEn}
                         fill
                         sizes="(max-width: 768px) 100vw, 70vw"
-                        className="object-cover"
+                        className={isActive ? 'object-contain' : 'object-cover'}
                         style={{
                           transform: isActive ? 'scale(1.03)' : 'scale(1.1)',
                           filter: isActive
