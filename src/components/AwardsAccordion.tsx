@@ -44,6 +44,7 @@ function getImageList(award: Award): string[] {
 export default function AwardsAccordion({ awards }: Props) {
   const [active, setActive] = useState(0)
   const [imgIdx, setImgIdx] = useState(0)
+  const [lightbox, setLightbox] = useState<{ images: string[]; idx: number } | null>(null)
 
   const items = awards.slice(0, 5)
   const activeImages = items.length > 0
@@ -62,6 +63,17 @@ export default function AwardsAccordion({ awards }: Props) {
     }, 7000)
     return () => clearInterval(interval)
   }, [active, activeImages.length])
+
+  useEffect(() => {
+    if (!lightbox) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(null)
+      if (e.key === 'ArrowLeft') setLightbox(l => l && l.idx > 0 ? { ...l, idx: l.idx - 1 } : l)
+      if (e.key === 'ArrowRight') setLightbox(l => l && l.idx < l.images.length - 1 ? { ...l, idx: l.idx + 1 } : l)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightbox])
 
   if (items.length === 0) return null
 
@@ -132,13 +144,17 @@ export default function AwardsAccordion({ awards }: Props) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.65, delay: i * 0.07 }}
-                className="relative overflow-hidden cursor-pointer rounded-2xl"
+                className="relative overflow-hidden rounded-2xl"
                 style={{
                   flex: isActive ? 8 : 1,
                   transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
                   minWidth: 0,
+                  cursor: allImages.length > 0 ? 'zoom-in' : 'pointer',
                 }}
                 onMouseEnter={() => setActive(i)}
+                onClick={() => {
+                  if (allImages.length > 0) setLightbox({ images: allImages, idx: isActive ? imgIdx : 0 })
+                }}
               >
                 {/* Background — AnimatePresence crossfade between images */}
                 {displayUrl ? (
@@ -200,6 +216,18 @@ export default function AwardsAccordion({ awards }: Props) {
                     opacity: isActive ? 0 : 1,
                     transition: 'opacity 0.85s ease',
                     zIndex: 5,
+                  }}
+                />
+                {/* Deep gradient for active panel — makes text readable */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: isActive
+                      ? 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 32%, rgba(0,0,0,0.08) 62%, transparent 100%)'
+                      : 'none',
+                    opacity: isActive ? 1 : 0,
+                    transition: 'opacity 0.85s ease',
+                    zIndex: 6,
                   }}
                 />
                 {/* Gold top border */}
@@ -317,7 +345,7 @@ export default function AwardsAccordion({ awards }: Props) {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.32 }}
-                          className="font-[var(--font-libre-franklin)] text-[11px] md:text-[12px] text-white/40 tracking-[0.06em] uppercase max-w-[380px]"
+                          className="font-[var(--font-libre-franklin)] text-[12px] md:text-[13px] text-white/70 leading-relaxed max-w-[420px]"
                         >
                           {award.subtitleEn}
                         </motion.p>
@@ -343,6 +371,79 @@ export default function AwardsAccordion({ awards }: Props) {
           </Link>
         </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center gap-3 md:gap-5 px-4 md:px-10 py-4 bg-black/92 backdrop-blur-sm"
+            onClick={() => setLightbox(null)}
+          >
+            {/* Prev */}
+            <button
+              onClick={e => { e.stopPropagation(); setLightbox(l => l && l.idx > 0 ? { ...l, idx: l.idx - 1 } : l) }}
+              className={`shrink-0 w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 ${lightbox.idx === 0 ? 'opacity-20 pointer-events-none' : ''}`}
+            >
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                <path d="M8 1L3 6l5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {/* Image */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={lightbox.idx}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="relative w-full max-w-3xl overflow-hidden rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.7)] bg-[#0a0a0a]"
+                style={{ aspectRatio: '4/3' }}
+                onClick={e => e.stopPropagation()}
+              >
+                <Image
+                  src={lightbox.images[lightbox.idx]}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
+                {/* Counter */}
+                {lightbox.images.length > 1 && (
+                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm">
+                    <span className="font-[var(--font-libre-franklin)] text-[10px] text-white/60 tracking-[1px]">
+                      {lightbox.idx + 1} / {lightbox.images.length}
+                    </span>
+                  </div>
+                )}
+                {/* Close */}
+                <button
+                  onClick={() => setLightbox(null)}
+                  className="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                >
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Next */}
+            <button
+              onClick={e => { e.stopPropagation(); setLightbox(l => l && l.idx < l.images.length - 1 ? { ...l, idx: l.idx + 1 } : l) }}
+              className={`shrink-0 w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 ${lightbox.idx === lightbox.images.length - 1 ? 'opacity-20 pointer-events-none' : ''}`}
+            >
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                <path d="M4 1l5 5-5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </section>
   )
