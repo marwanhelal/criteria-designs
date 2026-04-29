@@ -96,89 +96,108 @@ function StatItem({ value, label }: { value: string; label: string }) {
   )
 }
 
-// ── Video card with facade lazy-load ─────────────────────────────────────
-function VideoCard({ video }: { video: Video }) {
+// ── Video card ─────────────────────────────────────────────────────────────
+function VideoCard({ video, featured = false }: { video: Video; featured?: boolean }) {
   const [playing, setPlaying] = useState(false)
   const ytId = getYouTubeId(video.youtubeUrl)
-
   if (!ytId) return null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
+    <motion.article
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.65 }}
-      className="flex flex-col gap-4"
+      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+      className="group cursor-pointer"
+      onClick={() => !playing && setPlaying(true)}
     >
-      {/* Player */}
       <div
-        className="relative rounded-2xl overflow-hidden bg-black cursor-pointer group"
-        style={{ aspectRatio: '16/9' }}
-        onClick={() => setPlaying(true)}
+        className="relative overflow-hidden"
+        style={{ aspectRatio: featured ? '21/9' : '16/9' }}
       >
         {playing ? (
           <iframe
             src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
             title={video.titleEn}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full border-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         ) : (
           <>
+            {/* Thumbnail — hqdefault is always available */}
             <img
-              src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
+              src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
               alt={video.titleEn}
-              className="w-full h-full object-cover"
-              onError={e => { (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` }}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
             />
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
+            {/* Cinematic gradient */}
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.08) 52%, rgba(0,0,0,0.3) 100%)' }}
+            />
+            {/* Hover overlay lift */}
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+            {/* Gold top border slides in on hover */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+
             {/* Play button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div
-                className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/25 transition-all duration-300"
-                style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
-              >
-                <Play size={22} className="text-white ml-1" fill="white" />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="relative">
+                {/* Expanding outer ring */}
+                <div className="absolute inset-[-18px] rounded-full border border-[#B1A490]/0 group-hover:border-[#B1A490]/20 scale-100 group-hover:scale-[1.45] opacity-0 group-hover:opacity-100 transition-all duration-700" />
+                {/* Main circle */}
+                <div
+                  className="flex items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110"
+                  style={{
+                    width: featured ? '70px' : '58px',
+                    height: featured ? '70px' : '58px',
+                    background: 'rgba(177,164,144,0.12)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1.5px solid rgba(177,164,144,0.45)',
+                    boxShadow: '0 4px 28px rgba(0,0,0,0.35)',
+                  }}
+                >
+                  <Play
+                    style={{
+                      marginLeft: '3px',
+                      width: featured ? '22px' : '18px',
+                      height: featured ? '22px' : '18px',
+                      fill: 'rgba(177,164,144,0.95)',
+                      color: 'transparent',
+                    }}
+                  />
+                </div>
               </div>
             </div>
-            {/* Gold top border on hover */}
-            <div
-              className="absolute top-0 left-0 right-0 h-[2px] bg-[#B1A490] origin-left"
-              style={{ transform: 'scaleX(0)', transition: 'transform 0.5s cubic-bezier(0.22,1,0.36,1)' }}
-            />
+
+            {/* Bottom: title + YouTube link */}
+            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between gap-3 px-5 pb-5">
+              <h3
+                className="font-[var(--font-playfair)] italic text-white leading-snug"
+                style={{
+                  fontSize: featured ? 'clamp(16px, 1.6vw, 22px)' : 'clamp(13px, 1.2vw, 17px)',
+                  textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                }}
+              >
+                {video.titleEn}
+              </h3>
+              <a
+                href={`https://www.youtube.com/watch?v=${ytId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border border-white/15 hover:border-[#B1A490]/60 transition-all duration-300"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+                title="Watch on YouTube"
+              >
+                <ExternalLink size={11} className="text-white/40 hover:text-[#B1A490] transition-colors" />
+              </a>
+            </div>
           </>
         )}
       </div>
-
-      {/* Info */}
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3
-            className="font-[var(--font-playfair)] italic text-white leading-snug"
-            style={{ fontSize: 'clamp(15px, 1.3vw, 20px)' }}
-          >
-            {video.titleEn}
-          </h3>
-          {video.description && (
-            <p className="font-[var(--font-libre-franklin)] text-white/35 text-[12px] mt-1 leading-relaxed line-clamp-2">
-              {video.description}
-            </p>
-          )}
-        </div>
-        <a
-          href={`https://www.youtube.com/watch?v=${ytId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 shrink-0 font-[var(--font-libre-franklin)] text-[10px] text-[#B1A490] uppercase tracking-[2px] hover:text-white transition-colors mt-1"
-        >
-          <ExternalLink size={11} />
-          YouTube
-        </a>
-      </div>
-    </motion.div>
+    </motion.article>
   )
 }
 
@@ -469,11 +488,22 @@ export default function TeamPage() {
             </div>
 
             {/* Grid */}
-            <div className={`grid gap-[clamp(24px,3vw,40px)] ${videos.length === 1 ? 'grid-cols-1 max-w-2xl' : 'grid-cols-1 md:grid-cols-2'}`}>
-              {videos.map(video => (
-                <VideoCard key={video.id} video={video} />
-              ))}
-            </div>
+            {videos.length > 2 ? (
+              <div className="flex flex-col gap-[clamp(16px,2vw,28px)]">
+                <VideoCard video={videos[0]} featured />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(16px,2vw,28px)]">
+                  {videos.slice(1).map(video => (
+                    <VideoCard key={video.id} video={video} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className={`grid gap-[clamp(20px,2.5vw,32px)] ${videos.length === 1 ? 'grid-cols-1 max-w-3xl mx-auto' : 'grid-cols-1 md:grid-cols-2'}`}>
+                {videos.map(video => (
+                  <VideoCard key={video.id} video={video} />
+                ))}
+              </div>
+            )}
 
           </div>
         </section>
