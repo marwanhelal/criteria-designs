@@ -149,7 +149,7 @@ export default function AwardsAccordion({ awards }: Props) {
                   flex: isActive ? 8 : 1,
                   transition: 'flex 0.85s cubic-bezier(0.76, 0, 0.24, 1)',
                   minWidth: 0,
-                  cursor: allImages.length > 0 ? 'zoom-in' : 'pointer',
+                  cursor: 'pointer',
                 }}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => {
