@@ -114,55 +114,100 @@ function AwardsHeader() {
 }
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
-function Lightbox({ award, onClose }: { award: Award; onClose: () => void }) {
+function Lightbox({ list, idx, onClose, onNav }: {
+  list: Award[]
+  idx: number
+  onClose: () => void
+  onNav: (i: number) => void
+}) {
+  const award = list[idx]
+  const hasPrev = idx > 0
+  const hasNext = idx < list.length - 1
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft' && hasPrev) onNav(idx - 1)
+      if (e.key === 'ArrowRight' && hasNext) onNav(idx + 1)
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [onClose, onNav, idx, hasPrev, hasNext])
 
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-14 bg-black/90 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center gap-3 md:gap-5 px-4 md:px-10 py-4 md:py-14 bg-black/90 backdrop-blur-sm"
       onClick={onClose}
     >
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 12 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
-        onClick={e => e.stopPropagation()}
+      {/* Prev */}
+      <button
+        onClick={e => { e.stopPropagation(); if (hasPrev) onNav(idx - 1) }}
+        className={`shrink-0 w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 ${!hasPrev ? 'opacity-20 pointer-events-none' : ''}`}
       >
-        {award.image && (
-          <div className="relative w-full bg-[#0a0a0a]" style={{ aspectRatio: '4/3' }}>
-            <Image src={award.image} alt={award.titleEn} fill className="object-contain" unoptimized />
-          </div>
-        )}
-        <div className="bg-[#0f0f0f] border-t border-white/[0.06] px-6 py-5 flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#B1A490]">{award.year}</span>
-              <span className="w-px h-3 bg-white/10" />
-              <span className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2px] text-white/30">
-                {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
-              </span>
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+          <path d="M8 1L3 6l5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Card */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={award.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
+          onClick={e => e.stopPropagation()}
+        >
+          {award.image && (
+            <div className="relative w-full bg-[#0a0a0a]" style={{ aspectRatio: '4/3' }}>
+              <Image src={award.image} alt={award.titleEn} fill className="object-contain" unoptimized />
             </div>
-            <h2 className="font-[var(--font-playfair)] italic text-white text-[18px] md:text-[22px] leading-[1.25]">{award.titleEn}</h2>
-            {award.subtitleEn && (
-              <p className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 mt-2 leading-relaxed">{award.subtitleEn}</p>
-            )}
+          )}
+          <div className="bg-[#0f0f0f] border-t border-white/[0.06] px-6 py-5 flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] text-[#B1A490]">{award.year}</span>
+                <span className="w-px h-3 bg-white/10" />
+                <span className="font-[var(--font-libre-franklin)] text-[8px] uppercase tracking-[2px] text-white/30">
+                  {award.type === 'PAPER' ? 'Published Paper' : 'Award'}
+                </span>
+                {list.length > 1 && (
+                  <>
+                    <span className="w-px h-3 bg-white/10" />
+                    <span className="font-[var(--font-libre-franklin)] text-[8px] tracking-[1px] text-white/20">
+                      {idx + 1} / {list.length}
+                    </span>
+                  </>
+                )}
+              </div>
+              <h2 className="font-[var(--font-playfair)] italic text-white text-[18px] md:text-[22px] leading-[1.25]">{award.titleEn}</h2>
+              {award.subtitleEn && (
+                <p className="font-[var(--font-libre-franklin)] text-[11px] text-white/40 mt-2 leading-relaxed">{award.subtitleEn}</p>
+              )}
+            </div>
+            <button onClick={onClose}
+              className="shrink-0 mt-1 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors duration-200">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
           </div>
-          <button onClick={onClose}
-            className="shrink-0 mt-1 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors duration-200">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-              <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Next */}
+      <button
+        onClick={e => { e.stopPropagation(); if (hasNext) onNav(idx + 1) }}
+        className={`shrink-0 w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 ${!hasNext ? 'opacity-20 pointer-events-none' : ''}`}
+      >
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+          <path d="M4 1l5 5-5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
     </motion.div>
   )
 }
@@ -258,7 +303,7 @@ export default function AwardsPage() {
   const [all, setAll] = useState<Award[]>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>('awards')
-  const [lightboxAward, setLightboxAward] = useState<Award | null>(null)
+  const [lightboxState, setLightboxState] = useState<{ list: Award[]; idx: number } | null>(null)
 
   useEffect(() => {
     fetch('/api/awards?status=PUBLISHED')
@@ -267,10 +312,12 @@ export default function AwardsPage() {
       .catch(() => setLoading(false))
   }, [])
 
-  const openLightbox = useCallback((award: Award) => {
-    if (award.image) setLightboxAward(award)
+  const openLightbox = useCallback((list: Award[], award: Award) => {
+    const withImages = list.filter(a => a.image)
+    const idx = withImages.findIndex(a => a.id === award.id)
+    if (idx >= 0) setLightboxState({ list: withImages, idx })
   }, [])
-  const closeLightbox = useCallback(() => setLightboxAward(null), [])
+  const closeLightbox = useCallback(() => setLightboxState(null), [])
 
   const awards = all.filter(a => a.type !== 'PAPER')
   const papers = all.filter(a => a.type === 'PAPER')
@@ -289,7 +336,7 @@ export default function AwardsPage() {
       </div>
     )
     return list.map((a, i) => (
-      <RecognitionRow key={a.id} award={a} index={i} showType={showType} onImageClick={openLightbox} />
+      <RecognitionRow key={a.id} award={a} index={i} showType={showType} onImageClick={(award) => openLightbox(list, award)} />
     ))
   }
 
@@ -400,7 +447,14 @@ export default function AwardsPage() {
       </div>
 
       <AnimatePresence>
-        {lightboxAward && <Lightbox award={lightboxAward} onClose={closeLightbox} />}
+        {lightboxState && (
+          <Lightbox
+            list={lightboxState.list}
+            idx={lightboxState.idx}
+            onClose={closeLightbox}
+            onNav={(i) => setLightboxState(s => s ? { ...s, idx: i } : null)}
+          />
+        )}
       </AnimatePresence>
     </>
   )
