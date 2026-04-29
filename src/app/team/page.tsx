@@ -461,7 +461,7 @@ export default function TeamPage() {
 
       {/* ══════════════ VIDEOS ══════════════ */}
       {videos.length > 0 && (
-        <section className="w-full overflow-hidden" style={{ background: '#181C23' }}>
+        <section data-navbar-dark className="w-full overflow-hidden bg-white">
           <div className="max-w-[1380px] mx-auto px-[clamp(1.5rem,6vw,8rem)] py-[clamp(4rem,7vw,10rem)]">
 
             {/* Header */}
@@ -476,13 +476,13 @@ export default function TeamPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: 0.08 }}
-                  className="font-[var(--font-playfair)] italic font-normal text-white leading-[1.1]"
+                  className="font-[var(--font-playfair)] italic font-normal text-[#181C23] leading-[1.1]"
                   style={{ fontSize: 'clamp(26px, 3vw, 46px)' }}
                 >
                   In Motion
                 </motion.h2>
               </div>
-              <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="font-[var(--font-libre-franklin)] text-[12px] text-white/25 leading-relaxed max-w-[240px] md:text-right pb-1">
+              <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="font-[var(--font-libre-franklin)] text-[12px] text-[#9A9A94] leading-relaxed max-w-[240px] md:text-right pb-1">
                 Watch our projects come to life. Click to play directly on the site.
               </motion.p>
             </div>
