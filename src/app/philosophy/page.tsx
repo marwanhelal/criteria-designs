@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 interface PhilosophyData {
   heroTitle: string
@@ -43,6 +43,16 @@ const ease = [0.22, 1, 0.36, 1] as const
 
 export default function PhilosophyPage() {
   const [data, setData] = useState<PhilosophyData>(DEFAULTS)
+  const heroRef = useRef<HTMLElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const decorativeY  = useTransform(scrollYProgress, [0, 1], ['0%', '-40%'])
+  const contentY     = useTransform(scrollYProgress, [0, 1], ['0%', '-18%'])
+  const heroOpacity  = useTransform(scrollYProgress, [0, 0.75], [1, 0])
 
   useEffect(() => {
     fetch('/api/philosophy')
@@ -62,17 +72,20 @@ export default function PhilosophyPage() {
       <Navbar />
 
       {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center" style={{ background: '#0E1118' }}>
+      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden" style={{ background: '#0E1118' }}>
 
-        {/* Faint decorative word */}
-        <div className="absolute right-0 inset-y-0 flex items-center overflow-hidden pointer-events-none select-none pr-[clamp(1rem,4vw,6rem)]">
+        {/* Faint decorative word — moves fastest (floats away) */}
+        <motion.div
+          style={{ y: decorativeY }}
+          className="absolute right-0 inset-y-0 flex items-center overflow-hidden pointer-events-none select-none pr-[clamp(1rem,4vw,6rem)]"
+        >
           <span
             className="font-[var(--font-playfair)] italic leading-none text-white/[0.025]"
             style={{ fontSize: 'clamp(100px, 18vw, 300px)' }}
           >
             {data.heroTitle.split(' ').pop()}
           </span>
-        </div>
+        </motion.div>
 
         {/* Vertical accent line */}
         <div
@@ -80,7 +93,11 @@ export default function PhilosophyPage() {
           style={{ background: 'linear-gradient(to bottom, transparent, rgba(177,164,144,0.2) 30%, rgba(177,164,144,0.2) 70%, transparent)' }}
         />
 
-        <div className="relative z-10 w-full max-w-[1380px] mx-auto px-[clamp(2.5rem,7vw,10rem)] py-[clamp(7rem,12vw,14rem)]">
+        {/* Content — moves slower, fades out */}
+        <motion.div
+          style={{ y: contentY, opacity: heroOpacity }}
+          className="relative z-10 w-full max-w-[1380px] mx-auto px-[clamp(2.5rem,7vw,10rem)] py-[clamp(7rem,12vw,14rem)]"
+        >
 
           {/* Eyebrow */}
           <motion.div
@@ -141,7 +158,7 @@ export default function PhilosophyPage() {
               Scroll to explore
             </span>
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(177,164,144,0.2), transparent)' }} />
       </section>
