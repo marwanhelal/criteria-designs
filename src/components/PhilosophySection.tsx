@@ -324,10 +324,13 @@ export default function PhilosophySection() {
             className="w-10 h-px bg-[#B1A490] origin-left"
           />
         </div>
-        <h2 className="font-[var(--font-playfair)] text-[38px] md:text-[52px] lg:text-[64px] text-white italic leading-[1.1]">
+        <h2
+          className="font-[var(--font-playfair)] text-white italic leading-[1.05]"
+          style={{ fontSize: 'clamp(2.8rem, 7vw, 6rem)', fontWeight: 700 }}
+        >
           Our Philosophy
         </h2>
-        <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] text-white/35 mt-4 max-w-[500px] mx-auto leading-[1.8] italic">
+        <p className="font-[var(--font-playfair)] text-[16px] md:text-[18px] text-white/45 mt-4 max-w-[500px] mx-auto leading-[1.8] italic">
           Three chapters. One vision. The story of how Criteria Designs was built.
         </p>
       </motion.div>
@@ -566,7 +569,7 @@ export default function PhilosophySection() {
                       >
                         Chapter {pillars[activeCard].num}
                       </p>
-                      <p className="font-[var(--font-playfair)] text-[36px] md:text-[46px] text-white italic leading-none">
+                      <p className="font-[var(--font-playfair)] text-[42px] md:text-[56px] text-white italic leading-none">
                         {pillars[activeCard].label}
                       </p>
                     </motion.div>
@@ -577,7 +580,7 @@ export default function PhilosophySection() {
                 {/* Progress dots */}
                 <div className="flex items-center gap-3 mb-6">
                   {pillars.map((p, i) => (
-                    <button key={i} onClick={() => handleGoCard(i)} aria-label={`Go to ${p.label}`} className="relative flex flex-col items-center gap-1">
+                    <button key={i} onClick={() => handleGoCard(i)} aria-label={`Go to ${p.label}`} className="relative flex flex-col items-center gap-1 cursor-pointer">
                       <motion.div
                         animate={{
                           backgroundColor: i === activeCard ? p.accent : viewedSet.has(i) ? `${p.accent}55` : 'transparent',
@@ -592,7 +595,7 @@ export default function PhilosophySection() {
                         <div className="absolute top-full mt-[3px] w-6 h-px overflow-hidden rounded-full bg-white/10">
                           <div
                             key={`bar-${activeCard}`}
-                            className="h-full rounded-full"
+                            className="chapter-bar h-full rounded-full"
                             style={{
                               background: p.accent,
                               animation: 'chapter-progress 8s linear forwards',
@@ -610,10 +613,13 @@ export default function PhilosophySection() {
                   {viewedSet.size === 3 && !showFinale && (
                     <motion.span
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-2"
+                      className="font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[2px] ml-2 flex items-center gap-1"
                       style={{ color: '#B1A490' }}
                     >
-                      ✦ story complete
+                      <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true">
+                        <polygon points="4,0 5.5,2.5 8,3 6,5.5 6.5,8 4,6.5 1.5,8 2,5.5 0,3 2.5,2.5" />
+                      </svg>
+                      story complete
                     </motion.span>
                   )}
                 </div>
@@ -646,7 +652,7 @@ export default function PhilosophySection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.38, delay: 0.06, ease: EASE }}
-                    className="font-[var(--font-open-sans)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] text-center md:text-left font-light"
+                    className="font-[var(--font-merriweather)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] text-center md:text-left font-light"
                   >
                     {PILLAR_TEXTS[activeCard]}
                   </motion.p>
@@ -672,7 +678,7 @@ export default function PhilosophySection() {
                 Three chapters. One story.
               </p>
               <div className="w-8 h-px bg-[#B1A490]/40 mx-auto mb-5" />
-              <p className="font-[var(--font-open-sans)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] font-light">
+              <p className="font-[var(--font-merriweather)] text-white/70 text-[15px] md:text-[17px] leading-[1.95] font-light">
                 {PHILOSOPHY_TEXT}
               </p>
 
@@ -685,10 +691,16 @@ export default function PhilosophySection() {
               >
                 <Link
                   href="/philosophy"
-                  className="group inline-flex items-center gap-3 font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#B1A490] border border-[#B1A490]/30 px-8 py-4 hover:border-[#B1A490] hover:bg-[#B1A490]/08 transition-all duration-300"
+                  className="group inline-flex items-center gap-3 cursor-pointer font-[var(--font-libre-franklin)] text-[11px] uppercase tracking-[4px] text-[#B1A490] border border-[#B1A490]/30 px-8 py-4 hover:border-[#B1A490] hover:bg-[#B1A490]/08 transition-all duration-300"
                 >
                   <span className="transition-transform duration-300 group-hover:-translate-x-1">Explore Our Philosophy</span>
-                  <span className="opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">→</span>
+                  <svg
+                    width="14" height="10" viewBox="0 0 14 10" fill="none"
+                    className="opacity-60 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  >
+                    <path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </Link>
               </motion.div>
             </motion.div>
@@ -712,7 +724,7 @@ export default function PhilosophySection() {
 
         {/* Row 1 — moves LEFT, outlined brand phrases */}
         <div
-          className="flex whitespace-nowrap py-4"
+          className="marquee-track flex whitespace-nowrap py-4"
           style={{ animation: 'marquee-left 52s linear infinite', width: 'max-content' }}
         >
           {Array(6).fill(null).map((_, i) => (
@@ -745,6 +757,10 @@ export default function PhilosophySection() {
           @keyframes chapter-progress {
             0%   { width: 0%; }
             100% { width: 100%; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .marquee-track { animation-play-state: paused !important; }
+            .chapter-bar { animation: none !important; width: 100% !important; }
           }
         `}</style>
       </div>
