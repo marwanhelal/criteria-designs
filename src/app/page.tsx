@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PhilosophySection from '@/components/PhilosophySection'
+import PhilosophyScrollStory from '@/components/PhilosophyScrollStory'
 import FounderTeamSection from '@/components/FounderTeamSection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
@@ -297,6 +298,7 @@ export default function Home() {
       </section>
 
       <PhilosophySection />
+      <PhilosophyScrollStory />
       <ShowcaseSection projects={showcaseHero} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
