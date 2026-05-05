@@ -8,7 +8,6 @@ import {
   useInView,
   useMotionValueEvent,
   useReducedMotion,
-  type MotionValue,
 } from 'framer-motion'
 import Image from 'next/image'
 
@@ -55,22 +54,12 @@ const chapters = [
 // ── Desktop chapter panel ──────────────────────────────────────────
 function ChapterPanel({
   chapter,
-  index,
-  scrollYProgress,
+  isActive,
 }: {
   chapter: (typeof chapters)[number]
   index: number
-  scrollYProgress: MotionValue<number>
+  isActive: boolean
 }) {
-  // Each chapter is centered at: 0, 0.25, 0.5, 0.75, 1.0 of scrollYProgress
-  const center = index / (chapters.length - 1)
-  const band   = 0.28
-
-  const textX    = useTransform(scrollYProgress, [center - band, center, center + band], [40, 0, -40])
-  const textOp   = useTransform(scrollYProgress, [center - band, center - 0.08, center + 0.08, center + band], [0, 1, 1, 0])
-  const cardScale = useTransform(scrollYProgress, [center - band, center, center + band], [0.88, 1.01, 0.88])
-  const cardOp   = useTransform(scrollYProgress, [center - band, center - 0.1, center + 0.1, center + band], [0.45, 1, 1, 0.45])
-
   return (
     <div
       style={{
@@ -105,9 +94,12 @@ function ChapterPanel({
 
       {/* Left — text */}
       <motion.div
+        animate={{
+          x: isActive ? 0 : 28,
+          opacity: isActive ? 1 : 0.3,
+        }}
+        transition={{ duration: 0.75, ease: EASE }}
         style={{
-          x: textX,
-          opacity: textOp,
           width: '38%',
           flexShrink: 0,
           display: 'flex',
@@ -197,9 +189,12 @@ function ChapterPanel({
         }}
       >
         <motion.div
+          animate={{
+            scale: isActive ? 1.0 : 0.88,
+            opacity: isActive ? 1 : 0.45,
+          }}
+          transition={{ duration: 0.8, ease: EASE }}
           style={{
-            scale: cardScale,
-            opacity: cardOp,
             borderRadius: 18,
             overflow: 'hidden',
             boxShadow: '0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(177,164,144,0.1)',
@@ -431,7 +426,7 @@ export default function PhilosophyScrollStory() {
                 key={chapter.num}
                 chapter={chapter}
                 index={i}
-                scrollYProgress={scrollYProgress}
+                isActive={activeIdx === i}
               />
             ))}
           </motion.div>
