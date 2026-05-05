@@ -8,6 +8,7 @@ import {
   useInView,
   useMotionValueEvent,
   useReducedMotion,
+  type MotionValue,
 } from 'framer-motion'
 import Image from 'next/image'
 
@@ -51,15 +52,43 @@ const chapters = [
   },
 ]
 
+// Clamp a useTransform input range to [0,1] with strict monotonicity
+function r3(c: number, half: number): [number, number, number] {
+  const EPS = 0.004
+  const lo  = Math.max(0, c - half)
+  const hi  = Math.min(1, c + half)
+  const mid = Math.max(lo + EPS, Math.min(hi - EPS, c))
+  return [lo, mid, hi]
+}
+function r4(c: number, outer: number, inner: number): [number, number, number, number] {
+  const EPS = 0.004
+  const lo  = Math.max(0, c - outer)
+  const hi  = Math.min(1, c + outer)
+  let p1 = Math.max(lo + EPS, c - inner)
+  let p2 = Math.min(hi - EPS, c + inner)
+  if (p2 <= p1) p2 = p1 + EPS
+  return [lo, p1, p2, hi]
+}
+
 // ── Desktop chapter panel ──────────────────────────────────────────
 function ChapterPanel({
   chapter,
-  isActive,
+  index,
+  scrollYProgress,
 }: {
   chapter: (typeof chapters)[number]
   index: number
-  isActive: boolean
+  scrollYProgress: MotionValue<number>
 }) {
+  const center  = index / (chapters.length - 1)  // 0, 0.25, 0.5, 0.75, 1
+  const band    = 0.26
+  const isFirst = index === 0
+  const isLast  = index === chapters.length - 1
+
+  const textX     = useTransform(scrollYProgress, r3(center, band),       [isFirst ? 0 : 36,   0, isLast ? 0 : -36]  as [number, number, number])
+  const textOp    = useTransform(scrollYProgress, r4(center, band, 0.08), [isFirst ? 1 : 0,    1, 1, isLast ? 1 : 0] as [number, number, number, number])
+  const cardScale = useTransform(scrollYProgress, r3(center, band),       [isFirst ? 1 : 0.88, 1, isLast ? 1 : 0.88] as [number, number, number])
+
   return (
     <div
       style={{
@@ -92,14 +121,11 @@ function ChapterPanel({
         {chapter.num}
       </div>
 
-      {/* Left — text */}
+      {/* Left — text (compositor-driven, no React re-renders) */}
       <motion.div
-        animate={{
-          x: isActive ? 0 : 28,
-          opacity: isActive ? 1 : 0.3,
-        }}
-        transition={{ duration: 0.75, ease: EASE }}
         style={{
+          x: textX,
+          opacity: textOp,
           width: '38%',
           flexShrink: 0,
           display: 'flex',
@@ -108,9 +134,9 @@ function ChapterPanel({
           padding: '0 3% 0 6%',
           position: 'relative',
           zIndex: 1,
+          willChange: 'transform, opacity',
         }}
       >
-        {/* Chapter label */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <div style={{ width: 22, height: 1, background: '#B1A490', opacity: 0.65 }} />
           <span
@@ -126,7 +152,6 @@ function ChapterPanel({
           </span>
         </div>
 
-        {/* Act title */}
         <h3
           style={{
             fontFamily: 'var(--font-playfair)',
@@ -141,7 +166,6 @@ function ChapterPanel({
           {chapter.act}
         </h3>
 
-        {/* Gold accent line */}
         <div
           style={{
             width: 40,
@@ -151,7 +175,6 @@ function ChapterPanel({
           }}
         />
 
-        {/* Subtitle */}
         <p
           style={{
             fontFamily: 'var(--font-merriweather)',
@@ -176,7 +199,7 @@ function ChapterPanel({
         }}
       />
 
-      {/* Right — diagram card */}
+      {/* Right — diagram card (scale only, no opacity to avoid grey blending) */}
       <div
         style={{
           flex: 1,
@@ -189,18 +212,15 @@ function ChapterPanel({
         }}
       >
         <motion.div
-          animate={{
-            scale: isActive ? 1.0 : 0.88,
-            opacity: isActive ? 1 : 0.45,
-          }}
-          transition={{ duration: 0.8, ease: EASE }}
           style={{
+            scale: cardScale,
             borderRadius: 18,
             overflow: 'hidden',
-            boxShadow: '0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(177,164,144,0.1)',
+            boxShadow: '0 16px 50px rgba(0,0,0,0.32), 0 0 0 1px rgba(177,164,144,0.12)',
             position: 'relative',
             width: '100%',
             maxWidth: 860,
+            willChange: 'transform',
           }}
         >
           {/* Gold top border */}
@@ -262,7 +282,6 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
 
   return (
     <div ref={ref} style={{ padding: '0 1.25rem 4rem' }}>
-      {/* Label */}
       <motion.div
         initial={{ opacity: 0, x: -16 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -283,7 +302,6 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
         </span>
       </motion.div>
 
-      {/* Title */}
       <motion.h3
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -301,7 +319,6 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
         {chapter.act}
       </motion.h3>
 
-      {/* Subtitle */}
       <motion.p
         initial={{ opacity: 0, y: 14 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -317,7 +334,6 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
         {chapter.subtitle}
       </motion.p>
 
-      {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -346,19 +362,16 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
 
 // ── Main export ────────────────────────────────────────────────────
 export default function PhilosophyScrollStory() {
-  const sectionRef  = useRef<HTMLDivElement>(null)
-  const reduce      = useReducedMotion()
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const reduce     = useReducedMotion()
   const [activeIdx, setActiveIdx] = useState(0)
 
   const { scrollYProgress } = useScroll({ target: sectionRef })
 
-  // Horizontal track: hold at each chapter then snap to next
-  const x = useTransform(
-    scrollYProgress,
-    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0],
-    ['0%', '0%', '-20%', '-20%', '-40%', '-40%', '-60%', '-60%', '-80%', '-80%'],
-  )
+  // Smooth linear track — runs entirely on compositor, zero React re-renders
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-80%'])
 
+  // Only update dots (cheap state, not tied to transform path)
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     const thresholds = [0.15, 0.35, 0.55, 0.75]
     let idx = 0
@@ -419,6 +432,7 @@ export default function PhilosophyScrollStory() {
               display: 'flex',
               width: '500vw',
               height: '100%',
+              willChange: 'transform',
             }}
           >
             {chapters.map((chapter, i) => (
@@ -426,7 +440,7 @@ export default function PhilosophyScrollStory() {
                 key={chapter.num}
                 chapter={chapter}
                 index={i}
-                isActive={activeIdx === i}
+                scrollYProgress={scrollYProgress}
               />
             ))}
           </motion.div>
@@ -462,7 +476,7 @@ export default function PhilosophyScrollStory() {
             ))}
           </div>
 
-          {/* Scroll hint — fades out on last chapter */}
+          {/* Scroll hint */}
           <motion.div
             animate={{ opacity: activeIdx >= 4 ? 0 : 0.45 }}
             transition={{ duration: 0.5 }}
