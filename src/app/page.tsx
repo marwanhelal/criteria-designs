@@ -6,8 +6,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import PhilosophySection from '@/components/PhilosophySection'
-import PhilosophyScrollStory from '@/components/PhilosophyScrollStory'
+import PhilosophyCombined from '@/components/PhilosophyCombined'
 import FounderTeamSection from '@/components/FounderTeamSection'
 import ShowcaseSection from '@/components/ShowcaseSection'
 import ClientsMarquee from '@/components/ClientsMarquee'
@@ -297,8 +296,7 @@ export default function Home() {
         </div>
       </section>
 
-      <PhilosophySection />
-      <PhilosophyScrollStory />
+      <PhilosophyCombined />
       <ShowcaseSection projects={showcaseHero} />
 
       {/* ===== PORTFOLIO SECTION — YBA style ===== */}
