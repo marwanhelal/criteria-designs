@@ -380,11 +380,12 @@ export default function PhilosophyCombined() {
   const logoSrc    = data?.philosophyImage ?? null
 
   return (
-    <section ref={sectionRef} style={{ background: '#FAFAF8', width: '100%', overflow: 'hidden' }}>
+    <section ref={sectionRef} style={{ background: '#FAFAF8', width: '100%' }}>
 
       {/* ════════════════════════════════════════════ */}
       {/* ACT 1 — OUR PHILOSOPHY                      */}
       {/* ════════════════════════════════════════════ */}
+      <div style={{ overflow: 'hidden' }}>
 
       {/* Header */}
       <motion.div
@@ -611,6 +612,8 @@ export default function PhilosophyCombined() {
           )}
         </AnimatePresence>
       </motion.div>
+
+      </div>{/* /overflow-hidden Act 1 */}
 
       {/* ════════════════════════════════════════════ */}
       {/* BRIDGE — Act 1 → Act 2                      */}
