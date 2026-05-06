@@ -251,8 +251,6 @@ export default function Home() {
       <section className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
         {/* Dark gradient at top — ensures white navbar text is always readable */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10" />
-        {/* Bottom fade — dissolves hero into the philosophy section cream */}
-        <div className="absolute inset-x-0 bottom-0 pointer-events-none z-10" style={{ height: '28%', background: 'linear-gradient(to bottom, transparent 0%, rgba(250,250,248,0.55) 45%, #FAFAF8 100%)' }} />
         <div className="absolute inset-0">
           {heroVideo ? (
             <>
@@ -297,6 +295,17 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* ── Hero → Philosophy divider ── */}
+      <div style={{ background: '#FAFAF8', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2.2rem 0' }}>
+        <div style={{ flex: 1, maxWidth: 180, height: 1, background: 'linear-gradient(to left, #B1A490, transparent)' }} />
+        <div style={{ margin: '0 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 5, height: 5, transform: 'rotate(45deg)', background: '#B1A490', opacity: 0.55 }} />
+          <span style={{ fontFamily: 'var(--font-libre-franklin)', fontSize: 9, letterSpacing: '5px', textTransform: 'uppercase', color: '#B1A490', opacity: 0.7 }}>Criteria Designs</span>
+          <div style={{ width: 5, height: 5, transform: 'rotate(45deg)', background: '#B1A490', opacity: 0.55 }} />
+        </div>
+        <div style={{ flex: 1, maxWidth: 180, height: 1, background: 'linear-gradient(to right, #B1A490, transparent)' }} />
+      </div>
 
       <PhilosophyCombined />
       <ShowcaseSection projects={showcaseHero} />
