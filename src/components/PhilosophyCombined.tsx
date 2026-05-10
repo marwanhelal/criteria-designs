@@ -27,32 +27,32 @@ const LOGO = 240
 const chapters = [
   {
     num: '01',
-    act: 'The Reach',
-    subtitle: 'Architecture touches everyone — not just those who seek it. Unlike a painting in a gallery, the built environment is an experience no one can opt out of.',
+    act: 'The Influence Of Architecture On Humanity',
+    subtitle: 'Architecture influence has the effect of touching everyone around and not just the interested ones. The power of architecture lies in its obviousness. Unlike a painting in a gallery or a book on a shelf or a song from album, the built environment is an essential experience.',
     image: '/images/philosophy/diagram-01.jpg',
   },
   {
     num: '02',
-    act: 'The Space',
-    subtitle: 'More than 90% of our lives unfold inside buildings. Architecture directs the rhythm of cities and shapes psychological well-being for everyone.',
+    act: 'More Than 90% Of Our Lives In Buildings',
+    subtitle: 'Architecture directives the rhythm of our cities, influences our psychological well-being, and frames our daily life. This influence is profoundly democratic; it does not discriminate between the architect and the passerby, the tenant and the tourist. It is a force that touches everyone within its sphere, actively shaping society whether we consciously consent to it or not.',
     image: '/images/philosophy/diagram-02.jpg',
   },
   {
     num: '03',
-    act: 'The Mind',
-    subtitle: 'The built environment and nature converge to form the lens through which we perceive the world. Architecture is not backdrop — it is cause.',
+    act: 'We Believe That',
+    subtitle: 'Constructional and architectural products constitute the periphery to all human activities as well as being one of the main effective optical components to the surrounding environment, leading to being the most effective element to human efficiency.',
     image: '/images/philosophy/diagram-03.jpg',
   },
   {
     num: '04',
-    act: 'The Bond',
-    subtitle: 'Our Values Trilogy: human spiritual and material needs, environmental measures, and cultural identity — three forces united in every project we create.',
+    act: 'Concluding The Robust Bond',
+    subtitle: 'Between the human being and architecture, our philosophy is reflected in what we call Values Trilogy — forming a strong correlation between human basic spiritual and materialistic needs, environmental measures such as weather, geography and energy, and cultural values such as social and economic ones.',
     image: '/images/philosophy/diagram-04.jpg',
   },
   {
     num: '05',
-    act: 'The Solution',
-    subtitle: 'Nature, Human Values, and Art converge through design into innovative outcomes: Sustainability, Creativity, Uniqueness, and Resilience.',
+    act: 'Concluding The Robust Bond',
+    subtitle: 'Our theory summed up in our trilogy forms an innovative outcome that mirrors upon a happier life with increased loyalty to our habitation — expressed through Sustainability, Creativity, Uniqueness, and Resilience.',
     image: '/images/philosophy/diagram-05.jpg',
   },
 ]
