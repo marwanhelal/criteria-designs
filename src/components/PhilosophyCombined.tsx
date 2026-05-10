@@ -27,8 +27,8 @@ const LOGO = 240
 const chapters = [
   {
     num: '01',
-    act: 'The Reach',
-    subtitle: 'Architecture touches everyone — not just those who seek it. Unlike a painting in a gallery, the built environment is an experience no one can opt out of.',
+    act: 'The Influence Of Architecture On Humanity',
+    subtitle: 'Architecture influence has the effect of touching everyone around and not just the interested ones. The power of architecture lies in its obviousness. Unlike a painting in a gallery or a book on a shelf, the built environment is an essential experience.',
     image: '/images/philosophy/diagram-01.jpg',
   },
   {
@@ -144,7 +144,10 @@ function ChapterPanel({
         >
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(to right, transparent, #B1A490 20%, #B1A490 80%, transparent)', zIndex: 10 }} />
           <div style={{ background: '#ffffff', padding: 'clamp(1.2rem, 3vw, 2.5rem)' }}>
-            <Image src={chapter.image} alt={chapter.act} width={1100} height={750} style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }} unoptimized />
+            {/* aspectRatio crops the top ~28% of each diagram image, hiding the baked-in text header */}
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '1100 / 545', overflow: 'hidden' }}>
+              <Image src={chapter.image} alt={chapter.act} fill style={{ objectFit: 'cover', objectPosition: 'bottom center' }} unoptimized />
+            </div>
           </div>
           <div style={{ background: '#0D1018', padding: '0.6rem 1.6rem', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 16, height: 1, background: 'rgba(177,164,144,0.5)', flexShrink: 0 }} />
@@ -182,7 +185,9 @@ function MobileChapterBlock({ chapter }: { chapter: (typeof chapters)[number] })
         style={{ borderRadius: 14, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.07), 0 0 0 1px rgba(177,164,144,0.15)', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(to right, transparent, #B1A490 25%, #B1A490 75%, transparent)', zIndex: 10 }} />
         <div style={{ background: '#ffffff', padding: '1.2rem' }}>
-          <Image src={chapter.image} alt={chapter.act} width={1100} height={750} style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }} unoptimized />
+          <div style={{ position: 'relative', width: '100%', aspectRatio: '1100 / 545', overflow: 'hidden' }}>
+            <Image src={chapter.image} alt={chapter.act} fill style={{ objectFit: 'cover', objectPosition: 'bottom center' }} unoptimized />
+          </div>
         </div>
         <div style={{ background: '#0D1018', padding: '0.55rem 1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 14, height: 1, background: 'rgba(177,164,144,0.5)', flexShrink: 0 }} />
