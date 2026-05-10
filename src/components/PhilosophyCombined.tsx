@@ -338,18 +338,16 @@ export default function PhilosophyCombined() {
 
             {/* Wordmark — appears after convergence */}
             <motion.div
-              className="absolute pointer-events-none flex flex-col items-center gap-2"
-              style={{ left: '50%', top: `calc(50% + ${LOGO / 2 + 22}px)`, transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}
+              className="absolute pointer-events-none"
+              style={{ left: 0, right: 0, top: `calc(50% + ${LOGO / 2 + 22}px)`, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}
               animate={{ opacity: phase === 3 ? 1 : 0, y: phase === 3 ? 0 : 10 }}
               transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 28, height: 1, background: 'rgba(177,164,144,0.5)' }} />
-                <span style={{ fontFamily: 'var(--font-libre-franklin)', fontSize: 11, letterSpacing: '6px', textTransform: 'uppercase', color: 'rgba(24,28,35,0.55)', fontWeight: 400 }}>
-                  criteria designs group
-                </span>
-                <div style={{ width: 28, height: 1, background: 'rgba(177,164,144,0.5)' }} />
-              </div>
+              <div style={{ width: 32, height: 1, background: 'rgba(177,164,144,0.5)', flexShrink: 0 }} />
+              <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 15, letterSpacing: '4px', color: 'rgba(24,28,35,0.6)', fontWeight: 400, fontStyle: 'italic', whiteSpace: 'nowrap' }}>
+                Criteria Designs Group
+              </span>
+              <div style={{ width: 32, height: 1, background: 'rgba(177,164,144,0.5)', flexShrink: 0 }} />
             </motion.div>
           </div>
         </div>
