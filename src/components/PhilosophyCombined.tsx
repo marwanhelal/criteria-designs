@@ -335,6 +335,22 @@ export default function PhilosophyCombined() {
               transition={{ duration: 0.7, ease: EASE }}>
               <LogoEl src={logoSrc} size={LOGO} />
             </motion.div>
+
+            {/* Wordmark — appears after convergence */}
+            <motion.div
+              className="absolute pointer-events-none flex flex-col items-center gap-2"
+              style={{ left: '50%', top: `calc(50% + ${LOGO / 2 + 22}px)`, transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}
+              animate={{ opacity: phase === 3 ? 1 : 0, y: phase === 3 ? 0 : 10 }}
+              transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 28, height: 1, background: 'rgba(177,164,144,0.5)' }} />
+                <span style={{ fontFamily: 'var(--font-libre-franklin)', fontSize: 11, letterSpacing: '6px', textTransform: 'uppercase', color: 'rgba(24,28,35,0.55)', fontWeight: 400 }}>
+                  criteria designs group
+                </span>
+                <div style={{ width: 28, height: 1, background: 'rgba(177,164,144,0.5)' }} />
+              </div>
+            </motion.div>
           </div>
         </div>
 
