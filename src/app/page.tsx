@@ -378,7 +378,8 @@ export default function Home() {
         </div>
       </div>
 
-      <FounderTeamSection />
+      {/* FounderTeamSection hidden until employee photos are ready — restore when photos available */}
+      {/* <FounderTeamSection /> */}
 
       <AwardsAccordion
         awards={(() => {
