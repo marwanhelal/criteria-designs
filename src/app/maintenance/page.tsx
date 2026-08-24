@@ -2,13 +2,12 @@ import Image from "next/image";
 
 export default function MaintenancePage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#f7f3ec] p-6">
+    <main className="fixed inset-0 bg-[#f7f3ec]">
       <Image
         src="/images/under-construction.jpg"
         alt="Criteria Design Group — Under Construction"
-        width={1280}
-        height={720}
-        className="w-full max-w-3xl rounded-md shadow-2xl h-auto"
+        fill
+        className="object-contain"
         priority
       />
     </main>
