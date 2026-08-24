@@ -17,20 +17,17 @@ export default function MaintenancePage() {
         style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)" }}
       />
 
-      {/* Spotlit artwork */}
-      <div className="relative z-10 flex h-full w-full items-center justify-center p-6 md:p-12">
-        <div className="animate-[maintenance-fade-in_1.1s_ease-out_forwards]">
-          <div className="relative animate-[maintenance-float_5s_ease-in-out_infinite]">
-            <div className="pointer-events-none absolute inset-[-8%] rounded-3xl bg-[#f2c94c]/25 blur-3xl animate-[maintenance-glow_4s_ease-in-out_infinite]" />
-            <Image
-              src="/images/under-construction.jpg"
-              alt="Criteria Design Group — Under Construction"
-              width={1280}
-              height={720}
-              className="relative w-full max-w-4xl h-auto rounded-lg shadow-[0_30px_90px_rgba(0,0,0,0.55)]"
-              priority
-            />
-          </div>
+      {/* Spotlit artwork — fills almost the entire viewport */}
+      <div className="absolute inset-3 md:inset-6 z-10 animate-[maintenance-fade-in_1.1s_ease-out_forwards]">
+        <div className="relative h-full w-full animate-[maintenance-float_5s_ease-in-out_infinite]">
+          <div className="pointer-events-none absolute inset-[-4%] rounded-3xl bg-[#f2c94c]/25 blur-3xl animate-[maintenance-glow_4s_ease-in-out_infinite]" />
+          <Image
+            src="/images/under-construction.jpg"
+            alt="Criteria Design Group — Under Construction"
+            fill
+            className="relative object-contain rounded-lg shadow-[0_30px_90px_rgba(0,0,0,0.55)]"
+            priority
+          />
         </div>
       </div>
     </main>
