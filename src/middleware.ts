@@ -31,6 +31,27 @@ export async function middleware(request: NextRequest) {
   const { pathname, } = request.nextUrl
   const method = request.method
 
+  // Maintenance mode: show the "under construction" page on the public domain only,
+  // while /admin, /api, and other domains (e.g. the temp working domain) keep working normally.
+  if (
+    process.env.MAINTENANCE_MODE === 'true' &&
+    !pathname.startsWith('/maintenance') &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/admin')
+  ) {
+    const host = (request.headers.get('x-forwarded-host') || request.headers.get('host') || '')
+      .split(':')[0]
+      .toLowerCase()
+    const maintenanceDomains = (process.env.MAINTENANCE_DOMAIN || '')
+      .split(',')
+      .map(d => d.trim().toLowerCase())
+      .filter(Boolean)
+
+    if (maintenanceDomains.includes(host)) {
+      return NextResponse.rewrite(new URL('/maintenance', request.url))
+    }
+  }
+
   // Allow all GET requests to API routes (public data) — except admin-only routes
   if (pathname.startsWith('/api/') && method === 'GET' && !pathname.startsWith('/api/admin')) {
     return NextResponse.next()
@@ -72,5 +93,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/:path*', '/admin/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|images/|uploads/).*)'],
 }
