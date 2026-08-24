@@ -80,3 +80,7 @@ html {
   90%  { opacity: 0; }
   100% { transform: translateX(130%) rotate(8deg); opacity: 0; }
 }
+@keyframes maintenance-text-spot {
+  0%, 100% { transform: translateX(-20%); }
+  50%      { transform: translateX(340%); }
+}

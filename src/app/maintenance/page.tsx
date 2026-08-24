@@ -28,6 +28,17 @@ export default function MaintenancePage() {
             className="relative object-contain rounded-lg shadow-[0_30px_90px_rgba(0,0,0,0.55)]"
             priority
           />
+
+          {/* Spotlight beam sweeping across the "UNDER CONSTRUCTION" text */}
+          <div className="pointer-events-none absolute inset-x-[8%] bottom-[5%] h-[16%] overflow-hidden mix-blend-screen">
+            <div
+              className="absolute top-0 h-full w-[28%] blur-lg animate-[maintenance-text-spot_6s_ease-in-out_infinite]"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,225,150,0.65) 35%, rgba(255,225,150,0) 70%)",
+              }}
+            />
+          </div>
         </div>
       </div>
     </main>
