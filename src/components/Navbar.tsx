@@ -96,7 +96,7 @@ export default function Navbar() {
         <div className="w-full px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between">
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
-            {settings?.logo && (
+            {settings?.logo ? (
               <div className="relative flex-shrink-0">
                 <div className="absolute inset-[-8px] bg-[#B1A490]/15 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <Image
@@ -108,15 +108,16 @@ export default function Navbar() {
                   unoptimized
                 />
               </div>
+            ) : (
+              <div className="flex flex-col gap-0">
+                <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
+                  Criteria
+                </span>
+                <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
+                  Designs
+                </span>
+              </div>
             )}
-            <div className="flex flex-col gap-0">
-              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] transition-colors duration-500 ${logoTextColor} ${logoHoverColor}`}>
-                Criteria
-              </span>
-              <span className={`font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] transition-colors duration-500 ${subtitleColor} ${subtitleHover}`}>
-                Designs
-              </span>
-            </div>
           </Link>
 
           {/* Hamburger Button */}
