@@ -93,7 +93,7 @@ export default function Navbar() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-transparent transition-colors duration-300">
-        <div className="w-full px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between">
+        <div className="w-full px-[clamp(1rem,4vw,7rem)] h-[clamp(76px,7vw,112px)] flex items-center justify-between">
           {/* Logo - CMS driven: image + text */}
           <Link href="/" className="group relative z-[60] flex items-center gap-4 md:gap-5 outline-none">
             {settings?.logo ? (
@@ -104,7 +104,7 @@ export default function Navbar() {
                   alt={settings.companyNameEn || 'Criteria Design Group'}
                   width={100}
                   height={100}
-                  className={`relative h-[clamp(44px,5vw,80px)] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
+                  className={`relative h-[clamp(52px,6vw,96px)] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:scale-105 ${logoFilter}`}
                   unoptimized
                 />
               </div>
