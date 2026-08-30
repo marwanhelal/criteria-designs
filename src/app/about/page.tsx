@@ -94,7 +94,7 @@ export default function AboutPage() {
       <Navbar />
 
       {/* ── spacer for fixed navbar ── */}
-      <div style={{ height: 'clamp(68px,6vw,100px)' }} />
+      <div style={{ height: 'clamp(76px,7vw,112px)' }} />
 
       <main className="bg-white" data-navbar-dark>
 

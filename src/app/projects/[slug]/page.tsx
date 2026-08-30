@@ -48,7 +48,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <Navbar />
 
       {/* ===== PROJECT HEADER ===== */}
-      <section className="pt-[clamp(68px,6vw,100px)] bg-black">
+      <section className="pt-[clamp(76px,7vw,112px)] bg-black">
         <div className="flex flex-col lg:flex-row">
 
           {/* Left info panel */}

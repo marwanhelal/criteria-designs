@@ -169,26 +169,27 @@ function ProjectsHeader({
         }}
       >
         {/* Row 1: Logo + Hamburger */}
-        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between border-b border-[#e8e8e8]">
+        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(76px,7vw,112px)] flex items-center justify-between border-b border-[#e8e8e8]">
           <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
-            {settings?.logo && (
+            {settings?.logo ? (
               <Image
                 src={settings.logo}
                 alt={settings.companyNameEn || 'Criteria Design Group'}
                 width={100}
                 height={100}
-                className="h-[clamp(44px,5vw,80px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                className="h-[clamp(52px,6vw,96px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105"
                 unoptimized
               />
+            ) : (
+              <div className="flex flex-col gap-0">
+                <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
+                  Criteria
+                </span>
+                <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
+                  Designs
+                </span>
+              </div>
             )}
-            <div className="flex flex-col gap-0">
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] transition-colors duration-300 group-hover:text-[#8a7a66]">
-                Criteria
-              </span>
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#666] group-hover:text-[#444] transition-colors duration-300">
-                Designs
-              </span>
-            </div>
           </Link>
 
           <button
@@ -503,7 +504,7 @@ export default function ProjectsPage() {
       />
 
       <div className="min-h-screen bg-white">
-        <div className="h-[190px] md:h-[210px]" />
+        <div className="h-[202px] md:h-[222px]" />
 
         <div className="px-6 lg:px-[52px] pt-10 pb-20">
 

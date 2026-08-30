@@ -48,16 +48,17 @@ function AwardsHeader() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#ECEAE6]">
-        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(68px,6vw,100px)] flex items-center justify-between">
+        <div className="px-[clamp(1rem,4vw,7rem)] h-[clamp(76px,7vw,112px)] flex items-center justify-between">
           <Link href="/" className="group flex items-center gap-4 md:gap-5 outline-none">
-            {settings?.logo && (
-              <Image src={settings.logo} alt={settings.companyNameEn || 'Criteria'} width={100} height={100}
-                className="h-[clamp(44px,5vw,80px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105" unoptimized />
+            {settings?.logo ? (
+              <Image src={settings.logo} alt={settings.companyNameEn || 'Criteria Design Group'} width={100} height={100}
+                className="h-[clamp(52px,6vw,96px)] w-auto object-contain transition-transform duration-500 group-hover:scale-105" unoptimized />
+            ) : (
+              <div className="flex flex-col gap-0">
+                <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] group-hover:text-[#8a7a66] transition-colors duration-300">Criteria</span>
+                <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#888] group-hover:text-[#555] transition-colors duration-300">Designs</span>
+              </div>
             )}
-            <div className="flex flex-col gap-0">
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(18px,2vw,30px)] font-bold leading-[1.1] tracking-[0.5px] text-[#181C23] group-hover:text-[#8a7a66] transition-colors duration-300">Criteria</span>
-              <span className="font-[family-name:var(--font-franklin-gothic)] text-[clamp(8px,0.8vw,12px)] font-light uppercase tracking-[6px] text-[#888] group-hover:text-[#555] transition-colors duration-300">Designs</span>
-            </div>
           </Link>
           <button onClick={() => setMenuOpen(!menuOpen)}
             className="relative z-[60] w-[clamp(38px,3.5vw,54px)] h-[clamp(38px,3.5vw,54px)] flex flex-col items-center justify-center gap-[5px] rounded-full bg-[#181C23] hover:bg-[#2a2f3a] transition-colors duration-300"
@@ -344,7 +345,7 @@ export default function AwardsPage() {
     <>
       <AwardsHeader />
       <div className="min-h-screen bg-white">
-        <div style={{ height: 'clamp(68px,6vw,100px)' }} />
+        <div style={{ height: 'clamp(76px,7vw,112px)' }} />
 
         {/* ── Page heading ── */}
         <div className="px-[clamp(1rem,4vw,7rem)] pt-12 pb-10 border-b border-[#ECEAE6]">
@@ -375,7 +376,7 @@ export default function AwardsPage() {
         </div>
 
         {/* ── Tabs ── */}
-        <div className="sticky top-[clamp(68px,6vw,100px)] z-40 bg-white/95 backdrop-blur-md border-b border-[#ECEAE6] px-[clamp(1rem,4vw,7rem)] flex items-center">
+        <div className="sticky top-[clamp(76px,7vw,112px)] z-40 bg-white/95 backdrop-blur-md border-b border-[#ECEAE6] px-[clamp(1rem,4vw,7rem)] flex items-center">
           {tabs.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className={`relative font-[var(--font-libre-franklin)] text-[9px] uppercase tracking-[3px] px-5 py-4 transition-colors duration-200 ${tab === t.key ? 'text-[#111]' : 'text-[#AEABA5] hover:text-[#555]'}`}>
